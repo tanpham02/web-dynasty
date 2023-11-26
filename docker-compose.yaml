@@ -1,0 +1,15 @@
+version: '4'
+services:
+  keitee-website-admin:
+    image: idsteamvn/keitee-website-admin:v1.0.0
+    container_name: keitee-website-admin
+    restart: always
+    build: .
+    ports:
+      - '2203:2203'
+    networks:
+      - keitee-website-admin_network
+
+networks:
+  keitee-website-admin_network:
+    external: true

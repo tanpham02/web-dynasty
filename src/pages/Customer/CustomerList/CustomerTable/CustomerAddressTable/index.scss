@@ -1,0 +1,9 @@
+.ant-modal.modal-list-customer-address {
+  & .ant-modal-content {
+    position: absolute !important;
+    min-width: calc(100% + 500px) !important;
+    left: 50% !important;
+    transform: translate(-50%, -0%) !important;
+    top: 50% !important;
+  }
+}
