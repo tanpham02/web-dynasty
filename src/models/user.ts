@@ -1,12 +1,13 @@
 export enum UserStatus {
-  ACTIVE = 'ACTIVE',
-  IN_ACTIVE = 'IN_ACTIVE',
-  DELETED = 'DELETED',
+  ACTIVE = "ACTIVE",
+  IN_ACTIVE = "IN_ACTIVE",
+  DELETED = "DELETED",
 }
 
 export enum UserRole {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
+  ADMIN = "ADMIN",
+  USER = "USER",
+  ALL = "ALL",
 }
 
 export interface User {
