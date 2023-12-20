@@ -1,32 +1,20 @@
-import SVG from "react-inlinesvg";
-import SEARCH_ICON from "~ assets/svg/search.svg";
-import SelectCustom from "~/components/customs/Select";
-import UserTable from "./UserTable";
-import React, { useState, useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
-import userService from "~/services/userService";
-import { Modal, Skeleton, TablePaginationConfig } from "antd";
-import { User, UserRole, UserStatus } from "~/models/user";
-import useDebounce from "~/hooks/useDebounce";
-import trash from "~/assets/svg/trash.svg";
-import { toast } from "react-hot-toast";
-import UserModal, { ModalType } from "./UserModal";
-import { SearchParams } from "~/types";
-import { useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
 import { Button } from "@nextui-org/button";
-import {
-  Input,
-  Select,
-  SelectItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@nextui-org/react";
+import { Input, Select, SelectItem } from "@nextui-org/react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { Modal, Skeleton, TablePaginationConfig } from "antd";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import SVG from "react-inlinesvg";
+import { useSelector } from "react-redux";
+import trash from "~/assets/svg/trash.svg";
+import { QUERY_KEY } from "~/constants/querryKey";
+import useDebounce from "~/hooks/useDebounce";
+import { User, UserRole, UserStatus } from "~/models/user";
+import { RootState } from "~/redux/store";
+import userService from "~/services/userService";
+import { SearchParams } from "~/types";
+import UserModal, { ModalType } from "./UserModal";
+import UserTable from "./UserTable";
 
 export interface ModalKey {
   visible?: boolean;
@@ -183,7 +171,6 @@ const UserListPage = () => {
           Thêm nhân viên
         </button> */}
       </div>
-
       <div>
         <div className="flex items-center mb-2">
           <div className="flex flex-1 items-center space-x-2">
@@ -243,7 +230,6 @@ const UserListPage = () => {
           ""
         )}
       </div>
-
       {showDeleteUserModal && (
         <Modal
           title="Xác nhận xóa danh sách nhân viên này"
@@ -259,35 +245,6 @@ const UserListPage = () => {
           ]}
         />
       )}
-      <Table aria-label="Example static collection table">
-        <TableHeader>
-          <TableColumn>NAME</TableColumn>
-          <TableColumn>ROLE</TableColumn>
-          <TableColumn>STATUS</TableColumn>
-        </TableHeader>
-        <TableBody>
-          <TableRow key="1">
-            <TableCell>Tony Reichert</TableCell>
-            <TableCell>CEO</TableCell>
-            <TableCell>Active</TableCell>
-          </TableRow>
-          <TableRow key="2">
-            <TableCell>Zoey Lang</TableCell>
-            <TableCell>Technical Lead</TableCell>
-            <TableCell>Paused</TableCell>
-          </TableRow>
-          <TableRow key="3">
-            <TableCell>Jane Fisher</TableCell>
-            <TableCell>Senior Developer</TableCell>
-            <TableCell>Active</TableCell>
-          </TableRow>
-          <TableRow key="4">
-            <TableCell>William Howard</TableCell>
-            <TableCell>Community Manager</TableCell>
-            <TableCell>Vacation</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
       {isLoadingUser ? (
         <>
           <Skeleton />

@@ -1,23 +1,43 @@
-import { useState, useMemo } from 'react';
-import SVG from 'react-inlinesvg';
-import SEARCH_ICON from '~ assets/svg/search.svg';
-import ProductTable from './ProductTable';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { QUERY_KEY } from '~/constants/querryKey';
-import { SearchParams } from '~/types';
-import { productService } from '~/services/productService';
-import { Select, Skeleton, TablePaginationConfig } from 'antd';
-import useDebounce from '~/hooks/useDebounce';
-import productCategoryService from '~/services/productCategoryService';
-import { ModalType } from '~/pages/User/UserModal';
-import { ProductMain } from '~/models/product';
+import {
+  Button,
+  Chip,
+  ChipProps,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Image,
+  Input,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { TablePaginationConfig } from "antd";
+import { useCallback, useState } from "react";
+import SVG from "react-inlinesvg";
+
+import { QUERY_KEY } from "~/constants/querryKey";
+import useDebounce from "~/hooks/useDebounce";
+import { ProductMain } from "~/models/product";
+import { ModalType } from "~/pages/User/UserModal";
+import { productService } from "~/services/productService";
+import { SearchParams } from "~/types";
+import { getFullImageUrl } from "~/utils/image";
+import { formatCurrencyVND } from "~/utils/number";
+import VerticalDotIcon from "~/assets/svg/vertical-dot.svg";
+import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
 
 const ProductListPage = () => {
   const [pageParameter, setPageParameter] = useState<SearchParams>({
     page: 0,
     pageSize: 10,
   });
-  const [valueSearch, setValueSearch] = useState<string>('');
+  const [valueSearch, setValueSearch] = useState<string>("");
   const [propsProduct, setPropsProduct] = useState<{
     showModal?: boolean;
     modalType?: ModalType;
@@ -25,7 +45,8 @@ const ProductListPage = () => {
   }>({});
 
   const queryText = useDebounce(valueSearch, 700);
-  const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
+  const [valueFilterFromCategory, setValueFilterFromCategory] =
+    useState<string>();
 
   const handleTableChange = (paginationFromTable: TablePaginationConfig) => {
     if (paginationFromTable.current && paginationFromTable.pageSize)
@@ -48,7 +69,12 @@ const ProductListPage = () => {
     isLoading: isLoadingProduct,
     refetch: refetchData,
   } = useInfiniteQuery(
-    [QUERY_KEY.PRODUCT_IN_ZALO_MINI_APP, pageParameter, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
+    [
+      QUERY_KEY.PRODUCT_IN_ZALO_MINI_APP,
+      pageParameter,
+      queryText,
+      valueFilterFromCategory,
+    ], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
     async () => {
       const params = {
         pageIndex: pageParameter.page,
@@ -59,35 +85,101 @@ const ProductListPage = () => {
     },
   );
 
-  const onChange = (newValue: string) => {
-    setValueFilterFromCategory(newValue);
-  };
+  const columns: ColumnType<ProductMain>[] = [
+    {
+      key: "_id",
+      align: "center",
+      name: "ID",
+      render: (product: ProductMain, index?: number) => (index || 0) + 1,
+    },
+    {
+      key: "image",
+      align: "center",
+      name: "Hình ảnh",
+      render: (product: ProductMain) => (
+        <Image
+          isBlurred
+          isZoomed
+          src={getFullImageUrl(product?.image)}
+          fallbackSrc="https://via.placeholder.com/80x80"
+          alt={product?.name}
+          className="w-20"
+          loading="lazy"
+        />
+      ),
+    },
+    {
+      key: "name",
+      align: "center",
+      name: "Tên",
+      render: (product: ProductMain) => (
+        <span className="line-clamp-1">{product?.name}</span>
+      ),
+    },
+    {
+      key: "price",
+      align: "center",
+      name: "Gía bán",
+      render: (product: ProductMain) => formatCurrencyVND(product?.price),
+    },
+    {
+      key: "types",
+      align: "end",
+      name: "Loại sản phẩm",
+      render: (product: ProductMain) => (
+        <Chip color="success" variant="flat">
+          Mới
+        </Chip>
+      ),
+    },
+    {
+      key: "description",
+      align: "center",
+      name: "Hành động",
+      render: () => (
+        <Dropdown>
+          <DropdownTrigger>
+            <Button isIconOnly size="sm" variant="light">
+              <SVG src={VerticalDotIcon} className="text-default-300" />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu>
+            <DropdownItem>Xem chi tiết</DropdownItem>
+            <DropdownItem>Chỉnh sửa</DropdownItem>
+            <DropdownItem>Xóa</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      ),
+    },
+  ];
 
   return (
-    <>
-      <div className='flex flex-row justify-between items-center gap-2 w-full'>
-        <span className='font-bold text-title-xl block pb-2'>Danh sách sản phẩm</span>
-        <button
+    <div>
+      <div>
+        <span className="font-bold text-title-xl">Danh sách sản phẩm</span>
+      </div>
+      <div className="flex justify-between items-center mt-4 mb-2">
+        <Input
+          size="sm"
+          variant="bordered"
+          className="max-w-[300px]"
+          placeholder="Tìm kiếm theo tên sản phẩm..."
+          value={valueSearch}
+          onValueChange={setValueSearch}
+        />
+        <Button
+          color="primary"
+          variant="shadow"
           onClick={handleOpenProductModal}
-          className='rounded-lg bg-primary px-4 py-2 font-normal text-white'
         >
           Thêm sản phẩm
-        </button>
+        </Button>
       </div>
-      <div className='flex items-center flex-row lg:w-[30%] mt-3 sm:w-[40%] xs:w-full flex-wrap gap-2'>
-        <div className='flex flex-1 items-center justify-center rounded-lg border-2 border-gray bg-white p-2 dark:bg-boxdark lg:w-[70%] sm:w-[40%]'>
-          <SVG src={SEARCH_ICON} />
-          <input
-            type='text'
-            placeholder='Tìm kiếm...'
-            className='w-full bg-transparent pl-6 pr-4 focus:outline-none'
-            onChange={(e) => setValueSearch(e.target.value)}
-          />
-        </div>
+      {!isLoadingProduct && (
+        <CustomTable columns={columns} data={productList?.pages?.[0]?.data} />
+      )}
 
-        <button className='rounded-lg bg-primary px-4 py-2 font-normal text-white'>Tìm</button>
-      </div>
-      {isLoadingProduct ? (
+      {/* {isLoadingProduct ? (
         Array(5).map((__item, index) => <Skeleton key={index} />)
       ) : (
         <ProductTable
@@ -98,8 +190,8 @@ const ProductListPage = () => {
           propsProduct={propsProduct}
           onSetPropsProduct={setPropsProduct}
         />
-      )}
-    </>
+      )} */}
+    </div>
   );
 };
 

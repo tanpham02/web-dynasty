@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "run:dev": "env-cmd -f .env.development vite",
-    "run:staging": "env-cmd -f .env.staging vite",
-    "run:prod": "env-cmd -f .env.production vite",
+    "dev": "env-cmd -f .env.development vite",
+    "staging": "env-cmd -f .env.staging vite",
+    "prod": "env-cmd -f .env.production vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
