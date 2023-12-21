@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { Product } from '~/models/product';
+import { createSlice } from "@reduxjs/toolkit";
+import { Product } from "~/models/product";
 
 export interface ProductInitialState {
   productListSelected: Product[];
@@ -10,7 +10,7 @@ const initialState: ProductInitialState = {
 };
 
 const productSlice = createSlice({
-  name: 'productSlice',
+  name: "productSlice",
   initialState: initialState,
   reducers: {
     setProductList: (state, action) => {

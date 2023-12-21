@@ -1,6 +1,6 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Result } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { LoadingOutlined } from "@ant-design/icons";
+import { Button, Result } from "antd";
+import { useNavigate } from "react-router-dom";
 
 export default function InComing() {
   const navigate = useNavigate();
@@ -8,12 +8,9 @@ export default function InComing() {
     <div>
       <Result
         icon={<LoadingOutlined />}
-        title='Chúng tôi sắp ra mắt!'
+        title="Chúng tôi sắp ra mắt!"
         extra={
-          <Button
-            type='primary'
-            onClick={() => navigate('/')}
-          >
+          <Button type="primary" onClick={() => navigate("/")}>
             Trở về trang chủ
           </Button>
         }

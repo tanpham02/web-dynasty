@@ -1,13 +1,28 @@
-import { useState, useEffect } from 'react';
-import locationService from '~/services/locationService';
-import { LocationItemType, LocationResponseType, SelectOptionType } from '~/types';
+import { useState, useEffect } from "react";
+import locationService from "~/services/locationService";
+import {
+  LocationItemType,
+  LocationResponseType,
+  SelectOptionType,
+} from "~/types";
 
-const useShippingLocation = (cityID: string | number, districtID: string | number) => {
-  const [cities, setCities] = useState<SelectOptionType[]>([{ value: 0, label: 'Chưa có địa chỉ' }]);
-  const [districts, setDistricts] = useState<SelectOptionType[]>([{ value: 0, label: 'Chưa có địa chỉ' }]);
-  const [wards, setWards] = useState<SelectOptionType[]>([{ value: 0, label: 'Chưa có địa chỉ' }]);
+const useShippingLocation = (
+  cityID: string | number,
+  districtID: string | number,
+) => {
+  const [cities, setCities] = useState<SelectOptionType[]>([
+    { value: 0, label: "Chưa có địa chỉ" },
+  ]);
+  const [districts, setDistricts] = useState<SelectOptionType[]>([
+    { value: 0, label: "Chưa có địa chỉ" },
+  ]);
+  const [wards, setWards] = useState<SelectOptionType[]>([
+    { value: 0, label: "Chưa có địa chỉ" },
+  ]);
 
-  const convertResponseDataToSelectOptionType = (responseData: LocationResponseType) => {
+  const convertResponseDataToSelectOptionType = (
+    responseData: LocationResponseType,
+  ) => {
     const dataAfterConvert: SelectOptionType[] = [];
     if (responseData.data) {
       responseData.data.forEach((locationItem: LocationItemType) => {
@@ -21,17 +36,25 @@ const useShippingLocation = (cityID: string | number, districtID: string | numbe
   };
 
   const handleGetCities = async () => {
-    const res = await locationService.searchLocationByCriteria({ type: 'CITY' });
+    const res = await locationService.searchLocationByCriteria({
+      type: "CITY",
+    });
     setCities(convertResponseDataToSelectOptionType(res));
   };
 
   const handleGetDistricts = async (cityId: string | number) => {
-    const res = await locationService.searchLocationByCriteria({ type: 'DISTRICT', parentId: cityId });
+    const res = await locationService.searchLocationByCriteria({
+      type: "DISTRICT",
+      parentId: cityId,
+    });
     setDistricts(convertResponseDataToSelectOptionType(res));
   };
 
   const handleGetWards = async (districtId: string | number) => {
-    const res = await locationService.searchLocationByCriteria({ type: 'WARD', parentId: districtId });
+    const res = await locationService.searchLocationByCriteria({
+      type: "WARD",
+      parentId: districtId,
+    });
     setWards(convertResponseDataToSelectOptionType(res));
   };
 

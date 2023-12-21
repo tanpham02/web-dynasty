@@ -4,22 +4,31 @@ import {
   EditOutlined,
   ExclamationOutlined,
   InfoCircleOutlined,
-} from '@ant-design/icons';
-import { Avatar, Button, Table, TablePaginationConfig, Popconfirm, Tooltip, Checkbox, Empty } from 'antd';
-import { User, UserRole, UserStatus } from '~/models/user';
-import { Breakpoint, ListDataResponse, ListResponse } from '~/types';
-import React, { useState, useMemo } from 'react';
-import { ModalType } from '../UserModal';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import { useSelector } from 'react-redux';
-import { RootState } from '~/redux/store';
+} from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Table,
+  TablePaginationConfig,
+  Popconfirm,
+  Tooltip,
+  Checkbox,
+  Empty,
+} from "antd";
+import { User, UserRole, UserStatus } from "~/models/user";
+import { Breakpoint, ListDataResponse, ListResponse } from "~/types";
+import React, { useState, useMemo } from "react";
+import { ModalType } from "../UserModal";
+import { DATE_FORMAT_DDMMYYYY, formatDate } from "~/utils/date.utils";
+import { useSelector } from "react-redux";
+import { RootState } from "~/redux/store";
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof User;
   key?: keyof User;
   sorter?: boolean;
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
   render?: (value: any, record: User, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -45,8 +54,11 @@ const UserTable = ({
   handleChangeListIdsUserForDelete,
   handleShowModalUser,
 }: UserTableProps) => {
-  const [productCategorySelectedKeys, setProductCategorySelectedKeys] = useState<React.Key[]>([]);
-  const currentUserLogin = useSelector<RootState, User>((state) => state.userStore.user);
+  const [productCategorySelectedKeys, setProductCategorySelectedKeys] =
+    useState<React.Key[]>([]);
+  const currentUserLogin = useSelector<RootState, User>(
+    (state) => state.userStore.user,
+  );
 
   const pagination = useMemo(() => {
     const current = data?.pageIndex;
@@ -62,63 +74,69 @@ const UserTable = ({
 
   const COLUMNS: TableColumn[] = [
     {
-      title: 'Hình ảnh',
-      dataIndex: 'status',
-      key: 'status',
-      align: 'center',
+      title: "Hình ảnh",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
       render: (__id, record) =>
         record?.image ? (
           <Avatar
             src={record?.image}
-            shape='square'
-            className='!w-[70px] !h-[70px] !rounded-[10px]'
+            shape="square"
+            className="!w-[70px] !h-[70px] !rounded-[10px]"
           />
         ) : (
           <Avatar
-            shape='square'
-            className='!w-[70px] !h-[70px] !bg-primary !rounded-[10px] !text-[18px] font-medium !leading-[70px]'
+            shape="square"
+            className="!w-[70px] !h-[70px] !bg-primary !rounded-[10px] !text-[18px] font-medium !leading-[70px]"
           >
             {record?.fullName && record?.fullName.charAt(0).toUpperCase()}
           </Avatar>
         ),
     },
     {
-      title: 'Họ tên',
-      dataIndex: 'fullName',
-      key: 'fullName',
-      align: 'center',
+      title: "Họ tên",
+      dataIndex: "fullName",
+      key: "fullName",
+      align: "center",
     },
     {
-      title: 'Số điện thoại',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
-      align: 'center',
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      align: "center",
     },
     {
-      title: 'Ngày sinh',
-      dataIndex: 'birthday',
-      key: 'birthday',
-      align: 'center',
-      render: (_, record) => <span>{record.birthday ? formatDate(record.birthday, DATE_FORMAT_DDMMYYYY) : ''}</span>,
-      responsive: ['lg'],
+      title: "Ngày sinh",
+      dataIndex: "birthday",
+      key: "birthday",
+      align: "center",
+      render: (_, record) => (
+        <span>
+          {record.birthday
+            ? formatDate(record.birthday, DATE_FORMAT_DDMMYYYY)
+            : ""}
+        </span>
+      ),
+      responsive: ["lg"],
     },
     {
-      title: 'Địa chỉ',
-      dataIndex: 'address',
-      key: 'address',
-      align: 'left',
-      responsive: ['xxl'],
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
+      align: "left",
+      responsive: ["xxl"],
     },
     {
-      title: 'Trạng thái người dùng',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Trạng thái người dùng",
+      dataIndex: "status",
+      key: "status",
       render: (__id, record) => {
         switch (record.status) {
           case UserStatus.ACTIVE:
             return (
-              <div className='!flex items-center justify-center'>
-                <button className='text-[14px] bg-success  text-white px-3 py-1 rounded-md font-medium'>
+              <div className="!flex items-center justify-center">
+                <button className="text-[14px] bg-success  text-white px-3 py-1 rounded-md font-medium">
                   Hoạt động
                 </button>
               </div>
@@ -126,8 +144,8 @@ const UserTable = ({
             break;
           case UserStatus.IN_ACTIVE:
             return (
-              <div className='!flex items-center justify-center'>
-                <button className='text-[14px] bg-danger text-white px-3 py-1 rounded-md font-medium'>
+              <div className="!flex items-center justify-center">
+                <button className="text-[14px] bg-danger text-white px-3 py-1 rounded-md font-medium">
                   Ngừng hoạt động
                 </button>
               </div>
@@ -137,49 +155,61 @@ const UserTable = ({
           // code block
         }
       },
-      responsive: ['xxl'],
+      responsive: ["xxl"],
     },
     {
-      title: 'Vai trò',
-      dataIndex: 'role',
-      key: 'role',
-      align: 'center',
-      render: (_, record) => <span>{record.role === UserRole.ADMIN ? 'Quản trị' : 'Nhân viên'}</span>,
-      responsive: ['xl'],
+      title: "Vai trò",
+      dataIndex: "role",
+      key: "role",
+      align: "center",
+      render: (_, record) => (
+        <span>{record.role === UserRole.ADMIN ? "Quản trị" : "Nhân viên"}</span>
+      ),
+      responsive: ["xl"],
     },
     {
-      title: 'Hành động',
-      dataIndex: 'status',
-      key: 'status',
-      align: 'center',
+      title: "Hành động",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
       render: (__text, record) => (
-        <div className='flex justify-center gap-2 text-center'>
+        <div className="flex justify-center gap-2 text-center">
           <div>
             <Tooltip
               title={
                 record._id !== currentUserLogin._id &&
                 handleCheckRolePermission(record, currentUserLogin) &&
-                'Bạn bị giới hạn chỉnh sửa nhân viên này'
+                "Bạn bị giới hạn chỉnh sửa nhân viên này"
               }
             >
               <Button
-                type='primary'
+                type="primary"
                 className={`!flex items-center justify-center !rounded-lg  text-center border border-solid ${
-                  record._id !== currentUserLogin._id && handleCheckRolePermission(record, currentUserLogin)
-                    ? 'border-transparent'
-                    : '!border-warning !bg-warning'
+                  record._id !== currentUserLogin._id &&
+                  handleCheckRolePermission(record, currentUserLogin)
+                    ? "border-transparent"
+                    : "!border-warning !bg-warning"
                 } `}
-                disabled={record._id !== currentUserLogin._id && handleCheckRolePermission(record, currentUserLogin)}
-                onClick={() => handleShowModalUser(ModalType.UPDATE, record._id)}
+                disabled={
+                  record._id !== currentUserLogin._id &&
+                  handleCheckRolePermission(record, currentUserLogin)
+                }
+                onClick={() =>
+                  handleShowModalUser(ModalType.UPDATE, record._id)
+                }
               >
                 <EditOutlined />
               </Button>
             </Tooltip>
           </div>
-          <div onClick={() => handleShowModalUser(ModalType.INFORMATION, record._id)}>
+          <div
+            onClick={() =>
+              handleShowModalUser(ModalType.INFORMATION, record._id)
+            }
+          >
             <Button
-              type='primary'
-              className='!flex items-center justify-center !rounded-lg !bg-primary border border-solid !border-primary'
+              type="primary"
+              className="!flex items-center justify-center !rounded-lg !bg-primary border border-solid !border-primary"
             >
               <InfoCircleOutlined />
             </Button>
@@ -187,33 +217,39 @@ const UserTable = ({
           <>
             {handleCheckRolePermission(record, currentUserLogin) && (
               <Tooltip
-                title={handleCheckRolePermission(record, currentUserLogin) && 'Bạn bị giới hạn xóa nhân viên này'}
+                title={
+                  handleCheckRolePermission(record, currentUserLogin) &&
+                  "Bạn bị giới hạn xóa nhân viên này"
+                }
               >
                 <Button
                   disabled={handleCheckRolePermission(record, currentUserLogin)}
-                  type={'danger' as 'primary'}
+                  type={"danger" as "primary"}
                   className={` flex  items-center justify-center !rounded-lg`}
                 >
-                  <DeleteOutlined className='!flex' />
+                  <DeleteOutlined className="!flex" />
                 </Button>
               </Tooltip>
             )}
             {!handleCheckRolePermission(record, currentUserLogin) && (
               <Popconfirm
-                title='Xác nhận xóa nhân viên này?'
-                className=' flex items-center'
+                title="Xác nhận xóa nhân viên này?"
+                className=" flex items-center"
                 onConfirm={() => {
                   handleDeleteSingleUser(record._id);
                 }}
-                okText='Có'
-                cancelText='Không'
+                okText="Có"
+                cancelText="Không"
               >
                 <Button
-                  disabled={record._id !== currentUserLogin._id && handleCheckRolePermission(record, currentUserLogin)}
-                  type={'danger' as 'primary'}
+                  disabled={
+                    record._id !== currentUserLogin._id &&
+                    handleCheckRolePermission(record, currentUserLogin)
+                  }
+                  type={"danger" as "primary"}
                   className={` flex  items-center justify-center !rounded-lg`}
                 >
-                  <DeleteOutlined className='!flex' />
+                  <DeleteOutlined className="!flex" />
                 </Button>
               </Popconfirm>
             )}
@@ -249,12 +285,15 @@ const UserTable = ({
     onChange: onUserListCheckedChange,
     getCheckboxProps: (record: User) => ({
       disabled:
-        record._id !== currentUserLogin._id && handleCheckRolePermission(record, currentUserLogin) ? true : false,
+        record._id !== currentUserLogin._id &&
+        handleCheckRolePermission(record, currentUserLogin)
+          ? true
+          : false,
     }),
     renderCell(__checked: boolean, record: User, __index: number, node: any) {
       if (handleCheckRolePermission(record, currentUserLogin)) {
         return (
-          <Tooltip title='Bạn bị giới hạn xóa nhân viên này'>
+          <Tooltip title="Bạn bị giới hạn xóa nhân viên này">
             <Checkbox disabled />
           </Tooltip>
         );
@@ -267,11 +306,11 @@ const UserTable = ({
     <>
       <Table
         rowSelection={rowSelection}
-        rowKey='_id'
+        rowKey="_id"
         dataSource={data?.data}
         columns={COLUMNS}
-        className='rounded-sm border border-stroke bg-white pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1'
-        rowClassName='text-black dark:text-white'
+        className="rounded-sm border border-stroke bg-white pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"
+        rowClassName="text-black dark:text-white"
         pagination={{
           current: pagination.pageCurrent,
           pageSize: pagination.pageSize,
@@ -282,7 +321,7 @@ const UserTable = ({
           emptyText: (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description='Không có dữ liệu'
+              description="Không có dữ liệu"
             />
           ),
         }}

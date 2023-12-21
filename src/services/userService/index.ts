@@ -1,24 +1,26 @@
-import { User } from '~/models/user';
-import axiosService from '../axiosService';
-import { FIND_USER_BY_CRITERIA_URL, USER_URL } from '../apiUrl';
-import { ListDataResponse, SearchParams } from '~/types';
-import qs from 'qs';
+import { User } from "~/models/user";
+import axiosService from "../axiosService";
+import { FIND_USER_BY_CRITERIA_URL, USER_URL } from "../apiUrl";
+import { ListDataResponse, SearchParams } from "~/types";
+import qs from "qs";
 
 const userService = {
   getUserInfo: async (userId: string): Promise<User> => {
     return axiosService()({
       url: `${USER_URL}/${userId}`,
-      method: 'GET',
+      method: "GET",
     })
       .then((res) => res.data)
       .catch((error) => {
         throw error;
       });
   },
-  searchUserByCriteria: async (params: SearchParams): Promise<ListDataResponse<User>> => {
+  searchUserByCriteria: async (
+    params: SearchParams,
+  ): Promise<ListDataResponse<User>> => {
     return axiosService()({
       url: `${FIND_USER_BY_CRITERIA_URL}`,
-      method: 'GET',
+      method: "GET",
       params,
     })
       .then((res) => res.data)
@@ -29,7 +31,7 @@ const userService = {
   getUserByUserID: async (id: string): Promise<User> => {
     return axiosService()({
       url: `${USER_URL}/${id}`,
-      method: 'GET',
+      method: "GET",
     })
       .then((res) => res.data)
       .catch((error) => {
@@ -39,10 +41,10 @@ const userService = {
   createUser: async (data: User): Promise<User> => {
     return axiosService()({
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       url: `${USER_URL}/create`,
-      method: 'POST',
+      method: "POST",
       data: data,
     })
       .then((res) => res.data)
@@ -53,10 +55,10 @@ const userService = {
   updateUser: async (data: User, userId: string): Promise<User> => {
     return axiosService()({
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       url: `${USER_URL}/${userId}`,
-      method: 'PATCH',
+      method: "PATCH",
       data: data,
     })
       .then((res) => res.data)
@@ -67,11 +69,12 @@ const userService = {
   deleteUser: async (ids: number[]) => {
     return axiosService()({
       url: `${USER_URL}`,
-      method: 'DELETE',
+      method: "DELETE",
       params: {
         ids: ids,
       },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: "repeat" }),
     })
       .then((res) => res.data)
       .catch((error) => {

@@ -1,15 +1,15 @@
 version: '4'
 services:
-  keitee-website-admin:
-    image: idsteamvn/keitee-website-admin:v1.0.0
-    container_name: keitee-website-admin
+  the-pizza-company-dashboard:
+    image: the-pizza-company-dashboard:v1.0.0
+    container_name: the-pizza-company-dashboard
     restart: always
     build: .
     ports:
       - '2203:2203'
     networks:
-      - keitee-website-admin_network
+      - the-pizza-company-dashboard-network
 
 networks:
-  keitee-website-admin_network:
+  the-pizza-company-dashboard-network:
     external: true

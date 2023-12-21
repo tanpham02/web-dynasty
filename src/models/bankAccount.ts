@@ -8,10 +8,10 @@ export interface BankAccount {
 }
 
 export enum BankAccountStatus {
-  ACTIVE = 'ACTIVE',
-  IN_ACTIVE = 'IN_ACTIVE',
-  DELETED = 'DELETED',
-  IN_COMING = 'IN_COMING',
+  ACTIVE = "ACTIVE",
+  IN_ACTIVE = "IN_ACTIVE",
+  DELETED = "DELETED",
+  IN_COMING = "IN_COMING",
 }
 
 export interface FindAllBankFromThirdPartyVietQr {

@@ -1,12 +1,14 @@
-import { Membership } from '~/models/membership';
-import { MEMBERSHIP_URL } from '../apiUrl';
-import axiosService from '../axiosService';
-import { ListResponse, SearchParams } from '~/types';
+import { Membership } from "~/models/membership";
+import { MEMBERSHIP_URL } from "../apiUrl";
+import axiosService from "../axiosService";
+import { ListResponse, SearchParams } from "~/types";
 
 export const membershipService = {
-  searchMembershipByCriteria: async (params: SearchParams): Promise<ListResponse<Membership>> => {
+  searchMembershipByCriteria: async (
+    params: SearchParams,
+  ): Promise<ListResponse<Membership>> => {
     return axiosService()({
-      method: 'GET',
+      method: "GET",
       url: `${MEMBERSHIP_URL}/search`,
       params,
     })
@@ -17,10 +19,10 @@ export const membershipService = {
   },
   createMembership: async (data: FormData): Promise<Membership> => {
     return axiosService()({
-      method: 'POST',
+      method: "POST",
       url: `${MEMBERSHIP_URL}`,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       data: data,
     })
@@ -31,7 +33,7 @@ export const membershipService = {
   },
   getMembershipByID: async (id: number): Promise<Membership> => {
     return axiosService()({
-      method: 'GET',
+      method: "GET",
       url: `${MEMBERSHIP_URL}/${id}`,
     })
       .then((res) => res.data)
@@ -41,9 +43,9 @@ export const membershipService = {
   },
   updateMembership: async (data: FormData, id: number): Promise<Membership> => {
     return axiosService()({
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       url: `${MEMBERSHIP_URL}/${id}`,
       data: data,

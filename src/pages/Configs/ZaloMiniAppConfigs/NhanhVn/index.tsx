@@ -1,13 +1,13 @@
-import SVG from 'react-inlinesvg';
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEY } from '~/constants/querryKey';
-import { Button, Modal, Skeleton } from 'antd';
-import trash from '~/assets/svg/trash.svg';
-import { toast } from 'react-hot-toast';
-import NhanhVnTable from './NhanhVnTable';
-import NhanhVnModal, { ModalType } from './NhanhVnModal';
-import { nhanhVnService } from '~/services/nhanhVnService';
+import SVG from "react-inlinesvg";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEY } from "~/constants/querryKey";
+import { Button, Modal, Skeleton } from "antd";
+import trash from "~/assets/svg/trash.svg";
+import { toast } from "react-hot-toast";
+import NhanhVnTable from "./NhanhVnTable";
+import NhanhVnModal, { ModalType } from "./NhanhVnModal";
+import { nhanhVnService } from "~/services/nhanhVnService";
 
 export interface ModalKey {
   visible?: boolean;
@@ -16,11 +16,14 @@ export interface ModalKey {
 }
 
 const NhanhVn = () => {
-  const [showDeleteNhanhVnModal, setShowDeleteNhanhVnModal] = useState<boolean>(false);
+  const [showDeleteNhanhVnModal, setShowDeleteNhanhVnModal] =
+    useState<boolean>(false);
   const [nhanhVnModal, setNhanhVnModal] = useState<ModalKey>({
     visible: false,
   });
-  const [listIdsNhanhVnForDelete, setListIdsNhanhVnForDelete] = useState<React.Key[]>([]);
+  const [listIdsNhanhVnForDelete, setListIdsNhanhVnForDelete] = useState<
+    React.Key[]
+  >([]);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
 
   const {
@@ -34,7 +37,9 @@ const NhanhVn = () => {
   const { data: nhanhVnById } = useQuery(
     [QUERY_KEY.NHANH_VN_CONFIG, nhanhVnModal],
     async () => {
-      return await nhanhVnService.getNhanhVnById(Number(nhanhVnModal.nhanhVnId));
+      return await nhanhVnService.getNhanhVnById(
+        Number(nhanhVnModal.nhanhVnId),
+      );
     },
     { enabled: nhanhVnModal.nhanhVnId ? true : false },
   );
@@ -70,11 +75,11 @@ const NhanhVn = () => {
     setIsLoadingDelete(true);
     try {
       await nhanhVnService.deleteNhanhVn(ids);
-      toast.success('Xóa thành công', {
-        position: 'bottom-right',
+      toast.success("Xóa thành công", {
+        position: "bottom-right",
         duration: 3000,
-        icon: '👏',
-        style: { width: '70%' },
+        icon: "👏",
+        style: { width: "70%" },
       });
 
       setIsLoadingDelete(false);
@@ -87,40 +92,37 @@ const NhanhVn = () => {
       refetch();
     } catch (err) {
       console.log(err);
-      toast.success('Xóa thất bại', {
-        position: 'bottom-right',
+      toast.success("Xóa thất bại", {
+        position: "bottom-right",
         duration: 3500,
-        icon: '😔',
+        icon: "😔",
       });
     }
   };
 
   return (
     <>
-      <div className='flex flex-row justify-between mb-6 items-center gap-2 w-full'>
-        <span className='font-semibold text-[22px]'>Cấu hình NhanhVN</span>
+      <div className="flex flex-row justify-between mb-6 items-center gap-2 w-full">
+        <span className="font-semibold text-[22px]">Cấu hình NhanhVN</span>
         <button
-          className='rounded-lg bg-primary px-4 py-2 font-normal text-white'
+          className="rounded-lg bg-primary px-4 py-2 font-normal text-white"
           onClick={() => handleShowModalNhanhVn(ModalType.CREATE)}
         >
           + Thêm cấu hình NhanhVn
         </button>
       </div>
 
-      <div className=' flex flex-row justify-between flex-wrap  items-center gap-2'>
+      <div className=" flex flex-row justify-between flex-wrap  items-center gap-2">
         {listIdsNhanhVnForDelete.length !== 0 ? (
           <div
-            className='rounded-lg cursor-pointer transition duration-1000 linear bg-danger mt-2 mb-1 px-4 py-2 font-normal text-white flex items-center justify-between float-right'
+            className="rounded-lg cursor-pointer transition duration-1000 linear bg-danger mt-2 mb-1 px-4 py-2 font-normal text-white flex items-center justify-between float-right"
             onClick={handleShowModalDeleteNhanhVn}
           >
-            <SVG
-              src={trash}
-              className='mr-1'
-            />
+            <SVG src={trash} className="mr-1" />
             Xóa danh sách cấu hình NhanhVn đã chọn
           </div>
         ) : (
-          ''
+          ""
         )}
       </div>
 
@@ -130,15 +132,12 @@ const NhanhVn = () => {
           open={showDeleteNhanhVnModal}
           onCancel={handleCancel}
           footer={[
-            <Button
-              title='cancel'
-              onClick={handleCancel}
-            >
+            <Button title="cancel" onClick={handleCancel}>
               Hủy bỏ
             </Button>,
             <Button
-              key='submit'
-              type='primary'
+              key="submit"
+              type="primary"
               onClick={handleOk}
               loading={isLoadingDelete}
             >

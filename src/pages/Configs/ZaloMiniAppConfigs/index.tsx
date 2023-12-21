@@ -1,34 +1,35 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useLocation } from 'react-router-dom';
-import CKEditor from '~/components/customs/CKEditer';
-import { PATH_NAME } from '~/constants/router';
-import { StoreIntroductionInformation } from '~/models/storeIntroductionInformation';
-import { storeService } from '~/services/storeService';
-import { QUERY_KEY } from '~/constants/querryKey';
-import { toast } from 'react-hot-toast';
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
+import CKEditor from "~/components/customs/CKEditer";
+import { PATH_NAME } from "~/constants/router";
+import { StoreIntroductionInformation } from "~/models/storeIntroductionInformation";
+import { storeService } from "~/services/storeService";
+import { QUERY_KEY } from "~/constants/querryKey";
+import { toast } from "react-hot-toast";
 
 const ZaloMiniAppConfigsTitleMapping = {
-  [`${PATH_NAME.STORE_INTRODUCTION_INFORMATION_CONFIG}`]: 'Thông tin giới thiệu cửa hàng',
-  [`${PATH_NAME.DELIVERY_POLICY}`]: 'Chính sách giao hàng',
-  [`${PATH_NAME.DELIVERY_RESPONSIBILITY}`]: 'Trách nhiệm giao nhận',
-  [`${PATH_NAME.DISCLAIMER}`]: 'Tuyên bố miễn trừ',
-  [`${PATH_NAME.CHECKING_POLICY}`]: 'Chính sách kiểm hàng',
-  [`${PATH_NAME.PRIVACY_POLICY}`]: 'Chính sách bảo mật',
-  [`${PATH_NAME.RETURN_POLICY}`]: 'Chính sách đổi trả',
+  [`${PATH_NAME.STORE_INTRODUCTION_INFORMATION_CONFIG}`]:
+    "Thông tin giới thiệu cửa hàng",
+  [`${PATH_NAME.DELIVERY_POLICY}`]: "Chính sách giao hàng",
+  [`${PATH_NAME.DELIVERY_RESPONSIBILITY}`]: "Trách nhiệm giao nhận",
+  [`${PATH_NAME.DISCLAIMER}`]: "Tuyên bố miễn trừ",
+  [`${PATH_NAME.CHECKING_POLICY}`]: "Chính sách kiểm hàng",
+  [`${PATH_NAME.PRIVACY_POLICY}`]: "Chính sách bảo mật",
+  [`${PATH_NAME.RETURN_POLICY}`]: "Chính sách đổi trả",
 };
 
 const ZaloMiniAppConfigsPage = () => {
   const { pathname } = useLocation();
   const [information, setInformation] = useState<StoreIntroductionInformation>({
-    introduction: '',
-    privacyPolicy: '',
-    returnPolicy: '',
-    deliveryPolicy: '',
-    inspectionPolicy: '',
-    deliveryResponsibility: '',
-    disclaimer: '',
-    paymentMethod: '',
+    introduction: "",
+    privacyPolicy: "",
+    returnPolicy: "",
+    deliveryPolicy: "",
+    inspectionPolicy: "",
+    deliveryResponsibility: "",
+    disclaimer: "",
+    paymentMethod: "",
   });
 
   const { data: storeInformationData } = useQuery({
@@ -89,7 +90,7 @@ const ZaloMiniAppConfigsPage = () => {
           break;
 
         default:
-          return '';
+          return "";
       }
     }
   };
@@ -111,7 +112,7 @@ const ZaloMiniAppConfigsPage = () => {
       case PATH_NAME.DISCLAIMER:
         return information.disclaimer;
       default:
-        return '';
+        return "";
     }
   }, [information, pathname]);
 
@@ -119,24 +120,26 @@ const ZaloMiniAppConfigsPage = () => {
     await storeService.createStoreInformation({
       ...information,
     });
-    toast.success('Thêm thành công', {
-      position: 'bottom-right',
+    toast.success("Thêm thành công", {
+      position: "bottom-right",
       duration: 3000,
-      icon: '😘',
-      style: { width: '70%' },
+      icon: "😘",
+      style: { width: "70%" },
     });
   };
 
   return (
-    <div className='editor-container z-[999]'>
-      <h3 className='text-[18px] font-bold'>{ZaloMiniAppConfigsTitleMapping[pathname]}</h3>
+    <div className="editor-container z-[999]">
+      <h3 className="text-[18px] font-bold">
+        {ZaloMiniAppConfigsTitleMapping[pathname]}
+      </h3>
       <div>
         <CKEditor
           onChange={handleChangeCKEditorContent}
           value={handleGetValue as string}
         />
         <div
-          className='ml-auto mt-[20px] w-fit cursor-pointer rounded-[8px] bg-primary px-[13px] py-[6px] text-[18px] text-whiten'
+          className="ml-auto mt-[20px] w-fit cursor-pointer rounded-[8px] bg-primary px-[13px] py-[6px] text-[18px] text-whiten"
           onClick={handleCreateStoreInformation}
         >
           Lưu

@@ -1,22 +1,28 @@
 /* eslint-disable react-refresh/only-export-components */
-import SVG from 'react-inlinesvg';
-import SEARCH_ICON from '~ assets/svg/search.svg';
-import SelectCustom from '~/components/customs/Select';
-import React, { useState, useEffect } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { QUERY_KEY } from '~/constants/querryKey';
-import { Button, Modal, Skeleton, Space, TablePaginationConfig } from 'antd';
-import useDebounce from '~/hooks/useDebounce';
-import trash from '~/assets/svg/trash.svg';
-import { SearchParams } from '~/types';
-import VoucherModal, { ModalType } from './VoucherModal';
-import VoucherTable from './VoucherTable';
-import { Voucher, VoucherOverriding, VoucherPromotionType, VoucherSaleScope, VoucherStatus } from '~/models/voucher';
-import { voucherService } from '~/services/voucherService';
-import { toast } from 'react-hot-toast';
-import VoucherForNewCustomerModal from './VoucherForNewCustomerModal';
-import { data } from 'autoprefixer';
-import Loading from '~/components/Loading';
+import SVG from "react-inlinesvg";
+import SEARCH_ICON from "~ assets/svg/search.svg";
+import SelectCustom from "~/components/customs/Select";
+import React, { useState, useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { QUERY_KEY } from "~/constants/querryKey";
+import { Button, Modal, Skeleton, Space, TablePaginationConfig } from "antd";
+import useDebounce from "~/hooks/useDebounce";
+import trash from "~/assets/svg/trash.svg";
+import { SearchParams } from "~/types";
+import VoucherModal, { ModalType } from "./VoucherModal";
+import VoucherTable from "./VoucherTable";
+import {
+  Voucher,
+  VoucherOverriding,
+  VoucherPromotionType,
+  VoucherSaleScope,
+  VoucherStatus,
+} from "~/models/voucher";
+import { voucherService } from "~/services/voucherService";
+import { toast } from "react-hot-toast";
+import VoucherForNewCustomerModal from "./VoucherForNewCustomerModal";
+import { data } from "autoprefixer";
+import Loading from "~/components/Loading";
 
 export interface ModalKey {
   visible?: boolean;
@@ -26,46 +32,46 @@ export interface ModalKey {
 
 export const optionStatus = [
   {
-    value: '',
-    label: 'Tất cả',
+    value: "",
+    label: "Tất cả",
   },
   {
     value: VoucherStatus.IN_COMING,
-    label: 'Sắp diễn ra',
+    label: "Sắp diễn ra",
   },
   {
     value: VoucherStatus.ACTIVE,
-    label: 'Đang diễn ra',
+    label: "Đang diễn ra",
   },
   {
     value: VoucherStatus.IN_ACTIVE,
-    label: 'Đã kết thúc',
+    label: "Đã kết thúc",
   },
 ];
 
 export const optionSaleScope = [
   {
-    value: '',
-    label: 'Tất cả',
+    value: "",
+    label: "Tất cả",
   },
   {
     value: VoucherSaleScope.ALL,
-    label: 'Toàn shop',
+    label: "Toàn shop",
   },
   {
     value: VoucherSaleScope.PRODUCT,
-    label: 'Theo sản phẩm',
+    label: "Theo sản phẩm",
   },
 ];
 
 export const promotionType = [
   {
-    value: '',
-    label: 'Tất cả',
+    value: "",
+    label: "Tất cả",
   },
   {
     value: VoucherPromotionType.SALE,
-    label: 'Giảm giá',
+    label: "Giảm giá",
   },
   // {
   //   value: VoucherPromotionType.RECEIVE_MONEY,
@@ -74,24 +80,32 @@ export const promotionType = [
 ];
 
 const VoucherListPage = () => {
-  const [showDeleteVoucherModal, setShowDeleteVoucherModal] = useState<boolean>(false);
+  const [showDeleteVoucherModal, setShowDeleteVoucherModal] =
+    useState<boolean>(false);
   const [voucherModal, setVoucherModal] = useState<ModalKey>({
     visible: false,
   });
-  const [voucherForNewCustomerModal, setVoucherForNewCustomerModal] = useState<ModalKey>({
-    visible: false,
-  });
-  const [searchText, setSearchText] = useState<string>('');
-  const [filterStatus, setFilterStatus] = useState<VoucherStatus | string>('');
-  const [filterScope, setFilterScope] = useState<VoucherSaleScope | string>('');
-  const [filterPromotionType, setFilterPromotionType] = useState<VoucherPromotionType | string>('');
-  const [listIdsVoucherForDelete, setListIdsVoucherForDelete] = useState<React.Key[]>([]);
+  const [voucherForNewCustomerModal, setVoucherForNewCustomerModal] =
+    useState<ModalKey>({
+      visible: false,
+    });
+  const [searchText, setSearchText] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<VoucherStatus | string>("");
+  const [filterScope, setFilterScope] = useState<VoucherSaleScope | string>("");
+  const [filterPromotionType, setFilterPromotionType] = useState<
+    VoucherPromotionType | string
+  >("");
+  const [listIdsVoucherForDelete, setListIdsVoucherForDelete] = useState<
+    React.Key[]
+  >([]);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
   const [pagination, setPagination] = useState<SearchParams>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [listProductIdInVoucher, setListProductIDInVoucher] = useState<string[]>([]);
+  const [listProductIdInVoucher, setListProductIDInVoucher] = useState<
+    string[]
+  >([]);
 
   const search = useDebounce(searchText, 500);
   const status = useDebounce(filterStatus, 500);
@@ -141,9 +155,14 @@ const VoucherListPage = () => {
     }
   }, [vouchers]);
 
-  const handleShowModalVoucher = async (type?: ModalType, voucherId?: string) => {
+  const handleShowModalVoucher = async (
+    type?: ModalType,
+    voucherId?: string,
+  ) => {
     if (voucherId) {
-      const voucherAfterFindById = await voucherService.findVoucherById(voucherId);
+      const voucherAfterFindById = await voucherService.findVoucherById(
+        voucherId,
+      );
       setVoucherModal({
         type,
         voucher: voucherAfterFindById,
@@ -157,9 +176,14 @@ const VoucherListPage = () => {
     }
   };
 
-  const handleShowVoucherForNewCustomer = async (type?: ModalType, voucherId?: string) => {
+  const handleShowVoucherForNewCustomer = async (
+    type?: ModalType,
+    voucherId?: string,
+  ) => {
     if (voucherId) {
-      const voucherAfterFindById = await voucherService.findVoucherById(voucherId);
+      const voucherAfterFindById = await voucherService.findVoucherById(
+        voucherId,
+      );
       setVoucherForNewCustomerModal({
         type,
         voucher: voucherAfterFindById,
@@ -175,7 +199,9 @@ const VoucherListPage = () => {
 
   useEffect(() => {
     setListProductIDInVoucher(
-      voucherModal.voucher?.listProductUsedVoucher?.map((itemId) => (itemId?._id ? itemId?._id : '')) as string[],
+      voucherModal.voucher?.listProductUsedVoucher?.map((itemId) =>
+        itemId?._id ? itemId?._id : "",
+      ) as string[],
     );
   }, [voucherModal.voucher]);
 
@@ -183,11 +209,11 @@ const VoucherListPage = () => {
     setIsLoadingDelete(true);
     try {
       await voucherService.deleteVoucher(ids);
-      toast.success('Xóa thành công', {
-        position: 'bottom-right',
+      toast.success("Xóa thành công", {
+        position: "bottom-right",
         duration: 3000,
-        icon: '👏',
-        style: { width: '70%' },
+        icon: "👏",
+        style: { width: "70%" },
       });
 
       setIsLoadingDelete(false);
@@ -200,18 +226,20 @@ const VoucherListPage = () => {
       refetch();
     } catch (err) {
       console.log(err);
-      toast.success('Xóa thất bại', {
-        position: 'bottom-right',
+      toast.success("Xóa thất bại", {
+        position: "bottom-right",
         duration: 3500,
-        icon: '😔',
+        icon: "😔",
       });
     }
   };
 
   return (
     <>
-      <div className='flex flex-row justify-between items-center gap-2 w-full'>
-        <span className='font-bold text-title-xl block pb-2'>Danh sách mã giảm giá</span>
+      <div className="flex flex-row justify-between items-center gap-2 w-full">
+        <span className="font-bold text-title-xl block pb-2">
+          Danh sách mã giảm giá
+        </span>
         <Space size={10}>
           {/* <button
             className='rounded-lg bg-meta-8 px-4 py-2 font-normal text-white'
@@ -220,7 +248,7 @@ const VoucherListPage = () => {
             Thêm voucher cho người mới
           </button> */}
           <button
-            className='rounded-lg bg-primary px-4 py-2 font-normal text-white'
+            className="rounded-lg bg-primary px-4 py-2 font-normal text-white"
             onClick={() => handleShowModalVoucher(ModalType.CREATE)}
           >
             Thêm mã giảm giá
@@ -228,14 +256,14 @@ const VoucherListPage = () => {
         </Space>
       </div>
 
-      <div className='mb-2 flex flex-row justify-between flex-wrap  items-center gap-2'>
-        <div className='flex items-center flex-wrap gap-2'>
-          <div className='my-2 flex  items-center rounded-lg border-2 border-gray bg-white p-2 dark:bg-boxdark '>
+      <div className="mb-2 flex flex-row justify-between flex-wrap  items-center gap-2">
+        <div className="flex items-center flex-wrap gap-2">
+          <div className="my-2 flex  items-center rounded-lg border-2 border-gray bg-white p-2 dark:bg-boxdark ">
             <SVG src={SEARCH_ICON} />
             <input
-              type='text'
-              placeholder='Tìm kiếm...'
-              className='w-full bg-transparent pl-6 pr-4 focus:outline-none'
+              type="text"
+              placeholder="Tìm kiếm..."
+              className="w-full bg-transparent pl-6 pr-4 focus:outline-none"
               onChange={(e: any) => setSearchText(e.target.value)}
               value={searchText}
             />
@@ -243,58 +271,54 @@ const VoucherListPage = () => {
 
           <SelectCustom
             options={promotionType}
-            className='flex items-center rounded-lg '
-            placeholder='Thể loại khuyến mãi'
+            className="flex items-center rounded-lg "
+            placeholder="Thể loại khuyến mãi"
             onChange={(e: any) => setFilterPromotionType(e.value)}
           />
 
           <SelectCustom
             options={optionSaleScope}
-            className='flex items-center rounded-lg '
-            placeholder='Phạm vi khuyến mãi'
+            className="flex items-center rounded-lg "
+            placeholder="Phạm vi khuyến mãi"
             onChange={(e: any) => setFilterScope(e.value)}
           />
 
           <SelectCustom
             options={optionStatus}
-            className='flex items-center rounded-lg min-w-[180px]'
-            placeholder='Trạng thái'
+            className="flex items-center rounded-lg min-w-[180px]"
+            placeholder="Trạng thái"
             onChange={(e: any) => setFilterStatus(e.value)}
           />
 
-          <button className='rounded-lg bg-primary px-4 py-2 font-normal text-white  '>Tìm</button>
+          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">
+            Tìm
+          </button>
         </div>
         {listIdsVoucherForDelete.length !== 0 ? (
           <div
-            className='rounded-lg cursor-pointer transition duration-1000 linear bg-danger px-4 py-2 font-normal text-white flex items-center justify-between float-right'
+            className="rounded-lg cursor-pointer transition duration-1000 linear bg-danger px-4 py-2 font-normal text-white flex items-center justify-between float-right"
             onClick={handleShowModalDeleteVoucher}
           >
-            <SVG
-              src={trash}
-              className='mr-1'
-            />
+            <SVG src={trash} className="mr-1" />
             Xóa danh sách voucher đã chọn
           </div>
         ) : (
-          ''
+          ""
         )}
       </div>
 
       {showDeleteVoucherModal && (
         <Modal
-          title='Xác nhận xóa danh sách voucher này'
+          title="Xác nhận xóa danh sách voucher này"
           open={showDeleteVoucherModal}
           onCancel={handleCancel}
           footer={[
-            <Button
-              title='cancel'
-              onClick={handleCancel}
-            >
+            <Button title="cancel" onClick={handleCancel}>
               Hủy bỏ
             </Button>,
             <Button
-              key='submit'
-              type='primary'
+              key="submit"
+              type="primary"
               onClick={handleOk}
               // loading={isLoadingDelete}
             >
