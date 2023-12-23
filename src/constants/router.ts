@@ -33,6 +33,7 @@ enum PATH_NAME {
 
   ORDER = "/order",
   MATERIAL = "/material",
+  ATTRIBUTE = "/attributes",
 }
 
 enum ROUTER_KEY {
@@ -57,6 +58,7 @@ enum ROUTER_KEY {
 
   ORDER = "ORDER",
   MATERIAL = "MATERIAL",
+  ATTRIBUTE = "ATTRIBUTE",
 }
 
 export { PATH_NAME, ROUTER_KEY };

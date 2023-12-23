@@ -8,7 +8,7 @@ import bannerIcon from "~/assets/images/icon/banner-icon.png";
 import { Banner, BannerType } from "~/models/banner";
 import { bannerService } from "~/services/bannerService";
 import { PATTERN } from "~/utils/regex";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { productService } from "~/services/productService";
 import productCategoryService from "~/services/productCategoryService";
 import { toast } from "react-hot-toast";

@@ -10,7 +10,7 @@ import {
 import { DatePicker, Skeleton } from "antd";
 import MaterialTable from "./MaterialTable";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import materialService from "~/services/materialService";
 import MaterialModal from "./MaterialTable/MaterialModal";
 import useDebounce from "~/hooks/useDebounce";

@@ -3,7 +3,7 @@ import { Skeleton, TablePaginationConfig } from "antd";
 import { useState } from "react";
 import SVG from "react-inlinesvg";
 import SEARCH_ICON from "~ assets/svg/search.svg";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import useDebounce from "~/hooks/useDebounce";
 import { membershipService } from "~/services/membershipService";
 import { SearchParams } from "~/types";

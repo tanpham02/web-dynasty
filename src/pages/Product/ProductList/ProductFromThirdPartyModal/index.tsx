@@ -19,7 +19,7 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import { useState, useMemo } from "react";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 // import useDebounce from '~/hooks/useDebounce';
 import { Breakpoint, SearchParams } from "~/types";
 import { toast } from "react-hot-toast";

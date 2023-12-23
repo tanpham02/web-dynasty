@@ -2,7 +2,7 @@ import SVG from "react-inlinesvg";
 import SelectCustom from "~/components/customs/Select";
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { Button, Modal, Skeleton, TablePaginationConfig } from "antd";
 import useDebounce from "~/hooks/useDebounce";
 import trash from "~/assets/svg/trash.svg";

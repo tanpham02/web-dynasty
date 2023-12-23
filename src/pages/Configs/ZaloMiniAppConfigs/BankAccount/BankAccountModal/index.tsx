@@ -4,7 +4,7 @@ import { Button, Input, InputNumber, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { toast } from "react-hot-toast";
 import { BankAccount, BankAccountStatus } from "~/models/bankAccount";
 import snippingLoading from "~/assets/gif/sniping-loading.gif";

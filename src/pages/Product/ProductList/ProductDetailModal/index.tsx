@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import * as React from "react";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { Product } from "~/models/product";
 import { productService } from "~/services/productService";
 import { formatCurrencyVND } from "~/utils/number";

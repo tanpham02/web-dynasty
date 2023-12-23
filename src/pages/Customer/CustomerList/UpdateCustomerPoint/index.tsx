@@ -10,7 +10,7 @@ import {
 } from "antd";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { CalculatorPoint, Customer, CustomerHistory } from "~/models/customers";
 import customerService from "~/services/customerService";
 import { DATE_FORMAT_DDMMYYYY, formatDate } from "~/utils/date.utils";

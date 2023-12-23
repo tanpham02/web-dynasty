@@ -2,7 +2,7 @@ import { Button, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import bannerIcon from "~/assets/images/icon/banner-icon.png";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import productCategoryService from "~/services/productCategoryService";
 import { toast } from "react-hot-toast";
 

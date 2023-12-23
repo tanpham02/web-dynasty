@@ -63,9 +63,23 @@ const routeSideBar = [
     title: "Sản phẩm",
     menu: [
       {
+        key: ROUTER_KEY.CATEGORY,
+        path: PATH_NAME.CATEGORY,
+        title: "Danh mục sản phẩm",
+        icon: PRODUCTS_ICON,
+        child: [],
+      },
+      {
         key: ROUTER_KEY.PRODUCT,
         path: PATH_NAME.PRODUCT_LIST,
         title: "Danh sách sản phẩm",
+        icon: PRODUCTS_ICON,
+        child: [],
+      },
+      {
+        key: ROUTER_KEY.ATTRIBUTE,
+        path: PATH_NAME.ATTRIBUTE,
+        title: "Thuộc tính",
         icon: PRODUCTS_ICON,
         child: [],
       },

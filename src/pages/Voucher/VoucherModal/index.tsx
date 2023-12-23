@@ -42,7 +42,7 @@ import {
 } from "~/utils/date.utils";
 import moment from "moment";
 import { voucherService } from "~/services/voucherService";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import useDebounce from "~/hooks/useDebounce";
 import { productService } from "~/services/productService";

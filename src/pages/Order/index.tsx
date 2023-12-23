@@ -4,7 +4,7 @@ import SVG from "react-inlinesvg";
 import { DatePicker, Skeleton } from "antd";
 import OrderTable, { STATUS_ORDER_OPTIONS } from "./OrderTable";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import orderService from "~/services/orderService";
 import { SearchParams } from "~/types";
 import Loading from "~/components/Loading";

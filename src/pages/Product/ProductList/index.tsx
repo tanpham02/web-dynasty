@@ -8,6 +8,11 @@ import {
   DropdownTrigger,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Pagination,
   Table,
   TableBody,
@@ -15,13 +20,14 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { TablePaginationConfig } from "antd";
 import { useCallback, useState } from "react";
 import SVG from "react-inlinesvg";
 
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import useDebounce from "~/hooks/useDebounce";
 import { ProductMain } from "~/models/product";
 import { ModalType } from "~/pages/User/UserModal";
@@ -31,6 +37,8 @@ import { getFullImageUrl } from "~/utils/image";
 import { formatCurrencyVND } from "~/utils/number";
 import VerticalDotIcon from "~/assets/svg/vertical-dot.svg";
 import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
+import CustomModal from "~/components/NextUI/CustomModal";
+import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
 
 const ProductListPage = () => {
   const [pageParameter, setPageParameter] = useState<SearchParams>({
@@ -38,31 +46,11 @@ const ProductListPage = () => {
     pageSize: 10,
   });
   const [valueSearch, setValueSearch] = useState<string>("");
-  const [propsProduct, setPropsProduct] = useState<{
-    showModal?: boolean;
-    modalType?: ModalType;
-    product?: ProductMain;
-  }>({});
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const queryText = useDebounce(valueSearch, 700);
   const [valueFilterFromCategory, setValueFilterFromCategory] =
     useState<string>();
-
-  const handleTableChange = (paginationFromTable: TablePaginationConfig) => {
-    if (paginationFromTable.current && paginationFromTable.pageSize)
-      setPageParameter({
-        page: paginationFromTable.current - 1,
-        pageSize: paginationFromTable.pageSize,
-      });
-  };
-
-  const handleOpenProductModal = () => {
-    setPropsProduct((prev) => ({
-      ...prev,
-      showModal: true,
-      modalType: ModalType.CREATE,
-    }));
-  };
 
   const {
     data: productList,
@@ -89,8 +77,8 @@ const ProductListPage = () => {
     {
       key: "_id",
       align: "center",
-      name: "ID",
-      render: (product: ProductMain, index?: number) => (index || 0) + 1,
+      name: "STT",
+      render: (_product: ProductMain, index?: number) => (index || 0) + 1,
     },
     {
       key: "image",
@@ -155,42 +143,48 @@ const ProductListPage = () => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <span className="font-bold text-title-xl">Danh sách sản phẩm</span>
-      </div>
+      </div> */}
+      <CustomBreadcrumb
+        pageName="Danh sách sản phẩm"
+        routes={[
+          {
+            label: "Danh sách sản phẩm",
+          },
+        ]}
+      />
       <div className="flex justify-between items-center mt-4 mb-2">
         <Input
           size="sm"
+          color="primary"
           variant="bordered"
+          label="Tìm kiếm theo tên sản phẩm..."
           className="max-w-[300px]"
-          placeholder="Tìm kiếm theo tên sản phẩm..."
           value={valueSearch}
           onValueChange={setValueSearch}
         />
-        <Button
-          color="primary"
-          variant="shadow"
-          onClick={handleOpenProductModal}
-        >
+        <Button color="primary" variant="shadow" onClick={onOpen}>
           Thêm sản phẩm
         </Button>
       </div>
-      {!isLoadingProduct && (
-        <CustomTable columns={columns} data={productList?.pages?.[0]?.data} />
-      )}
-
-      {/* {isLoadingProduct ? (
-        Array(5).map((__item, index) => <Skeleton key={index} />)
-      ) : (
-        <ProductTable
-          data={productList}
-          refreshData={refetchData}
-          handleTableChange={handleTableChange}
-          onClose={() => setPropsProduct({ showModal: false })}
-          propsProduct={propsProduct}
-          onSetPropsProduct={setPropsProduct}
-        />
-      )} */}
+      <CustomTable
+        columns={columns}
+        data={productList?.pages?.[0]?.data}
+        isLoading={isLoadingProduct}
+        emptyContent="Không có sản phẩm nào"
+        tableName="Danh sách sản phẩm"
+      />
+      <CustomModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        title="Thêm sản phẩm"
+      >
+        <div className="grid grid-cols-2">
+          <div></div>
+          <div></div>
+        </div>
+      </CustomModal>
     </div>
   );
 };

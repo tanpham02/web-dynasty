@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import systemConfigService from "~/services/systemConfigService";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 
 const defaultValuesReferralCodeConfig: SystemConfigs = {
   referralConversionRate: 0,

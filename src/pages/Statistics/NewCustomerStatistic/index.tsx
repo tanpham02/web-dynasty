@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Segmented, Space, Typography } from "antd";
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { StatisticGroupType, StatisticTime } from "~/constants/statisticKey";
 import { StatisticGroup } from "~/models/statistic";
 import { statisticService } from "~/services/statisticService";

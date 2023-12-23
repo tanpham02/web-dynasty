@@ -22,6 +22,7 @@ import { ModalType } from "../UserModal";
 import { DATE_FORMAT_DDMMYYYY, formatDate } from "~/utils/date.utils";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
+import { getFullImageUrl } from "~/utils/image";
 
 interface TableColumn {
   title: string;
@@ -81,7 +82,7 @@ const UserTable = ({
       render: (__id, record) =>
         record?.image ? (
           <Avatar
-            src={record?.image}
+            src={getFullImageUrl(record?.image)}
             shape="square"
             className="!w-[70px] !h-[70px] !rounded-[10px]"
           />

@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import SVG from "react-inlinesvg";
 import { useSelector } from "react-redux";
 import trash from "~/assets/svg/trash.svg";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import useDebounce from "~/hooks/useDebounce";
 import { User, UserRole, UserStatus } from "~/models/user";
 import { RootState } from "~/redux/store";

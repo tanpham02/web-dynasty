@@ -10,6 +10,7 @@ import ICO_EYE_ACTIVE from "~/assets/svg/eye-active.svg";
 import ICO_EYE_INACTIVE from "~/assets/svg/eye-inactive.svg";
 import { SignInType } from "~/models/authen";
 import { PATH_NAME } from "~/constants/router";
+import { Button } from "@nextui-org/react";
 
 const SignIn = () => {
   const navigation = useNavigate();
@@ -18,7 +19,7 @@ const SignIn = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignInType>({
     defaultValues: {
       username: "0984316437",
@@ -285,11 +286,20 @@ const SignIn = () => {
                 </div>
 
                 <div className="mb-5">
-                  <input
+                  {/* <input
                     type="submit"
                     value="Đăng nhập"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                  /> */}
+                  <Button
+                    color="primary"
+                    className="w-full"
+                    size="lg"
+                    variant="shadow"
+                    type="submit"
+                  >
+                    Đăng nhập
+                  </Button>
                 </div>
               </form>
             </div>

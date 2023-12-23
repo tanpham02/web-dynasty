@@ -1,7 +1,7 @@
 import SVG from "react-inlinesvg";
 import SEARCH_ICON from "~ assets/svg/search.svg";
 import CustomerTable from "./CustomerTable";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { useState } from "react";
 import { SearchParams } from "~/types";
 import useDebounce from "~/hooks/useDebounce";

@@ -14,7 +14,7 @@ import {
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { Customer, CustomerHistory } from "~/models/customers";
 import customerService from "~/services/customerService";
 import {

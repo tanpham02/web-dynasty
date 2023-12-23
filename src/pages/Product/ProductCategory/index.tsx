@@ -1,6 +1,6 @@
 import ProductCategoryTable from "./ProductCategoryTable";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import productCategoryService from "~/services/productCategoryService";
 import { Skeleton } from "antd";
 import { useState } from "react";

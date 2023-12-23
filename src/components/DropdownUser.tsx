@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import UserOne from "~ assets/images/user/user-01.png";
 import { User, UserRole } from "~/models/user";
+import { getFullImageUrl } from "~/utils/image";
 
 interface DropdownUserType {
   userInformation: User;
@@ -72,7 +73,11 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
 
         <span className="h-12 w-12 !rounded-full">
           <img
-            src={userInformation?.image || UserOne}
+            src={
+              userInformation?.image
+                ? getFullImageUrl(userInformation?.image)
+                : UserOne
+            }
             alt={`${userInformation?.fullName}`}
             onError={(e: any) => {
               e.target.onerror = null;

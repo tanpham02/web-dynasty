@@ -5,7 +5,7 @@ import CKEditor from "~/components/customs/CKEditer";
 import { PATH_NAME } from "~/constants/router";
 import { StoreIntroductionInformation } from "~/models/storeIntroductionInformation";
 import { storeService } from "~/services/storeService";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { toast } from "react-hot-toast";
 
 const ZaloMiniAppConfigsTitleMapping = {

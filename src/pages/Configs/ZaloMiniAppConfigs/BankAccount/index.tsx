@@ -1,7 +1,7 @@
 import SVG from "react-inlinesvg";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { Button, Modal, Skeleton } from "antd";
 import trash from "~/assets/svg/trash.svg";
 import { toast } from "react-hot-toast";

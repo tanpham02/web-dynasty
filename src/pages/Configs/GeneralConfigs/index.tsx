@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, InputNumber, Row, Typography } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import systemConfigService from "~/services/systemConfigService";
 import { toast } from "react-hot-toast";

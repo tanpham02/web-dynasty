@@ -6,7 +6,7 @@ import RevenueFromMiniAppPage from "~/pages/Statistics/RevenueFromMiniApp";
 import AffiliateStatisticPage from "~/pages/Customer/AffiliateStatistic";
 import PurchaseHistoryListPage from "~/pages/Customer/PurchaseHistory";
 import ProductListPage from "~/pages/Product/ProductList";
-import ProductCategoryListPage from "~/pages/Product/ProductCategory";
+import ProductCategoryListPage from "~/pages/Categories";
 import ZaloMiniAppConfigsPage from "~/pages/Configs/ZaloMiniAppConfigs";
 import Settings from "~/pages/Settings";
 import UserListPage from "~/pages/User";
@@ -19,6 +19,7 @@ import NhanhVn from "~/pages/Configs/ZaloMiniAppConfigs/NhanhVn";
 import { ReferralCodeConfigPage } from "~/pages/ReferralCodeConfig";
 import Order from "~/pages/Order";
 import Materials from "~/pages/Materials";
+import Attributes from "~/pages/Attributes";
 
 const privateRoutes = [
   {
@@ -164,6 +165,12 @@ const privateRoutes = [
     path: PATH_NAME.MATERIAL,
     component: Materials, //Done UI
     title: "Quản lý nguyên liệu",
+  },
+  {
+    key: ROUTER_KEY.ATTRIBUTE,
+    path: PATH_NAME.ATTRIBUTE,
+    component: Attributes,
+    title: "Thuộc tính sản phẩm",
   },
 ];
 

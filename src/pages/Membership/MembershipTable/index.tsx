@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Membership } from "~/models/membership";
 import { Breakpoint, ListResponse } from "~/types";
 import { MembershipCreateModal, ModalType } from "../MembershipModal";
-import { QUERY_KEY } from "~/constants/querryKey";
+import { QUERY_KEY } from "~/constants/queryKey";
 import { membershipService } from "~/services/membershipService";
 import { MembershipModalInfo } from "../MembershipModal/MembershipModalInfo";
 
