@@ -35,6 +35,8 @@ export default function CustomTable<T>({
   onSelectionChange,
   selectionMode = "multiple",
   pagination,
+  removeWrapper,
+  isStriped,
 }: {
   columns?: ColumnType<T>[];
   data?: T[];
@@ -51,6 +53,8 @@ export default function CustomTable<T>({
   onSelectionChange?(keys: Selection): void;
   selectionMode?: "multiple" | "single" | "none";
   pagination?: boolean;
+  removeWrapper?: boolean;
+  isStriped?: boolean;
 }): React.ReactNode {
   return (
     <div className="space-y-2">
@@ -59,6 +63,11 @@ export default function CustomTable<T>({
         selectedKeys={selectedKeys}
         selectionMode={selectionMode}
         onSelectionChange={onSelectionChange}
+        removeWrapper={removeWrapper}
+        isStriped={isStriped}
+        classNames={{
+          th: ["bg-zinc-200", "text-black"],
+        }}
       >
         <TableHeader columns={columns as ColumnType<T>[]}>
           {(column: ColumnType<T>) => (
@@ -125,6 +134,7 @@ export default function CustomTable<T>({
             showControls
             showShadow
             color="primary"
+            variant="faded"
             page={page}
             total={totalPage}
             onChange={onChangePage}

@@ -5,7 +5,7 @@ import NewCustomerStatisticPage from "~/pages/Statistics/NewCustomerStatistic";
 import RevenueFromMiniAppPage from "~/pages/Statistics/RevenueFromMiniApp";
 import AffiliateStatisticPage from "~/pages/Customer/AffiliateStatistic";
 import PurchaseHistoryListPage from "~/pages/Customer/PurchaseHistory";
-import ProductListPage from "~/pages/Product/ProductList";
+import ProductListPage from "~/pages/Product";
 import ProductCategoryListPage from "~/pages/Categories";
 import ZaloMiniAppConfigsPage from "~/pages/Configs/ZaloMiniAppConfigs";
 import Settings from "~/pages/Settings";
@@ -20,6 +20,7 @@ import { ReferralCodeConfigPage } from "~/pages/ReferralCodeConfig";
 import Order from "~/pages/Order";
 import Materials from "~/pages/Materials";
 import Attributes from "~/pages/Attributes";
+import ProductFormPage from "~/pages/Product/ProductFormPage";
 
 const privateRoutes = [
   {
@@ -171,6 +172,18 @@ const privateRoutes = [
     path: PATH_NAME.ATTRIBUTE,
     component: Attributes,
     title: "Thuộc tính sản phẩm",
+  },
+  {
+    key: ROUTER_KEY.PRODUCTS,
+    path: PATH_NAME.PRODUCT,
+    component: ProductFormPage,
+    title: "Thêm sản phẩm",
+  },
+  {
+    key: ROUTER_KEY.PRODUCTS,
+    path: `${PATH_NAME.PRODUCT}/:id`,
+    component: ProductFormPage,
+    title: "Chỉnh sủa sản phẩm",
   },
 ];
 

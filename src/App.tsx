@@ -10,6 +10,7 @@ import { privateRoutes, publicRoutes } from "./routers";
 import PrivateRoute from "./routers/PrivateRoute";
 import PublicRoute from "./routers/PublicRoute";
 import NotistackProvider from "./components/NotistackProvider";
+import "react-quill/dist/quill.snow.css";
 
 function App() {
   // Create a client

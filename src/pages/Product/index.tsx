@@ -1,52 +1,40 @@
 import {
   Button,
   Chip,
-  ChipProps,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
   Image,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Pagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
   useDisclosure,
 } from "@nextui-org/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { TablePaginationConfig } from "antd";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import SVG from "react-inlinesvg";
+import { useNavigate } from "react-router-dom";
 
+import VerticalDotIcon from "~/assets/svg/vertical-dot.svg";
+import Box from "~/components/Box";
+import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
+import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
 import { QUERY_KEY } from "~/constants/queryKey";
+import { PATH_NAME } from "~/constants/router";
 import useDebounce from "~/hooks/useDebounce";
 import { ProductMain } from "~/models/product";
-import { ModalType } from "~/pages/User/UserModal";
 import { productService } from "~/services/productService";
 import { SearchParams } from "~/types";
 import { getFullImageUrl } from "~/utils/image";
 import { formatCurrencyVND } from "~/utils/number";
-import VerticalDotIcon from "~/assets/svg/vertical-dot.svg";
-import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
-import CustomModal from "~/components/NextUI/CustomModal";
-import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
 
 const ProductListPage = () => {
+  const navigate = useNavigate();
+
   const [pageParameter, setPageParameter] = useState<SearchParams>({
     page: 0,
     pageSize: 10,
   });
   const [valueSearch, setValueSearch] = useState<string>("");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const queryText = useDebounce(valueSearch, 700);
   const [valueFilterFromCategory, setValueFilterFromCategory] =
@@ -55,14 +43,9 @@ const ProductListPage = () => {
   const {
     data: productList,
     isLoading: isLoadingProduct,
-    refetch: refetchData,
+    isFetching: isFetchingProduct,
   } = useInfiniteQuery(
-    [
-      QUERY_KEY.PRODUCT_IN_ZALO_MINI_APP,
-      pageParameter,
-      queryText,
-      valueFilterFromCategory,
-    ], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
+    [QUERY_KEY.PRODUCTS, pageParameter, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
     async () => {
       const params = {
         pageIndex: pageParameter.page,
@@ -142,10 +125,7 @@ const ProductListPage = () => {
   ];
 
   return (
-    <div>
-      {/* <div>
-        <span className="font-bold text-title-xl">Danh sách sản phẩm</span>
-      </div> */}
+    <Box>
       <CustomBreadcrumb
         pageName="Danh sách sản phẩm"
         routes={[
@@ -154,7 +134,7 @@ const ProductListPage = () => {
           },
         ]}
       />
-      <div className="flex justify-between items-center mt-4 mb-2">
+      <Box className="flex justify-between items-center mt-4 mb-2">
         <Input
           size="sm"
           color="primary"
@@ -164,28 +144,22 @@ const ProductListPage = () => {
           value={valueSearch}
           onValueChange={setValueSearch}
         />
-        <Button color="primary" variant="shadow" onClick={onOpen}>
+        <Button
+          color="primary"
+          variant="shadow"
+          onClick={() => navigate(PATH_NAME.PRODUCT)}
+        >
           Thêm sản phẩm
         </Button>
-      </div>
+      </Box>
       <CustomTable
         columns={columns}
         data={productList?.pages?.[0]?.data}
-        isLoading={isLoadingProduct}
+        isLoading={isLoadingProduct || isFetchingProduct}
         emptyContent="Không có sản phẩm nào"
         tableName="Danh sách sản phẩm"
       />
-      <CustomModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        title="Thêm sản phẩm"
-      >
-        <div className="grid grid-cols-2">
-          <div></div>
-          <div></div>
-        </div>
-      </CustomModal>
-    </div>
+    </Box>
   );
 };
 

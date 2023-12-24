@@ -261,3 +261,26 @@ li.ant-pagination-item:hover a,
   )::before {
   background-color: #006a31;
 }
+
+.form-context .ql-container.ql-snow,
+.form-context .ql-toolbar.ql-snow {
+  border: none;
+}
+
+.form-context .ql-editor {
+  min-height: 350px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #ddd;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #aaa;
+}

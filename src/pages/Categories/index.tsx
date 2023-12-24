@@ -88,6 +88,9 @@ const Categories = () => {
             category?.status === CategoryStatus.ACTIVE ? "success" : "danger"
           }
           variant="flat"
+          classNames={{
+            content: "font-semibold",
+          }}
         >
           {category?.status === CategoryStatus.ACTIVE
             ? "Đang kinh doanh"
@@ -201,6 +204,7 @@ const Categories = () => {
           label="Tìm kiếm tên danh mục..."
           size="sm"
           className="max-w-[250px]"
+          color="primary"
           variant="bordered"
           value={searchCategory}
           onValueChange={setSearchCategory}

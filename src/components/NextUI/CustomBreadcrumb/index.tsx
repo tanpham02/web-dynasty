@@ -27,6 +27,7 @@ const CustomBreadcrumb = ({ pageName, routes = [] }: CustomBreadcrumbProps) => {
         {routes.map((route, index) => (
           <BreadcrumbItem startContent={route?.icon} key={index}>
             <Link
+              isDisabled={!route?.path}
               href={route?.path}
               className="text-zinc-500 hover:!text-zinc-700"
             >

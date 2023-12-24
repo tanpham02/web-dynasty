@@ -47,7 +47,9 @@ const AttributeModal = ({
       key: "_id",
       align: "center",
       name: "STT",
-      render: (_attribute: AttributeValue, index?: number) => (index || 0) + 1,
+      render: (_attribute: AttributeValue, index?: number) => (
+        <span className="font-bold">{(index || 0) + 1}</span>
+      ),
     },
     {
       key: "name",
@@ -78,16 +80,23 @@ const AttributeModal = ({
     {
       key: "value",
       align: "center",
-      name: "Hành động",
+      name: <span className="block text-center">Hành động</span>,
       render: (_attribute: AttributeValue, index?: number) => (
-        <Tooltip content="Xóa giá trị thuộc tính này" showArrow delay={1500}>
-          <span
-            className="text-lg text-danger cursor-pointer active:opacity-50"
-            onClick={() => removeAttributeValue(index)}
+        <div className="flex justify-center">
+          <Tooltip
+            content="Xóa giá trị thuộc tính này"
+            showArrow
+            color="danger"
+            delay={1500}
           >
-            <SVG src={DeleteIcon} />
-          </span>
-        </Tooltip>
+            <span
+              className="text-lg text-danger cursor-pointer active:opacity-50 p-2"
+              onClick={() => removeAttributeValue(index)}
+            >
+              <SVG src={DeleteIcon} />
+            </span>
+          </Tooltip>
+        </div>
       ),
     },
   ];
@@ -154,7 +163,7 @@ const AttributeModal = ({
             }}
           />
           <div>
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between items-end mb-2">
               <span className="font-bold">Giá trị thuộc tính</span>
               <div className="space-x-2">
                 <Button

@@ -26,8 +26,13 @@ const FormContextInput = (props: FormContextInputProps) => {
           onValueChange={onChange}
           errorMessage={error?.message}
           ref={ref}
-          color={!!error ? "danger" : "default"}
+          classNames={{
+            inputWrapper: "border-b",
+            label: "font-semibold",
+          }}
+          color={!!error ? "danger" : "primary"}
           size="sm"
+          variant="underlined"
           {...props}
         />
       )}
