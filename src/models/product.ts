@@ -1,11 +1,11 @@
 export interface PercentSale {
-  type: "percent";
+  type: 'percent';
   percent: number;
 }
 
 export interface FixedSale {
   amount: number;
-  type: "fixed";
+  type: 'fixed';
 }
 
 export type Sale = PercentSale | FixedSale;
@@ -23,20 +23,20 @@ export interface BaseVariant {
 }
 
 export interface SingleOptionVariant extends BaseVariant {
-  type: "single";
+  type: 'single';
   default?: string;
 }
 
 export interface MultipleOptionVariant extends BaseVariant {
-  type: "multiple";
+  type: 'multiple';
   default?: string[];
 }
 
 export type Variant = SingleOptionVariant | MultipleOptionVariant;
 
 export enum ProductStatus {
-  ACTIVE = "ACTIVE",
-  IN_ACTIVE = "IN_ACTIVE",
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'IN_ACTIVE',
 }
 
 export interface ProductConfigAttribute extends AttributeValue {
@@ -80,13 +80,13 @@ export interface Product {
 }
 
 export enum ProductType {
-  NORMAL = "NORMAL", // bình thường
-  NEW = "NEW", // mới
-  BEST_SELLER = "BEST_SELLER", // bán chạy
-  DELICIOUS_MUST_TRY = "DELICIOUS_MUST_TRY", // ngon phải thử
-  VEGETARIAN = "VEGETARIAN", // chay
-  SPICY = "SPICY", // cay
-  UNIQUE = "UNIQUE", // dộc đáo
+  NORMAL = 'NORMAL', // bình thường
+  NEW = 'NEW', // mới
+  BEST_SELLER = 'BEST_SELLER', // bán chạy
+  DELICIOUS_MUST_TRY = 'DELICIOUS_MUST_TRY', // ngon phải thử
+  VEGETARIAN = 'VEGETARIAN', // chay
+  SPICY = 'SPICY', // cay
+  UNIQUE = 'UNIQUE', // dộc đáo
 }
 
 export interface ProductMain {
@@ -107,7 +107,7 @@ export interface ProductMain {
 
 export interface ProductChildrenAttribute {
   extendedName?: string; // VD: Nhỏ - Dày => Pizza Hải Sản Pesto Xanh - Nhỏ - Dày
-  extendedValuePairs?: string; // Còn này là cắp value SMALL - PAN, gửi này lên để t query
+  extendedValue?: string; // Còn này là cắp value SMALL - PAN, gửi này lên để t query
   productAttributeItem?: ProductChildrenAttributeItem[]; // này là những attribute item, mỗi item là một product con
 }
 
@@ -120,9 +120,9 @@ export interface ProductChildrenAttributeItem {
 }
 
 export enum ProductTypes {
-  NEW = "NEW",
-  HOT = "HOT",
-  INSTALLMENT = "INSTALLMENT",
+  NEW = 'NEW',
+  HOT = 'HOT',
+  INSTALLMENT = 'INSTALLMENT',
 }
 
 export interface ProductStatusOption {
@@ -132,31 +132,31 @@ export interface ProductStatusOption {
 
 export const ProductStatusOptions: ProductStatusOption[] = [
   {
-    label: "Mới",
+    label: 'Mới',
     value: ProductType.NEW,
   },
   {
-    label: "Bình thường",
+    label: 'Bình thường',
     value: ProductType.NORMAL,
   },
   {
-    label: "Bán chạy",
+    label: 'Bán chạy',
     value: ProductType.BEST_SELLER,
   },
   {
-    label: "Ngon phải thử",
+    label: 'Ngon phải thử',
     value: ProductType.DELICIOUS_MUST_TRY,
   },
   {
-    label: "Chay",
+    label: 'Chay',
     value: ProductType.VEGETARIAN,
   },
   {
-    label: "Cay",
+    label: 'Cay',
     value: ProductType.SPICY,
   },
   {
-    label: "Độc đáo",
+    label: 'Độc đáo',
     value: ProductType.UNIQUE,
   },
 ];

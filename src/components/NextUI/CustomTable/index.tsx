@@ -8,14 +8,14 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
-import React, { Key } from "react";
-import { v4 as uuidv4 } from "uuid";
+} from '@nextui-org/react';
+import React, { Key } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ColumnType<T> {
   key?: keyof T | string;
   name?: React.ReactNode;
-  align?: "start" | "center" | "end";
+  align?: 'start' | 'center' | 'end';
   render: (value: T, index?: number) => React.ReactNode;
 }
 
@@ -33,7 +33,7 @@ export default function CustomTable<T>({
   emptyContent,
   tableName,
   onSelectionChange,
-  selectionMode = "multiple",
+  selectionMode = 'multiple',
   pagination,
   removeWrapper,
   isStriped,
@@ -51,7 +51,7 @@ export default function CustomTable<T>({
   tableName?: string;
   selectedKeys?: Selection;
   onSelectionChange?(keys: Selection): void;
-  selectionMode?: "multiple" | "single" | "none";
+  selectionMode?: 'multiple' | 'single' | 'none';
   pagination?: boolean;
   removeWrapper?: boolean;
   isStriped?: boolean;
@@ -66,13 +66,13 @@ export default function CustomTable<T>({
         removeWrapper={removeWrapper}
         isStriped={isStriped}
         classNames={{
-          th: ["bg-zinc-200", "text-black"],
+          th: ['bg-zinc-200', 'text-black'],
         }}
       >
         <TableHeader columns={columns as ColumnType<T>[]}>
           {(column: ColumnType<T>) => (
             <TableColumn
-              key={column.key as Key}
+              key={uuidv4()}
               align={column?.align}
               className={`font-bold text-sm select-none`}
             >
@@ -90,28 +90,25 @@ export default function CustomTable<T>({
               : data
           }
         >
-          {(isLoading
-            ? (Array.from({ length: rowPerPage }).fill({
-                id: uuidv4(),
-              }) as any)
-            : data
-          )?.map((row: any, rowIndex: number) => (
-            <TableRow key={rowIndex}>
-              {columns?.map((_, index) =>
-                isLoading ? (
-                  <TableCell key={uuidv4()}>
-                    <Skeleton className="rounded-lg">
-                      <div className="h-4 rounded-lg bg-default-300"></div>
-                    </Skeleton>
-                  </TableCell>
-                ) : (
-                  <TableCell key={`${rowIndex} - ${index}`}>
-                    {columns[index].render(row, rowIndex)}
-                  </TableCell>
-                ),
-              )}
-            </TableRow>
-          ))}
+          {(isLoading ? Array.from({ length: rowPerPage }) : data)?.map(
+            (row: any, rowIndex: number) => (
+              <TableRow key={uuidv4()}>
+                {columns?.map((_, index) =>
+                  isLoading ? (
+                    <TableCell key={uuidv4()}>
+                      <Skeleton className="rounded-lg">
+                        <div className="h-4 rounded-lg bg-default-300"></div>
+                      </Skeleton>
+                    </TableCell>
+                  ) : (
+                    <TableCell key={uuidv4()}>
+                      {columns[index].render(row, rowIndex)}
+                    </TableCell>
+                  ),
+                )}
+              </TableRow>
+            ),
+          )}
         </TableBody>
       </Table>
       {pagination && (

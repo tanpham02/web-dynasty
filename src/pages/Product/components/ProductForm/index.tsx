@@ -5,27 +5,31 @@ import {
   CardHeader,
   Divider,
   SelectItem,
-} from "@nextui-org/react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { FormProvider, useForm } from "react-hook-form";
-import Svg from "react-inlinesvg";
+} from '@nextui-org/react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { FormProvider, useForm } from 'react-hook-form';
+import Svg from 'react-inlinesvg';
 
-import InfoIcon from "~/assets/svg/info.svg";
-import DescriptionIcon from "~/assets/svg/description.svg";
-import Box from "~/components/Box";
-import { FormContextInput } from "~/components/NextUI/Form";
-import FormContextCKEditor from "~/components/NextUI/Form/FormContextCKEditor";
-import FormContextSelect from "~/components/NextUI/Form/FormContextSelect";
-import FormContextTextArea from "~/components/NextUI/Form/FormContextTextArea";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { ProductMain, ProductStatusOptions } from "~/models/product";
-import { categoryService } from "~/services/categoryService";
-import ProductAttributeCard from "../ProductAttributeCard";
+import InfoIcon from '~/assets/svg/info.svg';
+import DescriptionIcon from '~/assets/svg/description.svg';
+import Box from '~/components/Box';
+import { FormContextInput } from '~/components/NextUI/Form';
+import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
+import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
+import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { ProductMain, ProductStatusOptions } from '~/models/product';
+import { categoryService } from '~/services/categoryService';
+import ProductAttributeCard from '../ProductAttributeCard';
+import { productService } from '~/services/productService';
 
 const ProductForm = () => {
   const forms = useForm<ProductMain>();
 
-  const { handleSubmit } = forms;
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = forms;
 
   const {
     data: categories,
@@ -36,8 +40,21 @@ const ProductForm = () => {
     async () => await categoryService.getCategoryByCriteria({}),
   );
 
-  const onSubmit = (data: ProductMain) => {
-    console.log("🚀 ~ file: index.tsx:40 ~ onSubmit ~ data:", data);
+  const onSubmit = async (data: ProductMain) => {
+    try {
+      const formData = new FormData();
+
+      const jsonData = JSON.stringify({
+        ...data,
+      });
+
+      formData.append('productInfo', jsonData);
+
+      await productService.createProduct(data);
+    } catch (err) {
+      console.log('🚀 ~ file: index.tsx:47 ~ onSubmit ~ err:', err);
+    } finally {
+    }
   };
 
   return (
@@ -55,7 +72,7 @@ const ProductForm = () => {
               label="Tên sản phẩm"
               isRequired
               rules={{
-                required: "Vui lòng nhập tên sản phẩm!",
+                required: 'Vui lòng nhập tên sản phẩm!',
               }}
             />
             <FormContextSelect
@@ -64,7 +81,7 @@ const ProductForm = () => {
               label="Danh mục sản phẩm"
               isLoading={isLoadingCategory || isFetchingCategory}
               rules={{
-                required: "Vui lòng chọn danh mục sản phẩm!",
+                required: 'Vui lòng chọn danh mục sản phẩm!',
               }}
             >
               {
@@ -88,7 +105,7 @@ const ProductForm = () => {
               type="number"
               endContent="đ"
               rules={{
-                required: "Vui lòng nhập giá bán!",
+                required: 'Vui lòng nhập giá bán!',
               }}
             />
             <FormContextInput
@@ -127,6 +144,7 @@ const ProductForm = () => {
           variant="shadow"
           className="col-span-2"
           size="lg"
+          isLoading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
           Thêm sản phẩm
