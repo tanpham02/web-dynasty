@@ -1,7 +1,7 @@
-import { ListResponse } from '~/types';
-import axiosService from '../axiosService';
-import { STORE_INFORMATION_URL } from '../apiUrl';
-import { StoreIntroductionInformation } from '~/models/storeIntroductionInformation';
+import { ListResponse } from "~/types";
+import axiosService from "../axiosService";
+import { STORE_INFORMATION_URL } from "../apiUrl";
+import { StoreIntroductionInformation } from "~/models/storeIntroductionInformation";
 
 export const storeService = {
   createStoreInformation: async (
@@ -9,7 +9,7 @@ export const storeService = {
   ): Promise<ListResponse<StoreIntroductionInformation>> => {
     return axiosService()({
       baseURL: `${STORE_INFORMATION_URL}`,
-      method: 'POST',
+      method: "POST",
       data: data,
     })
       .then((res) => res.data)
@@ -19,7 +19,7 @@ export const storeService = {
   },
   getStoreInformation: (): Promise<StoreIntroductionInformation> => {
     return axiosService()({
-      method: 'GET',
+      method: "GET",
       baseURL: `${STORE_INFORMATION_URL}`,
     })
       .then((res) => res.data)

@@ -101,6 +101,23 @@ export interface ProductMain {
   types?: ProductType[];
   orderQuantity?: number;
   productVariantId?: string;
+  attribute?: string[];
+  productAttributeList?: ProductChildrenAttribute[];
+}
+
+export interface ProductChildrenAttribute {
+  extendedName?: string; // VD: Nhỏ - Dày => Pizza Hải Sản Pesto Xanh - Nhỏ - Dày
+  extendedValue?: string; // Còn này là cắp value SMALL - PAN, gửi này lên để t query
+  productAttributeItem?: ProductChildrenAttributeItem[]; // này là những attribute item, mỗi item là một product con
+}
+
+export interface ProductChildrenAttributeItem {
+  _id?: string;
+  attributeParentId?: string; // id của attribute cha
+  name?: string; // Nhỏ
+  value?: string; // SMALL
+  priceAdjustment?: string; // +80.000đ
+  priceAdjustmentValue?: number; // 80000   => 2 cai này là biến thế nếu giá thay đổi thì có, còn không thôi
 }
 
 export enum ProductTypes {
@@ -109,10 +126,12 @@ export enum ProductTypes {
   INSTALLMENT = 'INSTALLMENT',
 }
 
-export const ProductStatusOptions: {
+export interface ProductStatusOption {
   label: string;
   value: number | string;
-}[] = [
+}
+
+export const ProductStatusOptions: ProductStatusOption[] = [
   {
     label: 'Mới',
     value: ProductType.NEW,

@@ -1,11 +1,11 @@
 export enum CustomerStatus {
-  ACTIVE = 'ACTIVE',
-  IN_ACTIVE = 'IN_ACTIVE',
+  ACTIVE = "ACTIVE",
+  IN_ACTIVE = "IN_ACTIVE",
 }
 
 export enum CustomerRole {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
+  ADMIN = "ADMIN",
+  USER = "USER",
 }
 
 export interface Customer {
@@ -71,6 +71,6 @@ export interface CustomerHistory {
 }
 
 export enum CalculatorPoint {
-  ADDITION = 'ADDITION',
-  SUBTRACTION = 'SUBTRACTION',
+  ADDITION = "ADDITION",
+  SUBTRACTION = "SUBTRACTION",
 }

@@ -6,7 +6,8 @@
 }
 
 .ant-pagination-options {
-  & .ant-select.ant-pagination-options-size-changer.ant-select-single.ant-select-show-arrow {
+  &
+    .ant-select.ant-pagination-options-size-changer.ant-select-single.ant-select-show-arrow {
     & .ant-select-selector {
       & .ant-select-selection-item {
         padding-right: 30px !important;

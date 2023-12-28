@@ -1,5 +1,4 @@
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill";
 
 interface CKEditorProps {
   value?: string;
@@ -18,10 +17,10 @@ const CKEditor: React.FC<CKEditorProps> = ({ value, onChange }) => {
       modules={{
         toolbar: [
           [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link', 'image', 'video'],
-          ['clean'],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image", "video"],
+          ["clean"],
         ],
       }}
     />

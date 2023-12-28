@@ -1,14 +1,14 @@
-import { Banner } from '~/models/banner';
-import { ListResponse, SearchParams } from '~/types';
-import axiosService from '../axiosService';
-import { BANNER_URL } from '../apiUrl';
-import qs from 'qs';
+import { Banner } from "~/models/banner";
+import { ListResponse, SearchParams } from "~/types";
+import axiosService from "../axiosService";
+import { BANNER_URL } from "../apiUrl";
+import qs from "qs";
 
 export const bannerService = {
   getBanner: (params: SearchParams): Promise<ListResponse<Banner>> => {
     return axiosService()({
       baseURL: `${BANNER_URL}/search`,
-      method: 'GET',
+      method: "GET",
       params,
     })
       .then((res) => res.data)
@@ -19,10 +19,10 @@ export const bannerService = {
   createBanner: (params: Banner, data: FormData): Promise<Banner> => {
     return axiosService()({
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       baseURL: `${BANNER_URL}`,
-      method: 'POST',
+      method: "POST",
       params,
       data,
     })
@@ -34,10 +34,10 @@ export const bannerService = {
   updateBanner: (params: Banner, data: FormData): Promise<Banner> => {
     return axiosService()({
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       baseURL: `${BANNER_URL}/${params.id}`,
-      method: 'PATCH',
+      method: "PATCH",
       params: {
         redirectId: params.redirectId,
         link: params.link,
@@ -53,11 +53,12 @@ export const bannerService = {
   deleteBanner: async (ids: number[]) => {
     return axiosService()({
       url: `${BANNER_URL}`,
-      method: 'DELETE',
+      method: "DELETE",
       params: {
         ids: ids,
       },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: "repeat" }),
     })
       .then((res) => res.data)
       .catch((error) => {

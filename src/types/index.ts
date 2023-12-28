@@ -1,5 +1,5 @@
-import { StatusOrder } from '~/models/order';
-import { VoucherPromotionType, VoucherSaleScope } from '~/models/voucher';
+import { StatusOrder } from "~/models/order";
+import { VoucherPromotionType, VoucherSaleScope } from "~/models/voucher";
 
 export interface SearchParams {
   searchText?: string;
@@ -22,35 +22,15 @@ export interface SearchParams {
   [key: string]: any;
 }
 
-export type Breakpoint = 'xxl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs';
+export type Breakpoint = "xxl" | "xl" | "lg" | "md" | "sm" | "xs";
 
 export interface ListResponse<T> {
   data: T[];
-  pageable: {
-    sort: {
-      unsorted: boolean;
-      sorted: boolean;
-      empty: boolean;
-    };
-    offset: number;
-    pageNumber: number;
-    pageSize: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  last: boolean;
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  number: number;
-  sort: {
-    unsorted: boolean;
-    sorted: boolean;
-    empty: boolean;
-  };
-  first: boolean;
-  numberOfElements?: number;
-  empty: boolean;
+  totalElement: number;
+  pageIndex: number;
+  pageSize: number;
+  totalPage: number;
+  isLastPage: boolean;
 }
 
 export interface ListDataResponse<T> {
@@ -77,9 +57,9 @@ export interface Pagination {
 }
 
 export enum LocationEnum {
-  CITY = 'CITY',
-  DISTRICT = 'DISTRICT',
-  WARD = 'WARD',
+  CITY = "CITY",
+  DISTRICT = "DISTRICT",
+  WARD = "WARD",
 }
 
 export interface SelectOptionType {

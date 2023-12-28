@@ -1,17 +1,23 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Table, TablePaginationConfig, Typography } from 'antd';
-import { ListResponse } from '~/types';
-import React, { useState, useMemo } from 'react';
-import { Banner, BannerType } from '~/models/banner';
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Popconfirm,
+  Table,
+  TablePaginationConfig,
+  Typography,
+} from "antd";
+import { ListResponse } from "~/types";
+import React, { useState, useMemo } from "react";
+import { Banner, BannerType } from "~/models/banner";
 
-import { ModalType } from '../BannerModal';
+import { ModalType } from "../BannerModal";
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof Banner;
   key?: keyof Banner;
   sorter?: boolean;
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
   render?: (value: any, record: Banner, index: number) => React.ReactNode;
 }
 
@@ -50,23 +56,23 @@ const BannerTable = ({
 
   const filterBannerByBannerType = (record: Banner) => {
     let filterBannerByBannerType = {
-      title: '',
+      title: "",
     };
     switch (record.bannerType) {
       case BannerType.CATEGORY:
         filterBannerByBannerType = {
-          title: 'Danh mục',
+          title: "Danh mục",
         };
         break;
 
       case BannerType.PRODUCT:
         filterBannerByBannerType = {
-          title: 'Sản phẩm',
+          title: "Sản phẩm",
         };
         break;
       case BannerType.NEWS:
         filterBannerByBannerType = {
-          title: 'Tin tức',
+          title: "Tin tức",
         };
         break;
     }
@@ -75,36 +81,33 @@ const BannerTable = ({
 
   const COLUMNS: TableColumn[] = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      align: 'center',
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      align: "center",
     },
     {
-      title: 'Banner',
-      dataIndex: 'path',
-      key: 'path',
-      align: 'center',
+      title: "Banner",
+      dataIndex: "path",
+      key: "path",
+      align: "center",
       render: (_, record: Banner) => (
         <>
           <img
             src={record.path}
             alt={filterBannerByBannerType(record).title}
-            className='!h-[200px] !rounded-[10px] mx-auto'
+            className="!h-[200px] !rounded-[10px] mx-auto"
           />
         </>
       ),
     },
     {
-      title: 'Thể loại',
-      dataIndex: 'bannerType',
-      key: 'bannerType',
-      align: 'center',
+      title: "Thể loại",
+      dataIndex: "bannerType",
+      key: "bannerType",
+      align: "center",
       render: (_, record: Banner) => (
-        <Typography.Text
-          type='secondary'
-          className='!text-black'
-        >
+        <Typography.Text type="secondary" className="!text-black">
           {filterBannerByBannerType(record).title}
         </Typography.Text>
       ),
@@ -125,16 +128,16 @@ const BannerTable = ({
     //   ),
     // },
     {
-      title: 'Hành động',
-      dataIndex: 'id',
-      key: 'id',
-      align: 'center',
+      title: "Hành động",
+      dataIndex: "id",
+      key: "id",
+      align: "center",
       render: (__, record: Banner) => (
-        <div className='flex justify-center gap-2 text-center'>
+        <div className="flex justify-center gap-2 text-center">
           <div>
             <Button
-              type='primary'
-              className='!flex items-center justify-center !rounded-lg'
+              type="primary"
+              className="!flex items-center justify-center !rounded-lg"
               onClick={() => handleShowModalBanner(ModalType.UPDATE, record.id)}
             >
               <EditOutlined />
@@ -144,15 +147,15 @@ const BannerTable = ({
           <div>
             <Popconfirm
               onConfirm={() => handleDeleteOneBanner(record.id)}
-              okText='Có'
-              cancelText='Không'
-              title='Xác nhận xóa banner này'
+              okText="Có"
+              cancelText="Không"
+              title="Xác nhận xóa banner này"
             >
               <Button
-                type={'danger' as 'primary'}
+                type={"danger" as "primary"}
                 className={` flex  items-center justify-center !rounded-lg`}
               >
-                <DeleteOutlined className='!flex' />
+                <DeleteOutlined className="!flex" />
               </Button>
             </Popconfirm>
           </div>
@@ -176,11 +179,11 @@ const BannerTable = ({
       {data && (
         <Table
           rowSelection={rowSelection}
-          rowKey='id'
+          rowKey="id"
           dataSource={data.content}
           columns={COLUMNS}
-          className='rounded-sm border border-stroke bg-white pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1'
-          rowClassName='text-black dark:text-white'
+          className="rounded-sm border border-stroke bg-white pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"
+          rowClassName="text-black dark:text-white"
           pagination={{
             current: pagination.pageCurrent,
             total: pagination.totalElements,

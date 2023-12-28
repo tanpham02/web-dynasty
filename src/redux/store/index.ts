@@ -1,5 +1,10 @@
-import { configureStore, combineReducers, Reducer, AnyAction } from '@reduxjs/toolkit';
-import { productReducer, userReducer } from '../slice';
+import {
+  configureStore,
+  combineReducers,
+  Reducer,
+  AnyAction,
+} from "@reduxjs/toolkit";
+import { productReducer, userReducer } from "../slice";
 
 const appReducer = combineReducers({
   userStore: userReducer,
@@ -7,7 +12,7 @@ const appReducer = combineReducers({
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
-  if (action.type === 'RESET_STATE') {
+  if (action.type === "RESET_STATE") {
     state = {} as RootState;
   }
 

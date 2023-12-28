@@ -54,6 +54,10 @@ export const VOUCHER_URL = `${API_URL}/voucher`;
 //VOUCHER
 export const MATERIALS_URL = `${API_URL}/material`;
 
+export const ATTRIBUTES_URL = `${API_URL}/product-attributes`;
+
+export const CATEGORY_URL = `${API_URL}/category`;
+
 //STATISTIC
 export const STATISTIC_URL = `${API_URL}/charts`;
 
@@ -62,7 +66,8 @@ export const MEMBERSHIP_URL = `${API_URL}/membership-level`;
 
 // BANK ACCOUNT
 export const BANK_ACCOUNT = `${API_URL}/bank-account`;
-export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR = 'https://api.vietqr.io/v2/banks';
+export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR =
+  "https://api.vietqr.io/v2/banks";
 
 // NHANH VN CONFIG
 export const NHANH_VN_CONFIG = `${API_URL}/nhanh-vn`;

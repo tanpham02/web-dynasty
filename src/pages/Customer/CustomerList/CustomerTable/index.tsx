@@ -140,7 +140,7 @@ const CustomerTable = ({
       if (customerId) {
         const listCustomerAddress =
           await customerAddressService.getListCustomerAddressByCustomerId(
-            customerId
+            customerId,
           );
         return setDataCustomerAddress({
           visible: true,
@@ -201,7 +201,7 @@ const CustomerTable = ({
   };
 
   const handleShowUpdateCustomerPointModal = (
-    customerID: number | undefined
+    customerID: number | undefined,
   ) => {
     if (customerID) {
       setShowCreateOrUpdateCustomerModal({

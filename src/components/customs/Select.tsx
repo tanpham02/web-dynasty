@@ -1,16 +1,16 @@
-import Select, { Props } from 'react-select';
+import Select, { Props } from "react-select";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const styleSelect = {
   control: (base: any) => ({
     ...base,
-    height: '100%',
-    width: '100%',
-    padding: '0px',
+    height: "100%",
+    width: "100%",
+    padding: "0px",
   }),
   menu: (base: any) => ({
     ...base,
-    fontSize: '14px',
+    fontSize: "14px",
     zIndex: 99,
   }),
   menuPortal: (base: any) => ({
@@ -25,7 +25,7 @@ const SelectCustom = (props: Props) => {
       {...props}
       styles={props.styles || styleSelect}
       className={`my-react-select-container ${props.className}`}
-      classNamePrefix='my-react-select'
+      classNamePrefix="my-react-select"
     />
   );
 };

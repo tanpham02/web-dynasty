@@ -1,11 +1,13 @@
-import axiosService from '../axiosService';
-import { LOCATION_URL } from '../apiUrl';
-import { LocationResponseType, LocationType } from '~/types';
+import axiosService from "../axiosService";
+import { LOCATION_URL } from "../apiUrl";
+import { LocationResponseType, LocationType } from "~/types";
 
 const locationService = {
-  searchLocationByCriteria: async (params: LocationType): Promise<LocationResponseType> => {
+  searchLocationByCriteria: async (
+    params: LocationType,
+  ): Promise<LocationResponseType> => {
     return axiosService()({
-      method: 'GET',
+      method: "GET",
       url: `${LOCATION_URL}`,
       params: params,
     })

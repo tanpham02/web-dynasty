@@ -7,10 +7,10 @@ export interface Statistic {
 }
 
 export enum StatisticGroup {
-  DAY = 'DAY',
-  WEEK = 'WEEK',
-  MONTH = 'MONTH',
-  YEAR = 'YEAR',
+  DAY = "DAY",
+  WEEK = "WEEK",
+  MONTH = "MONTH",
+  YEAR = "YEAR",
 }
 
 export type StatisticOptionType = {

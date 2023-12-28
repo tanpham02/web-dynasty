@@ -1,5 +1,5 @@
-import { Modal } from 'antd';
-import React from 'react';
+import { Modal } from "antd";
+import React from "react";
 
 interface ConfirmDeleteModalProps {
   visible: boolean;
@@ -7,7 +7,11 @@ interface ConfirmDeleteModalProps {
   onCancel: () => void;
 }
 
-const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ visible, onConfirm, onCancel }) => {
+const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
+  visible,
+  onConfirm,
+  onCancel,
+}) => {
   const handleOk = () => {
     onConfirm();
   };
@@ -18,7 +22,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ visible, onConf
 
   return (
     <Modal
-      title='Xác nhận xóa'
+      title="Xác nhận xóa"
       open={visible}
       onOk={handleOk}
       onCancel={handleCancel}

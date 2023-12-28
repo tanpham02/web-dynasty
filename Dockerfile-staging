@@ -21,4 +21,4 @@ COPY . .
 EXPOSE 2203
 
 # Start the server
-CMD ["yarn", "run:staging"]
+CMD ["yarn", "staging"]

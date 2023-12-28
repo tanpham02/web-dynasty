@@ -233,14 +233,20 @@ input[type="number"] {
 .ant-btn.ant-btn-default:hover,
 .ant-pagination-item.ant-pagination-item-active,
 li.ant-pagination-item:hover,
-li.ant-pagination-prev:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover,
-li.ant-pagination-next:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover,
+li.ant-pagination-prev:not(.ant-pagination-disabled)
+  button.ant-pagination-item-link:hover,
+li.ant-pagination-next:not(.ant-pagination-disabled)
+  button.ant-pagination-item-link:hover,
 .ant-pagination-item.ant-pagination-item-active:hover {
   border: 1px solid #006a31;
   color: #006a31;
 }
-li.ant-pagination-prev:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover span,
-li.ant-pagination-next:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover span {
+li.ant-pagination-prev:not(.ant-pagination-disabled)
+  button.ant-pagination-item-link:hover
+  span,
+li.ant-pagination-next:not(.ant-pagination-disabled)
+  button.ant-pagination-item-link:hover
+  span {
   color: #006a31 !important;
 }
 
@@ -250,6 +256,31 @@ li.ant-pagination-item:hover a,
   color: #006a31 !important;
 }
 
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+.ant-radio-button-wrapper-checked:not(
+    .ant-radio-button-wrapper-disabled
+  )::before {
   background-color: #006a31;
+}
+
+.form-context .ql-container.ql-snow,
+.form-context .ql-toolbar.ql-snow {
+  border: none;
+}
+
+.form-context .ql-editor {
+  min-height: 350px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #ddd;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #aaa;
 }

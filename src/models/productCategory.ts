@@ -1,8 +1,8 @@
-import { Product } from './product';
+import { Product } from "./product";
 
 export enum CategoryStatus {
-  ACTIVE = 'ACTIVE',
-  IN_ACTIVE = 'IN_ACTIVE',
+  ACTIVE = "ACTIVE",
+  IN_ACTIVE = "IN_ACTIVE",
 }
 
 export interface ProductCategory {

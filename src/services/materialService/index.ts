@@ -1,12 +1,14 @@
-import { Material } from '~/models/materials';
-import { ListDataResponse, SearchParams } from '~/types';
-import axiosService from '../axiosService';
-import { MATERIALS_URL } from '../apiUrl';
+import { Material } from "~/models/materials";
+import { ListDataResponse, SearchParams } from "~/types";
+import axiosService from "../axiosService";
+import { MATERIALS_URL } from "../apiUrl";
 
 const materialService = {
-  searchPagination: (params: SearchParams): Promise<ListDataResponse<Material>> => {
+  searchPagination: (
+    params: SearchParams,
+  ): Promise<ListDataResponse<Material>> => {
     return axiosService()({
-      method: 'GET',
+      method: "GET",
       baseURL: `${MATERIALS_URL}/search`,
       params,
     })
@@ -17,7 +19,7 @@ const materialService = {
   },
   create: (data: Material): Promise<Material> => {
     return axiosService()({
-      method: 'POST',
+      method: "POST",
       baseURL: `${MATERIALS_URL}/create`,
       data,
     })
@@ -28,7 +30,7 @@ const materialService = {
   },
   update: (id: string, data: Material): Promise<Material> => {
     return axiosService()({
-      method: 'PATCH',
+      method: "PATCH",
       baseURL: `${MATERIALS_URL}/${id}`,
       data,
     })
@@ -39,7 +41,7 @@ const materialService = {
   },
   getById: (id: string) => {
     return axiosService()({
-      method: 'GET',
+      method: "GET",
       baseURL: `${MATERIALS_URL}/${id}`,
     })
       .then((res) => res.data)
@@ -49,7 +51,7 @@ const materialService = {
   },
   delete: (id: string) => {
     return axiosService()({
-      method: 'DELETE',
+      method: "DELETE",
       baseURL: `${MATERIALS_URL}/${id}`,
     })
       .then((res) => res.data)
