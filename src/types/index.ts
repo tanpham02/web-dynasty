@@ -1,5 +1,5 @@
-import { StatusOrder } from "~/models/order";
-import { VoucherPromotionType, VoucherSaleScope } from "~/models/voucher";
+import { StatusOrder } from '~/models/order';
+import { VoucherPromotionType, VoucherSaleScope } from '~/models/voucher';
 
 export interface SearchParams {
   searchText?: string;
@@ -22,7 +22,7 @@ export interface SearchParams {
   [key: string]: any;
 }
 
-export type Breakpoint = "xxl" | "xl" | "lg" | "md" | "sm" | "xs";
+export type Breakpoint = 'xxl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs';
 
 export interface ListResponse<T> {
   data: T[];
@@ -57,9 +57,9 @@ export interface Pagination {
 }
 
 export enum LocationEnum {
-  CITY = "CITY",
-  DISTRICT = "DISTRICT",
-  WARD = "WARD",
+  CITY = 'CITY',
+  DISTRICT = 'DISTRICT',
+  WARD = 'WARD',
 }
 
 export interface SelectOptionType {

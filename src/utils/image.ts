@@ -1,3 +1,3 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import { BASE_URL } from "~/config";
 
 export const getFullImageUrl = (subPath?: string) => `${BASE_URL}${subPath}`;

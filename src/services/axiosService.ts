@@ -4,6 +4,7 @@ import authService from "./authService";
 import { checkTokenExp } from "../utils/token.utils";
 import { asyncLocalStorage } from "../utils/localStorage.utils";
 import { toast } from "react-hot-toast";
+import { BASE_URL } from "~/config";
 
 // closure: to save the refreshTokenRequest
 let refreshTokenRequest: any = null;
@@ -25,7 +26,7 @@ const axiosService = () => {
   };
 
   const axiosOptions = axios.create({
-    baseURL: import.meta.env.API_URL,
+    baseURL: BASE_URL,
     headers: {
       "content-type": "application/json",
       Authorization: "Bearer " + accessToken,
@@ -43,7 +44,7 @@ const axiosService = () => {
           if (response) {
             asyncLocalStorage.setLocalStorage(
               LOCAL_STORAGE.ACCESS_TOKEN,
-              response.accessToken,
+              response.accessToken
             );
             config.headers = {
               "Content-Type": "application/json",
@@ -67,7 +68,7 @@ const axiosService = () => {
 
     (error) => {
       Promise.reject(error);
-    },
+    }
   );
   // Sau khi gui server
   axiosOptions.interceptors.response.use(
@@ -86,8 +87,8 @@ const axiosService = () => {
             headers: errors.response.headers,
           },
           null,
-          2,
-        ),
+          2
+        )
       );
       if (!errors.response) {
         toast.error("Lỗi khi kết nối với server", {});
@@ -98,7 +99,7 @@ const axiosService = () => {
         window.location.href = "/signin";
       }
       throw errors;
-    },
+    }
   );
   return axiosOptions;
 };

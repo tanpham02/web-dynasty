@@ -6,24 +6,22 @@ import {
   Tooltip,
   useDisclosure,
   usePagination,
-} from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import { useState } from "react";
-import SVG from "react-inlinesvg";
+} from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import SVG from 'react-inlinesvg';
 
-import DeleteIcon from "~/assets/svg/delete.svg";
-import EditIcon from "~/assets/svg/edit.svg";
-import ModalConfirmDelete, {
-  ModalConfirmDeleteState,
-} from "~/components/ModalConfirmDelete";
-import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
-import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
-import { QUERY_KEY } from "~/constants/queryKey";
-import useDebounce from "~/hooks/useDebounce";
-import { Category, CategoryStatus } from "~/models/category";
-import { categoryService } from "~/services/categoryService";
-import CategoryModal from "./CategoryModal";
+import DeleteIcon from '~/assets/svg/delete.svg';
+import EditIcon from '~/assets/svg/edit.svg';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
+import { QUERY_KEY } from '~/constants/queryKey';
+import useDebounce from '~/hooks/useDebounce';
+import { Category, CategoryStatus } from '~/models/category';
+import { categoryService } from '~/services/categoryService';
+import CategoryModal from './CategoryModal';
 
 const Categories = () => {
   const {
@@ -39,7 +37,7 @@ const Categories = () => {
   } = useDisclosure();
 
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
-  const [searchCategory, setSearchCategory] = useState<string>("");
+  const [searchCategory, setSearchCategory] = useState<string>('');
   const [categorySelectedKeys, setCategorySelectedKeys] = useState<Selection>();
   const [modal, setModal] = useState<{
     isEdit?: boolean;
@@ -55,56 +53,52 @@ const Categories = () => {
 
   const columns: ColumnType<Category>[] = [
     {
-      key: "_id",
-      align: "center",
-      name: "STT",
+      key: '_id',
+      align: 'center',
+      name: 'STT',
       render: (_category: Category, index?: number) => (index || 0) + 1,
     },
     {
-      key: "name",
-      align: "center",
-      name: "Tên danh mục",
+      key: 'name',
+      align: 'center',
+      name: 'Tên danh mục',
       render: (category: Category) => category?.name,
     },
     {
-      key: "products",
-      align: "center",
-      name: "Số lượng sản phẩm",
+      key: 'products',
+      align: 'center',
+      name: 'Số lượng sản phẩm',
       render: (category: Category) => category?.products?.length || 0,
     },
     {
-      key: "priority",
-      align: "center",
-      name: "Thứ tự hiển thị",
+      key: 'priority',
+      align: 'center',
+      name: 'Thứ tự hiển thị',
       render: (category: Category) => category?.priority || 0,
     },
     {
-      key: "status",
-      align: "center",
-      name: "Trạng thái",
+      key: 'status',
+      align: 'center',
+      name: 'Trạng thái',
       render: (category: Category) => (
         <Chip
-          color={
-            category?.status === CategoryStatus.ACTIVE ? "success" : "danger"
-          }
+          color={category?.status === CategoryStatus.ACTIVE ? 'success' : 'danger'}
           variant="flat"
           classNames={{
-            content: "font-semibold",
+            content: 'font-semibold',
           }}
         >
-          {category?.status === CategoryStatus.ACTIVE
-            ? "Đang kinh doanh"
-            : "Ngưng kinh doanh"}
+          {category?.status === CategoryStatus.ACTIVE ? 'Đang kinh doanh' : 'Ngưng kinh doanh'}
         </Chip>
       ),
     },
     {
-      key: "id",
-      align: "center",
-      name: "Hành động",
+      key: '_id',
+      align: 'center',
+      name: 'Hành động',
       render: (category: Category) => (
-        <div className="relative flex items-center gap-2">
-          <Tooltip content="Chỉnh sửa thuộc tính" showArrow delay={1500}>
+        <div className="relative flex items-center gap-3">
+          <Tooltip content="Chỉnh sửa thuộc tính" showArrow>
             <span
               className="text-lg text-default-400 cursor-pointer active:opacity-50"
               onClick={() => handleOpenModalEdit(category)}
@@ -112,12 +106,7 @@ const Categories = () => {
               <SVG src={EditIcon} />
             </span>
           </Tooltip>
-          <Tooltip
-            color="danger"
-            content="Xóa thuộc tính này"
-            showArrow
-            delay={1500}
-          >
+          <Tooltip color="danger" content="Xóa thuộc tính này" showArrow>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50"
               onClick={() => handleOpenDeleteModal(category)}
@@ -157,10 +146,7 @@ const Categories = () => {
     onOpenModalDelete();
   };
 
-  const handleOpenModalEdit = (category: Category) => {
-    setModal({ isEdit: true, categoryId: category?._id });
-    onOpenModal();
-  };
+  
 
   const handleOpenModalAddAttribute = () => {
     setModal({});
@@ -170,18 +156,13 @@ const Categories = () => {
   const handleDeleteAttribute = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await categoryService.deleteCategoryByIds(
-        modalDelete?.id ? [modalDelete.id] : [],
-      );
-      enqueueSnackbar("Xóa danh mục thành công!");
+      await categoryService.deleteCategoryByIds(modalDelete?.id ? [modalDelete.id] : []);
+      enqueueSnackbar('Xóa danh mục thành công!');
     } catch (err) {
-      enqueueSnackbar("Có lỗi xảy ra khi xóa danh mục!", {
-        variant: "error",
+      enqueueSnackbar('Có lỗi xảy ra khi xóa danh mục!', {
+        variant: 'error',
       });
-      console.log(
-        "🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:",
-        err,
-      );
+      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:', err);
     } finally {
       await refetchCategory();
       setModalDelete({});
@@ -195,7 +176,7 @@ const Categories = () => {
         pageName="Danh mục sản phẩm"
         routes={[
           {
-            label: "Danh mục sản phẩm",
+            label: 'Danh mục sản phẩm',
           },
         ]}
       />
@@ -209,11 +190,7 @@ const Categories = () => {
           value={searchCategory}
           onValueChange={setSearchCategory}
         />
-        <Button
-          color="primary"
-          variant="shadow"
-          onClick={handleOpenModalAddAttribute}
-        >
+        <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>
           Thêm danh mục
         </Button>
       </div>
@@ -225,9 +202,7 @@ const Categories = () => {
         emptyContent="Không có danh mục nào"
         selectedKeys={categorySelectedKeys}
         onSelectionChange={setCategorySelectedKeys}
-        isLoading={
-          isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes
-        }
+        isLoading={isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes}
         totalPage={total}
         onChangePage={setPage}
       />

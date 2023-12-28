@@ -13,7 +13,7 @@ import React, { Key } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ColumnType<T> {
-  key?: keyof T | string;
+  key?: keyof T;
   name?: React.ReactNode;
   align?: 'start' | 'center' | 'end';
   render: (value: T, index?: number) => React.ReactNode;
@@ -101,9 +101,7 @@ export default function CustomTable<T>({
                       </Skeleton>
                     </TableCell>
                   ) : (
-                    <TableCell key={uuidv4()}>
-                      {columns[index].render(row, rowIndex)}
-                    </TableCell>
+                    <TableCell key={uuidv4()}>{columns[index].render(row, rowIndex)}</TableCell>
                   ),
                 )}
               </TableRow>
