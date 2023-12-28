@@ -5,25 +5,25 @@ import {
   Selection,
   Tooltip,
   useDisclosure,
-  usePagination,
-} from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import { useState } from "react";
-import SVG from "react-inlinesvg";
+} from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import SVG from 'react-inlinesvg';
 
-import DeleteIcon from "~/assets/svg/delete.svg";
-import EditIcon from "~/assets/svg/edit.svg";
+import DeleteIcon from '~/assets/svg/delete.svg';
+import EditIcon from '~/assets/svg/edit.svg';
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
-} from "~/components/ModalConfirmDelete";
-import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
-import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
-import { QUERY_KEY } from "~/constants/queryKey";
-import useDebounce from "~/hooks/useDebounce";
-import { Category, CategoryStatus } from "~/models/category";
-import { categoryService } from "~/services/categoryService";
-import CategoryModal from "./CategoryModal";
+} from '~/components/ModalConfirmDelete';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
+import { QUERY_KEY } from '~/constants/queryKey';
+import useDebounce from '~/hooks/useDebounce';
+import { Category, CategoryStatus } from '~/models/category';
+import { categoryService } from '~/services/categoryService';
+import CategoryModal from './CategoryModal';
+import usePagination from '~/hooks/usePagination';
 
 const Categories = () => {
   const {
@@ -38,73 +38,72 @@ const Categories = () => {
     onOpenChange: onOpenChangeModalDelete,
   } = useDisclosure();
 
+  const [searchCategory, setSearchCategory] = useState<string>('');
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
-  const [searchCategory, setSearchCategory] = useState<string>("");
   const [categorySelectedKeys, setCategorySelectedKeys] = useState<Selection>();
   const [modal, setModal] = useState<{
     isEdit?: boolean;
     categoryId?: string;
   }>();
-  const { setPage, total, activePage } = usePagination({
-    page: 0,
-    total: 100,
-  });
+
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const searchCategoryDebounce = useDebounce(searchCategory, 500);
 
   const columns: ColumnType<Category>[] = [
     {
-      key: "_id",
-      align: "center",
-      name: "STT",
+      key: '_id',
+      align: 'center',
+      name: 'STT',
       render: (_category: Category, index?: number) => (index || 0) + 1,
     },
     {
-      key: "name",
-      align: "center",
-      name: "Tên danh mục",
+      key: 'name',
+      align: 'center',
+      name: 'Tên danh mục',
       render: (category: Category) => category?.name,
     },
     {
-      key: "products",
-      align: "center",
-      name: "Số lượng sản phẩm",
+      key: 'products',
+      align: 'center',
+      name: 'Số lượng sản phẩm',
       render: (category: Category) => category?.products?.length || 0,
     },
     {
-      key: "priority",
-      align: "center",
-      name: "Thứ tự hiển thị",
+      key: 'priority',
+      align: 'center',
+      name: 'Thứ tự hiển thị',
       render: (category: Category) => category?.priority || 0,
     },
     {
-      key: "status",
-      align: "center",
-      name: "Trạng thái",
+      key: 'status',
+      align: 'center',
+      name: 'Trạng thái',
       render: (category: Category) => (
         <Chip
           color={
-            category?.status === CategoryStatus.ACTIVE ? "success" : "danger"
+            category?.status === CategoryStatus.ACTIVE ? 'success' : 'danger'
           }
           variant="flat"
           classNames={{
-            content: "font-semibold",
+            content: 'font-semibold',
           }}
         >
           {category?.status === CategoryStatus.ACTIVE
-            ? "Đang kinh doanh"
-            : "Ngưng kinh doanh"}
+            ? 'Đang kinh doanh'
+            : 'Ngưng kinh doanh'}
         </Chip>
       ),
     },
     {
-      key: "id",
-      align: "center",
-      name: "Hành động",
+      key: 'id',
+      align: 'center',
+      name: 'Hành động',
       render: (category: Category) => (
         <div className="relative flex items-center gap-2">
-          <Tooltip content="Chỉnh sửa thuộc tính" showArrow delay={1500}>
+          <Tooltip content="Chỉnh sửa thuộc tính" showArrow>
             <span
               className="text-lg text-default-400 cursor-pointer active:opacity-50"
               onClick={() => handleOpenModalEdit(category)}
@@ -112,12 +111,7 @@ const Categories = () => {
               <SVG src={EditIcon} />
             </span>
           </Tooltip>
-          <Tooltip
-            color="danger"
-            content="Xóa thuộc tính này"
-            showArrow
-            delay={1500}
-          >
+          <Tooltip color="danger" content="Xóa thuộc tính này" showArrow>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50"
               onClick={() => handleOpenDeleteModal(category)}
@@ -131,17 +125,17 @@ const Categories = () => {
   ];
 
   const {
-    data: attributes,
-    isLoading: isLoadingAttributes,
-    isFetching: isFetchingAttributes,
-    isRefetching: isRefetchingAttributes,
+    data: categories,
+    isLoading: isLoadingCategories,
+    isFetching: isFetchingCategories,
+    isRefetching: isRefetchingCategories,
     refetch: refetchCategory,
   } = useQuery(
-    [QUERY_KEY.ATTRIBUTE, searchCategoryDebounce, activePage],
+    [QUERY_KEY.ATTRIBUTE, searchCategoryDebounce, pageIndex, pageSize],
     async () =>
       await categoryService.getCategoryByCriteria({
-        pageSize: 10,
-        pageIndex: 0,
+        pageSize: pageSize,
+        pageIndex: pageIndex,
         name: searchCategoryDebounce,
       }),
     {
@@ -173,13 +167,13 @@ const Categories = () => {
       await categoryService.deleteCategoryByIds(
         modalDelete?.id ? [modalDelete.id] : [],
       );
-      enqueueSnackbar("Xóa danh mục thành công!");
+      enqueueSnackbar('Xóa danh mục thành công!');
     } catch (err) {
-      enqueueSnackbar("Có lỗi xảy ra khi xóa danh mục!", {
-        variant: "error",
+      enqueueSnackbar('Có lỗi xảy ra khi xóa danh mục!', {
+        variant: 'error',
       });
       console.log(
-        "🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:",
+        '🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:',
         err,
       );
     } finally {
@@ -195,7 +189,7 @@ const Categories = () => {
         pageName="Danh mục sản phẩm"
         routes={[
           {
-            label: "Danh mục sản phẩm",
+            label: 'Danh mục sản phẩm',
           },
         ]}
       />
@@ -205,9 +199,12 @@ const Categories = () => {
           size="sm"
           className="max-w-[250px]"
           color="primary"
-          variant="bordered"
+          variant="faded"
           value={searchCategory}
           onValueChange={setSearchCategory}
+          classNames={{
+            inputWrapper: 'bg-white',
+          }}
         />
         <Button
           color="primary"
@@ -219,17 +216,21 @@ const Categories = () => {
       </div>
       <CustomTable
         pagination
+        rowKey="_id"
         columns={columns}
-        data={attributes?.data}
+        data={categories?.data}
         tableName="Danh mục sản phẩm"
         emptyContent="Không có danh mục nào"
         selectedKeys={categorySelectedKeys}
         onSelectionChange={setCategorySelectedKeys}
-        isLoading={
-          isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes
-        }
-        totalPage={total}
+        totalPage={categories?.totalPage}
+        page={pageIndex + 1}
+        rowPerPage={pageSize}
         onChangePage={setPage}
+        onChangeRowPerPage={setRowPerPage}
+        isLoading={
+          isLoadingCategories || isFetchingCategories || isRefetchingCategories
+        }
       />
       <CategoryModal
         isOpen={isOpenModal}

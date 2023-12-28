@@ -1,6 +1,6 @@
-import { ReactNode, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import { ReactNode, useState } from 'react';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 
 interface DefaultLayoutProps {
   children: ReactNode;
@@ -10,7 +10,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   return (
-    <div className="dark:bg-boxdark-2 dark:text-bodydark bg-zinc-50">
+    <div className="dark:bg-boxdark-2 dark:text-bodydark bg-zinc-100">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
         {/* <!-- ===== Sidebar Start ===== --> */}

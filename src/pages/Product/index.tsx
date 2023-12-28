@@ -8,24 +8,24 @@ import {
   Image,
   Input,
   useDisclosure,
-} from "@nextui-org/react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import SVG from "react-inlinesvg";
-import { useNavigate } from "react-router-dom";
+} from '@nextui-org/react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import SVG from 'react-inlinesvg';
+import { useNavigate } from 'react-router-dom';
 
-import VerticalDotIcon from "~/assets/svg/vertical-dot.svg";
-import Box from "~/components/Box";
-import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
-import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { PATH_NAME } from "~/constants/router";
-import useDebounce from "~/hooks/useDebounce";
-import { ProductMain } from "~/models/product";
-import { productService } from "~/services/productService";
-import { SearchParams } from "~/types";
-import { getFullImageUrl } from "~/utils/image";
-import { formatCurrencyVND } from "~/utils/number";
+import VerticalDotIcon from '~/assets/svg/vertical-dot.svg';
+import Box from '~/components/Box';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { PATH_NAME } from '~/constants/router';
+import useDebounce from '~/hooks/useDebounce';
+import { ProductMain } from '~/models/product';
+import { productService } from '~/services/productService';
+import { SearchParams } from '~/types';
+import { getFullImageUrl } from '~/utils/image';
+import { formatCurrencyVND } from '~/utils/number';
 
 const ProductListPage = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const ProductListPage = () => {
     page: 0,
     pageSize: 10,
   });
-  const [valueSearch, setValueSearch] = useState<string>("");
+  const [valueSearch, setValueSearch] = useState<string>('');
 
   const queryText = useDebounce(valueSearch, 700);
   const [valueFilterFromCategory, setValueFilterFromCategory] =
@@ -55,21 +55,21 @@ const ProductListPage = () => {
       return await productService.getProductPagination(params);
     },
     {
-      refetchOnWindowFocus: false
-    }
+      refetchOnWindowFocus: false,
+    },
   );
 
   const columns: ColumnType<ProductMain>[] = [
     {
-      key: "_id",
-      align: "center",
-      name: "STT",
+      key: '_id',
+      align: 'center',
+      name: 'STT',
       render: (_product: ProductMain, index?: number) => (index || 0) + 1,
     },
     {
-      key: "image",
-      align: "center",
-      name: "Hình ảnh",
+      key: 'image',
+      align: 'center',
+      name: 'Hình ảnh',
       render: (product: ProductMain) => (
         <Image
           isBlurred
@@ -83,23 +83,23 @@ const ProductListPage = () => {
       ),
     },
     {
-      key: "name",
-      align: "center",
-      name: "Tên",
+      key: 'name',
+      align: 'center',
+      name: 'Tên',
       render: (product: ProductMain) => (
         <span className="line-clamp-1">{product?.name}</span>
       ),
     },
     {
-      key: "price",
-      align: "center",
-      name: "Gía bán",
+      key: 'price',
+      align: 'center',
+      name: 'Gía bán',
       render: (product: ProductMain) => formatCurrencyVND(product?.price),
     },
     {
-      key: "types",
-      align: "end",
-      name: "Loại sản phẩm",
+      key: 'types',
+      align: 'end',
+      name: 'Loại sản phẩm',
       render: (product: ProductMain) => (
         <Chip color="success" variant="flat">
           Mới
@@ -107,9 +107,9 @@ const ProductListPage = () => {
       ),
     },
     {
-      key: "description",
-      align: "center",
-      name: "Hành động",
+      key: 'description',
+      align: 'center',
+      name: 'Hành động',
       render: () => (
         <Dropdown>
           <DropdownTrigger>
@@ -133,7 +133,7 @@ const ProductListPage = () => {
         pageName="Danh sách sản phẩm"
         routes={[
           {
-            label: "Danh sách sản phẩm",
+            label: 'Danh sách sản phẩm',
           },
         ]}
       />

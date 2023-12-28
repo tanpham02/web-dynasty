@@ -1,5 +1,7 @@
 import {
   Pagination,
+  Select,
+  SelectItem,
   Selection,
   Skeleton,
   Table,
@@ -20,6 +22,7 @@ export interface ColumnType<T> {
 }
 
 export default function CustomTable<T>({
+  rowKey,
   selectedKeys,
   columns = [],
   data = [],
@@ -38,6 +41,7 @@ export default function CustomTable<T>({
   removeWrapper,
   isStriped,
 }: {
+  rowKey?: keyof T;
   columns?: ColumnType<T>[];
   data?: T[];
   page?: number;
@@ -92,7 +96,7 @@ export default function CustomTable<T>({
         >
           {(isLoading ? Array.from({ length: rowPerPage }) : data)?.map(
             (row: any, rowIndex: number) => (
-              <TableRow key={uuidv4()}>
+              <TableRow key={rowKey && !isLoading ? row[rowKey] : uuidv4()}>
                 {columns?.map((_, index) =>
                   isLoading ? (
                     <TableCell key={uuidv4()}>
@@ -113,11 +117,15 @@ export default function CustomTable<T>({
       </Table>
       {pagination && (
         <div className="flex justify-end items-center">
-          <label className="flex items-center text-default-400 text-small mr-2">
+          <label
+            id="row-per-page"
+            className="flex items-center text-default-400 text-small mr-2 bg-white shadow-sm py-0.5 px-2 mb-3 rounded-lg"
+          >
             Số lượng dòng:
             <select
+              id="row-per-page"
               value={rowPerPage}
-              className="outline-none text-default-400 text-small"
+              className="outline-none text-default-700 text-small"
               onChange={(e) => onChangeRowPerPage?.(Number(e.target.value))}
             >
               {rowPerPageOptions.map((quantity) => (
@@ -127,14 +135,37 @@ export default function CustomTable<T>({
               ))}
             </select>
           </label>
+          {/* <Select
+            label="Số lượng dòng"
+            labelPlacement="outside-left"
+            size="sm"
+            variant="faded"
+            classNames={{
+              mainWrapper: 'w-[120px]',
+              trigger: 'bg-white border-none shadow',
+              label: 'text-xs font-medium',
+              listboxWrapper: 'ml-auto w-fit',
+            }}
+          >
+            {rowPerPageOptions.map((quantity) => (
+              <SelectItem key={quantity} value={quantity}>
+                {quantity} / trang
+              </SelectItem>
+            ))}
+          </Select> */}
           <Pagination
             showControls
             showShadow
+            loop
             color="primary"
             variant="faded"
             page={page}
             total={totalPage}
             onChange={onChangePage}
+            classNames={{
+              next: 'bg-white',
+              prev: 'bg-white',
+            }}
           />
         </div>
       )}

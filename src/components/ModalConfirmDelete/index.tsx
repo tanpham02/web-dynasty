@@ -1,9 +1,9 @@
-import SVG from "react-inlinesvg";
-import { Button } from "@nextui-org/react";
-import { Key } from "react";
+import SVG from 'react-inlinesvg';
+import { Button } from '@nextui-org/react';
+import { Key } from 'react';
 
-import CustomModal from "../NextUI/CustomModal";
-import WarningIcon from "~/assets/svg/warning.svg";
+import CustomModal from '../NextUI/CustomModal';
+import WarningIcon from '~/assets/svg/warning.svg';
 
 export interface ModalConfirmDeleteState {
   desc?: string;

@@ -1,11 +1,11 @@
-import React, { Key, useRef } from "react";
-import { SnackbarProvider } from "notistack";
-import SVG from "react-inlinesvg";
+import React, { Key, useRef } from 'react';
+import { SnackbarProvider } from 'notistack';
+import SVG from 'react-inlinesvg';
 
-import SuccessIcon from "~/assets/svg/success.svg";
-import WarningIcon from "~/assets/svg/warning.svg";
-import ErrorIcon from "~/assets/svg/error.svg";
-import InfoIcon from "~/assets/svg/info.svg";
+import SuccessIcon from '~/assets/svg/success.svg';
+import WarningIcon from '~/assets/svg/warning.svg';
+import ErrorIcon from '~/assets/svg/error.svg';
+import InfoIcon from '~/assets/svg/info.svg';
 
 interface NotistackProviderProps {
   children?: React.ReactNode;
@@ -24,9 +24,9 @@ const NotistackProvider = ({ children }: NotistackProviderProps) => {
       dense
       maxSnack={5}
       preventDuplicate
-      autoHideDuration={30000}
+      autoHideDuration={3000}
       variant="success"
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       iconVariant={{
         info: (
           <div className=" w-6 h-6 rounded-full flex items-center justify-center p-1.5 bg-sky-100 mr-2">

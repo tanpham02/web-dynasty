@@ -6,6 +6,8 @@ import CART_ICON from "~/assets/svg/cart-shopping-sidebar.svg";
 import PRODUCTS_ICON from "~/assets/svg/product-sidebar.svg";
 import MATERIAL_ICON from "~/assets/svg/material-sidebar.svg";
 import VOUCHER_ICON from "~/assets/svg/voucher-sidebar.svg";
+import CATEGORY_ICON from "~/assets/svg/grid.svg";
+import ATTIBUTE_ICON from "~/assets/svg/tree-structure.svg";
 
 const routeSideBar = [
   // {
@@ -66,7 +68,7 @@ const routeSideBar = [
         key: ROUTER_KEY.CATEGORY,
         path: PATH_NAME.CATEGORY,
         title: "Danh mục sản phẩm",
-        icon: PRODUCTS_ICON,
+        icon: CATEGORY_ICON,
         child: [],
       },
       {
@@ -80,7 +82,7 @@ const routeSideBar = [
         key: ROUTER_KEY.ATTRIBUTE,
         path: PATH_NAME.ATTRIBUTE,
         title: "Thuộc tính",
-        icon: PRODUCTS_ICON,
+        icon: ATTIBUTE_ICON,
         child: [],
       },
     ],
