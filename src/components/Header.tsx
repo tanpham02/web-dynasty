@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getUserInfo } from "~/redux/slice/userSlice";
 import { User } from "~/models/user";
 import { PATH_NAME } from "~/constants/router";
-import ImgPizza2 from "~/assets/images/logo/logo-pizza-2.png";
+import ImgPizza2 from "~/assets/images/logo/dynasty-high-resolution-logo.png";
 import jwt_decode from "jwt-decode";
 interface DecodedJWT {
   id: string;
@@ -22,7 +22,7 @@ const Header = (props: {
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const userInformation = useSelector<RootState, User>(
-    (state) => state.userStore.user,
+    (state) => state.userStore.user
   );
   const token = localStorage.getItem("@refresh_token");
 
@@ -36,7 +36,7 @@ const Header = (props: {
   }, [token]);
 
   return (
-    <header className="sticky top-0 z-10 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+    <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           {/* <!-- Hamburger Toggle BTN --> */}
@@ -82,12 +82,12 @@ const Header = (props: {
           </button>
           {/* <!-- Hamburger Toggle BTN --> */}
 
-          <Link
+          {/* <Link
             className="block flex-shrink-0 lg:hidden"
             to={PATH_NAME.STAFF_MANAGEMENT}
           >
             <img src={ImgPizza2} alt="Logo" className="w-25 object-cover" />
-          </Link>
+          </Link> */}
         </div>
 
         <div className="hidden sm:block">

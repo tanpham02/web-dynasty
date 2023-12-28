@@ -22,7 +22,7 @@ const SignIn = () => {
     formState: { errors, isSubmitting },
   } = useForm<SignInType>({
     defaultValues: {
-      username: "0984316437",
+      username: "admin",
       password: "123456",
     },
   });
@@ -35,7 +35,7 @@ const SignIn = () => {
         JSON.stringify({
           username: data.username,
           password: data.password,
-        }),
+        })
       );
       const response = await authService.signIn(formData);
 
