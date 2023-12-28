@@ -67,6 +67,9 @@ const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
               classNames={{
                 input: 'text-right',
               }}
+              rules={{
+                required: "Vui lòng nhập giá sản phẩm tăng thêm cho thuộc tính này!"
+              }}
             />
           ))}
         </Box>

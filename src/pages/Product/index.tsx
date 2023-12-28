@@ -54,6 +54,9 @@ const ProductListPage = () => {
       };
       return await productService.getProductPagination(params);
     },
+    {
+      refetchOnWindowFocus: false
+    }
   );
 
   const columns: ColumnType<ProductMain>[] = [

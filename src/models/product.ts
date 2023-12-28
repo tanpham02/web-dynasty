@@ -112,6 +112,7 @@ export interface ProductChildrenAttribute {
 }
 
 export interface ProductChildrenAttributeItem {
+  _id?: string;
   attributeParentId?: string; // id của attribute cha
   name?: string; // Nhỏ
   value?: string; // SMALL

@@ -22,9 +22,16 @@ import { ProductMain, ProductStatusOptions } from '~/models/product';
 import { categoryService } from '~/services/categoryService';
 import ProductAttributeCard from '../ProductAttributeCard';
 import { productService } from '~/services/productService';
+import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
+import { PATH_NAME } from '~/constants/router';
 
 const ProductForm = () => {
   const forms = useForm<ProductMain>();
+
+  const { enqueueSnackbar } = useSnackbar()
+
+  const navigate = useNavigate()
 
   const {
     handleSubmit,
@@ -41,19 +48,37 @@ const ProductForm = () => {
   );
 
   const onSubmit = async (data: ProductMain) => {
+    console.log("🚀 ~ file: index.tsx:51 ~ onSubmit ~ data:", data)
     try {
       const formData = new FormData();
 
       const jsonData = JSON.stringify({
         ...data,
+        categoryId: [...data?.categoryId]?.[0],
+        types: [...data?.types],
+        productAttributeList: data?.productAttributeList?.map(attribute => {
+          return {
+            ...attribute,
+            productAttributeItem: attribute?.productAttributeItem?.map(attributeValue => {
+              return {
+                attributeId: attributeValue?._id,
+                priceAdjustmentValue: attributeValue?.priceAdjustmentValue
+              }
+            })
+          }
+        })
       });
 
       formData.append('productInfo', jsonData);
 
-      await productService.createProduct(data);
+      await productService.createProduct(formData);
+      enqueueSnackbar("Tạo sản phẩm thành công!")
+      navigate(PATH_NAME.PRODUCT_LIST)
     } catch (err) {
+      enqueueSnackbar("Tạo sản phẩm thành công!", {
+        variant: "error"
+      })
       console.log('🚀 ~ file: index.tsx:47 ~ onSubmit ~ err:', err);
-    } finally {
     }
   };
 
@@ -89,7 +114,7 @@ const ProductForm = () => {
                   (page, pageIndex) =>
                     page?.data?.map((category, index) => (
                       <SelectItem
-                        key={`${pageIndex} - ${index}`}
+                        key={category?._id}
                         value={category?._id}
                       >
                         {category?.name}
