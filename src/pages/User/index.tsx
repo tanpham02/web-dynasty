@@ -302,14 +302,20 @@ const UserListPage = () => {
               variant="faded"
               className="w-full max-w-[250px] text-sm"
               label="Tìm kiếm..."
+              classNames={{
+                inputWrapper: 'bg-white',
+              }}
             />
             <Select
               size="sm"
               variant="faded"
-              className="w-full max-w-[250px]"
+              className="w-full max-w-[250px] "
               label="Chọn trạng thái"
               items={optionStatus}
               value={UserRole.ALL.toString()}
+              classNames={{
+                trigger: 'bg-white',
+              }}
             >
               {(status) => (
                 <SelectItem key={status.value.toString()} value={status.value?.toString()}>
