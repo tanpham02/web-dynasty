@@ -7,7 +7,6 @@ import {
   RegisterOptions,
   useFormContext,
 } from 'react-hook-form';
-import { Users } from '~/models/user';
 
 interface FormContextInputProps<T extends { [key: string]: keyof T }> extends InputProps {
   control: Control<FieldValues, T>;
