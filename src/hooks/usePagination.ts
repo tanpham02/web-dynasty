@@ -8,21 +8,27 @@ interface Pagination {
 interface PaginationProps {
   pageSize: number;
   pageIndex: number;
-  setPagination(pageSize: number, pageIndex: number): void;
+  setPage(page: number): void
+  setRowPerPage(pageSize: number): void
 }
 
 const usePagination = (): PaginationProps => {
   const [paginationValue, setPaginationValue] = useState<Pagination>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 10
   });
 
-  const setPagination = (pageSize: number, pageIndex: number) => {
-    setPaginationValue((prev) => ({ ...prev, pageSize, pageIndex }));
+  const setPage = (pageIndex: number) => {
+    setPaginationValue((prev) => ({ ...prev, pageIndex: pageIndex - 1 }));
+  };
+
+  const setRowPerPage = (pageSize: number) => {
+    setPaginationValue((prev) => ({ ...prev, pageSize }));
   };
 
   return {
-    setPagination,
+    setPage,
+    setRowPerPage,
     pageIndex: paginationValue.pageIndex,
     pageSize: paginationValue.pageSize,
   };

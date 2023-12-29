@@ -6,9 +6,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalProps,
-} from "@nextui-org/react";
-import React from "react";
-import { createPortal } from "react-dom";
+} from '@nextui-org/react';
+import React from 'react';
+import { createPortal } from 'react-dom';
 
 interface CustomModalProps extends ModalProps {
   isOpen?: boolean;
@@ -42,7 +42,7 @@ const CustomModal = (props: CustomModalProps) => {
         onOpenChange={onOpenChange}
         classNames={{
           backdrop:
-            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+            'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
         }}
         motionProps={{
           variants: {
@@ -51,7 +51,7 @@ const CustomModal = (props: CustomModalProps) => {
               opacity: 1,
               transition: {
                 duration: 0.2,
-                ease: "easeOut",
+                ease: 'easeOut',
               },
             },
             exit: {
@@ -59,7 +59,7 @@ const CustomModal = (props: CustomModalProps) => {
               opacity: 0,
               transition: {
                 duration: 0.2,
-                ease: "easeIn",
+                ease: 'easeIn',
               },
             },
           },
@@ -75,7 +75,7 @@ const CustomModal = (props: CustomModalProps) => {
               {controls && (
                 <ModalFooter>
                   <Button color="default" variant="shadow" onPress={onClose}>
-                    {cancelButtonText || "Đóng"}
+                    {cancelButtonText || 'Đóng'}
                   </Button>
                   <Button
                     color="primary"
@@ -83,7 +83,7 @@ const CustomModal = (props: CustomModalProps) => {
                     onPress={onOk}
                     isLoading={isLoading}
                   >
-                    {okButtonText || "OK"}
+                    {okButtonText || 'OK'}
                   </Button>
                 </ModalFooter>
               )}

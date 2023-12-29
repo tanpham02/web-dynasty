@@ -1,12 +1,4 @@
-import {
-  Button,
-  Chip,
-  Input,
-  Selection,
-  Tooltip,
-  useDisclosure,
-  usePagination,
-} from '@nextui-org/react';
+import { Button, Chip, Input, Selection, Tooltip, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -22,6 +14,7 @@ import useDebounce from '~/hooks/useDebounce';
 import { Category, CategoryStatus } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
 import CategoryModal from './CategoryModal';
+import usePagination from '~/hooks/usePagination';
 
 const Categories = () => {
   const {
@@ -43,10 +36,9 @@ const Categories = () => {
     isEdit?: boolean;
     categoryId?: string;
   }>();
-  const { setPage, total, activePage } = usePagination({
-    page: 0,
-    total: 100,
-  });
+
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const searchCategoryDebounce = useDebounce(searchCategory, 500);
@@ -120,23 +112,28 @@ const Categories = () => {
   ];
 
   const {
-    data: attributes,
-    isLoading: isLoadingAttributes,
-    isFetching: isFetchingAttributes,
-    isRefetching: isRefetchingAttributes,
+    data: categories,
+    isLoading: isLoadingCategories,
+    isFetching: isFetchingCategories,
+    isRefetching: isRefetchingCategories,
     refetch: refetchCategory,
   } = useQuery(
-    [QUERY_KEY.ATTRIBUTE, searchCategoryDebounce, activePage],
+    [QUERY_KEY.ATTRIBUTE, searchCategoryDebounce, pageIndex, pageSize],
     async () =>
       await categoryService.getCategoryByCriteria({
-        pageSize: 10,
-        pageIndex: 0,
+        pageSize: pageSize,
+        pageIndex: pageIndex,
         name: searchCategoryDebounce,
       }),
     {
       refetchOnWindowFocus: false,
     },
   );
+
+  const handleOpenModalEdit = (category: Category) => {
+    setModal({ isEdit: true, categoryId: category?._id });
+    onOpenModal();
+  };
 
   const handleOpenDeleteModal = (category: Category) => {
     setModalDelete({
@@ -145,8 +142,6 @@ const Categories = () => {
     });
     onOpenModalDelete();
   };
-
-  
 
   const handleOpenModalAddAttribute = () => {
     setModal({});
@@ -186,9 +181,12 @@ const Categories = () => {
           size="sm"
           className="max-w-[250px]"
           color="primary"
-          variant="bordered"
+          variant="faded"
           value={searchCategory}
           onValueChange={setSearchCategory}
+          classNames={{
+            inputWrapper: 'bg-white',
+          }}
         />
         <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>
           Thêm danh mục
@@ -196,15 +194,19 @@ const Categories = () => {
       </div>
       <CustomTable
         pagination
+        rowKey="_id"
         columns={columns}
-        data={attributes?.data}
+        data={categories?.data}
         tableName="Danh mục sản phẩm"
         emptyContent="Không có danh mục nào"
         selectedKeys={categorySelectedKeys}
         onSelectionChange={setCategorySelectedKeys}
-        isLoading={isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes}
-        totalPage={total}
+        totalPage={categories?.totalPage}
+        page={pageIndex + 1}
+        rowPerPage={pageSize}
         onChangePage={setPage}
+        onChangeRowPerPage={setRowPerPage}
+        isLoading={isLoadingCategories || isFetchingCategories || isRefetchingCategories}
       />
       <CategoryModal
         isOpen={isOpenModal}
