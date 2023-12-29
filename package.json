@@ -60,6 +60,7 @@
     "sass": "^1.69.3",
     "tailwindcss": "^3.3.2",
     "uuidv4": "^6.2.13",
+    "vietnam-provinces": "^0.0.4",
     "yarn": "^1.22.19"
   },
   "devDependencies": {

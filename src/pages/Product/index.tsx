@@ -14,6 +14,8 @@ import { useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { useNavigate } from 'react-router-dom';
 
+import { getProvincesWithDetail } from 'vietnam-provinces';
+
 import VerticalDotIcon from '~/assets/svg/vertical-dot.svg';
 import Box from '~/components/Box';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
@@ -38,6 +40,7 @@ const ProductListPage = () => {
 
   const queryText = useDebounce(valueSearch, 700);
   const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
+  console.log(getProvincesWithDetail());
 
   const {
     data: productList,
