@@ -35,7 +35,7 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
             label: 'font-semibold',
           }}
           color={!!error ? 'danger' : 'primary'}
-          size="lg"
+          size="md"
           variant="underlined"
           {...props}
         />
