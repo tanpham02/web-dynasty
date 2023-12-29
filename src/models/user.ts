@@ -10,10 +10,10 @@ export enum UserRole {
   ALL = 'ALL',
 }
 
-export interface User {
-  [x: string]: any;
+export interface Users {
   _id?: string;
   birthday?: string | Date;
+  username?: string;
   fullName?: string;
   phoneNumber?: string;
   email?: string;
@@ -28,4 +28,5 @@ export interface User {
   role?: UserRole;
   status?: UserStatus;
   image?: string;
+  confirmPw?: string;
 }

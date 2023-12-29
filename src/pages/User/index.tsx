@@ -31,6 +31,7 @@ import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
+import CategoryModal from '../Categories/CategoryModal';
 
 export interface ModalKey {
   visible?: boolean;
@@ -158,18 +159,18 @@ const UserListPage = () => {
       name: 'Hành động',
       render: (_user: User) => (
         <div className="relative flex items-center gap-3">
-          <Tooltip content="Chỉnh sửa nhân viên" showArrow>
+          <Tooltip content="Chỉnh sửa nhân viên" showArrow delay={500}>
             <span
               className="text-lg text-default-400 cursor-pointer active:opacity-50"
-              onClick={() => handleOpenModalEdit(category)}
+              onClick={() => handleOpenModalEdit(_user)}
             >
               <SVG src={EditIcon} />
             </span>
           </Tooltip>
-          <Tooltip color="danger" content="Xóa nhân viên này" showArrow>
+          <Tooltip color="danger" content="Xóa nhân viên này" showArrow delay={500}>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50"
-              onClick={() => handleOpenDeleteModal(category)}
+              //   onClick={() => handleOpenDeleteModal(_user)}
             >
               <SVG src={DeleteIcon} />
             </span>
@@ -181,7 +182,7 @@ const UserListPage = () => {
 
   const {
     data: users,
-    refetch,
+    refetch: refetchUser,
     isLoading: isLoadingUser,
   } = useQuery(
     [QUERY_KEY.USERS, search, role, pagination, activePage],
@@ -221,7 +222,7 @@ const UserListPage = () => {
 
   useEffect(() => {
     if (users) {
-      if (users?.pages?.[0]?.data?.length <= 0) {
+      if (users?.data?.length <= 0) {
         setPagination((prev) => ({
           ...prev,
           pageIndex: prev?.pageIndex && prev?.pageIndex - 1,
@@ -232,9 +233,7 @@ const UserListPage = () => {
 
   const handleShowModalUser = (type?: ModalType, userId?: string) => {
     if (userId && type !== ModalType.CREATE) {
-      const userAfterFindById = users?.pages[users?.pages.length - 1]?.data?.find(
-        (user) => user._id === userId,
-      );
+      const userAfterFindById = users?.data?.find((user) => user._id === userId);
       setUserModal({
         type,
         user: userAfterFindById,
@@ -268,7 +267,7 @@ const UserListPage = () => {
           setShowDeleteUserModal(false);
         }
       }
-      refetch();
+      refetchUser();
     } catch (err) {
       console.log(err);
       toast.success('Xóa thất bại', {
@@ -279,8 +278,8 @@ const UserListPage = () => {
     }
   };
 
-  const handleOpenModalEdit = (category: Category) => {
-    setModal({ isEdit: true, categoryId: category?._id });
+  const handleOpenModalEdit = (user: User) => {
+    setModal({ isEdit: true, userId: user?._id });
     onOpenModal();
   };
 
@@ -324,7 +323,7 @@ const UserListPage = () => {
               )}
             </Select>
           </div>
-          <Button color="primary" variant="shadow">
+          <Button color="primary" variant="shadow" onClick={onOpenModal}>
             Thêm nhân viên
           </Button>
         </div>
@@ -364,6 +363,13 @@ const UserListPage = () => {
         tableName="Danh sách nhân viên"
         emptyContent="Không có nhân viên nào"
       />
+
+      <UserModal
+        isOpen={isOpenModal}
+        onOpenChange={onOpenChangeModal}
+        onRefetch={refetchUser}
+        {...modal}
+      />
       {/* <UserTable
         data={users?.pages[users?.pages?.length - 1]}
         refreshData={refetch}
@@ -374,13 +380,13 @@ const UserListPage = () => {
       /> */}
 
       {/* {userModal.visible && ( */}
-      <UserModal
+      {/* <UserModal
         refetchData={refetch}
         onClose={() => setUserModal({ visible: false })}
         visible={userModal.visible}
         modalType={userModal.type}
         user={userModal.user}
-      />
+      /> */}
       {/* )} */}
     </div>
   );

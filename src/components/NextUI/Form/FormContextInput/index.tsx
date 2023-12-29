@@ -1,20 +1,26 @@
 import { Input, InputProps } from '@nextui-org/react';
-import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
+import {
+  Controller,
+  FieldPath,
+  FieldValues,
+  RegisterOptions,
+  useFormContext,
+} from 'react-hook-form';
 
-interface FormContextInputProps extends InputProps {
-  name: string;
+interface FormContextInputProps<T extends FieldValues> extends InputProps {
+  name: FieldPath<T>;
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
     'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
   >;
 }
-const FormContextInput = (props: FormContextInputProps) => {
-  const { control } = useFormContext();
+const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>) => {
+  const { control } = useFormContext<FieldValues>();
 
   return (
     <Controller
-      name={props.name}
       control={control}
+      name={props.name}
       rules={props?.rules}
       render={({ field: { value, onChange, ref }, fieldState: { error } }) => (
         <Input
@@ -27,7 +33,7 @@ const FormContextInput = (props: FormContextInputProps) => {
             label: 'font-semibold',
           }}
           color={!!error ? 'danger' : 'primary'}
-          size="md"
+          size="lg"
           variant="underlined"
           {...props}
         />

@@ -58,7 +58,6 @@ const ProductAttributeCard = () => {
               name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
               endContent={<span className="font-bold">đ</span>}
               type="number"
-              
               classNames={{
                 input: 'text-right',
               }}
