@@ -24,7 +24,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
     warning: 'text-warning hover:bg-warning/20',
     success: 'text-success hover:bg-success/20',
     info: 'text-info hover:bg-info/20',
-    default: 'text-default-700 hover:bg-default/20',
+    default: 'text-default-500 hover:bg-default/20',
   };
 
   return (
