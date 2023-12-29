@@ -1,5 +1,5 @@
-import { createPortal } from "react-dom";
-import "./index.scss";
+import { createPortal } from 'react-dom';
+import './index.scss';
 
 const Loading = () => {
   return (

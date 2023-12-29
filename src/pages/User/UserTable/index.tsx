@@ -4,7 +4,7 @@ import {
   EditOutlined,
   ExclamationOutlined,
   InfoCircleOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   Avatar,
   Button,
@@ -14,22 +14,22 @@ import {
   Tooltip,
   Checkbox,
   Empty,
-} from "antd";
-import { User, UserRole, UserStatus } from "~/models/user";
-import { Breakpoint, ListDataResponse, ListResponse } from "~/types";
-import React, { useState, useMemo } from "react";
-import { ModalType } from "../UserModal";
-import { DATE_FORMAT_DDMMYYYY, formatDate } from "~/utils/date.utils";
-import { useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
-import { getFullImageUrl } from "~/utils/image";
+} from 'antd';
+import { User, UserRole, UserStatus } from '~/models/user';
+import { Breakpoint, ListDataResponse, ListResponse } from '~/types';
+import React, { useState, useMemo } from 'react';
+import { ModalType } from '../UserModal';
+import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '~/redux/store';
+import { getFullImageUrl } from '~/utils/image';
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof User;
   key?: keyof User;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: User, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -55,11 +55,8 @@ const UserTable = ({
   handleChangeListIdsUserForDelete,
   handleShowModalUser,
 }: UserTableProps) => {
-  const [productCategorySelectedKeys, setProductCategorySelectedKeys] =
-    useState<React.Key[]>([]);
-  const currentUserLogin = useSelector<RootState, User>(
-    (state) => state.userStore.user,
-  );
+  const [productCategorySelectedKeys, setProductCategorySelectedKeys] = useState<React.Key[]>([]);
+  const currentUserLogin = useSelector<RootState, User>((state) => state.userStore.user);
 
   const pagination = useMemo(() => {
     const current = data?.pageIndex;
@@ -75,10 +72,10 @@ const UserTable = ({
 
   const COLUMNS: TableColumn[] = [
     {
-      title: "Hình ảnh",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Hình ảnh',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__id, record) =>
         record?.image ? (
           <Avatar
@@ -96,42 +93,38 @@ const UserTable = ({
         ),
     },
     {
-      title: "Họ tên",
-      dataIndex: "fullName",
-      key: "fullName",
-      align: "center",
+      title: 'Họ tên',
+      dataIndex: 'fullName',
+      key: 'fullName',
+      align: 'center',
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-      align: "center",
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      align: 'center',
     },
     {
-      title: "Ngày sinh",
-      dataIndex: "birthday",
-      key: "birthday",
-      align: "center",
+      title: 'Ngày sinh',
+      dataIndex: 'birthday',
+      key: 'birthday',
+      align: 'center',
       render: (_, record) => (
-        <span>
-          {record.birthday
-            ? formatDate(record.birthday, DATE_FORMAT_DDMMYYYY)
-            : ""}
-        </span>
+        <span>{record.birthday ? formatDate(record.birthday, DATE_FORMAT_DDMMYYYY) : ''}</span>
       ),
-      responsive: ["lg"],
+      responsive: ['lg'],
     },
     {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
-      align: "left",
-      responsive: ["xxl"],
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      key: 'address',
+      align: 'left',
+      responsive: ['xxl'],
     },
     {
-      title: "Trạng thái người dùng",
-      dataIndex: "status",
-      key: "status",
+      title: 'Trạng thái người dùng',
+      dataIndex: 'status',
+      key: 'status',
       render: (__id, record) => {
         switch (record.status) {
           case UserStatus.ACTIVE:
@@ -156,23 +149,23 @@ const UserTable = ({
           // code block
         }
       },
-      responsive: ["xxl"],
+      responsive: ['xxl'],
     },
     {
-      title: "Vai trò",
-      dataIndex: "role",
-      key: "role",
-      align: "center",
+      title: 'Vai trò',
+      dataIndex: 'role',
+      key: 'role',
+      align: 'center',
       render: (_, record) => (
-        <span>{record.role === UserRole.ADMIN ? "Quản trị" : "Nhân viên"}</span>
+        <span>{record.role === UserRole.ADMIN ? 'Quản trị' : 'Nhân viên'}</span>
       ),
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      title: "Hành động",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Hành động',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__text, record) => (
         <div className="flex justify-center gap-2 text-center">
           <div>
@@ -180,7 +173,7 @@ const UserTable = ({
               title={
                 record._id !== currentUserLogin._id &&
                 handleCheckRolePermission(record, currentUserLogin) &&
-                "Bạn bị giới hạn chỉnh sửa nhân viên này"
+                'Bạn bị giới hạn chỉnh sửa nhân viên này'
               }
             >
               <Button
@@ -188,26 +181,20 @@ const UserTable = ({
                 className={`!flex items-center justify-center !rounded-lg  text-center border border-solid ${
                   record._id !== currentUserLogin._id &&
                   handleCheckRolePermission(record, currentUserLogin)
-                    ? "border-transparent"
-                    : "!border-warning !bg-warning"
+                    ? 'border-transparent'
+                    : '!border-warning !bg-warning'
                 } `}
                 disabled={
                   record._id !== currentUserLogin._id &&
                   handleCheckRolePermission(record, currentUserLogin)
                 }
-                onClick={() =>
-                  handleShowModalUser(ModalType.UPDATE, record._id)
-                }
+                onClick={() => handleShowModalUser(ModalType.UPDATE, record._id)}
               >
                 <EditOutlined />
               </Button>
             </Tooltip>
           </div>
-          <div
-            onClick={() =>
-              handleShowModalUser(ModalType.INFORMATION, record._id)
-            }
-          >
+          <div onClick={() => handleShowModalUser(ModalType.INFORMATION, record._id)}>
             <Button
               type="primary"
               className="!flex items-center justify-center !rounded-lg !bg-primary border border-solid !border-primary"
@@ -220,12 +207,12 @@ const UserTable = ({
               <Tooltip
                 title={
                   handleCheckRolePermission(record, currentUserLogin) &&
-                  "Bạn bị giới hạn xóa nhân viên này"
+                  'Bạn bị giới hạn xóa nhân viên này'
                 }
               >
                 <Button
                   disabled={handleCheckRolePermission(record, currentUserLogin)}
-                  type={"danger" as "primary"}
+                  type={'danger' as 'primary'}
                   className={` flex  items-center justify-center !rounded-lg`}
                 >
                   <DeleteOutlined className="!flex" />
@@ -247,7 +234,7 @@ const UserTable = ({
                     record._id !== currentUserLogin._id &&
                     handleCheckRolePermission(record, currentUserLogin)
                   }
-                  type={"danger" as "primary"}
+                  type={'danger' as 'primary'}
                   className={` flex  items-center justify-center !rounded-lg`}
                 >
                   <DeleteOutlined className="!flex" />
@@ -286,8 +273,7 @@ const UserTable = ({
     onChange: onUserListCheckedChange,
     getCheckboxProps: (record: User) => ({
       disabled:
-        record._id !== currentUserLogin._id &&
-        handleCheckRolePermission(record, currentUserLogin)
+        record._id !== currentUserLogin._id && handleCheckRolePermission(record, currentUserLogin)
           ? true
           : false,
     }),
@@ -319,12 +305,7 @@ const UserTable = ({
         }}
         onChange={onGetPagination}
         locale={{
-          emptyText: (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="Không có dữ liệu"
-            />
-          ),
+          emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />,
         }}
       />
     </>

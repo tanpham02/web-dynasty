@@ -1,7 +1,5 @@
 import {
   Pagination,
-  Select,
-  SelectItem,
   Selection,
   Skeleton,
   Table,
@@ -11,11 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react';
-import React, { Key } from 'react';
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ColumnType<T> {
-  key?: keyof T;
   name?: React.ReactNode;
   align?: 'start' | 'center' | 'end';
   render: (value: T, index?: number) => React.ReactNode;

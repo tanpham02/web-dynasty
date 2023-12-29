@@ -1,16 +1,16 @@
-import { data } from "autoprefixer";
-import { Key } from "react";
-import qs from "qs";
+import { data } from 'autoprefixer';
+import { Key } from 'react';
+import qs from 'qs';
 
-import { Attribute } from "~/models/attribute";
-import { ATTRIBUTES_URL } from "../apiUrl";
-import axiosService from "../axiosService";
+import { Attribute } from '~/models/attribute';
+import { ATTRIBUTES_URL } from '../apiUrl';
+import axiosService from '../axiosService';
 
 export const attributeService = {
   getAllAttributes: async (): Promise<Attribute[]> => {
     return axiosService()({
       url: `${ATTRIBUTES_URL}/search-all`,
-      method: "GET",
+      method: 'GET',
     })
       .then((res) => res.data)
       .catch((err) => {
@@ -20,9 +20,9 @@ export const attributeService = {
   createAttribute: async (data: FormData): Promise<Attribute> => {
     return axiosService()({
       url: ATTRIBUTES_URL,
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       data,
     })
@@ -34,12 +34,11 @@ export const attributeService = {
   deleteAttribute: async (ids?: Key[]): Promise<Attribute> => {
     return axiosService()({
       url: ATTRIBUTES_URL,
-      method: "DELETE",
+      method: 'DELETE',
       params: {
         ids,
       },
-      paramsSerializer: (params) =>
-        qs.stringify(params, { arrayFormat: "repeat" }),
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((err) => {
@@ -49,22 +48,19 @@ export const attributeService = {
   getAttributeById: async (id?: Key): Promise<Attribute> => {
     return axiosService()({
       url: `${ATTRIBUTES_URL}/${id}`,
-      method: "GET",
+      method: 'GET',
     })
       .then((res) => res.data)
       .catch((err) => {
         throw err;
       });
   },
-  updateAttributeById: async (
-    id?: Key,
-    data?: FormData,
-  ): Promise<Attribute> => {
+  updateAttributeById: async (id?: Key, data?: FormData): Promise<Attribute> => {
     return axiosService()({
       url: `${ATTRIBUTES_URL}/${id}`,
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       data,
     })

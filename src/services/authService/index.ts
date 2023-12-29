@@ -1,13 +1,13 @@
-import axios from "axios";
-import { REFRESH_TOKEN_URL, SIGNIN_URL, SIGN_OUT_URL } from "../apiUrl";
-import axiosService from "../axiosService";
+import axios from 'axios';
+import { REFRESH_TOKEN_URL, SIGNIN_URL, SIGN_OUT_URL } from '../apiUrl';
+import axiosService from '../axiosService';
 const authService = {
   signIn: async (payload: FormData) => {
     return axios({
       url: SIGNIN_URL,
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       data: payload,
     })
@@ -18,16 +18,16 @@ const authService = {
   },
   signOut: async () => {
     return axiosService()({
-      method: "POST",
+      method: 'POST',
       url: SIGN_OUT_URL,
     });
   },
   refreshToken: async (refresh_token: string) => {
     return axiosService()({
-      method: "POST",
+      method: 'POST',
       url: REFRESH_TOKEN_URL,
       headers: {
-        "Content-Type": "text/plain",
+        'Content-Type': 'text/plain',
       },
       data: refresh_token,
     })

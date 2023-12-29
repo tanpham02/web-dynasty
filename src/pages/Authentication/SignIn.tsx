@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
-import LogoDark from "~/assets/images/logo/logo-pizza.png";
-import Logo from "~/assets/images/logo/logo-pizza.png";
-import { LOCAL_STORAGE } from "~/constants/local_storage";
-import authService from "~/services/authService";
-import ICO_EYE_ACTIVE from "~/assets/svg/eye-active.svg";
-import ICO_EYE_INACTIVE from "~/assets/svg/eye-inactive.svg";
-import { SignInType } from "~/models/authen";
-import { PATH_NAME } from "~/constants/router";
-import { Button } from "@nextui-org/react";
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import LogoDark from '~/assets/images/logo/logo-pizza.png';
+import Logo from '~/assets/images/logo/logo-pizza.png';
+import { LOCAL_STORAGE } from '~/constants/local_storage';
+import authService from '~/services/authService';
+import ICO_EYE_ACTIVE from '~/assets/svg/eye-active.svg';
+import ICO_EYE_INACTIVE from '~/assets/svg/eye-inactive.svg';
+import { SignInType } from '~/models/authen';
+import { PATH_NAME } from '~/constants/router';
+import { Button } from '@nextui-org/react';
 
 const SignIn = () => {
   const navigation = useNavigate();
@@ -22,8 +22,8 @@ const SignIn = () => {
     formState: { errors, isSubmitting },
   } = useForm<SignInType>({
     defaultValues: {
-      username: "admin",
-      password: "123456",
+      username: 'admin',
+      password: '123456',
     },
   });
   const onSubmit: SubmitHandler<SignInType> = async (data: SignInType) => {
@@ -31,26 +31,26 @@ const SignIn = () => {
       const formData = new FormData();
 
       formData.append(
-        "userLoginInfo",
+        'userLoginInfo',
         JSON.stringify({
           username: data.username,
           password: data.password,
-        })
+        }),
       );
       const response = await authService.signIn(formData);
 
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, response.accessToken);
       localStorage.setItem(LOCAL_STORAGE.REFRESH_TOKEN, response.refreshToken);
       navigation(PATH_NAME.STAFF_MANAGEMENT);
-      toast.success("Đăng nhập thành công", {
-        position: "bottom-right",
+      toast.success('Đăng nhập thành công', {
+        position: 'bottom-right',
         duration: 4000,
-        icon: "👏",
+        icon: '👏',
       });
       reset();
     } catch (error) {
-      toast.error("Đăng nhập thất bại !", {
-        position: "bottom-right",
+      toast.error('Đăng nhập thất bại !', {
+        position: 'bottom-right',
         duration: 4000,
       });
       console.log(error);
@@ -58,7 +58,7 @@ const SignIn = () => {
   };
 
   const setStyleValidate = (name: string) =>
-    errors[name as keyof typeof errors] ? { border: "2px solid red" } : {};
+    errors[name as keyof typeof errors] ? { border: '2px solid red' } : {};
   return (
     <>
       <div className="rounded-sm border h-[100vh] border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -222,9 +222,7 @@ const SignIn = () => {
                   alt='Logo'
                 />
               </Link> */}
-              <i className="mb-1.5 text-[16px] block font-semibold">
-                Đăng nhập vào{" "}
-              </i>
+              <i className="mb-1.5 text-[16px] block font-semibold">Đăng nhập vào </i>
               <h2 className="mb-9 text-2xl uppercase text-center font-bold text-black dark:text-white sm:text-title-xl2 italic">
                 The Pizza Company Dashboard
               </h2>
@@ -238,14 +236,14 @@ const SignIn = () => {
                     <input
                       type="text"
                       id="username"
-                      {...register("username", {
+                      {...register('username', {
                         required: true,
                       })}
-                      style={setStyleValidate("username")}
+                      style={setStyleValidate('username')}
                       placeholder="Nhập tên đăng nhập của bạn"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
-                    {errors.username?.type === "required" && (
+                    {errors.username?.type === 'required' && (
                       <span className="relative mt-2 block text-sm font-semibold text-danger">
                         Vui lòng nhập tên đăng nhập của bạn !
                       </span>
@@ -260,11 +258,11 @@ const SignIn = () => {
                   <div className="relative flex">
                     <input
                       id="password"
-                      type={isRevealPwd ? "text" : "password"}
-                      {...register("password", {
+                      type={isRevealPwd ? 'text' : 'password'}
+                      {...register('password', {
                         required: true,
                       })}
-                      style={setStyleValidate("password")}
+                      style={setStyleValidate('password')}
                       placeholder="Nhập mật khẩu của bạn"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
@@ -272,13 +270,13 @@ const SignIn = () => {
                     <img
                       className="absolute top-4 right-4"
                       src={isRevealPwd ? ICO_EYE_ACTIVE : ICO_EYE_INACTIVE}
-                      width={"3%"}
-                      height={"3%"}
+                      width={'3%'}
+                      height={'3%'}
                       alt="Your SVG"
                       onClick={() => setIsRevealPwd((prevState) => !prevState)}
                     />
                   </div>
-                  {errors.password?.type === "required" && (
+                  {errors.password?.type === 'required' && (
                     <span className="relative mt-2 block text-sm font-semibold text-danger">
                       Vui lòng nhập mật khẩu
                     </span>

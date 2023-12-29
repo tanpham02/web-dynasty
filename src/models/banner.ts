@@ -1,7 +1,7 @@
 export enum BannerType {
-  NEWS = "NEWS",
-  CATEGORY = "CATEGORY",
-  PRODUCT = "PRODUCT",
+  NEWS = 'NEWS',
+  CATEGORY = 'CATEGORY',
+  PRODUCT = 'PRODUCT',
 }
 
 export interface Banner {

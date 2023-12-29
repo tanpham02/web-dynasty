@@ -1,19 +1,17 @@
-import axiosService from "../axiosService";
+import axiosService from '../axiosService';
 import {
   PRODUCT_CATEGORY_FROM_THIRD_PARTY_URL,
   PRODUCT_CATEGORY_IN_ZALO_MINI_APP_URL,
   PRODUCT_CATEGORY_URL,
-} from "../apiUrl";
-import qs from "qs";
-import { ProductCategory } from "~/models/productCategory";
+} from '../apiUrl';
+import qs from 'qs';
+import { ProductCategory } from '~/models/productCategory';
 
 const productCategoryService = {
-  getAllProductCategoryInZaloMiniApp: async (
-    limitProduct: number,
-  ): Promise<ProductCategory[]> => {
+  getAllProductCategoryInZaloMiniApp: async (limitProduct: number): Promise<ProductCategory[]> => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_IN_ZALO_MINI_APP_URL}`,
-      method: "GET",
+      method: 'GET',
       params: {
         limitProduct,
       },
@@ -26,7 +24,7 @@ const productCategoryService = {
   getAllProductCategoryFromThirdParty: async (): Promise<ProductCategory[]> => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_FROM_THIRD_PARTY_URL}`,
-      method: "GET",
+      method: 'GET',
     })
       .then((res) => res.data)
       .catch((error) => {
@@ -36,7 +34,7 @@ const productCategoryService = {
   getProductCategoryById: async (id: number): Promise<ProductCategory> => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_URL}`,
-      method: "GET",
+      method: 'GET',
       params: {
         id,
       },
@@ -46,24 +44,20 @@ const productCategoryService = {
         throw error;
       });
   },
-  getParentProductCategoryByThirdPartyID: async (
-    nhanhVnId: string,
-  ): Promise<ProductCategory> => {
+  getParentProductCategoryByThirdPartyID: async (nhanhVnId: string): Promise<ProductCategory> => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_URL}/${nhanhVnId}`,
-      method: "GET",
+      method: 'GET',
     })
       .then((res) => res.data)
       .catch((error) => {
         throw error;
       });
   },
-  getChildProductCategoryByThirdPartyID: async (
-    nhanhVnId: string,
-  ): Promise<ProductCategory[]> => {
+  getChildProductCategoryByThirdPartyID: async (nhanhVnId: string): Promise<ProductCategory[]> => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_URL}/${nhanhVnId}/childs`,
-      method: "GET",
+      method: 'GET',
     })
       .then((res) => res.data)
       .catch((error) => {
@@ -73,12 +67,11 @@ const productCategoryService = {
   deleteProductCategoryInZaloMiniApp: async (nhanhVnIds: number[]) => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_URL}`,
-      method: "DELETE",
+      method: 'DELETE',
       params: {
         nhanhVnIds: nhanhVnIds,
       },
-      paramsSerializer: (params) =>
-        qs.stringify(params, { arrayFormat: "repeat" }),
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((error) => {
@@ -90,7 +83,7 @@ const productCategoryService = {
   ): Promise<ProductCategory[]> => {
     return axiosService()({
       url: `${PRODUCT_CATEGORY_URL}`,
-      method: "POST",
+      method: 'POST',
       data: productCategories,
     })
       .then((res) => res.data)
@@ -98,16 +91,13 @@ const productCategoryService = {
         throw error;
       });
   },
-  updateBannerProductCategory: async (
-    id: number,
-    image: FormData,
-  ): Promise<ProductCategory> => {
+  updateBannerProductCategory: async (id: number, image: FormData): Promise<ProductCategory> => {
     return axiosService()({
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       url: `${PRODUCT_CATEGORY_URL}/${id}`,
-      method: "PATCH",
+      method: 'PATCH',
       data: image,
     })
       .then((res) => res.data)

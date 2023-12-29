@@ -1,37 +1,17 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Table,
-  TablePaginationConfig,
-  Popconfirm,
-  Typography,
-  Empty,
-} from "antd";
-import { ListResponse, Breakpoint, ListDataResponse } from "~/types";
-import React, { useState, useMemo } from "react";
-import { ModalType } from "../VoucherModal";
-import {
-  SaleScope,
-  VoucherOverriding,
-  VoucherSaleScope,
-  VoucherStatus,
-} from "~/models/voucher";
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Table, TablePaginationConfig, Popconfirm, Typography, Empty } from 'antd';
+import { ListResponse, Breakpoint, ListDataResponse } from '~/types';
+import React, { useState, useMemo } from 'react';
+import { ModalType } from '../VoucherModal';
+import { SaleScope, VoucherOverriding, VoucherSaleScope, VoucherStatus } from '~/models/voucher';
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof VoucherOverriding;
   key?: keyof VoucherOverriding;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
-  render?: (
-    value: any,
-    record: VoucherOverriding,
-    index: number,
-  ) => React.ReactNode;
+  align?: 'left' | 'center' | 'right';
+  render?: (value: any, record: VoucherOverriding, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
 
@@ -41,10 +21,7 @@ interface VoucherTableProps {
   handleChangeListIdsVoucherForDelete: (ids: React.Key[]) => void;
   handleDeleteSingleVoucher: (id: any) => void;
   handleShowModalVoucher: (type?: ModalType, voucherID?: string) => void;
-  handleShowVoucherForNewCustomer: (
-    type?: ModalType,
-    voucherID?: string,
-  ) => void;
+  handleShowVoucherForNewCustomer: (type?: ModalType, voucherID?: string) => void;
 }
 
 export interface Pagination {
@@ -60,8 +37,7 @@ const VoucherTable = ({
   handleShowModalVoucher,
   handleShowVoucherForNewCustomer,
 }: VoucherTableProps) => {
-  const [productCategorySelectedKeys, setProductCategorySelectedKeys] =
-    useState<React.Key[]>([]);
+  const [productCategorySelectedKeys, setProductCategorySelectedKeys] = useState<React.Key[]>([]);
   const pagination = useMemo(() => {
     const current = data?.pageIndex;
     const total = data?.totalElement;
@@ -74,46 +50,46 @@ const VoucherTable = ({
 
   const COLUMNS: TableColumn[] = [
     {
-      title: "Tên voucher",
-      dataIndex: "name",
-      key: "name",
-      align: "left",
+      title: 'Tên voucher',
+      dataIndex: 'name',
+      key: 'name',
+      align: 'left',
     },
     {
-      title: "Mã voucher",
-      dataIndex: "code",
-      key: "code",
-      align: "center",
+      title: 'Mã voucher',
+      dataIndex: 'code',
+      key: 'code',
+      align: 'center',
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
-      align: "center",
+      title: 'Mô tả',
+      dataIndex: 'description',
+      key: 'description',
+      align: 'center',
     },
     {
-      title: "Phạm vi khuyến mãi",
-      dataIndex: "saleScope",
-      key: "saleScope",
-      align: "center",
+      title: 'Phạm vi khuyến mãi',
+      dataIndex: 'saleScope',
+      key: 'saleScope',
+      align: 'center',
       render: (_, record) => (
         <Typography.Text className="text-[14px] !text-primary font-semibold  rounded-md ">
           {record.saleScope
             ? record.saleScope === SaleScope.ALL
-              ? "Toàn shop"
+              ? 'Toàn shop'
               : record.saleScope === SaleScope.BY_PRODUCT
-              ? "Theo sản phẩm"
-              : "Giới thiệu khách hàng mới"
-            : ""}
+              ? 'Theo sản phẩm'
+              : 'Giới thiệu khách hàng mới'
+            : ''}
         </Typography.Text>
       ),
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      title: "Hành động",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Hành động',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__text, record) => (
         <div className="flex justify-center gap-2 text-center">
           <div>
@@ -129,10 +105,7 @@ const VoucherTable = ({
           </div>
           <div
             onClick={() => {
-              handleShowModalVoucher(
-                ModalType.INFORMATION,
-                record._id as unknown as string,
-              );
+              handleShowModalVoucher(ModalType.INFORMATION, record._id as unknown as string);
             }}
           >
             <Button
@@ -152,7 +125,7 @@ const VoucherTable = ({
             cancelText="Không"
           >
             <Button
-              type={"danger" as "primary"}
+              type={'danger' as 'primary'}
               className={` flex  items-center justify-center !rounded-lg`}
             >
               <DeleteOutlined className="!flex" />
@@ -165,7 +138,7 @@ const VoucherTable = ({
 
   const handleChangeListIdVoucherChange = (newSelectedRowKeys: React.Key[]) => {
     console.log(
-      "🚀 ~ file: index.tsx:144 ~ handleChangeListIdVoucherChange ~ newSelectedRowKeys:",
+      '🚀 ~ file: index.tsx:144 ~ handleChangeListIdVoucherChange ~ newSelectedRowKeys:',
       newSelectedRowKeys,
     );
     setProductCategorySelectedKeys(newSelectedRowKeys);
@@ -194,10 +167,7 @@ const VoucherTable = ({
           onChange={onGetPagination}
           locale={{
             emptyText: (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="Không có dữ liệu"
-              />
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />
             ),
           }}
         />

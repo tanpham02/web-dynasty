@@ -1,5 +1,5 @@
-import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
-import { InfiniteData } from "@tanstack/react-query";
+import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { InfiniteData } from '@tanstack/react-query';
 import {
   Avatar,
   Table,
@@ -9,12 +9,12 @@ import {
   Tooltip,
   Popconfirm,
   Empty,
-} from "antd";
-import { useMemo, useState } from "react";
-import { Product, ProductMain } from "~/models/product";
-import { Voucher, VoucherOverriding } from "~/models/voucher";
-import { ListDataResponse, ListResponse } from "~/types";
-import { ModalType } from "../VoucherModal";
+} from 'antd';
+import { useMemo, useState } from 'react';
+import { Product, ProductMain } from '~/models/product';
+import { Voucher, VoucherOverriding } from '~/models/voucher';
+import { ListDataResponse, ListResponse } from '~/types';
+import { ModalType } from '../VoucherModal';
 
 export interface VoucherApplyForProductTableProps {
   onSetListSelectionKeyProduct: (ids: string[]) => void;
@@ -36,12 +36,8 @@ interface VoucherApplyForProductTableI {
   key?: keyof ProductMain;
   dataIndex?: keyof ProductMain;
   title?: string;
-  align?: "left" | "center" | "right";
-  render?: (
-    text: string,
-    record: ProductMain,
-    index: number,
-  ) => React.ReactNode;
+  align?: 'left' | 'center' | 'right';
+  render?: (text: string, record: ProductMain, index: number) => React.ReactNode;
   visible?: boolean;
   hidden?: boolean;
 }
@@ -61,32 +57,28 @@ const VoucherApplyForProductTable = ({
     pageSize: 10,
   });
 
-  console.log("listProductIdInVoucher", listProductIdInVoucher);
+  console.log('listProductIdInVoucher', listProductIdInVoucher);
 
   const COLUMNS: VoucherApplyForProductTableI[] = [
     {
-      key: "name",
-      align: "left",
-      dataIndex: "name",
-      title: "Tên sản phẩm",
+      key: 'name',
+      align: 'left',
+      dataIndex: 'name',
+      title: 'Tên sản phẩm',
     },
     {
-      key: "image",
-      dataIndex: "image",
-      title: "Hình ảnh",
+      key: 'image',
+      dataIndex: 'image',
+      title: 'Hình ảnh',
       render: (__id, record) =>
-        record.image != "" ? (
+        record.image != '' ? (
           <Avatar src={record.image} shape="square" size={84} />
         ) : (
-          <Avatar
-            style={{ backgroundColor: "#de7300" }}
-            shape="square"
-            size={84}
-          >
+          <Avatar style={{ backgroundColor: '#de7300' }} shape="square" size={84}>
             {record.name && record.name.charAt(0)}
           </Avatar>
         ),
-      align: "center",
+      align: 'center',
     },
     // {
     //   key: 'id',
@@ -109,23 +101,23 @@ const VoucherApplyForProductTable = ({
     //   visible: false,
     // },
     {
-      key: "price",
-      align: "center",
-      dataIndex: "price",
-      title: "Giá",
+      key: 'price',
+      align: 'center',
+      dataIndex: 'price',
+      title: 'Giá',
       render: (__, record: ProductMain) => (
         <Typography.Text>
           <label className="tracking-[0.5px] font-normal ">
-            {record.price?.toLocaleString("EN")} đ
+            {record.price?.toLocaleString('EN')} đ
           </label>
         </Typography.Text>
       ),
     },
     {
-      key: "_id",
-      align: "center",
-      dataIndex: "_id",
-      title: "",
+      key: '_id',
+      align: 'center',
+      dataIndex: '_id',
+      title: '',
       render: (__, record: ProductMain) => (
         <>
           {record?._id && listProductIdInVoucher?.includes(record?._id) && (
@@ -136,7 +128,7 @@ const VoucherApplyForProductTable = ({
               onConfirm={() => handleDeleteListProductIDInVoucher(record._id)}
             >
               <button className="px-2 rounded-sm py-[6px] bg-danger mx-auto flex items-center">
-                <DeleteOutlined style={{ color: "#fff" }} />
+                <DeleteOutlined style={{ color: '#fff' }} />
               </button>
             </Popconfirm>
           )}
@@ -153,22 +145,15 @@ const VoucherApplyForProductTable = ({
       onSetListSelectionKeyProduct(newSelectedRowKeys as string[]);
     },
     getCheckboxProps: (record: ProductMain) => ({
-      disabled: record?._id
-        ? listProductIdInVoucher?.includes(record?._id)
-        : false,
+      disabled: record?._id ? listProductIdInVoucher?.includes(record?._id) : false,
       key: record._id,
     }),
-    renderCell(
-      __checked: boolean,
-      record: ProductMain,
-      __index: number,
-      node: any,
-    ) {
+    renderCell(__checked: boolean, record: ProductMain, __index: number, node: any) {
       if (record._id) {
         if (listProductIdInVoucher?.includes(record._id)) {
           return (
             <Tooltip title="Đã hiển thị">
-              <CheckCircleOutlined style={{ color: "#219653" }} />
+              <CheckCircleOutlined style={{ color: '#219653' }} />
             </Tooltip>
           );
         }
@@ -226,14 +211,11 @@ const VoucherApplyForProductTable = ({
             pageSize: handlePagination.pageSize,
             total: handlePagination.total,
           }}
-          scroll={{ y: "45vh" }}
+          scroll={{ y: '45vh' }}
           onChange={handleChangeCurrentPage}
           locale={{
             emptyText: (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="Không có dữ liệu"
-              />
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />
             ),
           }}
         />

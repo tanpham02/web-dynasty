@@ -1,13 +1,13 @@
-import SVG from "react-inlinesvg";
-import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { Button, Modal, Skeleton } from "antd";
-import trash from "~/assets/svg/trash.svg";
-import { toast } from "react-hot-toast";
-import NhanhVnTable from "./NhanhVnTable";
-import NhanhVnModal, { ModalType } from "./NhanhVnModal";
-import { nhanhVnService } from "~/services/nhanhVnService";
+import SVG from 'react-inlinesvg';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { Button, Modal, Skeleton } from 'antd';
+import trash from '~/assets/svg/trash.svg';
+import { toast } from 'react-hot-toast';
+import NhanhVnTable from './NhanhVnTable';
+import NhanhVnModal, { ModalType } from './NhanhVnModal';
+import { nhanhVnService } from '~/services/nhanhVnService';
 
 export interface ModalKey {
   visible?: boolean;
@@ -16,14 +16,11 @@ export interface ModalKey {
 }
 
 const NhanhVn = () => {
-  const [showDeleteNhanhVnModal, setShowDeleteNhanhVnModal] =
-    useState<boolean>(false);
+  const [showDeleteNhanhVnModal, setShowDeleteNhanhVnModal] = useState<boolean>(false);
   const [nhanhVnModal, setNhanhVnModal] = useState<ModalKey>({
     visible: false,
   });
-  const [listIdsNhanhVnForDelete, setListIdsNhanhVnForDelete] = useState<
-    React.Key[]
-  >([]);
+  const [listIdsNhanhVnForDelete, setListIdsNhanhVnForDelete] = useState<React.Key[]>([]);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
 
   const {
@@ -37,9 +34,7 @@ const NhanhVn = () => {
   const { data: nhanhVnById } = useQuery(
     [QUERY_KEY.NHANH_VN_CONFIG, nhanhVnModal],
     async () => {
-      return await nhanhVnService.getNhanhVnById(
-        Number(nhanhVnModal.nhanhVnId),
-      );
+      return await nhanhVnService.getNhanhVnById(Number(nhanhVnModal.nhanhVnId));
     },
     { enabled: nhanhVnModal.nhanhVnId ? true : false },
   );
@@ -75,11 +70,11 @@ const NhanhVn = () => {
     setIsLoadingDelete(true);
     try {
       await nhanhVnService.deleteNhanhVn(ids);
-      toast.success("Xóa thành công", {
-        position: "bottom-right",
+      toast.success('Xóa thành công', {
+        position: 'bottom-right',
         duration: 3000,
-        icon: "👏",
-        style: { width: "70%" },
+        icon: '👏',
+        style: { width: '70%' },
       });
 
       setIsLoadingDelete(false);
@@ -92,10 +87,10 @@ const NhanhVn = () => {
       refetch();
     } catch (err) {
       console.log(err);
-      toast.success("Xóa thất bại", {
-        position: "bottom-right",
+      toast.success('Xóa thất bại', {
+        position: 'bottom-right',
         duration: 3500,
-        icon: "😔",
+        icon: '😔',
       });
     }
   };
@@ -122,7 +117,7 @@ const NhanhVn = () => {
             Xóa danh sách cấu hình NhanhVn đã chọn
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
 
@@ -135,12 +130,7 @@ const NhanhVn = () => {
             <Button title="cancel" onClick={handleCancel}>
               Hủy bỏ
             </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              onClick={handleOk}
-              loading={isLoadingDelete}
-            >
+            <Button key="submit" type="primary" onClick={handleOk} loading={isLoadingDelete}>
               Xác nhận xóa
             </Button>,
           ]}

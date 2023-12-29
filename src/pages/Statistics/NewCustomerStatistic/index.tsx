@@ -1,12 +1,12 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Segmented, Space, Typography } from "antd";
-import { useState } from "react";
-import { Line } from "react-chartjs-2";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { StatisticGroupType, StatisticTime } from "~/constants/statisticKey";
-import { StatisticGroup } from "~/models/statistic";
-import { statisticService } from "~/services/statisticService";
-import { DATE_FORMAT_YYYYMMDD, subtractDays } from "~/utils/date.utils";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Segmented, Space, Typography } from 'antd';
+import { useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { StatisticGroupType, StatisticTime } from '~/constants/statisticKey';
+import { StatisticGroup } from '~/models/statistic';
+import { statisticService } from '~/services/statisticService';
+import { DATE_FORMAT_YYYYMMDD, subtractDays } from '~/utils/date.utils';
 
 const AffiliateStatisticPage = () => {
   const [queryParameter, setQueryParameter] = useState<{
@@ -15,9 +15,7 @@ const AffiliateStatisticPage = () => {
     toDate: string | Date;
   }>({
     chartTimeGroupBy: StatisticGroup.DAY,
-    fromDate: `${subtractDays(new Date(), StatisticTime[0].value).format(
-      DATE_FORMAT_YYYYMMDD,
-    )}`,
+    fromDate: `${subtractDays(new Date(), StatisticTime[0].value).format(DATE_FORMAT_YYYYMMDD)}`,
     toDate: `${subtractDays(new Date(), 1).format(DATE_FORMAT_YYYYMMDD)}`,
   });
 
@@ -43,9 +41,7 @@ const AffiliateStatisticPage = () => {
     if (value) {
       setQueryParameter({
         ...queryParameter,
-        fromDate: `${subtractDays(new Date(), value).format(
-          DATE_FORMAT_YYYYMMDD,
-        )}`,
+        fromDate: `${subtractDays(new Date(), value).format(DATE_FORMAT_YYYYMMDD)}`,
         toDate: `${subtractDays(new Date(), 1).format(DATE_FORMAT_YYYYMMDD)}`,
       });
     }
@@ -55,7 +51,7 @@ const AffiliateStatisticPage = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: 'top' as const,
       },
     },
   };
@@ -64,11 +60,9 @@ const AffiliateStatisticPage = () => {
     <>
       <div className="mb-5">
         <div>
-          <span className="font-bold text-xl">
-            {"Thống kê khách hàng mới trên Zalo Mini App"}
-          </span>
+          <span className="font-bold text-xl">{'Thống kê khách hàng mới trên Zalo Mini App'}</span>
         </div>
-        <Space className="mt-5" size={"large"}>
+        <Space className="mt-5" size={'large'}>
           <div>
             <Typography>Thời gian:</Typography>
             <Segmented
@@ -88,10 +82,7 @@ const AffiliateStatisticPage = () => {
         </Space>
         <div className="mt-5">
           {revenueStatisticData && (
-            <Line
-              options={chartOptions}
-              data={revenueStatisticData?.pages[0][0]}
-            />
+            <Line options={chartOptions} data={revenueStatisticData?.pages[0][0]} />
           )}
         </div>
       </div>

@@ -1,20 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Button, Input, InputNumber, Modal, Tooltip } from "antd";
-import { Membership, MembershipStatus } from "~/models/membership";
-import { membershipService } from "~/services/membershipService";
-import { toast } from "react-hot-toast";
-import snippingLoading from "~/assets/gif/sniping-loading.gif";
-import { HexColorPicker } from "react-colorful";
-import { PATTERN } from "~/utils/regex";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import React, { useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Button, Input, InputNumber, Modal, Tooltip } from 'antd';
+import { Membership, MembershipStatus } from '~/models/membership';
+import { membershipService } from '~/services/membershipService';
+import { toast } from 'react-hot-toast';
+import snippingLoading from '~/assets/gif/sniping-loading.gif';
+import { HexColorPicker } from 'react-colorful';
+import { PATTERN } from '~/utils/regex';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export enum ModalType {
-  CREATE = "CREATE",
-  UPDATE = "UPDATE",
-  DELETE = "DELETE",
-  INFORMATION = "INFORMATION",
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  INFORMATION = 'INFORMATION',
 }
 
 interface MembershipCreateModalProps {
@@ -24,8 +24,8 @@ interface MembershipCreateModalProps {
   membershipById?: Membership;
 }
 const defaultValueMemberShip: Membership = {
-  name: "",
-  conditionLabel: "",
+  name: '',
+  conditionLabel: '',
   conditionPrice: 0,
   percentDiscount: 0,
   status: MembershipStatus.ACTIVE,
@@ -37,14 +37,10 @@ export const MembershipCreateModal = ({
   modalType,
   membershipById,
 }: MembershipCreateModalProps) => {
-  const [membershipImageBlob, setMembershipImageBlob] = useState<string>("");
-  const [membershipImageRequest, setMembershipImageRequest] = useState<
-    File | string
-  >("");
-  const [
-    isLoadingWhenCallApiCreateOrUpdate,
-    setIsLoadingWhenCallApiCreateOrUpdate,
-  ] = useState<boolean>(false);
+  const [membershipImageBlob, setMembershipImageBlob] = useState<string>('');
+  const [membershipImageRequest, setMembershipImageRequest] = useState<File | string>('');
+  const [isLoadingWhenCallApiCreateOrUpdate, setIsLoadingWhenCallApiCreateOrUpdate] =
+    useState<boolean>(false);
 
   const {
     reset,
@@ -59,32 +55,28 @@ export const MembershipCreateModal = ({
     setIsLoadingWhenCallApiCreateOrUpdate(true);
     const partFormData = new FormData();
     if (membershipImageRequest) {
-      partFormData.append("backgroundImage", membershipImageRequest);
+      partFormData.append('backgroundImage', membershipImageRequest);
     }
-    partFormData.append("membershipLevelDTO ", JSON.stringify(data));
+    partFormData.append('membershipLevelDTO ', JSON.stringify(data));
 
     try {
-      modalType === ModalType.CREATE &&
-        (await membershipService.createMembership(partFormData));
+      modalType === ModalType.CREATE && (await membershipService.createMembership(partFormData));
       modalType === ModalType.UPDATE &&
         membershipById?.id &&
-        (await membershipService.updateMembership(
-          partFormData,
-          membershipById?.id,
-        ));
+        (await membershipService.updateMembership(partFormData, membershipById?.id));
       setIsLoadingWhenCallApiCreateOrUpdate(false);
       toast.success(
         `${
           modalType === ModalType.CREATE
-            ? "Thêm hạng thành viên thành công"
+            ? 'Thêm hạng thành viên thành công'
             : modalType === ModalType.UPDATE
-            ? "Cập nhật hạng thành viên thành công"
-            : ""
+            ? 'Cập nhật hạng thành viên thành công'
+            : ''
         }`,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           duration: 4000,
-          icon: "👏",
+          icon: '👏',
         },
       );
       handleOpenOrCloseMembershipCreateModal();
@@ -103,9 +95,7 @@ export const MembershipCreateModal = ({
     }
   }, [membershipById]);
 
-  const handleChangeMembershipImg = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeMembershipImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputFile = e.target;
     const file = inputFile.files !== null && inputFile.files[0];
     const reader = new FileReader();
@@ -120,21 +110,21 @@ export const MembershipCreateModal = ({
 
   const handleGenerateTextModal = useMemo(() => {
     let result = {
-      titleModal: "",
-      titleButton: "",
+      titleModal: '',
+      titleButton: '',
     };
 
     switch (modalType) {
       case ModalType.CREATE:
         result = {
-          titleButton: "Thêm",
-          titleModal: "Thêm hạng thành viên",
+          titleButton: 'Thêm',
+          titleModal: 'Thêm hạng thành viên',
         };
         break;
       case ModalType.UPDATE:
         result = {
-          titleButton: "Cập nhật",
-          titleModal: "Cập nhật hạng thành viên",
+          titleButton: 'Cập nhật',
+          titleModal: 'Cập nhật hạng thành viên',
         };
         break;
     }
@@ -151,16 +141,16 @@ export const MembershipCreateModal = ({
         cancelText="Hủy bỏ"
         onCancel={handleOpenOrCloseMembershipCreateModal}
         style={{
-          minWidth: "50%",
-          maxHeight: "100%",
-          paddingBottom: "0px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          minWidth: '50%',
+          maxHeight: '100%',
+          paddingBottom: '0px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
         footer={[
           <Button
-            style={{ border: "1px solid #1890ff", color: "#1890ff" }}
+            style={{ border: '1px solid #1890ff', color: '#1890ff' }}
             onClick={handleOpenOrCloseMembershipCreateModal}
           >
             Hủy bỏ
@@ -169,7 +159,7 @@ export const MembershipCreateModal = ({
             form="form-membership"
             key="submit"
             htmlType="submit"
-            style={{ background: "#1890ff", color: "#fff" }}
+            style={{ background: '#1890ff', color: '#fff' }}
           >
             {handleGenerateTextModal.titleButton}
           </Button>,
@@ -185,15 +175,11 @@ export const MembershipCreateModal = ({
                   </h3>
                 </div>
                 <div className="p-7">
-                  <form
-                    onSubmit={handleSubmit(submitHandler)}
-                    id="form-membership"
-                  >
+                  <form onSubmit={handleSubmit(submitHandler)} id="form-membership">
                     <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                       <div className="w-full ">
                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                          Tên hạng thành viên{" "}
-                          <strong className="text-xl text-danger">*</strong>
+                          Tên hạng thành viên <strong className="text-xl text-danger">*</strong>
                         </label>
                         <Controller
                           control={control}
@@ -202,7 +188,7 @@ export const MembershipCreateModal = ({
                           render={({ field: { value, onChange } }) => (
                             <Input
                               className={`!w-full !h-[48px] border-solid border-[1px] ${
-                                errors.name ? "!border-danger" : ""
+                                errors.name ? '!border-danger' : ''
                               }`}
                               value={value}
                               placeholder="Nhập tên hạng thành viên"
@@ -210,7 +196,7 @@ export const MembershipCreateModal = ({
                             />
                           )}
                         />
-                        {errors.name?.type === "required" && (
+                        {errors.name?.type === 'required' && (
                           <small className="text-danger text-[13px]">
                             Tên hạng thành viên không được rỗng
                           </small>
@@ -220,8 +206,8 @@ export const MembershipCreateModal = ({
 
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Giá trị tích lũy cần đạt ( bằng số ){" "}
-                        <strong className="text-xl text-danger">*</strong>{" "}
+                        Giá trị tích lũy cần đạt ( bằng số ){' '}
+                        <strong className="text-xl text-danger">*</strong>{' '}
                         <Tooltip title="Chỉ được chỉnh sửa khi không có thành viên!">
                           <QuestionCircleOutlined />
                         </Tooltip>
@@ -236,20 +222,15 @@ export const MembershipCreateModal = ({
                               <InputNumber
                                 className={`!w-full !h-[48px] leading-[48px]  ${
                                   errors.conditionPrice
-                                    ? "!border-danger border-solid  border-[100%] border-t-0 border-l-0"
-                                    : ""
+                                    ? '!border-danger border-solid  border-[100%] border-t-0 border-l-0'
+                                    : ''
                                 } `}
                                 value={value || 0}
                                 formatter={(value) =>
-                                  `${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ",",
-                                  )
+                                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                                 }
                                 parser={(value) =>
-                                  value
-                                    ? Number(value?.replace(/\$\s?|(,*)/g, ""))
-                                    : 0
+                                  value ? Number(value?.replace(/\$\s?|(,*)/g, '')) : 0
                                 }
                                 onChange={(value) => value && onChange(value)}
                                 controls={false}
@@ -268,7 +249,7 @@ export const MembershipCreateModal = ({
                     </div>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Giá trị tích lũy cần đạt ( bằng chữ ){" "}
+                        Giá trị tích lũy cần đạt ( bằng chữ ){' '}
                         <strong className="text-xl text-danger">*</strong>
                         <Tooltip title="Chỉ được chỉnh sửa khi không có thành viên!">
                           <QuestionCircleOutlined />
@@ -282,7 +263,7 @@ export const MembershipCreateModal = ({
                           <>
                             <Input
                               className={`!w-full !h-[48px] border-solid border-[1px] ${
-                                errors.conditionLabel ? "!border-danger" : ""
+                                errors.conditionLabel ? '!border-danger' : ''
                               }`}
                               value={value}
                               placeholder="Nhập giá trị tích lũy cần đạt ( bằng chữ )"
@@ -292,7 +273,7 @@ export const MembershipCreateModal = ({
                           </>
                         )}
                       />
-                      {errors.conditionLabel?.type === "required" && (
+                      {errors.conditionLabel?.type === 'required' && (
                         <small className="text-danger text-[13px]">
                           Giá trị tích lũy cần đạt ( bằng chữ ) không được rỗng
                         </small>
@@ -300,8 +281,7 @@ export const MembershipCreateModal = ({
                     </div>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Phần % giảm giá{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Phần % giảm giá <strong className="text-xl text-danger">*</strong>
                       </label>
                       <div className="relative">
                         <Controller
@@ -313,14 +293,12 @@ export const MembershipCreateModal = ({
                               value={value ? Number(value) : 0}
                               className={`!w-full !h-[48px] leading-[48px]  ${
                                 errors.percentDiscount
-                                  ? "!border-danger border-solid  border-[100%] border-t-0 border-l-0"
-                                  : ""
+                                  ? '!border-danger border-solid  border-[100%] border-t-0 border-l-0'
+                                  : ''
                               } `}
                               placeholder="Nhập % giảm giá"
                               formatter={(value) => `${value}`}
-                              parser={(value) =>
-                                value ? Number(value?.replace("%", "")) : 0
-                              }
+                              parser={(value) => (value ? Number(value?.replace('%', '')) : 0)}
                               controls={false}
                               onChange={(displayValue: number | null) =>
                                 displayValue && onChange(displayValue)
@@ -343,9 +321,7 @@ export const MembershipCreateModal = ({
             <div className="col-span-5 xl:col-span-2">
               <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                  <h3 className="font-medium text-black dark:text-white">
-                    Hạng thành viên
-                  </h3>
+                  <h3 className="font-medium text-black dark:text-white">Hạng thành viên</h3>
                 </div>
                 <div className="p-7">
                   <form>
@@ -399,10 +375,8 @@ export const MembershipCreateModal = ({
                             </svg>
                           </span>
                           <p>
-                            <span className="text-primary">
-                              Click để upload{" "}
-                            </span>{" "}
-                            hoặc kéo thả vào ô
+                            <span className="text-primary">Click để upload </span> hoặc kéo thả vào
+                            ô
                           </p>
                           <p className="mt-1.5">PNG hoặc JPG</p>
                           <p>(max, 1920 X 1080px)</p>
@@ -411,15 +385,14 @@ export const MembershipCreateModal = ({
                     </div>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Màu chủ đạo{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Màu chủ đạo <strong className="text-xl text-danger">*</strong>
                       </label>
 
                       <div className="relative">
                         <div className="mb-4">
                           <HexColorPicker
-                            color={watch("color")}
-                            onChange={(color) => setValue("color", color)}
+                            color={watch('color')}
+                            onChange={(color) => setValue('color', color)}
                           />
                         </div>
                         <Controller
@@ -429,7 +402,7 @@ export const MembershipCreateModal = ({
                           render={({ field: { value, onChange } }) => (
                             <Input
                               className={`!w-full !h-[48px] border-solid border-[1px]  ${
-                                errors.color ? "!border-danger" : ""
+                                errors.color ? '!border-danger' : ''
                               }`}
                               value={value}
                               placeholder="Nhập giá trị tích lũy cần đạt ( bằng chữ )"
@@ -437,7 +410,7 @@ export const MembershipCreateModal = ({
                             />
                           )}
                         />
-                        {errors.color?.type === "pattern" && (
+                        {errors.color?.type === 'pattern' && (
                           <div className="grid">
                             <small className="text-danger text-[13px]">
                               Màu chủ đạo không hợp lệ
@@ -447,7 +420,7 @@ export const MembershipCreateModal = ({
                             </small>
                           </div>
                         )}
-                        {errors.color?.type === "error" && (
+                        {errors.color?.type === 'error' && (
                           <small className="text-danger text-[13px]">
                             Màu chủ đạo không hợp lệ
                           </small>

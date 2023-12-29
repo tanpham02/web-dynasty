@@ -1,37 +1,34 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Skeleton, TablePaginationConfig } from "antd";
-import { useState } from "react";
-import SVG from "react-inlinesvg";
-import SEARCH_ICON from "~ assets/svg/search.svg";
-import { QUERY_KEY } from "~/constants/queryKey";
-import useDebounce from "~/hooks/useDebounce";
-import { membershipService } from "~/services/membershipService";
-import { SearchParams } from "~/types";
-import MembershipTable from "./MembershipTable";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Skeleton, TablePaginationConfig } from 'antd';
+import { useState } from 'react';
+import SVG from 'react-inlinesvg';
+import SEARCH_ICON from '~ assets/svg/search.svg';
+import { QUERY_KEY } from '~/constants/queryKey';
+import useDebounce from '~/hooks/useDebounce';
+import { membershipService } from '~/services/membershipService';
+import { SearchParams } from '~/types';
+import MembershipTable from './MembershipTable';
 
 export const MembershipPage = () => {
   const [pageParameter, setPageParameter] = useState<SearchParams>({
     page: 0,
     pageSize: 10,
   });
-  const [valueSearch, setValueSearch] = useState<string>("");
+  const [valueSearch, setValueSearch] = useState<string>('');
   const queryText = useDebounce(valueSearch, 800);
 
   const {
     data: membershipData,
     isLoading: isLoadingMembershipData,
     refetch,
-  } = useInfiniteQuery(
-    [QUERY_KEY.MEMBERSHIP, pageParameter, queryText],
-    async () => {
-      const params = {
-        pageIndex: pageParameter.page,
-        pageSize: pageParameter.pageSize,
-        name: queryText,
-      };
-      return await membershipService.searchMembershipByCriteria(params);
-    },
-  );
+  } = useInfiniteQuery([QUERY_KEY.MEMBERSHIP, pageParameter, queryText], async () => {
+    const params = {
+      pageIndex: pageParameter.page,
+      pageSize: pageParameter.pageSize,
+      name: queryText,
+    };
+    return await membershipService.searchMembershipByCriteria(params);
+  });
 
   const handleTableChange = (paginationFromTable: TablePaginationConfig) => {
     if (paginationFromTable.current && paginationFromTable.pageSize)
@@ -54,9 +51,7 @@ export const MembershipPage = () => {
               onChange={(e) => setValueSearch(e.target.value)}
             />
           </div>
-          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">
-            Tìm
-          </button>
+          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">Tìm</button>
         </div>
       </div>
       {isLoadingMembershipData ? (

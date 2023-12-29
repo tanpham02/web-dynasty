@@ -1,12 +1,12 @@
-import { Avatar, Table } from "antd";
-import { Customer } from "~/models/customers";
+import { Avatar, Table } from 'antd';
+import { Customer } from '~/models/customers';
 
 interface Columns {
   title?: string;
   dataIndex?: keyof Customer;
   key?: keyof Customer;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: Customer) => React.ReactNode;
 }
 
@@ -19,54 +19,45 @@ const MembershipModalInfoTableCustomer = ({
 }: MembershipModalInfoTableCustomerProps) => {
   const COLUMNS: Columns[] = [
     {
-      key: "id",
-      dataIndex: "id",
-      title: "ID",
-      align: "center",
+      key: 'id',
+      dataIndex: 'id',
+      title: 'ID',
+      align: 'center',
       render: (__index, record: Customer) => <span>{record.id}</span>,
     },
 
     {
-      key: "username",
-      dataIndex: "username",
-      title: "Tên đăng nhập",
-      align: "center",
+      key: 'username',
+      dataIndex: 'username',
+      title: 'Tên đăng nhập',
+      align: 'center',
       render: (__index, record: Customer) => <span>{record.username}</span>,
     },
     {
-      key: "fullName",
-      dataIndex: "fullName",
-      title: "Tên khách hàng",
-      align: "center",
+      key: 'fullName',
+      dataIndex: 'fullName',
+      title: 'Tên khách hàng',
+      align: 'center',
       render: (__index, record: Customer) => <span>{record.fullName}</span>,
     },
     {
-      key: "avatar",
-      dataIndex: "avatar",
-      title: "Hình ảnh",
+      key: 'avatar',
+      dataIndex: 'avatar',
+      title: 'Hình ảnh',
       render: (__id, record) =>
-        record.avatar != "" ? (
-          <Avatar
-            src={record.avatar}
-            shape="square"
-            className="!rounded-lg"
-            size={84}
-          />
+        record.avatar != '' ? (
+          <Avatar src={record.avatar} shape="square" className="!rounded-lg" size={84} />
         ) : (
-          <Avatar
-            style={{ backgroundColor: "#de7300" }}
-            shape="square"
-            size={84}
-          >
+          <Avatar style={{ backgroundColor: '#de7300' }} shape="square" size={84}>
             {record.fullName && record.fullName.charAt(0)}
           </Avatar>
         ),
     },
     {
-      title: "Hạng",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Hạng',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__index, record) => (
         <>
           {record?.membershipDTO?.color && record?.membershipDTO?.name ? (
@@ -94,7 +85,7 @@ const MembershipModalInfoTableCustomer = ({
         Danh sách khách hàng sử dụng gói này
       </span>
       <Table
-        scroll={{ y: "45vh" }}
+        scroll={{ y: '45vh' }}
         rowKey="id"
         dataSource={customerDTOs}
         columns={COLUMNS}

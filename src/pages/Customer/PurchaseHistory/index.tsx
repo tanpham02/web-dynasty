@@ -1,13 +1,13 @@
-import SVG from "react-inlinesvg";
-import SEARCH_ICON from "~ assets/svg/search.svg";
-import SelectCustom from "~/components/customs/Select";
-import PurchaseHistoryTable from "./PurchaseHistoryTable";
+import SVG from 'react-inlinesvg';
+import SEARCH_ICON from '~ assets/svg/search.svg';
+import SelectCustom from '~/components/customs/Select';
+import PurchaseHistoryTable from './PurchaseHistoryTable';
 
 const PurchaseHistoryListPage = () => {
   return (
     <>
       <div className="flex flex-row justify-between items-center gap-2 w-full">
-        <span className="font-bold text-xl">{"Lịch sử giao dịch"}</span>
+        <span className="font-bold text-xl">{'Lịch sử giao dịch'}</span>
         <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white">
           Thêm giao dịch
         </button>
@@ -30,9 +30,7 @@ const PurchaseHistoryListPage = () => {
             className="flex w-full items-center rounded-lg lg:w-[25%] xl:w-[25%]"
             placeholder="Loại giao dịch"
           />
-          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">
-            Tìm
-          </button>
+          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">Tìm</button>
         </div>
       </div>
       <PurchaseHistoryTable />

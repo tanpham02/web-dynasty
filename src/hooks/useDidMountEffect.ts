@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const useDidMountEffect = (func: Function, deps: any) => {

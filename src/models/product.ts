@@ -112,11 +112,8 @@ export interface ProductChildrenAttribute {
 }
 
 export interface ProductChildrenAttributeItem {
-  _id?: string;
-  attributeParentId?: string; // id của attribute cha
+  attributeId?: string;
   name?: string; // Nhỏ
-  value?: string; // SMALL
-  priceAdjustment?: string; // +80.000đ
   priceAdjustmentValue?: number; // 80000   => 2 cai này là biến thế nếu giá thay đổi thì có, còn không thôi
 }
 

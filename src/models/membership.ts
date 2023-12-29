@@ -1,8 +1,8 @@
-import { Customer } from "./customers";
+import { Customer } from './customers';
 
 export enum MembershipStatus {
-  ACTIVE = "ACTIVE",
-  IN_ACTIVE = "IN_ACTIVE",
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'IN_ACTIVE',
 }
 
 export interface Membership {

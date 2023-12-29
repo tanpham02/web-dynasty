@@ -1,6 +1,6 @@
-import { Controller, useFormContext } from "react-hook-form";
-import ReactQuill from "react-quill";
-import Box from "~/components/Box";
+import { Controller, useFormContext } from 'react-hook-form';
+import ReactQuill from 'react-quill';
+import Box from '~/components/Box';
 
 interface FormContextCKEditorProps {
   name: string;
@@ -20,10 +20,10 @@ const FormContextCKEditor = ({ name }: FormContextCKEditorProps) => {
             modules={{
               toolbar: [
                 [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["link", "image", "video"],
-                ["clean"],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link', 'image', 'video'],
+                ['clean'],
               ],
             }}
           />

@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useMemo } from "react";
-import { Button, Modal, Select, TreeSelect } from "antd";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import bannerIcon from "~/assets/images/icon/banner-icon.png";
-import { Banner, BannerType } from "~/models/banner";
-import { bannerService } from "~/services/bannerService";
-import { PATTERN } from "~/utils/regex";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { productService } from "~/services/productService";
-import productCategoryService from "~/services/productCategoryService";
-import { toast } from "react-hot-toast";
+import { useMemo } from 'react';
+import { Button, Modal, Select, TreeSelect } from 'antd';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import bannerIcon from '~/assets/images/icon/banner-icon.png';
+import { Banner, BannerType } from '~/models/banner';
+import { bannerService } from '~/services/bannerService';
+import { PATTERN } from '~/utils/regex';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { productService } from '~/services/productService';
+import productCategoryService from '~/services/productCategoryService';
+import { toast } from 'react-hot-toast';
 
 interface TreeSelectChildren {
   title?: string;
@@ -26,10 +26,10 @@ interface TreeSelectParent {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export enum ModalType {
-  CREATE = "CREATE",
-  UPDATE = "UPDATE",
-  DELETE = "DELETE",
-  INFORMATION = "INFORMATION",
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  INFORMATION = 'INFORMATION',
 }
 export interface UserModalProps {
   banner?: Banner;
@@ -43,21 +43,15 @@ const defaultBannerValues: Banner = {
   bannerType: BannerType.CATEGORY,
 };
 
-const BannerModal = ({
-  visible,
-  banner,
-  modalType,
-  onClose,
-  refetchData,
-}: UserModalProps) => {
+const BannerModal = ({ visible, banner, modalType, onClose, refetchData }: UserModalProps) => {
   const bannerTypeSelection = [
     {
       value: BannerType.CATEGORY,
-      label: "Danh mục",
+      label: 'Danh mục',
     },
     {
       value: BannerType.PRODUCT,
-      label: "Sản phẩm",
+      label: 'Sản phẩm',
     },
     // {
     //   value: BannerType.NEWS,
@@ -66,8 +60,8 @@ const BannerModal = ({
   ];
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [bannerToSubmit, setBannerToSubmit] = useState<File | string>("");
-  const [bannerBlob, setBannerBlob] = useState<any>("");
+  const [bannerToSubmit, setBannerToSubmit] = useState<File | string>('');
+  const [bannerBlob, setBannerBlob] = useState<any>('');
   const [showConfigFollowBannerType, setShowConfigFollowBannerType] = useState<{
     isShowProductDropdown: boolean;
     isShowProductCategoryDropdown: boolean;
@@ -97,31 +91,26 @@ const BannerModal = ({
       return await productCategoryService.getAllProductCategoryInZaloMiniApp(0);
     },
     {
-      enabled: Boolean(
-        showConfigFollowBannerType.isShowProductCategoryDropdown,
-      ),
+      enabled: Boolean(showConfigFollowBannerType.isShowProductCategoryDropdown),
     },
   );
 
-  const { data: product, fetchNextPage: fetchNextPageProduct } =
-    useInfiniteQuery(
-      [QUERY_KEY.PRODUCT_IN_ZALO_MINI_APP],
-      async ({ pageParam = 0 }) => {
-        const params = { pageIndex: pageParam, pageSize: 10 };
-        return await productService.getProductInZaloMiniApp(params);
+  const { data: product, fetchNextPage: fetchNextPageProduct } = useInfiniteQuery(
+    [QUERY_KEY.PRODUCT_IN_ZALO_MINI_APP],
+    async ({ pageParam = 0 }) => {
+      const params = { pageIndex: pageParam, pageSize: 10 };
+      return await productService.getProductInZaloMiniApp(params);
+    },
+    {
+      getNextPageParam: ({ last, pageable }) => {
+        if (!last) {
+          return pageable.pageNumber + 1;
+        }
+        return undefined;
       },
-      {
-        getNextPageParam: ({ last, pageable }) => {
-          if (!last) {
-            return pageable.pageNumber + 1;
-          }
-          return undefined;
-        },
-        enabled: Boolean(
-          showConfigFollowBannerType.isShowProductCategoryDropdown,
-        ),
-      },
-    );
+      enabled: Boolean(showConfigFollowBannerType.isShowProductCategoryDropdown),
+    },
+  );
 
   useEffect(() => {
     if (banner) {
@@ -162,26 +151,26 @@ const BannerModal = ({
 
   const getTitleModalAndButton = useMemo(() => {
     let result = {
-      titleModal: "",
-      titleButton: "",
+      titleModal: '',
+      titleButton: '',
     };
     switch (modalType) {
       case ModalType.CREATE:
         result = {
-          titleModal: "Thêm mới banner",
-          titleButton: "Thêm banner",
+          titleModal: 'Thêm mới banner',
+          titleButton: 'Thêm banner',
         };
         break;
       case ModalType.UPDATE:
         result = {
-          titleModal: "Cập nhật thông tin banner",
-          titleButton: "Cập nhật",
+          titleModal: 'Cập nhật thông tin banner',
+          titleButton: 'Cập nhật',
         };
         break;
       case ModalType.INFORMATION:
         result = {
-          titleModal: "Thông tin banner",
-          titleButton: "",
+          titleModal: 'Thông tin banner',
+          titleButton: '',
         };
         break;
     }
@@ -226,17 +215,17 @@ const BannerModal = ({
   );
 
   const onSubmit = async (data: Banner) => {
-    const checkError = watch("path");
-    if (checkError === "" || !checkError) {
-      setError("path", {
-        type: "required",
-        message: "Banner không được rỗng",
+    const checkError = watch('path');
+    if (checkError === '' || !checkError) {
+      setError('path', {
+        type: 'required',
+        message: 'Banner không được rỗng',
       });
     } else {
       setIsLoading(true);
       const imageFile = new FormData();
       if (bannerToSubmit) {
-        imageFile.append("imageFile ", bannerToSubmit);
+        imageFile.append('imageFile ', bannerToSubmit);
       }
       const { path, ...newData } = data;
 
@@ -248,15 +237,15 @@ const BannerModal = ({
         toast.success(
           `${
             modalType === ModalType.CREATE
-              ? "Thêm banner thành công"
+              ? 'Thêm banner thành công'
               : modalType === ModalType.UPDATE
-              ? "Cập nhật banner thành công"
-              : ""
+              ? 'Cập nhật banner thành công'
+              : ''
           }`,
           {
-            position: "bottom-right",
+            position: 'bottom-right',
             duration: 4000,
-            icon: "👏",
+            icon: '👏',
           },
         );
         reset(defaultBannerValues);
@@ -265,19 +254,17 @@ const BannerModal = ({
         onClose();
       } catch (err) {
         console.log(err);
-        toast.success("Thêm banner thất bại", {
-          position: "bottom-right",
+        toast.success('Thêm banner thất bại', {
+          position: 'bottom-right',
           duration: 4000,
-          icon: "😞",
+          icon: '😞',
         });
         setIsLoading(false);
       }
     }
   };
 
-  const handleScrollDropdownProduct = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleScrollDropdownProduct = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
     if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
       fetchNextPageProduct();
@@ -289,7 +276,7 @@ const BannerModal = ({
     const reader = new FileReader();
     reader.onloadend = function () {
       setBannerBlob(reader.result);
-      setValue("path", reader.result as unknown as string);
+      setValue('path', reader.result as unknown as string);
     };
 
     if (files) {
@@ -340,19 +327,15 @@ const BannerModal = ({
       okText="Lưu thay đổi"
       cancelText="Hủy bỏ"
       onCancel={onClose}
-      style={{ minWidth: "70%" }}
+      style={{ minWidth: '70%' }}
       footer={[
-        modalType === ModalType.INFORMATION ? (
-          ""
-        ) : (
-          <Button onClick={onClose}>Hủy</Button>
-        ),
+        modalType === ModalType.INFORMATION ? '' : <Button onClick={onClose}>Hủy</Button>,
         <Button
           form="form-banner"
           key="submit"
           htmlType="submit"
           loading={isLoading}
-          style={{ background: "#1890ff", color: "#fff" }}
+          style={{ background: '#1890ff', color: '#fff' }}
         >
           {getTitleModalAndButton.titleButton}
         </Button>,
@@ -363,9 +346,7 @@ const BannerModal = ({
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
-                  Thông tin banner
-                </h3>
+                <h3 className="font-medium text-black dark:text-white">Thông tin banner</h3>
               </div>
               <div className="p-10">
                 <form id="form-banner" onSubmit={handleSubmit(onSubmit)}>
@@ -374,8 +355,7 @@ const BannerModal = ({
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="Username"
                     >
-                      Thể loại banner{" "}
-                      <strong className="text-xl text-danger">*</strong>
+                      Thể loại banner <strong className="text-xl text-danger">*</strong>
                     </label>
                     <Controller
                       name="bannerType"
@@ -395,8 +375,7 @@ const BannerModal = ({
                   {showConfigFollowBannerType.isShowLinkInput && (
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Đường dẫn đến trang{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Đường dẫn đến trang <strong className="text-xl text-danger">*</strong>
                       </label>
 
                       <Controller
@@ -406,33 +385,30 @@ const BannerModal = ({
                         render={({ field: { value, onChange } }) => (
                           <input
                             className={`w-full rounded border border-stroke  py-2.5 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary ${
-                              errors.link ? "!border-danger" : ""
+                              errors.link ? '!border-danger' : ''
                             }`}
                             type="text"
-                            value={value ? value : ""}
-                            defaultValue={""}
+                            value={value ? value : ''}
+                            defaultValue={''}
                             onChange={onChange}
                             placeholder="Nhập đường dẫn"
                           />
                         )}
                       />
-                      {errors?.link?.type === "pattern" && (
-                        <small className="text-danger block">
-                          Đường dẫn không hợp lệ
-                        </small>
+                      {errors?.link?.type === 'pattern' && (
+                        <small className="text-danger block">Đường dẫn không hợp lệ</small>
                       )}
-                      {errors?.link?.type === "required" && (
+                      {errors?.link?.type === 'required' && (
                         <small className="text-danger text-[13px] block">
                           Đường dẫn không được rỗng
                         </small>
                       )}
                     </div>
-                  )}{" "}
+                  )}{' '}
                   {showConfigFollowBannerType.isShowProductCategoryDropdown && (
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Danh mục sản phẩm{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Danh mục sản phẩm <strong className="text-xl text-danger">*</strong>
                       </label>
                       <Controller
                         name="redirectId"
@@ -442,12 +418,10 @@ const BannerModal = ({
                           <TreeSelect
                             key={value}
                             className={`w-full rounded border ${
-                              errors.redirectId
-                                ? "border-danger"
-                                : "border-stroke"
+                              errors.redirectId ? 'border-danger' : 'border-stroke'
                             }  py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary`}
                             value={value}
-                            dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             treeData={generateOptionTreeSelect}
                             placeholder="Vui lòng chọn mục sản phẩm"
                             treeDefaultExpandAll
@@ -455,7 +429,7 @@ const BannerModal = ({
                           />
                         )}
                       />
-                      {errors?.redirectId?.type === "required" && (
+                      {errors?.redirectId?.type === 'required' && (
                         <small className="text-danger text-[13px]">
                           Danh mục sản phẩm không hợp lệ
                         </small>
@@ -471,18 +445,13 @@ const BannerModal = ({
                         name="redirectId"
                         control={control}
                         rules={{
-                          required:
-                            banner?.bannerType === BannerType.PRODUCT
-                              ? true
-                              : false,
+                          required: banner?.bannerType === BannerType.PRODUCT ? true : false,
                         }}
                         render={({ field: { value, onChange } }) => (
                           <Select
                             key={value}
                             className={`w-full rounded border ${
-                              errors.redirectId
-                                ? "border-danger"
-                                : "border-stroke"
+                              errors.redirectId ? 'border-danger' : 'border-stroke'
                             }  py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary`}
                             value={value}
                             options={generateOptionSelect}
@@ -492,10 +461,8 @@ const BannerModal = ({
                           />
                         )}
                       />
-                      {errors?.redirectId?.type === "required" && (
-                        <small className="text-danger block">
-                          Danh mục sản phẩm không hợp lệ
-                        </small>
+                      {errors?.redirectId?.type === 'required' && (
+                        <small className="text-danger block">Danh mục sản phẩm không hợp lệ</small>
                       )}
                     </div>
                   )}
@@ -571,8 +538,7 @@ const BannerModal = ({
                           </svg>
                         </span>
                         <p>
-                          <span className="text-primary">Click to upload</span>{" "}
-                          or drag and drop
+                          <span className="text-primary">Click to upload</span> or drag and drop
                         </p>
                         <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                         <p>(max, 800 X 800px)</p>
@@ -580,10 +546,8 @@ const BannerModal = ({
                     )}
                   </div>
                 </div>
-                {errors?.path?.type === "required" && !getValues("path") && (
-                  <small className="text-danger block text-[13px]">
-                    {errors.path.message}
-                  </small>
+                {errors?.path?.type === 'required' && !getValues('path') && (
+                  <small className="text-danger block text-[13px]">{errors.path.message}</small>
                 )}
               </div>
             </div>

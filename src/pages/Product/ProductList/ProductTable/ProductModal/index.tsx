@@ -1,28 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Button,
-  Col,
-  Input,
-  InputNumber,
-  Modal,
-  Row,
-  Select,
-  Tag,
-  Typography,
-} from "antd";
-import type { CustomTagProps } from "rc-select/lib/BaseSelect";
-import React, { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import Loading from "~/components/Loading";
-import {
-  ProductMain,
-  ProductStatusOptions,
-  ProductType,
-} from "~/models/product";
-import { ModalType } from "~/pages/User/UserModal";
-import { ProductTypeTagRenderMapping } from "..";
-import { productService } from "~/services/productService";
-import toast from "react-hot-toast";
+import { Button, Col, Input, InputNumber, Modal, Row, Select, Tag, Typography } from 'antd';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import Loading from '~/components/Loading';
+import { ProductMain, ProductStatusOptions, ProductType } from '~/models/product';
+import { ModalType } from '~/pages/User/UserModal';
+import { ProductTypeTagRenderMapping } from '..';
+import { productService } from '~/services/productService';
+import toast from 'react-hot-toast';
 
 interface ProductModalProps {
   visible?: boolean;
@@ -33,21 +19,15 @@ interface ProductModalProps {
 }
 
 const defaultProductValues: ProductMain = {
-  name: "",
+  name: '',
   price: 0,
   oldPrice: 0,
-  description: "",
-  image: "",
-  information: "",
+  description: '',
+  image: '',
+  information: '',
   types: [ProductType.NORMAL],
 };
-function ProductModal({
-  modalType,
-  visible,
-  onClose,
-  refetchData,
-  product,
-}: ProductModalProps) {
+function ProductModal({ modalType, visible, onClose, refetchData, product }: ProductModalProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fileProduct, setFileProduct] = useState<{
     filePreview?: any;
@@ -66,26 +46,26 @@ function ProductModal({
 
   const getTitleModalAndButton = useMemo(() => {
     let result = {
-      titleModal: "",
-      titleButton: "",
+      titleModal: '',
+      titleButton: '',
     };
     switch (modalType) {
       case ModalType.CREATE:
         result = {
-          titleModal: "Thêm sản phẩm mới",
-          titleButton: "Thêm sản phẩm",
+          titleModal: 'Thêm sản phẩm mới',
+          titleButton: 'Thêm sản phẩm',
         };
         break;
       case ModalType.UPDATE:
         result = {
-          titleModal: "Cập nhật thông tin sản phẩm",
-          titleButton: "Cập nhật",
+          titleModal: 'Cập nhật thông tin sản phẩm',
+          titleButton: 'Cập nhật',
         };
         break;
       case ModalType.INFORMATION:
         result = {
-          titleModal: "Thông tin sản phẩm",
-          titleButton: "",
+          titleModal: 'Thông tin sản phẩm',
+          titleButton: '',
         };
         break;
     }
@@ -145,9 +125,9 @@ function ProductModal({
     setIsLoading(true);
     const formData = new FormData();
     try {
-      formData.append("file", fileProduct?.fileUpload || "");
+      formData.append('file', fileProduct?.fileUpload || '');
 
-      formData.append("productInfo", JSON.stringify(dataSubmit));
+      formData.append('productInfo', JSON.stringify(dataSubmit));
 
       modalType === ModalType.CREATE
         ? await productService.createProduct(formData)
@@ -158,15 +138,15 @@ function ProductModal({
       toast.success(
         `${
           modalType === ModalType.CREATE
-            ? "Thêm sản phẩm thành công"
+            ? 'Thêm sản phẩm thành công'
             : modalType === ModalType.UPDATE
-            ? "Cập nhật sản phẩm thành công"
-            : ""
+            ? 'Cập nhật sản phẩm thành công'
+            : ''
         }`,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           duration: 4000,
-          icon: "🤪",
+          icon: '🤪',
         },
       );
       setIsLoading(false);
@@ -176,10 +156,10 @@ function ProductModal({
       onClose();
     } catch (error) {
       console.log(error);
-      toast.error("Thêm sản phẩm thất bại", {
-        position: "bottom-right",
+      toast.error('Thêm sản phẩm thất bại', {
+        position: 'bottom-right',
         duration: 4000,
-        icon: "😞",
+        icon: '😞',
       });
       setIsLoading(false);
     }
@@ -193,11 +173,9 @@ function ProductModal({
         okText="Lưu thay đổi"
         cancelText="Hủy bỏ"
         onCancel={onClose}
-        style={{ minWidth: "80%" }}
+        style={{ minWidth: '80%' }}
         footer={[
-          modalType === ModalType.INFORMATION ? null : (
-            <Button onClick={onClose}>Hủy</Button>
-          ),
+          modalType === ModalType.INFORMATION ? null : <Button onClick={onClose}>Hủy</Button>,
           <Button
             form="form-user"
             key="submit"
@@ -208,11 +186,7 @@ function ProductModal({
           </Button>,
         ]}
       >
-        <form
-          autoComplete="off"
-          id="form-user"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form autoComplete="off" id="form-user" onSubmit={handleSubmit(onSubmit)}>
           <Row gutter={24}>
             <Col span={8}>
               {modalType !== ModalType.INFORMATION && (
@@ -258,8 +232,7 @@ function ProductModal({
                           </svg>
                         </span>
                         <p>
-                          <span className="text-primary">Click to upload</span>{" "}
-                          or drag and drop
+                          <span className="text-primary">Click to upload</span> or drag and drop
                         </p>
                         <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                         <p>(max, 800 X 800px)</p>
@@ -268,7 +241,7 @@ function ProductModal({
                       <img
                         src={fileProduct?.filePreview}
                         className="max-h-[300px] border-[1px] border-solid border-[#ddd] mx-auto "
-                        alt={`Ảnh ${product?.name}` || ""}
+                        alt={`Ảnh ${product?.name}` || ''}
                       />
                     )}
                   </div>
@@ -284,12 +257,8 @@ function ProductModal({
                 {modalType != ModalType.INFORMATION && (
                   <>
                     <Col span={24}>
-                      <Typography.Text
-                        type="secondary"
-                        className="!text-black text-[14.5px]"
-                      >
-                        Tên sản phẩm{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                      <Typography.Text type="secondary" className="!text-black text-[14.5px]">
+                        Tên sản phẩm <strong className="text-xl text-danger">*</strong>
                       </Typography.Text>
                       <Controller
                         name="name"
@@ -300,18 +269,18 @@ function ProductModal({
                             value={value}
                             onChange={onChange}
                             className={`h-[38px] border-solid border-[1px] ${
-                              errors.name ? "!border-danger" : ""
+                              errors.name ? '!border-danger' : ''
                             }`}
                             placeholder="Tên sản phẩm"
                           />
                         )}
                       />
-                      {errors.name?.type === "required" ? (
+                      {errors.name?.type === 'required' ? (
                         <small className="text-danger text-[13px]">
                           Tên sản phẩm không được rỗng
                         </small>
                       ) : (
-                        ""
+                        ''
                       )}
                     </Col>
 
@@ -339,10 +308,7 @@ function ProductModal({
                 {modalType != ModalType.INFORMATION && (
                   <>
                     <Col span={24}>
-                      <Typography.Text
-                        type="secondary"
-                        className="!text-black text-[14.5px]"
-                      >
+                      <Typography.Text type="secondary" className="!text-black text-[14.5px]">
                         Mô tả sản phẩm
                       </Typography.Text>
                       <Controller
@@ -353,7 +319,7 @@ function ProductModal({
                             value={value}
                             onChange={onChange}
                             className={`h-[38px] border-solid border-[1px] ${
-                              errors.description ? "!border-danger" : ""
+                              errors.description ? '!border-danger' : ''
                             }`}
                             placeholder="Tên sản phẩm"
                           />
@@ -385,12 +351,8 @@ function ProductModal({
                 {modalType != ModalType.INFORMATION && (
                   <>
                     <Col span={24}>
-                      <Typography.Text
-                        type="secondary"
-                        className="!text-black text-[14.5px]"
-                      >
-                        Giá sản phẩm{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                      <Typography.Text type="secondary" className="!text-black text-[14.5px]">
+                        Giá sản phẩm <strong className="text-xl text-danger">*</strong>
                       </Typography.Text>
                       <Controller
                         name="price"
@@ -401,27 +363,18 @@ function ProductModal({
                         render={({ field: { value, onChange } }) => (
                           <InputNumber
                             formatter={(value) =>
-                              value
-                                ? `${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ",",
-                                  )
-                                : ""
+                              value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
                             }
                             parser={(displayValue?: string) =>
-                              displayValue
-                                ? Number(
-                                    displayValue.replace(/\$\s?|(,*)/g, ""),
-                                  )
-                                : 0
+                              displayValue ? Number(displayValue.replace(/\$\s?|(,*)/g, '')) : 0
                             }
                             value={value}
                             min={0}
                             onChange={(value) => value && onChange(value)}
                             className={`h-[38px] !w-full   ${
                               errors.price
-                                ? "!border-danger border-solid  border-[100%] border-t-0 border-l-0"
-                                : ""
+                                ? '!border-danger border-solid  border-[100%] border-t-0 border-l-0'
+                                : ''
                             } `}
                             placeholder="Nhập số tiền được giảm"
                             controls={false}
@@ -429,12 +382,12 @@ function ProductModal({
                           />
                         )}
                       />
-                      {errors.price?.type === "required" ? (
+                      {errors.price?.type === 'required' ? (
                         <small className="text-danger text-[13px]">
                           Giá sản phẩm không được rỗng
                         </small>
                       ) : (
-                        ""
+                        ''
                       )}
                     </Col>
 
@@ -462,10 +415,7 @@ function ProductModal({
                 {modalType != ModalType.INFORMATION && (
                   <>
                     <Col span={24}>
-                      <Typography.Text
-                        type="secondary"
-                        className="!text-black text-[14.5px]"
-                      >
+                      <Typography.Text type="secondary" className="!text-black text-[14.5px]">
                         Giá cũ sản phẩm
                       </Typography.Text>
                       <Controller
@@ -477,27 +427,18 @@ function ProductModal({
                         render={({ field: { value, onChange } }) => (
                           <InputNumber
                             formatter={(value) =>
-                              value
-                                ? `${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ",",
-                                  )
-                                : ""
+                              value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
                             }
                             parser={(displayValue?: string) =>
-                              displayValue
-                                ? Number(
-                                    displayValue.replace(/\$\s?|(,*)/g, ""),
-                                  )
-                                : 0
+                              displayValue ? Number(displayValue.replace(/\$\s?|(,*)/g, '')) : 0
                             }
                             value={value}
                             min={0}
                             onChange={(value) => value && onChange(value)}
                             className={`h-[38px] !w-full   ${
                               errors.oldPrice
-                                ? "!border-danger border-solid  border-[100%] border-t-0 border-l-0"
-                                : ""
+                                ? '!border-danger border-solid  border-[100%] border-t-0 border-l-0'
+                                : ''
                             } `}
                             placeholder="Nhập số tiền được giảm"
                             controls={false}
@@ -531,10 +472,7 @@ function ProductModal({
                 {modalType != ModalType.INFORMATION && (
                   <>
                     <Col span={24}>
-                      <Typography.Text
-                        type="secondary"
-                        className="!text-black text-[14.5px]"
-                      >
+                      <Typography.Text type="secondary" className="!text-black text-[14.5px]">
                         Thể loại sản phẩm
                       </Typography.Text>
                       <Controller
@@ -548,7 +486,7 @@ function ProductModal({
                             mode="multiple"
                             allowClear
                             value={value}
-                            style={{ width: "100%" }}
+                            style={{ width: '100%' }}
                             onChange={onChange}
                             options={ProductStatusOptions}
                             tagRender={tagRender}

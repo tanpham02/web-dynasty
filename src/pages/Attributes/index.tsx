@@ -1,22 +1,20 @@
-import { Button, Tooltip, useDisclosure } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
-import SVG from "react-inlinesvg";
-import { useState } from "react";
-import { useSnackbar } from "notistack";
+import { Button, Tooltip, useDisclosure } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
+import SVG from 'react-inlinesvg';
+import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
-import CustomBreadcrumb from "~/components/NextUI/CustomBreadcrumb";
-import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { Attribute } from "~/models/attribute";
-import { attributeService } from "~/services/attributeService";
-import AttributeModal from "./AttributeModal";
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { Attribute } from '~/models/attribute';
+import { attributeService } from '~/services/attributeService';
+import AttributeModal from './AttributeModal';
 
-import DeleteIcon from "~/assets/svg/delete.svg";
-import EyeIcon from "~/assets/svg/eye.svg";
-import EditIcon from "~/assets/svg/edit.svg";
-import ModalConfirmDelete, {
-  ModalConfirmDeleteState,
-} from "~/components/ModalConfirmDelete";
+import DeleteIcon from '~/assets/svg/delete.svg';
+import EyeIcon from '~/assets/svg/eye.svg';
+import EditIcon from '~/assets/svg/edit.svg';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 
 const Attributes = () => {
   const {
@@ -41,31 +39,29 @@ const Attributes = () => {
 
   const columns: ColumnType<Attribute>[] = [
     {
-      key: "_id",
-      align: "center",
-      name: "STT",
+      key: '_id',
+      align: 'center',
+      name: 'STT',
       render: (_attribute: Attribute, index?: number) => (index || 0) + 1,
     },
     {
-      key: "name",
-      align: "center",
-      name: "Tên thuộc tính",
+      key: 'name',
+      align: 'center',
+      name: 'Tên thuộc tính',
       render: (attribute: Attribute) => attribute?.name,
     },
     {
-      key: "attributeList",
-      align: "center",
-      name: "Số lượng giá trị",
+      key: 'attributeList',
+      align: 'center',
+      name: 'Số lượng giá trị',
       render: (attribute: Attribute) => (
-        <span className="font-bold">
-          {attribute?.attributeList?.length || 0}
-        </span>
+        <span className="font-bold">{attribute?.attributeList?.length || 0}</span>
       ),
     },
     {
-      key: "id",
-      align: "center",
-      name: "Hành động",
+      key: 'id',
+      align: 'center',
+      name: 'Hành động',
       render: (attribute: Attribute) => (
         <div className="relative flex items-center gap-2">
           <Tooltip content="Chỉnh sửa thuộc tính" showArrow delay={1500}>
@@ -76,12 +72,7 @@ const Attributes = () => {
               <SVG src={EditIcon} />
             </span>
           </Tooltip>
-          <Tooltip
-            color="danger"
-            content="Xóa thuộc tính này"
-            showArrow
-            delay={1500}
-          >
+          <Tooltip color="danger" content="Xóa thuộc tính này" showArrow delay={1500}>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50"
               onClick={() => handleOpenDeleteModal(attribute)}
@@ -100,13 +91,9 @@ const Attributes = () => {
     isFetching: isFetchingAttributes,
     isRefetching: isRefetchingAttributes,
     refetch: refetchAttributes,
-  } = useQuery(
-    [QUERY_KEY.ATTRIBUTE],
-    async () => await attributeService.getAllAttributes(),
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  } = useQuery([QUERY_KEY.ATTRIBUTE], async () => await attributeService.getAllAttributes(), {
+    refetchOnWindowFocus: false,
+  });
 
   const handleOpenDeleteModal = (attribute: Attribute) => {
     setModalDelete({
@@ -117,10 +104,7 @@ const Attributes = () => {
   };
 
   const handleOpenModalEdit = (attribute: Attribute) => {
-    console.log(
-      "🚀 ~ file: index.tsx:129 ~ handleOpenModal ~ attribute:",
-      attribute,
-    );
+    console.log('🚀 ~ file: index.tsx:129 ~ handleOpenModal ~ attribute:', attribute);
     setModal({ isEdit: true, attributeId: attribute?._id });
     onOpenModal();
   };
@@ -133,18 +117,13 @@ const Attributes = () => {
   const handleDeleteAttribute = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await attributeService.deleteAttribute(
-        modalDelete?.id ? [modalDelete.id] : [],
-      );
-      enqueueSnackbar("Xóa thuộc tính thành công!");
+      await attributeService.deleteAttribute(modalDelete?.id ? [modalDelete.id] : []);
+      enqueueSnackbar('Xóa thuộc tính thành công!');
     } catch (err) {
-      enqueueSnackbar("Có lỗi xảy ra khi xóa thuộc tính!", {
-        variant: "error",
+      enqueueSnackbar('Có lỗi xảy ra khi xóa thuộc tính!', {
+        variant: 'error',
       });
-      console.log(
-        "🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:",
-        err,
-      );
+      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:', err);
     } finally {
       await refetchAttributes();
       setModalDelete({});
@@ -158,16 +137,12 @@ const Attributes = () => {
         pageName="Danh sách thuộc tính"
         routes={[
           {
-            label: "Danh sách thuộc tính",
+            label: 'Danh sách thuộc tính',
           },
         ]}
       />
       <div className="flex justify-end mb-2">
-        <Button
-          color="primary"
-          variant="shadow"
-          onClick={handleOpenModalAddAttribute}
-        >
+        <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>
           Thêm thuộc tính
         </Button>
       </div>
@@ -176,9 +151,7 @@ const Attributes = () => {
         data={attributes}
         tableName="Danh sách thuộc tính"
         emptyContent="Không có thuộc tính nào"
-        isLoading={
-          isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes
-        }
+        isLoading={isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes}
       />
       <AttributeModal
         isOpen={isOpenModal}

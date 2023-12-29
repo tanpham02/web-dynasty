@@ -1,13 +1,16 @@
-import { SelectItem } from '@nextui-org/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { SelectItem, Skeleton } from '@nextui-org/react';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import Box from '~/components/Box';
 
 import CustomModal from '~/components/NextUI/CustomModal';
+import CustomTable from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextSwitch from '~/components/NextUI/Form/FormContextSwitch';
+import ModalCategorySkeleton from '~/components/Skeleton/ModalCategorySkeleton';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { Category } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
@@ -70,6 +73,7 @@ const CategoryModal = ({
     () => categories?.pages?.flatMap((page) => page?.data),
     [categories],
   );
+  console.log('🚀 ~ file: index.tsx:76 ~ categoriesData:', categoriesData);
 
   const onSubmit = async (data: Category) => {
     try {
@@ -82,9 +86,7 @@ const CategoryModal = ({
       if (data?.childrenCategory?.parentId) {
         parentCategoryId = [...data.childrenCategory.parentId]?.[0];
         isCreateChildrenCategory = true;
-        const parentCategory = categoriesData?.find(
-          (item) => item._id === parentCategoryId,
-        );
+        const parentCategory = categoriesData?.find((item) => item._id === parentCategoryId);
 
         jsonData = {
           ...parentCategory,
@@ -107,20 +109,14 @@ const CategoryModal = ({
       formData.append('categoryInfo', JSON.stringify(jsonData));
 
       if (isEdit || isCreateChildrenCategory)
-        await categoryService.updateCategory(
-          categoryId || parentCategoryId,
-          formData,
-        );
+        await categoryService.updateCategory(categoryId || parentCategoryId, formData);
       else await categoryService.createCategory(formData);
 
       enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} danh mục thành công!`);
     } catch (err) {
-      enqueueSnackbar(
-        `Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} danh mục!`,
-        {
-          variant: 'error',
-        },
-      );
+      enqueueSnackbar(`Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} danh mục!`, {
+        variant: 'error',
+      });
       console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
     } finally {
       await onRefetch?.();
@@ -139,37 +135,30 @@ const CategoryModal = ({
       isLoading={isSubmitting}
     >
       <FormProvider {...forms}>
-        <div className="space-y-4">
-          {Array.isArray(categoriesData) && categoriesData.length > 0 && (
+        {Array.isArray(categoriesData) && categoriesData.length > 0 && (
+          <Box className="space-y-4">
             <FormContextSelect
               isLoading={isLoadingCategory || isFetchingCategory}
               name="childrenCategory.parentId"
               label="Danh mục cha (nếu có)"
               items={categoriesData}
             >
-              {(category: any) => (
-                <SelectItem key={category?._id}>{category?.name}</SelectItem>
-              )}
+              {(category: any) => <SelectItem key={category?._id}>{category?.name}</SelectItem>}
             </FormContextSelect>
-          )}
-          <FormContextInput
-            isRequired
-            name="name"
-            label="Tên danh mục"
-            rules={{
-              required: 'Vui lòng nhập tên danh mục',
-            }}
-          />
-          <FormContextInput
-            name="priority"
-            label="Thứ tự hiển thị"
-            type="number"
-          />
-          <FormContextSwitch
-            name="isShowHomePage"
-            label="Hiển thị trên trang chủ"
-          />
-        </div>
+            <FormContextInput
+              isRequired
+              name="name"
+              label="Tên danh mục"
+              rules={{
+                required: 'Vui lòng nhập tên danh mục',
+              }}
+            />
+            <FormContextInput name="priority" label="Thứ tự hiển thị" type="number" />
+            <FormContextSwitch name="isShowHomePage" label="Hiển thị trên trang chủ" />
+            <CustomTable />
+          </Box>
+        )}
+        <ModalCategorySkeleton />
       </FormProvider>
     </CustomModal>
   );

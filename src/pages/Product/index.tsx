@@ -37,8 +37,7 @@ const ProductListPage = () => {
   const [valueSearch, setValueSearch] = useState<string>('');
 
   const queryText = useDebounce(valueSearch, 700);
-  const [valueFilterFromCategory, setValueFilterFromCategory] =
-    useState<string>();
+  const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
 
   const {
     data: productList,
@@ -61,13 +60,11 @@ const ProductListPage = () => {
 
   const columns: ColumnType<ProductMain>[] = [
     {
-      key: '_id',
       align: 'center',
       name: 'STT',
       render: (_product: ProductMain, index?: number) => (index || 0) + 1,
     },
     {
-      key: 'image',
       align: 'center',
       name: 'Hình ảnh',
       render: (product: ProductMain) => (
@@ -77,27 +74,22 @@ const ProductListPage = () => {
           src={getFullImageUrl(product?.image)}
           fallbackSrc="https://via.placeholder.com/80x80"
           alt={product?.name}
-          className="w-20"
+          className="w-20 h-20"
           loading="lazy"
         />
       ),
     },
     {
-      key: 'name',
       align: 'center',
       name: 'Tên',
-      render: (product: ProductMain) => (
-        <span className="line-clamp-1">{product?.name}</span>
-      ),
+      render: (product: ProductMain) => <span className="line-clamp-1">{product?.name}</span>,
     },
     {
-      key: 'price',
       align: 'center',
       name: 'Gía bán',
       render: (product: ProductMain) => formatCurrencyVND(product?.price),
     },
     {
-      key: 'types',
       align: 'end',
       name: 'Loại sản phẩm',
       render: (product: ProductMain) => (
@@ -107,7 +99,6 @@ const ProductListPage = () => {
       ),
     },
     {
-      key: 'description',
       align: 'center',
       name: 'Hành động',
       render: () => (
@@ -147,11 +138,7 @@ const ProductListPage = () => {
           value={valueSearch}
           onValueChange={setValueSearch}
         />
-        <Button
-          color="primary"
-          variant="shadow"
-          onClick={() => navigate(PATH_NAME.PRODUCT)}
-        >
+        <Button color="primary" variant="shadow" onClick={() => navigate(PATH_NAME.PRODUCT)}>
           Thêm sản phẩm
         </Button>
       </Box>

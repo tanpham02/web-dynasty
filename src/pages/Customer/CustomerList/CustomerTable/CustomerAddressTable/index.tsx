@@ -1,22 +1,18 @@
-import React from "react";
-import { CustomerAddressItem } from "~/models/customers/customerAddress";
-import { Breakpoint } from "~/types";
-import { CustomerAddressProps } from "..";
-import { Modal, Table, Typography } from "antd";
-import { CheckCircleOutlined } from "@ant-design/icons";
-import "./index.scss";
+import React from 'react';
+import { CustomerAddressItem } from '~/models/customers/customerAddress';
+import { Breakpoint } from '~/types';
+import { CustomerAddressProps } from '..';
+import { Modal, Table, Typography } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import './index.scss';
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof CustomerAddressItem;
   key?: keyof CustomerAddressItem;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
-  render?: (
-    value: any,
-    record: CustomerAddressItem,
-    index: number,
-  ) => React.ReactNode;
+  align?: 'left' | 'center' | 'right';
+  render?: (value: any, record: CustomerAddressItem, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
 
@@ -28,43 +24,43 @@ interface CustomerAddressTableProps {
 const CustomerAddressTable = ({ data, onClose }: CustomerAddressTableProps) => {
   const COLUMNS: TableColumn[] = [
     {
-      title: "Họ tên",
-      dataIndex: "fullName",
-      key: "districtId",
-      align: "center",
+      title: 'Họ tên',
+      dataIndex: 'fullName',
+      key: 'districtId',
+      align: 'center',
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-      align: "center",
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      align: 'center',
     },
     {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
-      align: "center",
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      key: 'address',
+      align: 'center',
       render: (_, record, _index) => (
         <Typography.Text>{handleGenerateAddress(record)}</Typography.Text>
       ),
     },
     {
-      title: "Địa chỉ mặc định",
-      dataIndex: "isDefault",
-      key: "isDefault",
+      title: 'Địa chỉ mặc định',
+      dataIndex: 'isDefault',
+      key: 'isDefault',
       render: (__index, record) => (
         <>
           {record.isDefault && (
             <CheckCircleOutlined
               style={{
                 fontSize: 20,
-                color: "#006a31",
+                color: '#006a31',
               }}
             />
           )}
         </>
       ),
-      align: "center",
+      align: 'center',
     },
   ];
 

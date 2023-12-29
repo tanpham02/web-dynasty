@@ -1,4 +1,4 @@
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import jwt_decode, { JwtPayload } from 'jwt-decode';
 
 export const checkTokenExp = (token: string) => {
   const date = new Date().getTime() / 1000;

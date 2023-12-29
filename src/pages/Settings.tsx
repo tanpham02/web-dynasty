@@ -1,5 +1,5 @@
-import Breadcrumb from "~/components/Breadcrumb";
-import userThree from "~ assets/images/user/user-03.png";
+import Breadcrumb from '~/components/Breadcrumb';
+import userThree from '~ assets/images/user/user-03.png';
 
 const Settings = () => {
   return (
@@ -11,9 +11,7 @@ const Settings = () => {
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
-                  Personal Information
-                </h3>
+                <h3 className="font-medium text-black dark:text-white">Personal Information</h3>
               </div>
               <div className="p-7">
                 <form action="#">
@@ -212,9 +210,7 @@ const Settings = () => {
           <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
-                  Your Photo
-                </h3>
+                <h3 className="font-medium text-black dark:text-white">Your Photo</h3>
               </div>
               <div className="p-7">
                 <form action="#">
@@ -223,16 +219,10 @@ const Settings = () => {
                       <img src={userThree} alt="User" />
                     </div>
                     <div>
-                      <span className="mb-1.5 text-black dark:text-white">
-                        Edit your photo
-                      </span>
+                      <span className="mb-1.5 text-black dark:text-white">Edit your photo</span>
                       <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
-                          Delete
-                        </button>
-                        <button className="text-sm hover:text-primary">
-                          Update
-                        </button>
+                        <button className="text-sm hover:text-primary">Delete</button>
+                        <button className="text-sm hover:text-primary">Update</button>
                       </span>
                     </div>
                   </div>
@@ -276,8 +266,7 @@ const Settings = () => {
                         </svg>
                       </span>
                       <p>
-                        <span className="text-primary">Click to upload</span> or
-                        drag and drop
+                        <span className="text-primary">Click to upload</span> or drag and drop
                       </p>
                       <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                       <p>(max, 800 X 800px)</p>

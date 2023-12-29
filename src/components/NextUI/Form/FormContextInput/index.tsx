@@ -1,10 +1,5 @@
 import { Input, InputProps } from '@nextui-org/react';
-import {
-  Controller,
-  FieldValues,
-  RegisterOptions,
-  useFormContext,
-} from 'react-hook-form';
+import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
 
 interface FormContextInputProps extends InputProps {
   name: string;
@@ -32,7 +27,7 @@ const FormContextInput = (props: FormContextInputProps) => {
             label: 'font-semibold',
           }}
           color={!!error ? 'danger' : 'primary'}
-          size="sm"
+          size="md"
           variant="underlined"
           {...props}
         />

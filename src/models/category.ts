@@ -1,6 +1,6 @@
 export enum CategoryStatus {
-  ACTIVE = "ACTIVE",
-  IN_ACTIVE = "IN_ACTIVE",
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'IN_ACTIVE',
 }
 
 export interface Category {

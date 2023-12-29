@@ -1,34 +1,23 @@
-import {
-  CalculatorOutlined,
-  EditOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { InfiniteData } from "@tanstack/react-query";
-import {
-  Avatar,
-  Button,
-  Empty,
-  Select,
-  Table,
-  TablePaginationConfig,
-} from "antd";
-import { useMemo, useState } from "react";
-import { Customer } from "~/models/customers";
-import { Breakpoint, ListDataResponse, ListResponse } from "~/types";
-import CreateOrUpdateCustomerModal from "../CreateOrUpdateCustomerModal";
-import moment from "moment";
-import { DATE_FORMAT_DDMMYYYY } from "~/utils/date.utils";
-import UpdateCustomerPointModal from "../UpdateCustomerPoint";
-import customerAddressService from "~/services/customerService/customerAddressService";
-import { CustomerAddressList } from "~/models/customers/customerAddress";
-import CustomerAddressTable from "./CustomerAddressTable";
+import { CalculatorOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { InfiniteData } from '@tanstack/react-query';
+import { Avatar, Button, Empty, Select, Table, TablePaginationConfig } from 'antd';
+import { useMemo, useState } from 'react';
+import { Customer } from '~/models/customers';
+import { Breakpoint, ListDataResponse, ListResponse } from '~/types';
+import CreateOrUpdateCustomerModal from '../CreateOrUpdateCustomerModal';
+import moment from 'moment';
+import { DATE_FORMAT_DDMMYYYY } from '~/utils/date.utils';
+import UpdateCustomerPointModal from '../UpdateCustomerPoint';
+import customerAddressService from '~/services/customerService/customerAddressService';
+import { CustomerAddressList } from '~/models/customers/customerAddress';
+import CustomerAddressTable from './CustomerAddressTable';
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof Customer;
   key?: keyof Customer;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: Customer, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -46,25 +35,19 @@ export interface CustomerAddressProps {
   dataCustomerAddress?: CustomerAddressList;
 }
 
-const CustomerTable = ({
-  data,
-  refreshData,
-  handleTableChange,
-}: CustomerTableProps) => {
-  const [showCreateOrUpdateCustomerModal, setShowCreateOrUpdateCustomerModal] =
-    useState<{
-      isShowCreateOrUpdateCustomerModal?: boolean;
-      isShowUpdateCustomerPointModal?: boolean;
-      customerID: number;
-      type?: "UPDATE" | "CREATE" | "DETAIL";
-    }>({
-      isShowCreateOrUpdateCustomerModal: false,
-      isShowUpdateCustomerPointModal: false,
-      customerID: CUSTOMER_ID_WHEN_EMPTY,
-      type: "CREATE",
-    });
-  const [dataCustomerAddress, setDataCustomerAddress] =
-    useState<CustomerAddressProps>({});
+const CustomerTable = ({ data, refreshData, handleTableChange }: CustomerTableProps) => {
+  const [showCreateOrUpdateCustomerModal, setShowCreateOrUpdateCustomerModal] = useState<{
+    isShowCreateOrUpdateCustomerModal?: boolean;
+    isShowUpdateCustomerPointModal?: boolean;
+    customerID: number;
+    type?: 'UPDATE' | 'CREATE' | 'DETAIL';
+  }>({
+    isShowCreateOrUpdateCustomerModal: false,
+    isShowUpdateCustomerPointModal: false,
+    customerID: CUSTOMER_ID_WHEN_EMPTY,
+    type: 'CREATE',
+  });
+  const [dataCustomerAddress, setDataCustomerAddress] = useState<CustomerAddressProps>({});
 
   const pagination = useMemo(() => {
     const current = data?.pageIndex;
@@ -79,41 +62,38 @@ const CustomerTable = ({
 
   const COLUMNS: TableColumn[] = [
     {
-      title: "Họ tên",
-      dataIndex: "fullName",
-      key: "fullName",
-      align: "center",
+      title: 'Họ tên',
+      dataIndex: 'fullName',
+      key: 'fullName',
+      align: 'center',
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-      align: "center",
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      align: 'center',
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      align: "center",
-      responsive: ["lg"],
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      align: 'center',
+      responsive: ['lg'],
     },
     {
-      title: "Ngày sinh",
-      dataIndex: "birthday",
-      key: "birthday",
+      title: 'Ngày sinh',
+      dataIndex: 'birthday',
+      key: 'birthday',
       render: (__index, record) => (
-        <div>
-          {record.birthday &&
-            moment(record.birthday).format(DATE_FORMAT_DDMMYYYY)}
-        </div>
+        <div>{record.birthday && moment(record.birthday).format(DATE_FORMAT_DDMMYYYY)}</div>
       ),
-      align: "center",
-      responsive: ["md"],
+      align: 'center',
+      responsive: ['md'],
     },
     {
-      title: "Sổ địa chỉ",
-      dataIndex: "customerAddressId",
-      key: "customerAddressId",
+      title: 'Sổ địa chỉ',
+      dataIndex: 'customerAddressId',
+      key: 'customerAddressId',
       render: (__index, record) => (
         <button
           className="py-2 px-3 bg-gray text-primary rounded-md font-semibold hover:text-white duration-200 ease-linear hover:bg-primary"
@@ -122,7 +102,7 @@ const CustomerTable = ({
           Xem sổ địa chỉ
         </button>
       ),
-      align: "center",
+      align: 'center',
     },
 
     // {
@@ -138,10 +118,9 @@ const CustomerTable = ({
   const handleShowListCustomerAddress = async (customerId?: string) => {
     try {
       if (customerId) {
-        const listCustomerAddress =
-          await customerAddressService.getListCustomerAddressByCustomerId(
-            customerId,
-          );
+        const listCustomerAddress = await customerAddressService.getListCustomerAddressByCustomerId(
+          customerId,
+        );
         return setDataCustomerAddress({
           visible: true,
           dataCustomerAddress: listCustomerAddress,
@@ -154,20 +133,15 @@ const CustomerTable = ({
   };
 
   const handleConvertAddress = (record: Customer) => {
-    const addressParts = [
-      record.address,
-      record.ward,
-      record.district,
-      record.city,
-    ];
-    return addressParts.filter(Boolean).join(", ");
+    const addressParts = [record.address, record.ward, record.district, record.city];
+    return addressParts.filter(Boolean).join(', ');
   };
 
   const handleCloseProductDetailModal = () => {
     setShowCreateOrUpdateCustomerModal({
       isShowCreateOrUpdateCustomerModal: false,
       customerID: CUSTOMER_ID_WHEN_EMPTY,
-      type: "CREATE",
+      type: 'CREATE',
     });
   };
 
@@ -177,7 +151,7 @@ const CustomerTable = ({
         isShowCreateOrUpdateCustomerModal:
           !showCreateOrUpdateCustomerModal.isShowCreateOrUpdateCustomerModal,
         customerID: customerID,
-        type: "DETAIL",
+        type: 'DETAIL',
       });
     }
   };
@@ -188,7 +162,7 @@ const CustomerTable = ({
         isShowCreateOrUpdateCustomerModal:
           !showCreateOrUpdateCustomerModal.isShowCreateOrUpdateCustomerModal,
         customerID: customerID,
-        type: "UPDATE",
+        type: 'UPDATE',
       });
     }
   };
@@ -200,9 +174,7 @@ const CustomerTable = ({
     });
   };
 
-  const handleShowUpdateCustomerPointModal = (
-    customerID: number | undefined,
-  ) => {
+  const handleShowUpdateCustomerPointModal = (customerID: number | undefined) => {
     if (customerID) {
       setShowCreateOrUpdateCustomerModal({
         isShowUpdateCustomerPointModal:
@@ -227,21 +199,14 @@ const CustomerTable = ({
           total: pagination.totalElements,
         }}
         locale={{
-          emptyText: (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="Không có dữ liệu"
-            />
-          ),
+          emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />,
         }}
       />
       {showCreateOrUpdateCustomerModal.isShowCreateOrUpdateCustomerModal && (
         <CreateOrUpdateCustomerModal
-          isShowCustomerModal={
-            showCreateOrUpdateCustomerModal.isShowCreateOrUpdateCustomerModal
-          }
+          isShowCustomerModal={showCreateOrUpdateCustomerModal.isShowCreateOrUpdateCustomerModal}
           customerID={showCreateOrUpdateCustomerModal.customerID}
-          type={showCreateOrUpdateCustomerModal.type || "DETAIL"}
+          type={showCreateOrUpdateCustomerModal.type || 'DETAIL'}
           handleCancelModal={handleCloseProductDetailModal}
           handleConfirmModal={handleCloseProductDetailModal}
           refreshData={refreshData}

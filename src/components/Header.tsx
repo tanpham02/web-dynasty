@@ -18,9 +18,7 @@ const Header = (props: {
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const userInformation = useSelector<RootState, User>(
-    (state) => state.userStore.user,
-  );
+  const userInformation = useSelector<RootState, User>((state) => state.userStore.user);
   const token = localStorage.getItem('@refresh_token');
 
   useEffect(() => {

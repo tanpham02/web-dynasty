@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface Pagination {
   pageSize: number;
@@ -8,14 +8,14 @@ interface Pagination {
 interface PaginationProps {
   pageSize: number;
   pageIndex: number;
-  setPage(page: number): void
-  setRowPerPage(pageSize: number): void
+  setPage(page: number): void;
+  setRowPerPage(pageSize: number): void;
 }
 
 const usePagination = (): PaginationProps => {
   const [paginationValue, setPaginationValue] = useState<Pagination>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 10,
   });
 
   const setPage = (pageIndex: number) => {

@@ -1,16 +1,11 @@
-import { Select, SelectProps } from "@nextui-org/react";
-import {
-  Controller,
-  FieldValues,
-  RegisterOptions,
-  useFormContext,
-} from "react-hook-form";
+import { Select, SelectProps } from '@nextui-org/react';
+import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
 
 interface FormContextSelectProps extends SelectProps {
   name: string;
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
-    "disabled" | "valueAsNumber" | "valueAsDate" | "setValueAs"
+    'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
   >;
 }
 
@@ -26,13 +21,13 @@ const FormContextSelect = (props: FormContextSelectProps) => {
           {...props}
           ref={ref}
           selectedKeys={value?.[0]}
-          size="sm"
+          size="md"
           classNames={{
-            trigger: "border-b",
-            label: "font-semibold",
+            trigger: 'border-b',
+            label: 'font-semibold',
           }}
           onSelectionChange={onChange}
-          color={!!error ? "danger" : "primary"}
+          color={!!error ? 'danger' : 'primary'}
           variant="underlined"
           errorMessage={error?.message}
         />
