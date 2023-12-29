@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import trash from '~/assets/svg/trash.svg';
 import { QUERY_KEY } from '~/constants/queryKey';
 import useDebounce from '~/hooks/useDebounce';
-import { User, UserRole, UserStatus } from '~/models/user';
+import { Users, UserRole, UserStatus } from '~/models/user';
 import { RootState } from '~/redux/store';
 import userService from '~/services/userService';
 import { SearchParams } from '~/types';
@@ -32,15 +32,16 @@ import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import CategoryModal from '../Categories/CategoryModal';
+import ButtonIcon from '~/components/ButtonIcon';
 
 export interface ModalKey {
   visible?: boolean;
   type?: ModalType;
-  user?: User;
+  user?: Users;
 }
 
 const UserListPage = () => {
-  const currentUserLogin = useSelector<RootState, User>((state) => state.userStore.user);
+  const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
   const [showDeleteUserModal, setShowDeleteUserModal] = useState<boolean>(false);
   const [userModal, setUserModal] = useState<ModalKey>({
     visible: false,
@@ -86,18 +87,18 @@ const UserListPage = () => {
     },
   ];
 
-  const columns: ColumnType<User>[] = [
+  const columns: ColumnType<Users>[] = [
     {
       key: '_id',
       align: 'center',
       name: 'STT',
-      render: (_user: User, index?: number) => index || 0 + 1,
+      render: (_user: Users, index?: number) => index || 0 + 1,
     },
     {
       name: 'Hình ảnh',
       key: 'image',
       align: 'center',
-      render: (user: User) =>
+      render: (user: Users) =>
         user?.image ? (
           <Avatar
             src={getFullImageUrl(user.image)}
@@ -117,31 +118,31 @@ const UserListPage = () => {
       name: 'Họ tên',
       key: 'fullName',
       align: 'center',
-      render: (user: User) => user?.fullName || '',
+      render: (user: Users) => user?.fullName || '',
     },
     {
       name: 'Số điện thoại',
       key: 'phoneNumber',
       align: 'center',
-      render: (user: User) => user?.phoneNumber || '',
+      render: (user: Users) => user?.phoneNumber || '',
     },
     {
       name: 'Ngày sinh',
       key: 'birthday',
-      render: (user: User) =>
+      render: (user: Users) =>
         user?.birthday ? formatDate(user.birthday, DATE_FORMAT_DDMMYYYY) : '',
     },
     {
       name: 'Địa chỉ',
       key: 'address',
       align: 'center',
-      render: (user: User) => user?.address || '',
+      render: (user: Users) => user?.address || '',
     },
     {
       key: 'status',
       align: 'center',
       name: 'Trạng thái',
-      render: (user: User) => (
+      render: (user: Users) => (
         <Chip
           color={user?.status === UserStatus.ACTIVE ? 'success' : 'danger'}
           variant="flat"
@@ -157,24 +158,25 @@ const UserListPage = () => {
       key: '_id',
       align: 'center',
       name: 'Hành động',
-      render: (_user: User) => (
-        <div className="relative flex items-center gap-3">
-          <Tooltip content="Chỉnh sửa nhân viên" showArrow delay={500}>
-            <span
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-              onClick={() => handleOpenModalEdit(_user)}
-            >
-              <SVG src={EditIcon} />
-            </span>
-          </Tooltip>
-          <Tooltip color="danger" content="Xóa nhân viên này" showArrow delay={500}>
-            <span
-              className="text-lg text-danger cursor-pointer active:opacity-50"
-              //   onClick={() => handleOpenDeleteModal(_user)}
-            >
-              <SVG src={DeleteIcon} />
-            </span>
-          </Tooltip>
+      render: (_user: Users) => (
+        <div className="flex items-center gap-3">
+          <ButtonIcon
+            title="Chỉnh sửa nhân viên"
+            icon={EditIcon}
+            tooltipProps={{
+              showArrow: true,
+              delay: 500,
+            }}
+          />
+          <ButtonIcon
+            title="Xóa nhân viên này"
+            icon={DeleteIcon}
+            status="danger"
+            tooltipProps={{
+              showArrow: true,
+              delay: 500,
+            }}
+          />
         </div>
       ),
     },
@@ -278,7 +280,7 @@ const UserListPage = () => {
     }
   };
 
-  const handleOpenModalEdit = (user: User) => {
+  const handleOpenModalEdit = (user: Users) => {
     setModal({ isEdit: true, userId: user?._id });
     onOpenModal();
   };
