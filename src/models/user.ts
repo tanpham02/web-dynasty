@@ -1,19 +1,19 @@
 export enum UserStatus {
-  ACTIVE = "ACTIVE",
-  IN_ACTIVE = "IN_ACTIVE",
-  DELETED = "DELETED",
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'IN_ACTIVE',
+  DELETED = 'DELETED',
 }
 
 export enum UserRole {
-  ADMIN = "ADMIN",
-  USER = "USER",
-  ALL = "ALL",
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  ALL = 'ALL',
 }
 
-export interface User {
-  [x: string]: any;
+export interface Users {
   _id?: string;
   birthday?: string | Date;
+  username?: string;
   fullName?: string;
   phoneNumber?: string;
   email?: string;
@@ -28,4 +28,5 @@ export interface User {
   role?: UserRole;
   status?: UserStatus;
   image?: string;
+  confirmPw?: string;
 }

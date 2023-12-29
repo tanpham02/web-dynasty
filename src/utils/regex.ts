@@ -6,4 +6,9 @@ export const PATTERN = {
   URL: /^((http(s?)?):\/\/)?([wW]{3}\.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?\/?$/g,
   HEX_COLOR: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
   CHECK_EMPTY: /^(?!\s*$).+/,
+  PASSWORD: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
+  // more than 8 chars
+  // at least one number
+  // at least one special character
+  // one uppercase and one lowercase letter
 };
