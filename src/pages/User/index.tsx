@@ -1,19 +1,12 @@
 import { Button } from '@nextui-org/button';
-import {
-  Chip,
-  Input,
-  Select,
-  SelectItem,
-  Tooltip,
-  useDisclosure,
-  usePagination,
-} from '@nextui-org/react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { Avatar, Modal, Skeleton, TablePaginationConfig } from 'antd';
+import { Chip, Input, Select, SelectItem, useDisclosure, usePagination } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
+import { Avatar, Modal, TablePaginationConfig } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import SVG from 'react-inlinesvg';
 import { useSelector } from 'react-redux';
+
 import trash from '~/assets/svg/trash.svg';
 import { QUERY_KEY } from '~/constants/queryKey';
 import useDebounce from '~/hooks/useDebounce';
@@ -22,7 +15,6 @@ import { RootState } from '~/redux/store';
 import userService from '~/services/userService';
 import { SearchParams } from '~/types';
 import UserModal, { ModalType } from './UserModal';
-import UserTable from './UserTable';
 import CustomTable from '~/components/NextUI/CustomTable';
 import { ColumnType } from '~/components/NextUI/CustomTable';
 import { getFullImageUrl } from '~/utils/image';
@@ -31,7 +23,6 @@ import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
-import CategoryModal from '../Categories/CategoryModal';
 import ButtonIcon from '~/components/ButtonIcon';
 
 export interface ModalKey {
@@ -316,7 +307,9 @@ const UserListPage = () => {
               value={UserRole.ALL.toString()}
               classNames={{
                 trigger: 'bg-white',
+                
               }}
+              
             >
               {(status) => (
                 <SelectItem key={status.value.toString()} value={status.value?.toString()}>

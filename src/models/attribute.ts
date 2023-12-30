@@ -1,7 +1,7 @@
 export interface Attribute {
   _id?: string;
   name: string;
-  attributeList?: AttributeValue[];
+  attributeList: AttributeValue[];
 }
 
 export interface AttributeValue {

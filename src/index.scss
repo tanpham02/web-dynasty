@@ -136,3 +136,45 @@ li.ant-pagination-item:hover a,
   border-radius: 10px;
   background-color: #aaa;
 }
+
+#FileUpload:hover #preview-icon {
+  display: block !important;
+}
+
+.ant-image-preview-img-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.ant-picker {
+  border-color: #006a31 !important;
+
+  &:hover,
+  &-focused {
+    border-color: #006a31 !important;
+    border-width: 2px !important;
+  }
+  &-focused {
+    box-shadow: 0 0 0 2px rgb(22 94 19 / 20%) !important;
+  }
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border: 1px solid #006a31 !important;
+}
+
+.ant-picker-today-btn {
+  color: #006a31 !important;
+}
+
+.ant-picker-header-view button:hover {
+  color: #006a31 !important;
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+  color: #fff;
+  background: #006a31 !important;
+}

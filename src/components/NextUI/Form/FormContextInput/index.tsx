@@ -1,6 +1,5 @@
 import { Input, InputProps } from '@nextui-org/react';
 import {
-  Control,
   Controller,
   FieldPath,
   FieldValues,
@@ -9,7 +8,6 @@ import {
 } from 'react-hook-form';
 
 interface FormContextInputProps<T extends { [key: string]: keyof T }> extends InputProps {
-  control: Control<FieldValues, T>;
   name: FieldPath<T>;
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
@@ -17,11 +15,11 @@ interface FormContextInputProps<T extends { [key: string]: keyof T }> extends In
   >;
 }
 const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>) => {
-  const {} = useFormContext<T>();
+  const { control } = useFormContext();
 
   return (
     <Controller
-      control={props.control}
+      control={control}
       name={props.name}
       rules={props?.rules}
       render={({ field: { value, onChange, ref }, fieldState: { error } }) => (
@@ -31,12 +29,13 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
           errorMessage={error?.message}
           ref={ref}
           classNames={{
-            inputWrapper: 'border-b',
+            inputWrapper: 'bg-white',
             label: 'font-semibold',
+            input: 'text-primary-text-color',
           }}
           color={!!error ? 'danger' : 'primary'}
           size="md"
-          variant="underlined"
+          variant="bordered"
           {...props}
         />
       )}

@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import UserOne from '~ assets/images/user/user-01.png';
-import { User, UserRole } from '~/models/user';
+import { Users, UserRole } from '~/models/user';
 import { getFullImageUrl } from '~/utils/image';
 
 interface DropdownUserType {
-  userInformation: User;
+  userInformation: Users;
 }
 
 const UserRoleMapping: { [key: string]: any } = {

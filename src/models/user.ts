@@ -12,7 +12,7 @@ export enum UserRole {
 
 export interface Users {
   _id?: string;
-  birthday?: string | Date;
+  birthday?: any;
   username?: string;
   fullName?: string;
   phoneNumber?: string;

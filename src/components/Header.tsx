@@ -2,7 +2,7 @@
 import jwt_decode from 'jwt-decode';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { User } from '~/models/user';
+import { Users } from '~/models/user';
 import { getUserInfo } from '~/redux/slice/userSlice';
 import { AppDispatch, RootState } from '~/redux/store';
 import DropdownUser from './DropdownUser';
@@ -18,7 +18,7 @@ const Header = (props: {
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const userInformation = useSelector<RootState, User>(
+  const userInformation = useSelector<RootState, Users>(
     (state) => state.userStore.user,
   );
   const token = localStorage.getItem('@refresh_token');

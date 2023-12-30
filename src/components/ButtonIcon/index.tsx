@@ -1,5 +1,5 @@
 import { Tooltip, TooltipProps } from '@nextui-org/react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import SVG from 'react-inlinesvg';
 
 interface ButtonIconProps {
@@ -23,7 +23,8 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
     danger: 'text-danger hover:bg-danger/20',
     warning: 'text-warning hover:bg-warning/20',
     success: 'text-success hover:bg-success/20',
-    info: 'text-info hover:bg-info/20',
+    primary: 'text-primary hover:bg-primary/20',
+    secondary: 'text-secondary hover:bg-secondary/20',
     default: 'text-default-500 hover:bg-default/20',
   };
 

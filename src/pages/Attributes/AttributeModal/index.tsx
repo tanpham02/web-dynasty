@@ -1,15 +1,15 @@
-import { Button, Tooltip } from "@nextui-org/react";
-import { useSnackbar } from "notistack";
-import { useEffect } from "react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import SVG from "react-inlinesvg";
+import { Button, Tooltip } from '@nextui-org/react';
+import { useSnackbar } from 'notistack';
+import { useEffect } from 'react';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import SVG from 'react-inlinesvg';
 
-import DeleteIcon from "~/assets/svg/delete.svg";
-import CustomModal from "~/components/NextUI/CustomModal";
-import CustomTable, { ColumnType } from "~/components/NextUI/CustomTable";
-import { FormContextInput } from "~/components/NextUI/Form";
-import { Attribute, AttributeValue } from "~/models/attribute";
-import { attributeService } from "~/services/attributeService";
+import DeleteIcon from '~/assets/svg/delete.svg';
+import CustomModal from '~/components/NextUI/CustomModal';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
+import { FormContextInput } from '~/components/NextUI/Form';
+import { Attribute, AttributeValue } from '~/models/attribute';
+import { attributeService } from '~/services/attributeService';
 
 interface AttributeModalProps {
   isOpen?: boolean;
@@ -40,55 +40,50 @@ const AttributeModal = ({
     fields: attributeValue,
     append: appendAttributeValue,
     remove: removeAttributeValue,
-  } = useFieldArray({ control, name: "attributeList" });
+  } = useFieldArray({ control, name: 'attributeList' });
 
   const columns: ColumnType<AttributeValue>[] = [
     {
-      key: "_id",
-      align: "center",
-      name: "STT",
+      key: '_id',
+      align: 'center',
+      name: 'STT',
       render: (_attribute: AttributeValue, index?: number) => (
         <span className="font-bold">{(index || 0) + 1}</span>
       ),
     },
     {
-      key: "name",
-      align: "center",
-      name: "Tên giá trị",
+      key: 'name',
+      align: 'center',
+      name: 'Tên giá trị',
       render: (_attribute: AttributeValue, index?: number) => (
-        <FormContextInput
-          name={`attributeList.${index}.name`}
+        <FormContextInput<Attribute>
+          name={`attributeList.${index}.name` as any}
           rules={{
-            required: "Vui lòng nhập tên giá trị thuộc tính!",
+            required: 'Vui lòng nhập tên giá trị thuộc tính!',
           }}
         />
       ),
     },
     {
-      key: "value",
-      align: "center",
-      name: "Giá trị",
+      key: 'value',
+      align: 'center',
+      name: 'Giá trị',
       render: (_attribute: AttributeValue, index?: number) => (
-        <FormContextInput
-          name={`attributeList.${index}.value`}
+        <FormContextInput<Attribute>
+          name={`attributeList.${index}.value` as any}
           rules={{
-            required: "Vui lòng nhập giá trị thuộc tính!",
+            required: 'Vui lòng nhập giá trị thuộc tính!',
           }}
         />
       ),
     },
     {
-      key: "value",
-      align: "center",
+      key: 'value',
+      align: 'center',
       name: <span className="block text-center">Hành động</span>,
       render: (_attribute: AttributeValue, index?: number) => (
         <div className="flex justify-center">
-          <Tooltip
-            content="Xóa giá trị thuộc tính này"
-            showArrow
-            color="danger"
-            delay={1500}
-          >
+          <Tooltip content="Xóa giá trị thuộc tính này" showArrow color="danger" delay={1500}>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50 p-2"
               onClick={() => removeAttributeValue(index)}
@@ -103,7 +98,7 @@ const AttributeModal = ({
 
   useEffect(() => {
     if (attributeId && isEdit && isOpen) getAttributeDetail();
-    else resetFormValue({ name: "", attributeList: [] });
+    else resetFormValue({ name: '', attributeList: [] });
   }, [isEdit, attributeId, isOpen]);
 
   const getAttributeDetail = async () => {
@@ -113,30 +108,24 @@ const AttributeModal = ({
         resetFormValue(response);
       }
     } catch (err) {
-      enqueueSnackbar("Có lỗi xảy ra khi lấy dữ liệu thuộc tính!");
+      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu thuộc tính!');
       onOpenChange?.();
-      console.log("🚀 ~ file: index.tsx:125 ~ getAttributeDetail ~ err:", err);
+      console.log('🚀 ~ file: index.tsx:125 ~ getAttributeDetail ~ err:', err);
     }
   };
 
   const onSubmit = async (data: Attribute) => {
     try {
       const formData = new FormData();
-      formData.append("productAttributeInfo", JSON.stringify(data));
-      if (isEdit)
-        await attributeService.updateAttributeById(attributeId, formData);
+      formData.append('productAttributeInfo', JSON.stringify(data));
+      if (isEdit) await attributeService.updateAttributeById(attributeId, formData);
       else await attributeService.createAttribute(formData);
-      enqueueSnackbar(
-        `${isEdit ? "Chỉnh sửa" : "Thêm"} thuộc tính thành công!`,
-      );
+      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`);
     } catch (err) {
-      enqueueSnackbar(
-        `Có lỗi xảy ra khi ${isEdit ? "chỉnh sửa" : "thêm"} thuộc tính!`,
-        {
-          variant: "error",
-        },
-      );
-      console.log("🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:", err);
+      enqueueSnackbar(`Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} thuộc tính!`, {
+        variant: 'error',
+      });
+      console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
     } finally {
       await onRefetch?.();
       onOpenChange?.();
@@ -147,8 +136,8 @@ const AttributeModal = ({
     <CustomModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={isEdit ? "Cập nhật thuộc tính" : "Thêm thuộc tính mới"}
-      okButtonText={isEdit ? "Lưu thay đổi" : "Thêm"}
+      title={isEdit ? 'Cập nhật thuộc tính' : 'Thêm thuộc tính mới'}
+      okButtonText={isEdit ? 'Lưu thay đổi' : 'Thêm'}
       className="w-full max-w-[800px]"
       onOk={handleSubmit(onSubmit)}
       isLoading={isSubmitting}
@@ -159,7 +148,7 @@ const AttributeModal = ({
             name="name"
             label="Tên thuộc tính"
             rules={{
-              required: "Vui lòng nhập tên thuộc tính",
+              required: 'Vui lòng nhập tên thuộc tính',
             }}
           />
           <div>
@@ -183,8 +172,8 @@ const AttributeModal = ({
                   className="bg-sky-200 text-sky-500 font-bold"
                   onClick={() =>
                     appendAttributeValue({
-                      name: "",
-                      value: "",
+                      name: '',
+                      value: '',
                     })
                   }
                 >

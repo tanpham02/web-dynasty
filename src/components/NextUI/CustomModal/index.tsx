@@ -39,10 +39,9 @@ const CustomModal = (props: CustomModalProps) => {
     <div className="z-[9999]">
       <Modal
         isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        // onOpenChange={onOpenChange}
         classNames={{
-          backdrop:
-            'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
+          backdrop: 'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
         }}
         motionProps={{
           variants: {
@@ -77,12 +76,7 @@ const CustomModal = (props: CustomModalProps) => {
                   <Button color="default" variant="shadow" onPress={onClose}>
                     {cancelButtonText || 'Đóng'}
                   </Button>
-                  <Button
-                    color="primary"
-                    variant="shadow"
-                    onPress={onOk}
-                    isLoading={isLoading}
-                  >
+                  <Button color="primary" variant="shadow" onPress={onOk} isLoading={isLoading}>
                     {okButtonText || 'OK'}
                   </Button>
                 </ModalFooter>
