@@ -1,17 +1,17 @@
-import SVG from "react-inlinesvg";
-import SelectCustom from "~/components/customs/Select";
-import React, { useState, useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { Button, Modal, Skeleton, TablePaginationConfig } from "antd";
-import useDebounce from "~/hooks/useDebounce";
-import trash from "~/assets/svg/trash.svg";
-import { toast } from "react-hot-toast";
-import { SearchParams } from "~/types";
-import { Banner, BannerType } from "~/models/banner";
-import BannerTable from "./BannerTable";
-import BannerModal, { ModalType } from "./BannerModal";
-import { bannerService } from "~/services/bannerService";
+import SVG from 'react-inlinesvg';
+import SelectCustom from '~/components/customs/Select';
+import React, { useState, useEffect } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { Button, Modal, Skeleton, TablePaginationConfig } from 'antd';
+import useDebounce from '~/hooks/useDebounce';
+import trash from '~/assets/svg/trash.svg';
+import { toast } from 'react-hot-toast';
+import { SearchParams } from '~/types';
+import { Banner, BannerType } from '~/models/banner';
+import BannerTable from './BannerTable';
+import BannerModal, { ModalType } from './BannerModal';
+import { bannerService } from '~/services/bannerService';
 
 export interface ModalKey {
   visible?: boolean;
@@ -20,15 +20,12 @@ export interface ModalKey {
 }
 
 const BannerPage = () => {
-  const [showDeleteBannerModal, setShowDeleteBannerModal] =
-    useState<boolean>(false);
+  const [showDeleteBannerModal, setShowDeleteBannerModal] = useState<boolean>(false);
   const [bannerModal, setBannerModal] = useState<ModalKey>({
     visible: false,
   });
-  const [filterStatus, setFilterStatus] = useState<BannerType | string>("");
-  const [listIdsUserForDelete, setListIdsUserForDelete] = useState<React.Key[]>(
-    [],
-  );
+  const [filterStatus, setFilterStatus] = useState<BannerType | string>('');
+  const [listIdsUserForDelete, setListIdsUserForDelete] = useState<React.Key[]>([]);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
   const [pagination, setPagination] = useState<SearchParams>({
     pageIndex: 0,
@@ -37,20 +34,20 @@ const BannerPage = () => {
 
   const optionStatus = [
     {
-      value: "",
-      label: "Tất cả",
+      value: '',
+      label: 'Tất cả',
     },
     {
       value: BannerType.CATEGORY,
-      label: "Danh mục",
+      label: 'Danh mục',
     },
     {
       value: BannerType.PRODUCT,
-      label: "Sản phẩm",
+      label: 'Sản phẩm',
     },
     {
       value: BannerType.NEWS,
-      label: "Tin tức",
+      label: 'Tin tức',
     },
   ];
 
@@ -60,17 +57,14 @@ const BannerPage = () => {
     data: banners,
     refetch,
     isLoading: isLoadingBanner,
-  } = useInfiniteQuery(
-    [QUERY_KEY.BANNER, filterByType, pagination],
-    async () => {
-      const params = {
-        pageIndex: pagination.pageIndex,
-        pageSize: pagination.pageSize,
-        bannerType: filterByType,
-      };
-      return await bannerService.getBanner(params);
-    },
-  );
+  } = useInfiniteQuery([QUERY_KEY.BANNER, filterByType, pagination], async () => {
+    const params = {
+      pageIndex: pagination.pageIndex,
+      pageSize: pagination.pageSize,
+      bannerType: filterByType,
+    };
+    return await bannerService.getBanner(params);
+  });
 
   const handleShowModalDeleteUser = () => {
     setShowDeleteBannerModal(true);
@@ -106,9 +100,9 @@ const BannerPage = () => {
 
   const handleShowModalBanner = (type?: ModalType, bannerId?: number) => {
     if (bannerId) {
-      const bannerAfterFindById = banners?.pages[
-        banners?.pages.length - 1
-      ].content.find((banner) => banner.id === bannerId);
+      const bannerAfterFindById = banners?.pages[banners?.pages.length - 1].content.find(
+        (banner) => banner.id === bannerId,
+      );
       setBannerModal({
         type,
         banner: bannerAfterFindById,
@@ -126,11 +120,11 @@ const BannerPage = () => {
     setIsLoadingDelete(true);
     try {
       await bannerService.deleteBanner(ids);
-      toast.success("Xóa thành công", {
-        position: "bottom-right",
+      toast.success('Xóa thành công', {
+        position: 'bottom-right',
         duration: 3000,
-        icon: "👏",
-        style: { width: "70%" },
+        icon: '👏',
+        style: { width: '70%' },
       });
 
       setIsLoadingDelete(false);
@@ -143,10 +137,10 @@ const BannerPage = () => {
       refetch();
     } catch (err) {
       console.log(err);
-      toast.success("Xóa thất bại", {
-        position: "bottom-right",
+      toast.success('Xóa thất bại', {
+        position: 'bottom-right',
         duration: 3500,
-        icon: "😔",
+        icon: '😔',
       });
     }
   };
@@ -173,9 +167,7 @@ const BannerPage = () => {
             onChange={(e: any) => setFilterStatus(e.value)}
           />
 
-          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">
-            Tìm
-          </button>
+          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">Tìm</button>
         </div>
         {listIdsUserForDelete.length !== 0 ? (
           <div
@@ -186,7 +178,7 @@ const BannerPage = () => {
             Xóa danh sách đã chọn
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
 
@@ -199,12 +191,7 @@ const BannerPage = () => {
             <Button title="cancel" onClick={handleCancel}>
               Hủy bỏ
             </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              onClick={handleOk}
-              loading={isLoadingDelete}
-            >
+            <Button key="submit" type="primary" onClick={handleOk} loading={isLoadingDelete}>
               Xác nhận xóa
             </Button>,
           ]}

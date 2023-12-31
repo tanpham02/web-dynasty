@@ -1,16 +1,16 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table, Typography } from "antd";
-import React, { useState } from "react";
-import { ModalType } from "../NhanhVnModal";
-import { NhanhVn, NhanhVnStatus } from "~/models/nhanhVn";
-import { Breakpoint } from "~/types";
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Table, Typography } from 'antd';
+import React, { useState } from 'react';
+import { ModalType } from '../NhanhVnModal';
+import { NhanhVn, NhanhVnStatus } from '~/models/nhanhVn';
+import { Breakpoint } from '~/types';
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof NhanhVn;
   key?: keyof NhanhVn;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: NhanhVn, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -34,49 +34,47 @@ const NhanhVnTable = ({
   handleDeleteOneNhanhVn,
   handleShowModalNhanhVn,
 }: NhanhVnTableProps) => {
-  const [nhanhVnSelectedKeys, setNhanhVnSelectedKeys] = useState<React.Key[]>(
-    [],
-  );
+  const [nhanhVnSelectedKeys, setNhanhVnSelectedKeys] = useState<React.Key[]>([]);
 
   const COLUMNS: TableColumn[] = [
     {
-      title: "STT",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
+      title: 'STT',
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
       render: (__, __record, index) => <strong>{index + 1}</strong>,
     },
     {
-      title: "App ID",
-      dataIndex: "appId",
-      key: "appId",
-      align: "center",
+      title: 'App ID',
+      dataIndex: 'appId',
+      key: 'appId',
+      align: 'center',
     },
     {
-      title: "Business ID",
-      dataIndex: "businessId",
-      key: "businessId",
-      align: "center",
-      responsive: ["xl"],
+      title: 'Business ID',
+      dataIndex: 'businessId',
+      key: 'businessId',
+      align: 'center',
+      responsive: ['xl'],
     },
     {
-      title: "Phiên bản",
-      dataIndex: "version",
-      key: "version",
-      align: "center",
-      responsive: ["xl"],
+      title: 'Phiên bản',
+      dataIndex: 'version',
+      key: 'version',
+      align: 'center',
+      responsive: ['xl'],
     },
     {
-      title: "Độ ưu tiên",
-      dataIndex: "priority",
-      key: "priority",
-      align: "center",
+      title: 'Độ ưu tiên',
+      dataIndex: 'priority',
+      key: 'priority',
+      align: 'center',
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__id, record) => {
         switch (record.status) {
           case NhanhVnStatus.ACTIVE:
@@ -98,22 +96,20 @@ const NhanhVnTable = ({
           default:
         }
       },
-      responsive: ["lg"],
+      responsive: ['lg'],
     },
     {
-      title: "Hành động",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
+      title: 'Hành động',
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
       render: (__, record: NhanhVn) => (
         <div className="flex justify-center gap-2 text-center">
           <div>
             <Button
               type="primary"
               className="!flex items-center justify-center !rounded-lg"
-              onClick={() =>
-                handleShowModalNhanhVn(ModalType.UPDATE, record.id)
-              }
+              onClick={() => handleShowModalNhanhVn(ModalType.UPDATE, record.id)}
             >
               <EditOutlined />
             </Button>
@@ -127,7 +123,7 @@ const NhanhVnTable = ({
               title="Xác nhận xóa cấu hình NhanhVn này"
             >
               <Button
-                type={"danger" as "primary"}
+                type={'danger' as 'primary'}
                 className={` flex  items-center justify-center !rounded-lg`}
               >
                 <DeleteOutlined className="!flex" />

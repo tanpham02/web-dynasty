@@ -1,15 +1,13 @@
-import { ListDataResponse, SearchParams } from "~/types";
-import axiosService from "../axiosService";
-import { Order, StatusOrder } from "~/models/order";
+import { ListDataResponse, SearchParams } from '~/types';
+import axiosService from '../axiosService';
+import { Order, StatusOrder } from '~/models/order';
 
-import { ORDER_URL } from "../apiUrl";
+import { ORDER_URL } from '../apiUrl';
 
 const orderService = {
-  searchPagination: async (
-    params: SearchParams,
-  ): Promise<ListDataResponse<Order>> => {
+  searchPagination: async (params: SearchParams): Promise<ListDataResponse<Order>> => {
     return axiosService()({
-      method: "GET",
+      method: 'GET',
       baseURL: `${ORDER_URL}/search`,
       params,
     })
@@ -20,7 +18,7 @@ const orderService = {
   },
   updateOrderStatus: async (orderId: string, statusOrder: StatusOrder) => {
     return axiosService()({
-      method: "PATCH",
+      method: 'PATCH',
       baseURL: `${ORDER_URL}/update-status-order`,
       params: {
         orderId,

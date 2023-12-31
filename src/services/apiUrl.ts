@@ -1,4 +1,4 @@
-import { BASE_URL } from "~/config";
+import { BASE_URL } from '~/config';
 
 //API URL
 const API_URL = `${BASE_URL}/api`;
@@ -66,8 +66,7 @@ export const MEMBERSHIP_URL = `${API_URL}/membership-level`;
 
 // BANK ACCOUNT
 export const BANK_ACCOUNT = `${API_URL}/bank-account`;
-export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR =
-  "https://api.vietqr.io/v2/banks";
+export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR = 'https://api.vietqr.io/v2/banks';
 
 // NHANH VN CONFIG
 export const NHANH_VN_CONFIG = `${API_URL}/nhanh-vn`;

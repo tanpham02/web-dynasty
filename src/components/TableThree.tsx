@@ -14,17 +14,13 @@ const TableThree = () => {
               <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Status
               </th>
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
-                Actions
-              </th>
+              <th className="py-4 px-4 font-medium text-black dark:text-white">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                <h5 className="font-medium text-black dark:text-white">
-                  Free Package
-                </h5>
+                <h5 className="font-medium text-black dark:text-white">Free Package</h5>
                 <p className="text-sm">$0.00</p>
               </td>
               <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -107,9 +103,7 @@ const TableThree = () => {
             </tr>
             <tr>
               <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                <h5 className="font-medium text-black dark:text-white">
-                  Standard Package
-                </h5>
+                <h5 className="font-medium text-black dark:text-white">Standard Package</h5>
                 <p className="text-sm">$59.00</p>
               </td>
               <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -192,9 +186,7 @@ const TableThree = () => {
             </tr>
             <tr>
               <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                <h5 className="font-medium text-black dark:text-white">
-                  Business Package
-                </h5>
+                <h5 className="font-medium text-black dark:text-white">Business Package</h5>
                 <p className="text-sm">$99.00</p>
               </td>
               <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -277,9 +269,7 @@ const TableThree = () => {
             </tr>
             <tr>
               <td className="py-5 px-4 pl-9 xl:pl-11">
-                <h5 className="font-medium text-black dark:text-white">
-                  Standard Package
-                </h5>
+                <h5 className="font-medium text-black dark:text-white">Standard Package</h5>
                 <p className="text-sm">$59.00</p>
               </td>
               <td className="py-5 px-4">

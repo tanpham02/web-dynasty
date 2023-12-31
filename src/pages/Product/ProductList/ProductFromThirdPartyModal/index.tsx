@@ -1,5 +1,5 @@
-import SVG from "react-inlinesvg";
-import SEARCH_ICON from "~ assets/svg/search.svg";
+import SVG from 'react-inlinesvg';
+import SEARCH_ICON from '~ assets/svg/search.svg';
 import {
   Table,
   Avatar,
@@ -9,23 +9,19 @@ import {
   Button,
   TreeSelect,
   Modal,
-} from "antd";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { productService } from "~/services/productService";
-import { Product } from "~/models/product";
-import {
-  CheckCircleOutlined,
-  CloseOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { useState, useMemo } from "react";
-import { QUERY_KEY } from "~/constants/queryKey";
+} from 'antd';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { productService } from '~/services/productService';
+import { Product } from '~/models/product';
+import { CheckCircleOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { useState, useMemo } from 'react';
+import { QUERY_KEY } from '~/constants/queryKey';
 // import useDebounce from '~/hooks/useDebounce';
-import { Breakpoint, SearchParams } from "~/types";
-import { toast } from "react-hot-toast";
-import ProductDetailModal from "../ProductDetailModal";
-import useDebounce from "~/hooks/useDebounce";
-import productCategoryService from "~/services/productCategoryService";
+import { Breakpoint, SearchParams } from '~/types';
+import { toast } from 'react-hot-toast';
+import ProductDetailModal from '../ProductDetailModal';
+import useDebounce from '~/hooks/useDebounce';
+import productCategoryService from '~/services/productCategoryService';
 
 interface TreeSelectChildren {
   title?: string;
@@ -41,7 +37,7 @@ interface Columns {
   dataIndex?: keyof Product;
   key?: keyof Product;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: Product) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -63,14 +59,9 @@ const ProductFromThirdPartyModal = ({
     page: 0,
     pageSize: 10,
   });
-  const [productSelectedKeys, setProductSelectedKeys] = useState<React.Key[]>(
-    [],
-  );
-  console.log(
-    "🚀 ~ file: index.tsx:54 ~ productSelectedKeys:",
-    productSelectedKeys,
-  );
-  const [valueSearch, setValueSearch] = useState<string>("");
+  const [productSelectedKeys, setProductSelectedKeys] = useState<React.Key[]>([]);
+  console.log('🚀 ~ file: index.tsx:54 ~ productSelectedKeys:', productSelectedKeys);
+  const [valueSearch, setValueSearch] = useState<string>('');
   const [valueCategoryFilter, setValueCategoryFilter] = useState<string>();
   const queryText = useDebounce(valueSearch, 700);
 
@@ -93,16 +84,11 @@ const ProductFromThirdPartyModal = ({
       disabled: record.existInDatabase,
       key: record.id,
     }),
-    renderCell(
-      __checked: boolean,
-      record: Product,
-      __index: number,
-      node: any,
-    ) {
+    renderCell(__checked: boolean, record: Product, __index: number, node: any) {
       if (record.existInDatabase) {
         return (
           <Tooltip title="Đã hiển thị">
-            <CheckCircleOutlined style={{ color: "#219653" }} />
+            <CheckCircleOutlined style={{ color: '#219653' }} />
           </Tooltip>
         );
       }
@@ -112,85 +98,81 @@ const ProductFromThirdPartyModal = ({
 
   const COLUMNS: Columns[] = [
     {
-      key: "nhanhVnId",
-      dataIndex: "id",
-      title: "NhanhVn ID",
-      align: "center",
+      key: 'nhanhVnId',
+      dataIndex: 'id',
+      title: 'NhanhVn ID',
+      align: 'center',
       render: (__index, record: Product) => <span>{record.nhanhVnId}</span>,
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      key: "image",
-      dataIndex: "image",
-      title: "Hình ảnh",
+      key: 'image',
+      dataIndex: 'image',
+      title: 'Hình ảnh',
       render: (__id, record) =>
-        record.image != "" ? (
+        record.image != '' ? (
           <Avatar src={record.image} shape="square" size={84} />
         ) : (
-          <Avatar
-            style={{ backgroundColor: "#de7300" }}
-            shape="square"
-            size={84}
-          >
+          <Avatar style={{ backgroundColor: '#de7300' }} shape="square" size={84}>
             {record.name && record.name.charAt(0)}
           </Avatar>
         ),
     },
     {
-      key: "name",
-      dataIndex: "name",
-      title: "Tên",
+      key: 'name',
+      dataIndex: 'name',
+      title: 'Tên',
     },
 
     {
-      key: "price",
-      dataIndex: "price",
-      title: "Giá",
+      key: 'price',
+      dataIndex: 'price',
+      title: 'Giá',
       sorter: true,
-      align: "center",
+      align: 'center',
     },
 
     {
-      title: "Trạng thái ở Nhanh VN",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Trạng thái ở Nhanh VN',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__index, record) => (
         <div
           className={
-            record.status === "ACTIVE"
-              ? "inline-flex items-center rounded-lg bg-success px-3 py-1 text-center font-semibold  text-white"
-              : "inline-flex items-center rounded-lg bg-danger px-3 py-1 text-center font-semibold  text-white"
+            record.status === 'ACTIVE'
+              ? 'inline-flex items-center rounded-lg bg-success px-3 py-1 text-center font-semibold  text-white'
+              : 'inline-flex items-center rounded-lg bg-danger px-3 py-1 text-center font-semibold  text-white'
           }
         >
-          {record.status == "ACTIVE" ? "Hoạt động" : "Ngưng hoạt động"}
+          {record.status == 'ACTIVE' ? 'Hoạt động' : 'Ngưng hoạt động'}
         </div>
       ),
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      title: "Hiển thị trên Zalo Mini App",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Hiển thị trên Zalo Mini App',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__index, record) => (
         <div
           className={
             record.existInDatabase
-              ? "inline-flex items-center rounded-lg bg-success  px-3 py-1 text-center font-semibold  text-white"
-              : "inline-flex items-center rounded-lg bg-danger  px-3 py-1 text-center font-semibold  text-white"
+              ? 'inline-flex items-center rounded-lg bg-success  px-3 py-1 text-center font-semibold  text-white'
+              : 'inline-flex items-center rounded-lg bg-danger  px-3 py-1 text-center font-semibold  text-white'
           }
         >
-          {record.existInDatabase ? "Đã hiển thị" : "Chưa hiển thị"}
+          {record.existInDatabase ? 'Đã hiển thị' : 'Chưa hiển thị'}
         </div>
       ),
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      title: "Hành động",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Hành động',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__id, record) => (
         <div className="flex justify-center gap-2 text-center">
           <Button
@@ -217,12 +199,7 @@ const ProductFromThirdPartyModal = ({
     isLoading: isLoadingProduct,
     refetch: refreshProductFromThirdPartyData,
   } = useInfiniteQuery(
-    [
-      QUERY_KEY.PRODUCT_FROM_THIRD_PARTY,
-      pageParameter,
-      queryText,
-      valueCategoryFilter,
-    ], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
+    [QUERY_KEY.PRODUCT_FROM_THIRD_PARTY, pageParameter, queryText, valueCategoryFilter], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
     async () => {
       const params = {
         categoryId: valueCategoryFilter,
@@ -236,7 +213,7 @@ const ProductFromThirdPartyModal = ({
   );
 
   const generateOptionTreeSelect = useMemo(() => {
-    const result: TreeSelectParent[] = [{ title: "Tất cả", value: "" }];
+    const result: TreeSelectParent[] = [{ title: 'Tất cả', value: '' }];
     productCategory?.map((parent) => {
       if (parent.childCategoryDTOs) {
         const childCategory = parent?.childCategoryDTOs?.map((child) => ({
@@ -262,17 +239,14 @@ const ProductFromThirdPartyModal = ({
 
   const pagination = useMemo(() => {
     const current =
-      productFromThirdPartyResponse?.pages[
-        productFromThirdPartyResponse?.pages.length - 1
-      ].pageable.pageNumber;
+      productFromThirdPartyResponse?.pages[productFromThirdPartyResponse?.pages.length - 1].pageable
+        .pageNumber;
     const total =
-      productFromThirdPartyResponse?.pages[
-        productFromThirdPartyResponse?.pages.length - 1
-      ].totalElements;
+      productFromThirdPartyResponse?.pages[productFromThirdPartyResponse?.pages.length - 1]
+        .totalElements;
     const pageSize =
-      productFromThirdPartyResponse?.pages[
-        productFromThirdPartyResponse?.pages.length - 1
-      ].pageable.pageSize;
+      productFromThirdPartyResponse?.pages[productFromThirdPartyResponse?.pages.length - 1].pageable
+        .pageSize;
     return {
       pageCurrent: current ? current + 1 : 1, // 1 is page default
       totalElements: total || 0,
@@ -291,26 +265,22 @@ const ProductFromThirdPartyModal = ({
   const handleAddProductCategoryFromThirdPartyToZaloMiniApp = async () => {
     if (productSelectedKeys.length !== 0 && productFromThirdPartyResponse) {
       const listProductSelected: Product[] = [];
-      productFromThirdPartyResponse.pages.map(
-        (productFromThirdPartyResponsePerPage) => {
-          productFromThirdPartyResponsePerPage.content.filter(
-            (product) =>
-              product.nhanhVnId &&
-              productSelectedKeys.includes(product.nhanhVnId) &&
-              listProductSelected.push(product),
-          );
-        },
-      );
+      productFromThirdPartyResponse.pages.map((productFromThirdPartyResponsePerPage) => {
+        productFromThirdPartyResponsePerPage.content.filter(
+          (product) =>
+            product.nhanhVnId &&
+            productSelectedKeys.includes(product.nhanhVnId) &&
+            listProductSelected.push(product),
+        );
+      });
 
       if (listProductSelected) {
         try {
-          await productService.addProductFromThirdPartyToZaloMiniApp(
-            listProductSelected,
-          );
-          toast.success("Thêm sản phẩm vào Zalo Mini App thành công", {
-            position: "bottom-right",
+          await productService.addProductFromThirdPartyToZaloMiniApp(listProductSelected);
+          toast.success('Thêm sản phẩm vào Zalo Mini App thành công', {
+            position: 'bottom-right',
             duration: 3500,
-            icon: "👏",
+            icon: '👏',
           });
           setProductSelectedKeys([]);
           refreshProductFromThirdPartyData();
@@ -318,7 +288,7 @@ const ProductFromThirdPartyModal = ({
           handleOpenProductModal();
         } catch (error) {
           console.log(error);
-          toast.error("Lỗi khi thêm danh mục sản phẩm vào Mini App");
+          toast.error('Lỗi khi thêm danh mục sản phẩm vào Mini App');
         }
       }
     }
@@ -327,8 +297,7 @@ const ProductFromThirdPartyModal = ({
   const handleShowProductDetailModal = (productID: string | undefined) => {
     if (productID) {
       setShowProductDetailModal({
-        isShowProductDetailModal:
-          !showProductDetailModal.isShowProductDetailModal,
+        isShowProductDetailModal: !showProductDetailModal.isShowProductDetailModal,
         productID: productID,
       });
     }
@@ -455,12 +424,12 @@ const ProductFromThirdPartyModal = ({
     <Modal
       open={showModal}
       title="Danh sách sản phẩm được lấy từ NhanhVN"
-      width={"80%"}
+      width={'80%'}
       onCancel={() => handleOpenProductModal()}
       footer={[
         <div
           className={`flex ${
-            productSelectedKeys.length > 0 ? "justify-between" : "justify-end"
+            productSelectedKeys.length > 0 ? 'justify-between' : 'justify-end'
           } mt-5 `}
         >
           {productSelectedKeys.length > 0 && (
@@ -477,9 +446,7 @@ const ProductFromThirdPartyModal = ({
             </button>
             <button
               className={`w-auto px-8 py-2 ml-3 rounded-lg font-medium ${
-                productSelectedKeys.length == 0
-                  ? "bg-stroke "
-                  : "bg-menu-color hover:bg-primary"
+                productSelectedKeys.length == 0 ? 'bg-stroke ' : 'bg-menu-color hover:bg-primary'
               }  text-white`}
               disabled={productSelectedKeys.length == 0}
               onClick={handleAddProductCategoryFromThirdPartyToZaloMiniApp}
@@ -504,16 +471,14 @@ const ProductFromThirdPartyModal = ({
         <TreeSelect
           className={`flex items-center flex-1 rounded-lg w-full px-2 lg:h-[80%] h-[80%] border-2 border-gray bg-white p-2 dark:bg-boxdark `}
           value={valueCategoryFilter}
-          dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
           treeData={generateOptionTreeSelect}
           placeholder="Chọn danh mục sản phẩm"
           treeDefaultExpandAll
           onChange={(value) => setValueCategoryFilter(value)}
         />
 
-        <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white">
-          Tìm
-        </button>
+        <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white">Tìm</button>
       </div>
       {isLoadingProduct ? (
         <>
@@ -528,12 +493,11 @@ const ProductFromThirdPartyModal = ({
           rowKey="nhanhVnId"
           columns={COLUMNS}
           dataSource={
-            productFromThirdPartyResponse?.pages[
-              productFromThirdPartyResponse?.pages.length - 1
-            ]?.content
+            productFromThirdPartyResponse?.pages[productFromThirdPartyResponse?.pages.length - 1]
+              ?.content
           }
           className="product-list rounded-sm border border-stroke bg-white pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 "
-          scroll={{ y: "45vh" }}
+          scroll={{ y: '45vh' }}
           pagination={{
             current: pagination.pageCurrent,
             pageSize: pagination.pageSize,
@@ -543,9 +507,7 @@ const ProductFromThirdPartyModal = ({
         />
       )}
       <ProductDetailModal
-        isShowProductDetailModal={
-          showProductDetailModal.isShowProductDetailModal
-        }
+        isShowProductDetailModal={showProductDetailModal.isShowProductDetailModal}
         productID={showProductDetailModal.productID}
         handleCancelModal={handleCloseProductDetailModal}
         handleConfirmModal={handleCloseProductDetailModal}

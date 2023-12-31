@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useMemo } from "react";
-import { Button, Input, InputNumber, Modal } from "antd";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { toast } from "react-hot-toast";
-import snippingLoading from "~/assets/gif/sniping-loading.gif";
-import { bankAccountService } from "~/services/bankAccountService";
-import { NhanhVn, NhanhVnStatus } from "~/models/nhanhVn";
-import { nhanhVnService } from "~/services/nhanhVnService";
+import { useMemo } from 'react';
+import { Button, Input, InputNumber, Modal } from 'antd';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { toast } from 'react-hot-toast';
+import snippingLoading from '~/assets/gif/sniping-loading.gif';
+import { bankAccountService } from '~/services/bankAccountService';
+import { NhanhVn, NhanhVnStatus } from '~/models/nhanhVn';
+import { nhanhVnService } from '~/services/nhanhVnService';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export enum ModalType {
-  CREATE = "CREATE",
-  UPDATE = "UPDATE",
-  DELETE = "DELETE",
-  INFORMATION = "INFORMATION",
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  INFORMATION = 'INFORMATION',
 }
 export interface NhanhVnModalProps {
   visible?: boolean;
@@ -27,9 +27,9 @@ export interface NhanhVnModalProps {
 }
 
 const defaultBankAccountValue: NhanhVn = {
-  appId: "",
-  version: "",
-  secretKey: "",
+  appId: '',
+  version: '',
+  secretKey: '',
   priority: 0,
   status: NhanhVnStatus.ACTIVE,
 };
@@ -41,10 +41,8 @@ const NhanhVnModal = ({
   refetchData,
   nhanhVnById,
 }: NhanhVnModalProps) => {
-  const [
-    isLoadingWhenCallApiCreateOrUpdate,
-    setIsLoadingWhenCallApiCreateOrUpdate,
-  ] = useState<boolean>(false);
+  const [isLoadingWhenCallApiCreateOrUpdate, setIsLoadingWhenCallApiCreateOrUpdate] =
+    useState<boolean>(false);
 
   const {
     control,
@@ -68,26 +66,26 @@ const NhanhVnModal = ({
 
   const getTitleModalAndButton = useMemo(() => {
     let result = {
-      titleModal: "",
-      titleButton: "",
+      titleModal: '',
+      titleButton: '',
     };
     switch (modalType) {
       case ModalType.CREATE:
         result = {
-          titleModal: "Thêm mới cấu hình NhanhVn",
-          titleButton: "Thêm cấu hình NhanhVn",
+          titleModal: 'Thêm mới cấu hình NhanhVn',
+          titleButton: 'Thêm cấu hình NhanhVn',
         };
         break;
       case ModalType.UPDATE:
         result = {
-          titleModal: "Cập nhật thông tin cấu hình NhanhVn",
-          titleButton: "Cập nhật",
+          titleModal: 'Cập nhật thông tin cấu hình NhanhVn',
+          titleButton: 'Cập nhật',
         };
         break;
       case ModalType.INFORMATION:
         result = {
-          titleModal: "Thông tin cấu hình NhanhVn",
-          titleButton: "",
+          titleModal: 'Thông tin cấu hình NhanhVn',
+          titleButton: '',
         };
         break;
     }
@@ -97,34 +95,29 @@ const NhanhVnModal = ({
 
   const onSubmit = async (data: NhanhVn) => {
     try {
-      modalType === ModalType.CREATE &&
-        (await nhanhVnService.createNhanhVn(data));
+      modalType === ModalType.CREATE && (await nhanhVnService.createNhanhVn(data));
       modalType === ModalType.UPDATE &&
         nhanhVnById?.id &&
         (await nhanhVnService.updateNhanhVn(data, nhanhVnById?.id));
       setIsLoadingWhenCallApiCreateOrUpdate(false);
       onClose();
       toast.success(
-        `${
-          modalType === ModalType.CREATE ? "Thêm" : "Cập nhật"
-        } tài khoản ngân hàng thành công`,
+        `${modalType === ModalType.CREATE ? 'Thêm' : 'Cập nhật'} tài khoản ngân hàng thành công`,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           duration: 4000,
-          icon: "😞",
+          icon: '😞',
         },
       );
       refetchData();
     } catch (err) {
       console.log(err);
       toast.success(
-        `${
-          modalType === ModalType.CREATE ? "Thêm" : "Cập nhật"
-        } tài khoản ngân hàng thành công`,
+        `${modalType === ModalType.CREATE ? 'Thêm' : 'Cập nhật'} tài khoản ngân hàng thành công`,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           duration: 4000,
-          icon: "😞",
+          icon: '😞',
         },
       );
     }
@@ -138,18 +131,14 @@ const NhanhVnModal = ({
         okText="Lưu thay đổi"
         cancelText="Hủy bỏ"
         onCancel={onClose}
-        style={{ minWidth: "50%" }}
+        style={{ minWidth: '50%' }}
         footer={[
-          modalType === ModalType.INFORMATION ? (
-            ""
-          ) : (
-            <Button onClick={onClose}>Hủy</Button>
-          ),
+          modalType === ModalType.INFORMATION ? '' : <Button onClick={onClose}>Hủy</Button>,
           <Button
             form="form-bank-account"
             key="submit"
             htmlType="submit"
-            style={{ background: "#1890ff", color: "#fff" }}
+            style={{ background: '#1890ff', color: '#fff' }}
           >
             {getTitleModalAndButton.titleButton}
           </Button>,
@@ -160,14 +149,10 @@ const NhanhVnModal = ({
             <div className="col-span-5 ">
               <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div className="p-10">
-                  <form
-                    id="form-bank-account"
-                    onSubmit={handleSubmit(onSubmit)}
-                  >
+                  <form id="form-bank-account" onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        App ID{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        App ID <strong className="text-xl text-danger">*</strong>
                       </label>
                       <Controller
                         name="appId"
@@ -178,22 +163,19 @@ const NhanhVnModal = ({
                             value={value}
                             onChange={onChange}
                             className={`!h-[38px] !w-full border-solid border-[1px] ${
-                              errors.appId ? "!border-danger" : ""
+                              errors.appId ? '!border-danger' : ''
                             }`}
                             placeholder="VD: 33162"
                           />
                         )}
                       />
                       {errors?.appId && (
-                        <small className="text-danger text-[13px]">
-                          App ID không được rỗng
-                        </small>
+                        <small className="text-danger text-[13px]">App ID không được rỗng</small>
                       )}
                     </div>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Phiên bản{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Phiên bản <strong className="text-xl text-danger">*</strong>
                       </label>
                       <Controller
                         name="version"
@@ -204,22 +186,19 @@ const NhanhVnModal = ({
                             value={value}
                             onChange={onChange}
                             className={`!h-[38px] !w-full border-solid border-[1px] ${
-                              errors.version ? "!border-danger" : ""
+                              errors.version ? '!border-danger' : ''
                             }`}
                             placeholder="VD: 1.0"
                           />
                         )}
                       />
                       {errors?.version && (
-                        <small className="text-danger text-[13px]">
-                          Phiên bản không được rỗng
-                        </small>
+                        <small className="text-danger text-[13px]">Phiên bản không được rỗng</small>
                       )}
                     </div>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Secret Key{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Secret Key <strong className="text-xl text-danger">*</strong>
                       </label>
                       <Controller
                         name="secretKey"
@@ -230,7 +209,7 @@ const NhanhVnModal = ({
                             value={value}
                             onChange={onChange}
                             className={`!h-[38px] !w-full border-solid border-[1px] ${
-                              errors.secretKey ? "!border-danger" : ""
+                              errors.secretKey ? '!border-danger' : ''
                             }`}
                             placeholder="VD: DABSJD21y38"
                           />
@@ -244,8 +223,7 @@ const NhanhVnModal = ({
                     </div>
                     <div className="mb-5.5">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        Độ ưu tiên{" "}
-                        <strong className="text-xl text-danger">*</strong>
+                        Độ ưu tiên <strong className="text-xl text-danger">*</strong>
                       </label>
                       <Controller
                         name="priority"
@@ -256,7 +234,7 @@ const NhanhVnModal = ({
                             value={value}
                             onChange={(e) => e && onChange(e)}
                             className={`!h-[38px] !w-full border-solid border-[1px] ${
-                              errors.priority ? "!border-danger" : ""
+                              errors.priority ? '!border-danger' : ''
                             }`}
                             placeholder="VD: 99999"
                             controls={false}

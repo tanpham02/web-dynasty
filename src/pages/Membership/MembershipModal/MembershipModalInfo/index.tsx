@@ -1,27 +1,21 @@
-import { Button, Col, Modal, Row, Typography } from "antd";
-import { Membership } from "~/models/membership";
-import MembershipModalInfoTableCustomer from "./MembershipModalInfoTableCustomer";
+import { Button, Col, Modal, Row, Typography } from 'antd';
+import { Membership } from '~/models/membership';
+import MembershipModalInfoTableCustomer from './MembershipModalInfoTableCustomer';
 
 interface MembershipCreateModalProps {
   onClose: () => void;
   membershipById?: Membership;
 }
 
-export const MembershipModalInfo = ({
-  onClose,
-  membershipById,
-}: MembershipCreateModalProps) => {
+export const MembershipModalInfo = ({ onClose, membershipById }: MembershipCreateModalProps) => {
   return (
     <Modal
       open={true}
       onCancel={onClose}
-      title={"Chi tiết hạng thành viên"}
-      style={{ minWidth: "50%" }}
+      title={'Chi tiết hạng thành viên'}
+      style={{ minWidth: '50%' }}
       footer={[
-        <Button
-          style={{ border: "1px solid #1890ff", color: "#1890ff" }}
-          onClick={onClose}
-        >
+        <Button style={{ border: '1px solid #1890ff', color: '#1890ff' }} onClick={onClose}>
           Tắt
         </Button>,
       ]}
@@ -44,10 +38,7 @@ export const MembershipModalInfo = ({
         </Col>
 
         <Col span={16}>
-          <Typography.Text
-            type="secondary"
-            className="!text-black text-[15px] font-medium"
-          >
+          <Typography.Text type="secondary" className="!text-black text-[15px] font-medium">
             Thông tin chung
           </Typography.Text>
           <Row gutter={16} className="mt-5">
@@ -58,9 +49,9 @@ export const MembershipModalInfo = ({
               <Typography.Text
                 type="secondary"
                 className="text-[15px] font-medium "
-                style={{ color: membershipById?.color || "#000000" }}
+                style={{ color: membershipById?.color || '#000000' }}
               >
-                {membershipById?.name || ""}
+                {membershipById?.name || ''}
               </Typography.Text>
             </Col>
           </Row>
@@ -75,10 +66,8 @@ export const MembershipModalInfo = ({
                 className="!text-black text-[15px] font-medium tracking-[1px]"
               >
                 {membershipById?.conditionPrice
-                  ? `${Number(membershipById?.conditionPrice).toLocaleString(
-                      "EN",
-                    )}đ`
-                  : ""}
+                  ? `${Number(membershipById?.conditionPrice).toLocaleString('EN')}đ`
+                  : ''}
               </Typography.Text>
             </Col>
           </Row>
@@ -88,11 +77,8 @@ export const MembershipModalInfo = ({
               <Typography.Text type="secondary" className="!text-black ">
                 Giá trị tích lũy cần đạt ( bằng chữ ):&nbsp;
               </Typography.Text>
-              <Typography.Text
-                type="secondary"
-                className="!text-black text-[15px] font-medium"
-              >
-                {membershipById?.conditionLabel || ""}
+              <Typography.Text type="secondary" className="!text-black text-[15px] font-medium">
+                {membershipById?.conditionLabel || ''}
               </Typography.Text>
             </Col>
           </Row>
@@ -106,15 +92,13 @@ export const MembershipModalInfo = ({
                 type="secondary"
                 className="!text-black text-[15px] font-medium tracking-[1px]"
               >
-                {`${membershipById?.percentDiscount}%` || ""}
+                {`${membershipById?.percentDiscount}%` || ''}
               </Typography.Text>
             </Col>
           </Row>
         </Col>
       </Row>
-      <MembershipModalInfoTableCustomer
-        customerDTOs={membershipById?.customerDTOs}
-      />
+      <MembershipModalInfoTableCustomer customerDTOs={membershipById?.customerDTOs} />
     </Modal>
   );
 };

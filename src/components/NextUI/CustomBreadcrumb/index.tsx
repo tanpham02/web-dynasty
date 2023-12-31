@@ -1,8 +1,8 @@
-import { BreadcrumbItem, Breadcrumbs, Link } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
-import SVG from "react-inlinesvg";
-import HomeIcon from "~/assets/svg/home.svg";
-import { PATH_NAME } from "~/constants/router";
+import { BreadcrumbItem, Breadcrumbs, Link } from '@nextui-org/react';
+import { useNavigate } from 'react-router-dom';
+import SVG from 'react-inlinesvg';
+import HomeIcon from '~/assets/svg/home.svg';
+import { PATH_NAME } from '~/constants/router';
 
 interface Route {
   path?: string;

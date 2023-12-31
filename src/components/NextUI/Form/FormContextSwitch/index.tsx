@@ -1,5 +1,5 @@
-import { Switch, SwitchProps } from "@nextui-org/react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Switch, SwitchProps } from '@nextui-org/react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 interface FormContextSwitchProps extends SwitchProps {
   name: string;

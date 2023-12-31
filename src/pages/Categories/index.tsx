@@ -45,31 +45,26 @@ const Categories = () => {
 
   const columns: ColumnType<Category>[] = [
     {
-      key: '_id',
       align: 'center',
       name: 'STT',
       render: (_category: Category, index?: number) => (index || 0) + 1,
     },
     {
-      key: 'name',
       align: 'center',
       name: 'Tên danh mục',
       render: (category: Category) => category?.name,
     },
     {
-      key: 'products',
       align: 'center',
       name: 'Số lượng sản phẩm',
       render: (category: Category) => category?.products?.length || 0,
     },
     {
-      key: 'priority',
       align: 'center',
       name: 'Thứ tự hiển thị',
       render: (category: Category) => category?.priority || 0,
     },
     {
-      key: 'status',
       align: 'center',
       name: 'Trạng thái',
       render: (category: Category) => (
@@ -85,7 +80,6 @@ const Categories = () => {
       ),
     },
     {
-      key: '_id',
       align: 'center',
       name: 'Hành động',
       render: (category: Category) => (

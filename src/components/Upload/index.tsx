@@ -46,7 +46,7 @@ const Upload: React.FC<UploadProps> = (props) => {
             <ButtonIcon
               title="Xem trước"
               icon={EyeIcon}
-              status="secondary"
+              status="default"
               onClick={() => setVisiblePreview(true)}
             />
           </Box>

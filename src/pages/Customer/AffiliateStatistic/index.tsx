@@ -1,4 +1,4 @@
-import InComing from "~/pages/Incoming";
+import InComing from '~/pages/Incoming';
 
 const AffiliateStatisticPage = () => {
   return (

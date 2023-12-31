@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import userSeven from "assets/images/user/user-07.png";
-import userEight from "assets/images/user/user-08.png";
-import userNine from "assets/images/user/user-09.png";
-import userTen from "assets/images/user/user-10.png";
+import { useEffect, useRef, useState } from 'react';
+import userSeven from 'assets/images/user/user-07.png';
+import userEight from 'assets/images/user/user-08.png';
+import userNine from 'assets/images/user/user-09.png';
+import userTen from 'assets/images/user/user-10.png';
 
 const TaskHeader = () => {
   const [popupOpen, setPopupOpen] = useState(false);
@@ -14,16 +14,11 @@ const TaskHeader = () => {
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!popup.current) return;
-      if (
-        !popupOpen ||
-        popup.current.contains(target) ||
-        trigger.current.contains(target)
-      )
-        return;
+      if (!popupOpen || popup.current.contains(target) || trigger.current.contains(target)) return;
       setPopupOpen(false);
     };
-    document.addEventListener("click", clickHandler);
-    return () => document.removeEventListener("click", clickHandler);
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
   });
 
   // close if the esc key is pressed
@@ -32,16 +27,14 @@ const TaskHeader = () => {
       if (!popupOpen || keyCode !== 27) return;
       setPopupOpen(false);
     };
-    document.addEventListener("keydown", keyHandler);
-    return () => document.removeEventListener("keydown", keyHandler);
+    document.addEventListener('keydown', keyHandler);
+    return () => document.removeEventListener('keydown', keyHandler);
   });
 
   return (
     <div className="flex flex-col gap-y-4 rounded-sm border border-stroke bg-white p-3 shadow-default dark:border-strokedark dark:bg-boxdark sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h3 className="pl-2 text-title-lg font-semibold text-black dark:text-white">
-          Tasks
-        </h3>
+        <h3 className="pl-2 text-title-lg font-semibold text-black dark:text-white">Tasks</h3>
       </div>
       <div className="flex flex-col gap-4 2xsm:flex-row 2xsm:items-center">
         <div className="flex -space-x-2">

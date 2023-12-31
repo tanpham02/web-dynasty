@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -13,7 +12,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 
-import AddCircleIcon from '~/assets/svg/add.svg';
 import DeleteIcon from '~/assets/svg/delete.svg';
 import GridLayoutIcon from '~/assets/svg/grid-layout.svg';
 import Box from '~/components/Box';
@@ -24,30 +22,27 @@ import { Attribute, AttributeValue } from '~/models/attribute';
 import { ProductChildrenAttribute, ProductMain } from '~/models/product';
 import { attributeService } from '~/services/attributeService';
 
-interface ProductAttributeCardProps {
-  isOpen?: boolean;
-}
-
-const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
+const ProductAttributeCard = () => {
   const { control } = useFormContext<ProductMain>();
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
 
   const columns: ColumnType<ProductChildrenAttribute>[] = [
     {
-      key: 'extendName',
       name: 'Tên mở rộng',
       render: (record: ProductChildrenAttribute) => record?.extendedName,
     },
     {
-      key: 'attributeName',
-      name: 'Tên thuộc tính',
+      name: <Box className="text-center">Tên thuộc tính</Box>,
       render: (record: ProductChildrenAttribute, index?: number) => (
         <Box className="space-y-1">
           {record?.productAttributeItem?.map((attributeValue, fieldIndex) => (
             <FormContextInput
               name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.name`}
               value={attributeValue?.name}
+              classNames={{
+                input: 'text-center',
+              }}
               isReadOnly
             />
           ))}
@@ -55,20 +50,19 @@ const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
       ),
     },
     {
-      key: 'productAttributeItem',
-      name: <Box className="text-right">Giá bán cộng thêm</Box>,
+      name: <Box className="text-center">Giá bán cộng thêm</Box>,
       render: (record: ProductChildrenAttribute, index?: number) => (
         <Box className="space-y-1">
           {record?.productAttributeItem?.map((_, fieldIndex) => (
             <FormContextInput
               name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
-              endContent="đ"
+              endContent={<span className="font-bold">đ</span>}
               type="number"
               classNames={{
                 input: 'text-right',
               }}
               rules={{
-                required: "Vui lòng nhập giá sản phẩm tăng thêm cho thuộc tính này!"
+                required: 'Vui lòng nhập giá sản phẩm tăng thêm cho thuộc tính này!',
               }}
             />
           ))}
@@ -76,16 +70,10 @@ const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
       ),
     },
     {
-      key: 'actions',
       name: <span className="block text-center">Hành động</span>,
       render: (_record, index?: number) => (
         <div className="flex justify-center">
-          <Tooltip
-            color="danger"
-            content="Xóa sản phẩm con này"
-            showArrow
-            delay={1500}
-          >
+          <Tooltip color="danger" content="Xóa sản phẩm con này" showArrow>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50"
               onClick={() => removeProductAttribute(index)}
@@ -111,11 +99,9 @@ const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
     data: attributes,
     isLoading: isLoadingAttribute,
     isFetching: isFetchingAttribute,
-  } = useQuery(
-    [QUERY_KEY.ATTRIBUTE],
-    async () => await attributeService.getAllAttributes(),
-    { enabled: isOpen, refetchOnWindowFocus: false },
-  );
+  } = useQuery([QUERY_KEY.ATTRIBUTE], async () => await attributeService.getAllAttributes(), {
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     removeProductAttribute(undefined);
@@ -157,12 +143,8 @@ const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
         for (const attr of attributeSelected[index].attributeList || []) {
           generateCombinations(
             index + 1,
-            attr?.name
-              ? [...currentCombination, attr.name]
-              : [...currentCombination],
-            attr?.value
-              ? [...currentCombinationValue, attr.value]
-              : [...currentCombinationValue],
+            attr?.name ? [...currentCombination, attr.name] : [...currentCombination],
+            attr?.value ? [...currentCombinationValue, attr.value] : [...currentCombinationValue],
             attr ? [...attributeValue, attr] : [...attributeValue],
           );
         }
@@ -171,52 +153,35 @@ const ProductAttributeCard = ({ isOpen = true }: ProductAttributeCardProps) => {
     [attributeSelected],
   );
 
-  const handleChangeAttributeSelected = (
-    checked: boolean,
-    attribute: Attribute,
-  ) => {
+  const handleChangeAttributeSelected = (checked: boolean, attribute: Attribute) => {
     if (checked) {
       setAttributeSelected((prev) => [...prev, attribute]);
     } else {
-      setAttributeSelected(
-        attributeSelected?.filter((item) => item?._id != attribute?._id),
-      );
+      setAttributeSelected(attributeSelected?.filter((item) => item?._id != attribute?._id));
     }
   };
 
   return (
-    <Card className="col-span-2">
+    <Card>
       <CardHeader>
         <Svg src={GridLayoutIcon} className="w-5 h-5 mr-2" />
         <span className="text-lg font-bold">Thuộc tính sản phẩm</span>
       </CardHeader>
       <Divider />
       <CardBody className="p-6 space-y-4">
-        <Box className="grid gap-4 grid-cols-2">
-          <CheckboxGroup className="space-y-2">
-            {attributes?.map((attribute, index) => (
-              <Box key={index} className="flex justify-between w-full">
+        <Box className="grid gap-4">
+          <CheckboxGroup>
+            <Box className="grid grid-cols-4 lg:grid-cols-6">
+              {attributes?.map((attribute, index) => (
                 <Checkbox
+                  key={index}
                   value={attribute?._id}
-                  onValueChange={(checked) =>
-                    handleChangeAttributeSelected(checked, attribute)
-                  }
+                  onValueChange={(checked) => handleChangeAttributeSelected(checked, attribute)}
                 >
                   {attribute?.name}
                 </Checkbox>
-                <Button size="sm" color="primary" variant="bordered" isIconOnly>
-                  <Svg src={AddCircleIcon} />
-                </Button>
-              </Box>
-            ))}
-            <Button
-              color="primary"
-              size="sm"
-              variant="bordered"
-              className="mt-2"
-            >
-              Thêm thuộc tính
-            </Button>
+              ))}
+            </Box>
           </CheckboxGroup>
         </Box>
         <CustomTable

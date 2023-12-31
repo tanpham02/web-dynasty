@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Controller, FieldValue, FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { Users, UserRole } from '~/models/user';
+import { getProvincesWithDetail } from 'vietnam-provinces';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '~/redux/store';
 import CustomModal from '~/components/NextUI/CustomModal';
@@ -49,6 +50,18 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
   const [avatar, setAvatar] = useState<any>();
   const [isShowInputUpdatePw, setIsShowInputUpdatePw] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  const vietnamLocations = getProvincesWithDetail();
+
+  const mappingVietNamLocation = useMemo(() => {
+    if (vietnamLocations) {
+      const newLocationsArray = Object.keys(vietnamLocations)
+        .map((key) => [vietnamLocations[key]])
+        .flatMap((item) => item);
+
+      return newLocationsArray;
+    }
+  }, [vietnamLocations]);
 
   const forms = useForm<Users>({
     defaultValues: defaultUserValues,
@@ -110,11 +123,12 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
   // }, [modalType]);
 
   const onSubmit = async (data: Users) => {
-    setIsLoading(true);
-    const formData = new FormData();
-    if (avatar) {
-      formData.append('files', avatar);
-    }
+    console.log('🚀 ~ file: index.tsx:127 ~ onSubmit ~ data:', data);
+    // setIsLoading(true);
+    // const formData = new FormData();
+    // if (avatar) {
+    //   formData.append('files', avatar);
+    // }
 
     // try {
     //   formData.append('userInfo', JSON.stringify(data));
@@ -239,7 +253,7 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
               }}
               isRequired
               type="email"
-              label="Email"
+              label="E-mail"
               isClearable
             />
 
@@ -260,7 +274,6 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
               rules={{
                 required: 'Vui lòng chọn vai trò',
               }}
-              value={UserRole.ADMIN}
               items={roleSelection}
             >
               {(optionItem: any) => (
@@ -269,6 +282,23 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
                 </SelectItem>
               )}
             </FormContextSelect>
+
+            {/* <FormContextSelect
+              isRequired
+              name="city"
+              label="Tỉnh / Thành phố"
+              rules={{
+                required: 'Vui lòng chọn Tỉnh / Thành phố',
+              }}
+              value={UserRole.ADMIN}
+              items={roleSelection}
+            >
+              {(optionItem: any) => (
+                <SelectItem key={optionItem.value.toString()} value={optionItem.value?.toString()}>
+                  {optionItem.label}
+                </SelectItem>
+              )}
+            </FormContextSelect> */}
 
             <FormContextInput<Users>
               isRequired
@@ -279,7 +309,8 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
                 required: 'Vui lòng nhập mật khẩu',
                 pattern: {
                   value: PATTERN.PASSWORD,
-                  message: 'Mật khẩu không hợp lệ',
+                  message:
+                    'Sai định dạng (Mật khẩu ít nhất 8 ký tự, bao gồm ít nhất một chữ số, một ký tự đặc biệt, một chứ cái thường và một chữ cái in hoa)',
                 },
               }}
             />
@@ -292,7 +323,8 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
               rules={{
                 required: 'Vui lòng nhập mật khẩu xác nhận',
                 validate: {
-                  confirmPw: (value) => value === watch('password'),
+                  confirmPw: (value) =>
+                    value !== watch('password') ? 'Mật khẩu và mật khẩu xác nhận không khớp' : true,
                 },
               }}
             />

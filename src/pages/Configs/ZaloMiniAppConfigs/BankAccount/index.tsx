@@ -1,14 +1,14 @@
-import SVG from "react-inlinesvg";
-import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { Button, Modal, Skeleton } from "antd";
-import trash from "~/assets/svg/trash.svg";
-import { toast } from "react-hot-toast";
-import BankAccountTable from "./BankAccountTable";
-import BankAccountModal, { ModalType } from "./BankAccountModal";
-import { BankAccountStatus } from "~/models/bankAccount";
-import { bankAccountService } from "~/services/bankAccountService";
+import SVG from 'react-inlinesvg';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { Button, Modal, Skeleton } from 'antd';
+import trash from '~/assets/svg/trash.svg';
+import { toast } from 'react-hot-toast';
+import BankAccountTable from './BankAccountTable';
+import BankAccountModal, { ModalType } from './BankAccountModal';
+import { BankAccountStatus } from '~/models/bankAccount';
+import { bankAccountService } from '~/services/bankAccountService';
 
 export interface ModalKey {
   visible?: boolean;
@@ -17,13 +17,11 @@ export interface ModalKey {
 }
 
 const BankAccount = () => {
-  const [showDeleteBankAccountModal, setShowDeleteBankAccountModal] =
-    useState<boolean>(false);
+  const [showDeleteBankAccountModal, setShowDeleteBankAccountModal] = useState<boolean>(false);
   const [bankAccountModal, setBankAccountModal] = useState<ModalKey>({
     visible: false,
   });
-  const [listIdsBankAccountForDelete, setListIdsBankAccountForDelete] =
-    useState<React.Key[]>([]);
+  const [listIdsBankAccountForDelete, setListIdsBankAccountForDelete] = useState<React.Key[]>([]);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
 
   const {
@@ -40,9 +38,7 @@ const BankAccount = () => {
   const { data: bankAccountById } = useQuery(
     [QUERY_KEY.BANK_ACCOUNT, bankAccountModal],
     async () => {
-      return await bankAccountService.getBankAccountById(
-        Number(bankAccountModal.bankAccountId),
-      );
+      return await bankAccountService.getBankAccountById(Number(bankAccountModal.bankAccountId));
     },
     { enabled: bankAccountModal.bankAccountId ? true : false },
   );
@@ -59,10 +55,7 @@ const BankAccount = () => {
     setShowDeleteBankAccountModal(false);
   };
 
-  const handleShowModalBankAccount = (
-    type?: ModalType,
-    bankAccountId?: number,
-  ) => {
+  const handleShowModalBankAccount = (type?: ModalType, bankAccountId?: number) => {
     if (bankAccountId) {
       setBankAccountModal({
         type,
@@ -81,11 +74,11 @@ const BankAccount = () => {
     setIsLoadingDelete(true);
     try {
       await bankAccountService.deleteBankAccount(ids);
-      toast.success("Xóa thành công", {
-        position: "bottom-right",
+      toast.success('Xóa thành công', {
+        position: 'bottom-right',
         duration: 3000,
-        icon: "👏",
-        style: { width: "70%" },
+        icon: '👏',
+        style: { width: '70%' },
       });
 
       setIsLoadingDelete(false);
@@ -98,10 +91,10 @@ const BankAccount = () => {
       refetch();
     } catch (err) {
       console.log(err);
-      toast.success("Xóa thất bại", {
-        position: "bottom-right",
+      toast.success('Xóa thất bại', {
+        position: 'bottom-right',
         duration: 3500,
-        icon: "😔",
+        icon: '😔',
       });
     }
   };
@@ -128,7 +121,7 @@ const BankAccount = () => {
             Xóa danh sách tài khoản ngân hàng đã chọn
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
 
@@ -141,12 +134,7 @@ const BankAccount = () => {
             <Button title="cancel" onClick={handleCancel}>
               Hủy bỏ
             </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              onClick={handleOk}
-              loading={isLoadingDelete}
-            >
+            <Button key="submit" type="primary" onClick={handleOk} loading={isLoadingDelete}>
               Xác nhận xóa
             </Button>,
           ]}
@@ -165,9 +153,7 @@ const BankAccount = () => {
           data={bankAccount}
           refreshData={refetch}
           handleDeleteOneBankAccount={handleDeleteBankAccount}
-          handleChangeListIdsBankAccountForDelete={
-            setListIdsBankAccountForDelete
-          }
+          handleChangeListIdsBankAccountForDelete={setListIdsBankAccountForDelete}
           handleShowModalBankAccount={handleShowModalBankAccount}
         />
       )}

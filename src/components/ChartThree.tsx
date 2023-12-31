@@ -1,6 +1,6 @@
-import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
-import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from 'apexcharts';
+import React, { useState } from 'react';
+import ReactApexChart from 'react-apexcharts';
 
 interface ChartThreeState {
   series: number[];
@@ -8,20 +8,20 @@ interface ChartThreeState {
 
 const options: ApexOptions = {
   chart: {
-    type: "donut",
+    type: 'donut',
   },
-  colors: ["#10B981", "#375E83", "#259AE6", "#FFA70B"],
-  labels: ["Remote", "Hybrid", "Onsite", "Leave"],
+  colors: ['#10B981', '#375E83', '#259AE6', '#FFA70B'],
+  labels: ['Remote', 'Hybrid', 'Onsite', 'Leave'],
   legend: {
     show: true,
-    position: "bottom",
+    position: 'bottom',
   },
 
   plotOptions: {
     pie: {
       donut: {
-        size: "65%",
-        background: "transparent",
+        size: '65%',
+        background: 'transparent',
       },
     },
   },
@@ -58,9 +58,7 @@ const ChartThree: React.FC = () => {
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-5">
       <div className="mb-3 justify-between gap-4 sm:flex">
         <div>
-          <h5 className="text-xl font-semibold text-black dark:text-white">
-            Visitors Analytics
-          </h5>
+          <h5 className="text-xl font-semibold text-black dark:text-white">Visitors Analytics</h5>
         </div>
         <div>
           <div className="relative z-20 inline-block">
@@ -98,11 +96,7 @@ const ChartThree: React.FC = () => {
 
       <div className="mb-2">
         <div id="chartThree" className="mx-auto flex justify-center">
-          <ReactApexChart
-            options={options}
-            series={state.series}
-            type="donut"
-          />
+          <ReactApexChart options={options} series={state.series} type="donut" />
         </div>
       </div>
 

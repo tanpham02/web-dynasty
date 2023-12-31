@@ -1,19 +1,19 @@
-import { InfiniteData } from "@tanstack/react-query";
-import { Empty, Select, Table, TablePaginationConfig, Typography } from "antd";
-import React, { useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import { Order, StatusOrder, TypeOrder } from "~/models/order";
-import orderService from "~/services/orderService";
-import { Breakpoint, ListDataResponse } from "~/types";
-import { formatCurrencyVND } from "~/utils/number";
-import { PaginationProps } from "..";
+import { InfiniteData } from '@tanstack/react-query';
+import { Empty, Select, Table, TablePaginationConfig, Typography } from 'antd';
+import React, { useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Order, StatusOrder, TypeOrder } from '~/models/order';
+import orderService from '~/services/orderService';
+import { Breakpoint, ListDataResponse } from '~/types';
+import { formatCurrencyVND } from '~/utils/number';
+import { PaginationProps } from '..';
 
 interface Columns {
   title?: string;
   dataIndex?: keyof Order;
   key?: keyof Order;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: Order) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -27,27 +27,27 @@ interface OrderTableProps {
 
 export const STATUS_ORDER_OPTIONS = [
   {
-    label: "Đợi xác nhận",
+    label: 'Đợi xác nhận',
     value: StatusOrder.PENDING,
   },
   {
-    label: "Đợi lấy hàng",
+    label: 'Đợi lấy hàng',
     value: StatusOrder.WAITING_FOR_DELIVERING,
   },
   {
-    label: "Đang giao hàng",
+    label: 'Đang giao hàng',
     value: StatusOrder.DELIVERING,
   },
   {
-    label: "Giao hàng thất bại",
+    label: 'Giao hàng thất bại',
     value: StatusOrder.FAIL,
   },
   {
-    label: "Đơn đã hủy",
+    label: 'Đơn đã hủy',
     value: StatusOrder.CANCELED,
   },
   {
-    label: "Giao hàng thành công",
+    label: 'Giao hàng thành công',
     value: StatusOrder.SUCCESS,
   },
 ];
@@ -60,68 +60,64 @@ const OrderTable = ({
 }: OrderTableProps) => {
   const COLUMNS: Columns[] = [
     {
-      key: "fullName",
-      dataIndex: "fullName",
-      title: "Tên khách hàng",
-      align: "center",
+      key: 'fullName',
+      dataIndex: 'fullName',
+      title: 'Tên khách hàng',
+      align: 'center',
     },
 
     {
-      key: "phoneNumber",
-      dataIndex: "phoneNumber",
-      title: "Số điện thoại",
-      align: "center",
+      key: 'phoneNumber',
+      dataIndex: 'phoneNumber',
+      title: 'Số điện thoại',
+      align: 'center',
     },
     {
-      title: "Địa chỉ giao hàng",
-      dataIndex: "address",
-      key: "address",
-      align: "center",
+      title: 'Địa chỉ giao hàng',
+      dataIndex: 'address',
+      key: 'address',
+      align: 'center',
       render: (__index, record) => (
         <Typography.Text>{handleGenerateAddress(record)}</Typography.Text>
       ),
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      title: "Loại đơn hàng",
-      dataIndex: "typeOrder",
-      key: "typeOrder",
-      align: "center",
+      title: 'Loại đơn hàng',
+      dataIndex: 'typeOrder',
+      key: 'typeOrder',
+      align: 'center',
       render: (__index, record) => (
         <Typography.Text
           className={`font-medium ${
-            record.typeOrder === TypeOrder.ORDER_DELIVERING
-              ? "!text-primary"
-              : "!text-[#d50e15]"
+            record.typeOrder === TypeOrder.ORDER_DELIVERING ? '!text-primary' : '!text-[#d50e15]'
           }`}
         >{`${
-          record.typeOrder === TypeOrder.ORDER_DELIVERING
-            ? "Đặt giao hàng"
-            : "Đặt đến lấy"
+          record.typeOrder === TypeOrder.ORDER_DELIVERING ? 'Đặt giao hàng' : 'Đặt đến lấy'
         }`}</Typography.Text>
       ),
-      responsive: ["md"],
+      responsive: ['md'],
     },
     {
-      key: "totalOrder",
-      dataIndex: "totalOrder",
-      title: "Tổng tiền",
-      align: "center",
+      key: 'totalOrder',
+      dataIndex: 'totalOrder',
+      title: 'Tổng tiền',
+      align: 'center',
       render: (__index, record) => (
         <Typography.Text className="tracking-[0.5px]">
-          {record?.totalOrder ? formatCurrencyVND(record.totalOrder) : ""}
+          {record?.totalOrder ? formatCurrencyVND(record.totalOrder) : ''}
         </Typography.Text>
       ),
-      responsive: ["md"],
+      responsive: ['md'],
     },
     {
-      title: "Trạng thái đơn hàng",
-      dataIndex: "statusOrder",
-      key: "statusOrder",
-      align: "center",
+      title: 'Trạng thái đơn hàng',
+      dataIndex: 'statusOrder',
+      key: 'statusOrder',
+      align: 'center',
       render: (__id, record) => (
         <Select
-          style={{ minWidth: "calc(100% + 16px)" }}
+          style={{ minWidth: 'calc(100% + 16px)' }}
           className=" rounded-lg !max-w-[200px] border-2 border-gray bg-white dark:bg-boxdark"
           value={record?.statusOrder}
           onChange={(value) => handleUpdateOrderStatus(record?._id, value)}
@@ -143,29 +139,26 @@ const OrderTable = ({
     };
   }, [data]);
 
-  const handleUpdateOrderStatus = async (
-    orderId?: string,
-    value?: StatusOrder,
-  ) => {
+  const handleUpdateOrderStatus = async (orderId?: string, value?: StatusOrder) => {
     onGetIsLoading(true);
 
     try {
       if (orderId && value) {
         await orderService.updateOrderStatus(orderId, value);
-        toast.success("Thay đổi trạng thái đơn hàng thành công", {
-          position: "bottom-right",
+        toast.success('Thay đổi trạng thái đơn hàng thành công', {
+          position: 'bottom-right',
           duration: 1500,
-          icon: "🤪",
+          icon: '🤪',
         });
         onGetIsLoading(false);
         refetchData();
       }
     } catch (error) {
       console.log(error);
-      toast.error("Thay đổi trạng thái đơn hàng thất bại", {
-        position: "bottom-right",
+      toast.error('Thay đổi trạng thái đơn hàng thất bại', {
+        position: 'bottom-right',
         duration: 1500,
-        icon: "😞",
+        icon: '😞',
       });
       onGetIsLoading(false);
     }
@@ -194,12 +187,7 @@ const OrderTable = ({
         });
       }}
       locale={{
-        emptyText: (
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="Không có dữ liệu"
-          />
-        ),
+        emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />,
       }}
     />
   );

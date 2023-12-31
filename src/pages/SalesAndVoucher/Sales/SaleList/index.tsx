@@ -1,15 +1,13 @@
-import SVG from "react-inlinesvg";
-import SEARCH_ICON from "~ assets/svg/search.svg";
-import SelectCustom from "~/components/customs/Select";
-import SaleTable from "./SaleTable";
+import SVG from 'react-inlinesvg';
+import SEARCH_ICON from '~ assets/svg/search.svg';
+import SelectCustom from '~/components/customs/Select';
+import SaleTable from './SaleTable';
 
 const SaleListPage = () => {
   return (
     <>
       <div className="flex flex-row justify-between items-center gap-2 w-full">
-        <span className="font-bold text-xl">
-          {"Danh sách Chương trình khuyến mãi"}
-        </span>
+        <span className="font-bold text-xl">{'Danh sách Chương trình khuyến mãi'}</span>
         <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white">
           Thêm chương trình
         </button>
@@ -32,9 +30,7 @@ const SaleListPage = () => {
             className="flex w-full items-center rounded-lg lg:w-[25%] xl:w-[25%]"
             placeholder="Vai trò"
           />
-          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">
-            Tìm
-          </button>
+          <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white  ">Tìm</button>
         </div>
       </div>
       <SaleTable />

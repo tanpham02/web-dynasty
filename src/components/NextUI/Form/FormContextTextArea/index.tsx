@@ -1,5 +1,5 @@
-import { Textarea, TextAreaProps } from "@nextui-org/react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Textarea, TextAreaProps } from '@nextui-org/react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 interface FormContextTextAreaProps extends TextAreaProps {
   name: string;
@@ -18,10 +18,10 @@ const FormContextTextArea = (props: FormContextTextAreaProps) => {
           onValueChange={onChange}
           ref={ref}
           classNames={{
-            inputWrapper: "border-b",
-            label: "font-semibold",
+            inputWrapper: 'border-b',
+            label: 'font-semibold',
           }}
-          color={!!error ? "danger" : "primary"}
+          color={!!error ? 'danger' : 'primary'}
           variant="underlined"
           errorMessage={error?.message}
           {...props}

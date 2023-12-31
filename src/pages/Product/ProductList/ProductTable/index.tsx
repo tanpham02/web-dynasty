@@ -1,9 +1,5 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { InfiniteData } from "@tanstack/react-query";
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { InfiniteData } from '@tanstack/react-query';
 import {
   Avatar,
   Button,
@@ -14,32 +10,28 @@ import {
   Table,
   TablePaginationConfig,
   Tag,
-} from "antd";
-import { useMemo, useState } from "react";
-import { toast } from "react-hot-toast";
-import {
-  ProductMain,
-  ProductStatusOptions,
-  ProductType,
-} from "~/models/product";
-import { productService } from "~/services/productService";
-import { Breakpoint, ListDataResponse } from "~/types";
-import ProductDetailModal from "../ProductDetailModal";
-import type { CustomTagProps } from "rc-select/lib/BaseSelect";
-import "./index.scss";
-import ProductModal from "./ProductModal";
-import { ModalType } from "~/pages/User/UserModal";
-import { formatCurrencyVND } from "~/utils/number";
-import Loading from "~/components/Loading";
+} from 'antd';
+import { useMemo, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { ProductMain, ProductStatusOptions, ProductType } from '~/models/product';
+import { productService } from '~/services/productService';
+import { Breakpoint, ListDataResponse } from '~/types';
+import ProductDetailModal from '../ProductDetailModal';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import './index.scss';
+import ProductModal from './ProductModal';
+import { ModalType } from '~/pages/User/UserModal';
+import { formatCurrencyVND } from '~/utils/number';
+import Loading from '~/components/Loading';
 
 export const ProductTypeTagRenderMapping = {
-  [`${ProductType.NORMAL}`]: "black",
-  [`${ProductType.NEW}`]: "#38cbcb",
-  [`${ProductType.BEST_SELLER}`]: "#ff0000",
-  [`${ProductType.DELICIOUS_MUST_TRY}`]: "#006a31",
-  [`${ProductType.VEGETARIAN}`]: "#40d340",
-  [`${ProductType.SPICY}`]: "#f64d4d",
-  [`${ProductType.UNIQUE}`]: "#ffb938",
+  [`${ProductType.NORMAL}`]: 'black',
+  [`${ProductType.NEW}`]: '#38cbcb',
+  [`${ProductType.BEST_SELLER}`]: '#ff0000',
+  [`${ProductType.DELICIOUS_MUST_TRY}`]: '#006a31',
+  [`${ProductType.VEGETARIAN}`]: '#40d340',
+  [`${ProductType.SPICY}`]: '#f64d4d',
+  [`${ProductType.UNIQUE}`]: '#ffb938',
 };
 
 const tagRender = (props: CustomTagProps) => {
@@ -66,7 +58,7 @@ interface Columns {
   dataIndex?: keyof ProductMain;
   key?: keyof ProductMain;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: ProductMain) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -96,16 +88,10 @@ const ProductTable = ({
   propsProduct,
   onSetPropsProduct,
 }: ProductTableProps) => {
-  const [showConfirmDeleteMultiModal, setShowConfirmDeleteMultiModal] =
-    useState<boolean>(false);
-  const [isLoadingDeleteMulti, setIsLoadingDeleteMulti] =
-    useState<boolean>(false);
-  const [productSelectedKeys, setProductSelectedKeys] = useState<React.Key[]>(
-    [],
-  );
-  const [productTypeSelectedKeys, setProductTypeSelectedKeys] = useState<
-    ProductType[]
-  >([]);
+  const [showConfirmDeleteMultiModal, setShowConfirmDeleteMultiModal] = useState<boolean>(false);
+  const [isLoadingDeleteMulti, setIsLoadingDeleteMulti] = useState<boolean>(false);
+  const [productSelectedKeys, setProductSelectedKeys] = useState<React.Key[]>([]);
+  const [productTypeSelectedKeys, setProductTypeSelectedKeys] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [showProductDetailModal, setShowProductDetailModal] = useState<{
@@ -119,8 +105,7 @@ const ProductTable = ({
   const handleShowProductDetailModal = (productID: string | undefined) => {
     if (productID) {
       setShowProductDetailModal({
-        isShowProductDetailModal:
-          !showProductDetailModal.isShowProductDetailModal,
+        isShowProductDetailModal: !showProductDetailModal.isShowProductDetailModal,
         productID: productID,
       });
     }
@@ -134,68 +119,62 @@ const ProductTable = ({
 
   const COLUMNS: Columns[] = [
     {
-      key: "image",
-      dataIndex: "image",
-      title: "Hình ảnh",
+      key: 'image',
+      dataIndex: 'image',
+      title: 'Hình ảnh',
       render: (__id, record) =>
-        record.image != "" ? (
+        record.image != '' ? (
           <Avatar src={record.image} shape="square" size={84} />
         ) : (
-          <Avatar
-            style={{ backgroundColor: "#de7300" }}
-            shape="square"
-            size={84}
-          >
+          <Avatar style={{ backgroundColor: '#de7300' }} shape="square" size={84}>
             {record.name && record.name.charAt(0)}
           </Avatar>
         ),
-      align: "center",
+      align: 'center',
     },
 
     {
-      key: "name",
-      dataIndex: "name",
-      title: "Tên",
-      align: "center",
+      key: 'name',
+      dataIndex: 'name',
+      title: 'Tên',
+      align: 'center',
     },
 
     {
-      key: "price",
-      dataIndex: "price",
-      title: "Giá",
+      key: 'price',
+      dataIndex: 'price',
+      title: 'Giá',
       render: (__index, record) => (
         <span className="tracking-[0.5px]">
-          {record?.price ? formatCurrencyVND(record.price) : ""}
+          {record?.price ? formatCurrencyVND(record.price) : ''}
         </span>
       ),
-      align: "center",
+      align: 'center',
     },
     {
-      title: "Loại sản phẩm",
-      dataIndex: "types",
-      key: "types",
-      align: "center",
+      title: 'Loại sản phẩm',
+      dataIndex: 'types',
+      key: 'types',
+      align: 'center',
       render: (__index, record) => (
         <Select
-          style={{ minWidth: "calc(100% + 16px)" }}
+          style={{ minWidth: 'calc(100% + 16px)' }}
           mode="multiple"
           tagRender={tagRender}
           className=" rounded-lg !max-w-[200px] border-2 border-gray bg-white dark:bg-boxdark"
           value={record?.types}
-          onChange={(typeValue) =>
-            handleUpdateProductTypes(record._id, typeValue)
-          }
+          onChange={(typeValue) => handleUpdateProductTypes(record._id, typeValue)}
           showSearch={false}
           options={ProductStatusOptions}
         />
       ),
-      responsive: ["lg"],
+      responsive: ['lg'],
     },
     {
-      title: "Hành động",
-      dataIndex: "_id",
-      key: "_id",
-      align: "center",
+      title: 'Hành động',
+      dataIndex: '_id',
+      key: '_id',
+      align: 'center',
       render: (__id, record) => (
         <div className="flex justify-center gap-2 text-center">
           <div>
@@ -203,10 +182,7 @@ const ProductTable = ({
               type="primary"
               className={`!flex items-center justify-center !rounded-lg  text-center border border-solid !border-warning !bg-warning
               } `}
-              onClick={() =>
-                record?._id &&
-                handleShowModalProduct(ModalType.UPDATE, record?._id)
-              }
+              onClick={() => record?._id && handleShowModalProduct(ModalType.UPDATE, record?._id)}
             >
               <EditOutlined />
             </Button>
@@ -228,7 +204,7 @@ const ProductTable = ({
             cancelText="Không"
           >
             <Button
-              type={"danger" as "primary"}
+              type={'danger' as 'primary'}
               className="flex r items-center justify-center !rounded-lg"
             >
               <DeleteOutlined className="!flex" />
@@ -273,10 +249,10 @@ const ProductTable = ({
     if (ids) {
       try {
         await productService.deleteProduct(ids);
-        toast.success("Xóa sản phẩm thành công", {
-          position: "bottom-right",
+        toast.success('Xóa sản phẩm thành công', {
+          position: 'bottom-right',
           duration: 3500,
-          icon: "🤪",
+          icon: '🤪',
         });
         if (Array.isArray(ids)) {
           setIsLoadingDeleteMulti(false);
@@ -288,10 +264,10 @@ const ProductTable = ({
       } catch (error) {
         console.log(error);
         setIsLoading(false);
-        toast.success("Lỗi khi xóa sản phẩm", {
-          position: "bottom-right",
+        toast.success('Lỗi khi xóa sản phẩm', {
+          position: 'bottom-right',
           duration: 4000,
-          icon: "😞",
+          icon: '😞',
         });
       }
     }
@@ -303,16 +279,16 @@ const ProductTable = ({
       try {
         const formData = new FormData();
         formData.append(
-          "productInfo",
+          'productInfo',
           JSON.stringify({
             types: types?.length > 0 ? types : ProductType.NORMAL,
           }),
         );
         await productService.updateProduct(formData, id);
-        toast.success("Cập nhật sản phẩm thành công", {
-          position: "bottom-right",
+        toast.success('Cập nhật sản phẩm thành công', {
+          position: 'bottom-right',
           duration: 4000,
-          icon: "🤪",
+          icon: '🤪',
         });
 
         if (Array.isArray(id)) {
@@ -323,10 +299,10 @@ const ProductTable = ({
         refreshData();
       } catch (error) {
         console.log(error);
-        toast.success("Lỗi khi cập nhật sản phẩm", {
-          position: "bottom-right",
+        toast.success('Lỗi khi cập nhật sản phẩm', {
+          position: 'bottom-right',
           duration: 4000,
-          icon: "😞",
+          icon: '😞',
         });
         setIsLoading(true);
       }
@@ -377,9 +353,9 @@ const ProductTable = ({
           </div>
         )}{' '} */}
         <Button
-          type={"danger" as "primary"}
+          type={'danger' as 'primary'}
           className={`!flex items-center  justify-end !rounded-md !py-4.5  ${
-            productSelectedKeys.length > 0 ? "" : "opacity-0"
+            productSelectedKeys.length > 0 ? '' : 'opacity-0'
           }`}
           onClick={() => {
             handleOpenOrCloseConfirmDeleteMultiModal();
@@ -403,12 +379,7 @@ const ProductTable = ({
         }}
         onChange={handleTableChange}
         locale={{
-          emptyText: (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="Không có dữ liệu"
-            />
-          ),
+          emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />,
         }}
       />
       <Modal
@@ -429,12 +400,10 @@ const ProductTable = ({
           </Button>,
         ]}
       >
-        <p>{"Bạn có chắc chắn muốn xóa các sản phẩm vừa chọn không? "}</p>
+        <p>{'Bạn có chắc chắn muốn xóa các sản phẩm vừa chọn không? '}</p>
       </Modal>
       <ProductDetailModal
-        isShowProductDetailModal={
-          showProductDetailModal.isShowProductDetailModal
-        }
+        isShowProductDetailModal={showProductDetailModal.isShowProductDetailModal}
         productID={showProductDetailModal.productID}
         handleCancelModal={handleCloseProductDetailModal}
         handleConfirmModal={handleCloseProductDetailModal}

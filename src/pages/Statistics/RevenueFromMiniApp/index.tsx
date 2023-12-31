@@ -1,12 +1,12 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Segmented, Space, Typography } from "antd";
-import { useState } from "react";
-import { Line } from "react-chartjs-2";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { StatisticGroupType, StatisticTime } from "~/constants/statisticKey";
-import { StatisticGroup } from "~/models/statistic";
-import { statisticService } from "~/services/statisticService";
-import { DATE_FORMAT_YYYYMMDD, subtractDays } from "~/utils/date.utils";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Segmented, Space, Typography } from 'antd';
+import { useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { StatisticGroupType, StatisticTime } from '~/constants/statisticKey';
+import { StatisticGroup } from '~/models/statistic';
+import { statisticService } from '~/services/statisticService';
+import { DATE_FORMAT_YYYYMMDD, subtractDays } from '~/utils/date.utils';
 
 const RevenueFromMiniAppPage = () => {
   const [queryParameter, setQueryParameter] = useState<{
@@ -15,9 +15,7 @@ const RevenueFromMiniAppPage = () => {
     toDate: string | Date;
   }>({
     chartTimeGroupBy: StatisticGroup.DAY,
-    fromDate: `${subtractDays(new Date(), StatisticTime[0].value).format(
-      DATE_FORMAT_YYYYMMDD,
-    )}`,
+    fromDate: `${subtractDays(new Date(), StatisticTime[0].value).format(DATE_FORMAT_YYYYMMDD)}`,
     toDate: `${subtractDays(new Date(), 1).format(DATE_FORMAT_YYYYMMDD)}`,
   });
 
@@ -43,9 +41,7 @@ const RevenueFromMiniAppPage = () => {
     if (value) {
       setQueryParameter({
         ...queryParameter,
-        fromDate: `${subtractDays(new Date(), value).format(
-          DATE_FORMAT_YYYYMMDD,
-        )}`,
+        fromDate: `${subtractDays(new Date(), value).format(DATE_FORMAT_YYYYMMDD)}`,
         toDate: `${subtractDays(new Date(), 1).format(DATE_FORMAT_YYYYMMDD)}`,
       });
     }
@@ -55,7 +51,7 @@ const RevenueFromMiniAppPage = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: 'top' as const,
       },
     },
   };
@@ -63,11 +59,9 @@ const RevenueFromMiniAppPage = () => {
   return (
     <>
       <div>
-        <span className="font-bold text-xl">
-          {"Doanh thu trên Zalo Mini App"}
-        </span>
+        <span className="font-bold text-xl">{'Doanh thu trên Zalo Mini App'}</span>
       </div>
-      <Space className="mt-5" size={"large"}>
+      <Space className="mt-5" size={'large'}>
         <div>
           <Typography>Thời gian:</Typography>
           <Segmented
@@ -87,10 +81,7 @@ const RevenueFromMiniAppPage = () => {
       </Space>
       <div className="mt-5">
         {revenueStatisticData && (
-          <Line
-            options={chartOptions}
-            data={revenueStatisticData?.pages[0][1]}
-          />
+          <Line options={chartOptions} data={revenueStatisticData?.pages[0][1]} />
         )}
       </div>
     </>

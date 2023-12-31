@@ -1,15 +1,13 @@
-import ProductOne from "~ assets/images/product/product-01.png";
-import ProductTwo from "~ assets/images/product/product-02.png";
-import ProductThree from "~ assets/images/product/product-03.png";
-import ProductFour from "~ assets/images/product/product-04.png";
+import ProductOne from '~ assets/images/product/product-01.png';
+import ProductTwo from '~ assets/images/product/product-02.png';
+import ProductThree from '~ assets/images/product/product-03.png';
+import ProductFour from '~ assets/images/product/product-04.png';
 
 const TableTwo = () => {
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
-        <h4 className="text-xl font-semibold text-black dark:text-white">
-          Top Products
-        </h4>
+        <h4 className="text-xl font-semibold text-black dark:text-white">Top Products</h4>
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -36,9 +34,7 @@ const TableTwo = () => {
             <div className="h-12.5 w-15 rounded-md">
               <img src={ProductOne} alt="Product" />
             </div>
-            <p className="text-sm text-black dark:text-white">
-              Apple Watch Series 7
-            </p>
+            <p className="text-sm text-black dark:text-white">Apple Watch Series 7</p>
           </div>
         </div>
         <div className="col-span-2 hidden items-center sm:flex">
@@ -82,9 +78,7 @@ const TableTwo = () => {
             <div className="h-12.5 w-15 rounded-md">
               <img src={ProductThree} alt="Product" />
             </div>
-            <p className="text-sm text-black dark:text-white">
-              Dell Inspiron 15
-            </p>
+            <p className="text-sm text-black dark:text-white">Dell Inspiron 15</p>
           </div>
         </div>
         <div className="col-span-2 hidden items-center sm:flex">

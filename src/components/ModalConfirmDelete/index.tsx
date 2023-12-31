@@ -38,12 +38,7 @@ const ModalConfirmDelete = ({
           <p className="font-bold text-title-lg my-4">Dynasty Dashboard</p>
           <p className="text-base text-center px-4">{desc}</p>
           <div className="grid grid-cols-2 gap-4 w-full mt-4 mb-8 px-8">
-            <Button
-              className="w-full"
-              color="default"
-              variant="shadow"
-              onClick={onOpenChange}
-            >
+            <Button className="w-full" color="default" variant="shadow" onClick={onOpenChange}>
               Hủy
             </Button>
             <Button

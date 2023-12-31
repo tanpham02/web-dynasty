@@ -1,22 +1,23 @@
-import { Button, Col, Form, Input, InputNumber, Row, Typography } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { QUERY_KEY } from "~/constants/queryKey";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import systemConfigService from "~/services/systemConfigService";
-import { toast } from "react-hot-toast";
-import { FrequentlyAskedQuestion } from "~/models/systemConfig";
-import _ from "lodash";
-import { useState, useMemo, useEffect } from "react";
+import { Button, Col, Form, Input, InputNumber, Row, Typography } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import systemConfigService from '~/services/systemConfigService';
+import { toast } from 'react-hot-toast';
+import { FrequentlyAskedQuestion } from '~/models/systemConfig';
+import _ from 'lodash';
+import { useState, useMemo, useEffect } from 'react';
 
 export const GeneralConfigsPage = () => {
-  const [valueMoneyToPointPercent, setValueMoneyToPointPercent] =
-    useState<number>(0);
+  const [valueMoneyToPointPercent, setValueMoneyToPointPercent] = useState<number>(0);
   const [valueOnePointToMoney, setValueOnePointToMoney] = useState<number>(0);
 
-  const { data: systemConfigsData, refetch: refetchSystemConfigsData } =
-    useInfiniteQuery([QUERY_KEY.SYSTEM_CONFIG], async () => {
+  const { data: systemConfigsData, refetch: refetchSystemConfigsData } = useInfiniteQuery(
+    [QUERY_KEY.SYSTEM_CONFIG],
+    async () => {
       return await systemConfigService.systemConfigService.getSystemConfig();
-    });
+    },
+  );
 
   const handleCalculatorWithPointer = useMemo(() => {
     const result = {
@@ -24,8 +25,7 @@ export const GeneralConfigsPage = () => {
     };
     const totalOrder = 10000000;
     if (valueMoneyToPointPercent !== undefined) {
-      result.valueMoneyToPointPercent =
-        (totalOrder / 100) * valueMoneyToPointPercent;
+      result.valueMoneyToPointPercent = (totalOrder / 100) * valueMoneyToPointPercent;
     }
 
     return result;
@@ -37,25 +37,23 @@ export const GeneralConfigsPage = () => {
         await systemConfigService.systemConfigService.updateSystemConfig(
           systemConfigServiceFormData,
         );
-        toast.success("Cập nhật Cấu hình hệ thống thành công", {
-          position: "bottom-right",
+        toast.success('Cập nhật Cấu hình hệ thống thành công', {
+          position: 'bottom-right',
           duration: 3500,
-          icon: "👏",
+          icon: '👏',
         });
         refetchSystemConfigsData();
       } catch (error) {
         console.log(error);
-        toast.error("Lỗi khi cập nhật Cấu hình hệ thống");
+        toast.error('Lỗi khi cập nhật Cấu hình hệ thống');
       }
     }
   };
 
-  const {
-    data: frequentlyAskedQuestionsData,
-    refetch: refetchFrequentlyAskedQuestionsData,
-  } = useInfiniteQuery([QUERY_KEY.FREQUENTLY_ASKED_QUESTION], async () => {
-    return await systemConfigService.frequentlyAskedQuestionService.getAllFrequentlyAskedQuestion();
-  });
+  const { data: frequentlyAskedQuestionsData, refetch: refetchFrequentlyAskedQuestionsData } =
+    useInfiniteQuery([QUERY_KEY.FREQUENTLY_ASKED_QUESTION], async () => {
+      return await systemConfigService.frequentlyAskedQuestionService.getAllFrequentlyAskedQuestion();
+    });
 
   const deepCompareArraysObject = (
     arr1: FrequentlyAskedQuestion[],
@@ -71,15 +69,15 @@ export const GeneralConfigsPage = () => {
         await systemConfigService.frequentlyAskedQuestionService.createFrequentlyAskedQuestion(
           data,
         );
-        toast.success("Thêm câu hỏi thành công", {
-          position: "bottom-right",
+        toast.success('Thêm câu hỏi thành công', {
+          position: 'bottom-right',
           duration: 3500,
-          icon: "👏",
+          icon: '👏',
         });
         refetchFrequentlyAskedQuestionsData();
       } catch (error) {
         console.log(error);
-        toast.error("Lỗi khi thêm câu hỏi");
+        toast.error('Lỗi khi thêm câu hỏi');
       }
     }
   };
@@ -90,15 +88,15 @@ export const GeneralConfigsPage = () => {
         await systemConfigService.frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(
           data,
         );
-        toast.success("Cập nhật câu hỏi thành công", {
-          position: "bottom-right",
+        toast.success('Cập nhật câu hỏi thành công', {
+          position: 'bottom-right',
           duration: 3500,
-          icon: "👏",
+          icon: '👏',
         });
         refetchFrequentlyAskedQuestionsData();
       } catch (error) {
         console.log(error);
-        toast.error("Lỗi khi cập nhật câu hỏi");
+        toast.error('Lỗi khi cập nhật câu hỏi');
       }
     }
   };
@@ -106,18 +104,16 @@ export const GeneralConfigsPage = () => {
   const handleDeleteFAQs = async (id: any) => {
     if (id) {
       try {
-        await systemConfigService.frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(
-          id,
-        );
-        toast.success("Xóa câu hỏi thành công", {
-          position: "bottom-right",
+        await systemConfigService.frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(id);
+        toast.success('Xóa câu hỏi thành công', {
+          position: 'bottom-right',
           duration: 3500,
-          icon: "👏",
+          icon: '👏',
         });
         refetchFrequentlyAskedQuestionsData();
       } catch (error) {
         console.log(error);
-        toast.error("Lỗi khi xóa câu hỏi");
+        toast.error('Lỗi khi xóa câu hỏi');
       }
     }
   };
@@ -149,8 +145,9 @@ export const GeneralConfigsPage = () => {
           frequentlyAskedQuestionsFormData.frequentlyAskedQuestions,
         );
         if (listFrequentlyAskedQuestionsCanBeDelete) {
-          const listFrequentlyAskedQuestionsID =
-            listFrequentlyAskedQuestionsCanBeDelete.map(({ id }) => id);
+          const listFrequentlyAskedQuestionsID = listFrequentlyAskedQuestionsCanBeDelete.map(
+            ({ id }) => id,
+          );
           handleDeleteFAQs(listFrequentlyAskedQuestionsID);
         }
       }
@@ -189,30 +186,22 @@ export const GeneralConfigsPage = () => {
                   initialValues={{
                     shipPrice: systemConfigsData?.pages[0].shipPrice,
                     minimumFreeShipOrderTotalPriceLabel:
-                      systemConfigsData?.pages[0]
-                        .minimumFreeShipOrderTotalPriceLabel,
+                      systemConfigsData?.pages[0].minimumFreeShipOrderTotalPriceLabel,
                     minimumFreeShipOrderTotalPriceValue:
-                      systemConfigsData?.pages[0]
-                        .minimumFreeShipOrderTotalPriceValue,
-                    cancellationReasons:
-                      systemConfigsData?.pages[0].cancellationReasons,
-                    moneyToPointPercent:
-                      systemConfigsData?.pages[0].moneyToPointPercent,
-                    onePointToMoney:
-                      systemConfigsData?.pages[0].onePointToMoney,
+                      systemConfigsData?.pages[0].minimumFreeShipOrderTotalPriceValue,
+                    cancellationReasons: systemConfigsData?.pages[0].cancellationReasons,
+                    moneyToPointPercent: systemConfigsData?.pages[0].moneyToPointPercent,
+                    onePointToMoney: systemConfigsData?.pages[0].onePointToMoney,
                     hotline: systemConfigsData?.pages[0].hotline,
-                    transferContent:
-                      systemConfigsData?.pages[0].transferContent,
+                    transferContent: systemConfigsData?.pages[0].transferContent,
                   }}
                   onFinish={onSubmitSystemConfig}
                   autoComplete="off"
-                  style={{ maxWidth: "100%" }}
+                  style={{ maxWidth: '100%' }}
                 >
                   <div>
                     <div className=" py-4 px-0 dark:border-strokedark">
-                      <Typography.Title level={5}>
-                        Hotline chăm sóc khách hàng
-                      </Typography.Title>
+                      <Typography.Title level={5}>Hotline chăm sóc khách hàng</Typography.Title>
                     </div>
 
                     <div>
@@ -221,23 +210,17 @@ export const GeneralConfigsPage = () => {
                         rules={[
                           {
                             required: true,
-                            message: "Hotline không được để trống",
+                            message: 'Hotline không được để trống',
                           },
                         ]}
                       >
-                        <Input
-                          className="!w-full !h-[38px]"
-                          placeholder="Ví dụ: 1800xxxx"
-                        />
+                        <Input className="!w-full !h-[38px]" placeholder="Ví dụ: 1800xxxx" />
                       </Form.Item>
                     </div>
                   </div>
                   <div>
                     <div className="py-4 px-0 dark:border-strokedark">
-                      <Typography.Title level={5}>
-                        {" "}
-                        Nội dung chuyển khoản
-                      </Typography.Title>
+                      <Typography.Title level={5}> Nội dung chuyển khoản</Typography.Title>
                     </div>
 
                     <div>
@@ -246,26 +229,21 @@ export const GeneralConfigsPage = () => {
                         rules={[
                           {
                             required: true,
-                            message: "Hotline không được để trống",
+                            message: 'Hotline không được để trống',
                           },
                         ]}
                       >
-                        <Input
-                          className="!w-full !h-[38px]"
-                          placeholder="Ví dụ: 1800xxxx"
-                        />
+                        <Input className="!w-full !h-[38px]" placeholder="Ví dụ: 1800xxxx" />
                       </Form.Item>
                     </div>
                   </div>
 
                   <div className="border-b border-stroke py-4 px-0 dark:border-strokedark">
-                    <Typography.Title level={5}>
-                      Thông tin phí ship
-                    </Typography.Title>
+                    <Typography.Title level={5}>Thông tin phí ship</Typography.Title>
                   </div>
-                  <div className="mt-3" style={{ width: "95%" }}>
+                  <div className="mt-3" style={{ width: '95%' }}>
                     <Typography.Paragraph className="text-[14px] mb-[0.5em] py-[8px] leading-[1.5px] font-medium">
-                      {" "}
+                      {' '}
                       Phí ship
                     </Typography.Paragraph>
                     <Form.Item
@@ -273,7 +251,7 @@ export const GeneralConfigsPage = () => {
                       rules={[
                         {
                           required: true,
-                          message: "Phí ship không được để trống",
+                          message: 'Phí ship không được để trống',
                         },
                       ]}
                     >
@@ -282,14 +260,10 @@ export const GeneralConfigsPage = () => {
                         addonAfter="đ"
                         placeholder="Ví dụ: Phí ship cho đơn hàng...."
                         formatter={(value) =>
-                          value
-                            ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            : ""
+                          value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
                         }
                         parser={(displayValue?: string) =>
-                          displayValue
-                            ? Number(displayValue.replace(/\$\s?|(,*)/g, ""))
-                            : 0
+                          displayValue ? Number(displayValue.replace(/\$\s?|(,*)/g, '')) : 0
                         }
                         controls={false}
                       />
@@ -298,16 +272,15 @@ export const GeneralConfigsPage = () => {
                     <Row gutter={2}>
                       <Col xs={12}>
                         <Typography.Paragraph>
-                          Tổng giá trị tối thiểu để đơn hàng được freeship (bằng
-                          số)
+                          Tổng giá trị tối thiểu để đơn hàng được freeship (bằng số)
                         </Typography.Paragraph>
                         <Form.Item
-                          name={"minimumFreeShipOrderTotalPriceValue"}
+                          name={'minimumFreeShipOrderTotalPriceValue'}
                           rules={[
                             {
                               required: true,
                               message:
-                                " Tổng giá trị tối thiểu để đơn hàng được freeship (bằng số) không được để trống",
+                                ' Tổng giá trị tối thiểu để đơn hàng được freeship (bằng số) không được để trống',
                             },
                           ]}
                         >
@@ -316,19 +289,10 @@ export const GeneralConfigsPage = () => {
                             addonAfter="đ"
                             placeholder="Ví dụ: 100,000"
                             formatter={(value) =>
-                              value
-                                ? `${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ",",
-                                  )
-                                : ""
+                              value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
                             }
                             parser={(displayValue?: string) =>
-                              displayValue
-                                ? Number(
-                                    displayValue.replace(/\$\s?|(,*)/g, ""),
-                                  )
-                                : 0
+                              displayValue ? Number(displayValue.replace(/\$\s?|(,*)/g, '')) : 0
                             }
                             controls={false}
                           />
@@ -336,8 +300,7 @@ export const GeneralConfigsPage = () => {
                       </Col>
                       <Col xs={12}>
                         <Typography.Paragraph>
-                          Tổng giá trị tối thiểu để đơn hàng được freeship (bằng
-                          chữ)
+                          Tổng giá trị tối thiểu để đơn hàng được freeship (bằng chữ)
                         </Typography.Paragraph>
                         <Form.Item
                           name="minimumFreeShipOrderTotalPriceLabel"
@@ -345,7 +308,7 @@ export const GeneralConfigsPage = () => {
                             {
                               required: true,
                               message:
-                                "Tổng giá trị tối thiểu để đơn hàng được freeship (bằng chữ) không được để trống",
+                                'Tổng giá trị tối thiểu để đơn hàng được freeship (bằng chữ) không được để trống',
                             },
                           ]}
                         >
@@ -359,7 +322,7 @@ export const GeneralConfigsPage = () => {
 
                     <div className="border-b  border-stroke mb-[16px]">
                       <Typography.Paragraph className="text-[16px] py-[16px] leading-[1.5px] font-medium">
-                        {" "}
+                        {' '}
                         Quy đổi điểm
                       </Typography.Paragraph>
                     </div>
@@ -374,7 +337,7 @@ export const GeneralConfigsPage = () => {
                             {
                               required: true,
                               message:
-                                "Phần trăm (%) số tiền đơn hàng được quy đổi ra điểm không được để trống",
+                                'Phần trăm (%) số tiền đơn hàng được quy đổi ra điểm không được để trống',
                             },
                           ]}
                         >
@@ -386,36 +349,28 @@ export const GeneralConfigsPage = () => {
                             addonAfter="%"
                             min={0}
                             max={100}
-                            onChange={(value) =>
-                              value && setValueMoneyToPointPercent(value)
-                            }
+                            onChange={(value) => value && setValueMoneyToPointPercent(value)}
                           />
                         </Form.Item>
                         <div className="text-[#999]">
                           <span>{`Ví dụ: Phần trăm (%) số tiền đơn hàng được quy đổi ra điểm là ${
                             valueMoneyToPointPercent || 0
-                          }% `}</span>{" "}
+                          }% `}</span>{' '}
                           <br />
-                          <span>
-                            Tổng giá trị đơn hàng của khách là 10,000,000đ
-                          </span>{" "}
-                          <br />
+                          <span>Tổng giá trị đơn hàng của khách là 10,000,000đ</span> <br />
                           <span>{`=> Số điểm khách hàng sẽ nhận được là ${handleCalculatorWithPointer.valueMoneyToPointPercent.toLocaleString(
-                            "EN",
+                            'EN',
                           )} điểm`}</span>
                         </div>
                       </Col>
                       <Col xs={12}>
-                        <Typography.Paragraph>
-                          Tỉ lệ quy đổi điểm sang VND
-                        </Typography.Paragraph>
+                        <Typography.Paragraph>Tỉ lệ quy đổi điểm sang VND</Typography.Paragraph>
                         <Form.Item
                           name="onePointToMoney"
                           rules={[
                             {
                               required: true,
-                              message:
-                                "Tỉ lệ quy đổi điểm sang VND không được để trống",
+                              message: 'Tỉ lệ quy đổi điểm sang VND không được để trống',
                             },
                           ]}
                         >
@@ -426,33 +381,21 @@ export const GeneralConfigsPage = () => {
                             addonAfter="đ"
                             min={0}
                             formatter={(value) =>
-                              value
-                                ? `${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ",",
-                                  )
-                                : ""
+                              value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
                             }
                             parser={(displayValue?: string) =>
                               displayValue
-                                ? Number.parseInt(
-                                    `${displayValue}`.replace(
-                                      /\$\s?|(,*)/g,
-                                      "",
-                                    ),
-                                  )
+                                ? Number.parseInt(`${displayValue}`.replace(/\$\s?|(,*)/g, ''))
                                 : 0
                             }
-                            onChange={(value) =>
-                              value && setValueOnePointToMoney(value)
-                            }
+                            onChange={(value) => value && setValueOnePointToMoney(value)}
                           />
                         </Form.Item>
                         <div className="text-[#999]">
-                          <span>{`Ví dụ: Tỉ lệ quy đổi điểm sang VND là 1:${valueOnePointToMoney}`}</span>{" "}
+                          <span>{`Ví dụ: Tỉ lệ quy đổi điểm sang VND là 1:${valueOnePointToMoney}`}</span>{' '}
                           <br />
                           <span>{`=> Với 1 điểm khách hàng sẽ nhận được ${valueOnePointToMoney.toLocaleString(
-                            "EN",
+                            'EN',
                           )} VND`}</span>
                         </div>
                       </Col>
@@ -461,7 +404,7 @@ export const GeneralConfigsPage = () => {
                   <div className="border-b border-stroke px-0 py-4  dark:border-strokedark">
                     <Typography.Title level={5}>Lí do hủy đơn</Typography.Title>
                   </div>
-                  <div className="mt-3" style={{ width: "95%" }}>
+                  <div className="mt-3" style={{ width: '95%' }}>
                     <Form.List name="cancellationReasons">
                       {(fields, { add, remove }) => (
                         <>
@@ -470,14 +413,14 @@ export const GeneralConfigsPage = () => {
                               key={key}
                               className="border-b border-stroke dark:border-strokedark flex mb-8 w-full justify-center items-center"
                             >
-                              <div style={{ width: "95%" }}>
+                              <div style={{ width: '95%' }}>
                                 <Form.Item
                                   {...restField}
-                                  name={[name, "reason"]}
+                                  name={[name, 'reason']}
                                   rules={[
                                     {
                                       required: true,
-                                      message: "Lí do không được bỏ trống",
+                                      message: 'Lí do không được bỏ trống',
                                     },
                                   ]}
                                 >
@@ -486,7 +429,7 @@ export const GeneralConfigsPage = () => {
                               </div>
                               <MinusCircleOutlined
                                 onClick={() => remove(name)}
-                                style={{ width: "5%", fontSize: 20 }}
+                                style={{ width: '5%', fontSize: 20 }}
                               />
                             </div>
                           ))}
@@ -496,9 +439,9 @@ export const GeneralConfigsPage = () => {
                               onClick={() => add()}
                               block
                               style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
                               }}
                               icon={<PlusOutlined />}
                             >
@@ -538,10 +481,9 @@ export const GeneralConfigsPage = () => {
                   onFinish={onSubmitFrequentlyAskedQuestions}
                   autoComplete="off"
                   initialValues={{
-                    frequentlyAskedQuestions:
-                      frequentlyAskedQuestionsData.pages[0],
+                    frequentlyAskedQuestions: frequentlyAskedQuestionsData.pages[0],
                   }}
-                  style={{ maxWidth: "100%" }}
+                  style={{ maxWidth: '100%' }}
                 >
                   <Form.List name="frequentlyAskedQuestions">
                     {(fields, { add, remove }) => (
@@ -551,17 +493,17 @@ export const GeneralConfigsPage = () => {
                             key={key}
                             className="border-b border-stroke dark:border-strokedark flex mb-8 w-full justify-center items-center"
                           >
-                            <div style={{ width: "95%" }}>
+                            <div style={{ width: '95%' }}>
                               <Typography.Paragraph className="text-[14px] mb-[0.5em] py-[8px] leading-[1.5px] font-medium">
                                 Câu hỏi
                               </Typography.Paragraph>
                               <Form.Item
                                 {...restField}
-                                name={[name, "title"]}
+                                name={[name, 'title']}
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Câu hỏi không được để trống",
+                                    message: 'Câu hỏi không được để trống',
                                   },
                                 ]}
                               >
@@ -575,11 +517,11 @@ export const GeneralConfigsPage = () => {
                               </Typography.Paragraph>
                               <Form.Item
                                 {...restField}
-                                name={[name, "description"]}
+                                name={[name, 'description']}
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Câu trả lời không được để trống",
+                                    message: 'Câu trả lời không được để trống',
                                   },
                                 ]}
                               >
@@ -591,7 +533,7 @@ export const GeneralConfigsPage = () => {
                             </div>
                             <MinusCircleOutlined
                               onClick={() => remove(name)}
-                              style={{ width: "5%", fontSize: 20 }}
+                              style={{ width: '5%', fontSize: 20 }}
                             />
                           </div>
                         ))}
@@ -601,9 +543,9 @@ export const GeneralConfigsPage = () => {
                             onClick={() => add()}
                             block
                             style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
                             }}
                             icon={<PlusOutlined />}
                           >

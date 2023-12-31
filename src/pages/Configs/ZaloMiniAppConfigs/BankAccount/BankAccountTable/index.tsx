@@ -1,17 +1,17 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table, Typography } from "antd";
-import React, { useState } from "react";
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Table, Typography } from 'antd';
+import React, { useState } from 'react';
 
-import { ModalType } from "../BankAccountModal";
-import { BankAccount, BankAccountStatus } from "~/models/bankAccount";
-import { Breakpoint } from "~/types";
+import { ModalType } from '../BankAccountModal';
+import { BankAccount, BankAccountStatus } from '~/models/bankAccount';
+import { Breakpoint } from '~/types';
 
 interface TableColumn {
   title: string;
   dataIndex?: keyof BankAccount;
   key?: keyof BankAccount;
   sorter?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, record: BankAccount, index: number) => React.ReactNode;
   responsive?: Breakpoint[];
 }
@@ -21,10 +21,7 @@ interface BankAccountTableProps {
   refreshData: () => void;
   handleChangeListIdsBankAccountForDelete: (ids: React.Key[]) => void;
   handleDeleteOneBankAccount: (id: any) => void;
-  handleShowModalBankAccount: (
-    type?: ModalType,
-    bankAccountId?: number,
-  ) => void;
+  handleShowModalBankAccount: (type?: ModalType, bankAccountId?: number) => void;
 }
 
 export interface Pagination {
@@ -38,41 +35,39 @@ const BankAccountTable = ({
   handleDeleteOneBankAccount,
   handleShowModalBankAccount,
 }: BankAccountTableProps) => {
-  const [bankAccountSelectedKeys, setBankAccountSelectedKeys] = useState<
-    React.Key[]
-  >([]);
+  const [bankAccountSelectedKeys, setBankAccountSelectedKeys] = useState<React.Key[]>([]);
 
   const COLUMNS: TableColumn[] = [
     {
-      title: "STT",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
+      title: 'STT',
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
       render: (__, record, index) => <strong>{index + 1}</strong>,
     },
     {
-      title: "Chủ tài khoản",
-      dataIndex: "bankAccountName",
-      key: "bankAccountName",
-      align: "left",
+      title: 'Chủ tài khoản',
+      dataIndex: 'bankAccountName',
+      key: 'bankAccountName',
+      align: 'left',
     },
     {
-      title: "Tên ngân hàng",
-      dataIndex: "bankName",
-      key: "bankName",
-      align: "left",
+      title: 'Tên ngân hàng',
+      dataIndex: 'bankName',
+      key: 'bankName',
+      align: 'left',
     },
     {
-      title: "Số tài khoản",
-      dataIndex: "bankAccountNumber",
-      key: "bankAccountNumber",
-      align: "center",
+      title: 'Số tài khoản',
+      dataIndex: 'bankAccountNumber',
+      key: 'bankAccountNumber',
+      align: 'center',
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (__id, record) => {
         switch (record.status) {
           case BankAccountStatus.ACTIVE:
@@ -94,22 +89,20 @@ const BankAccountTable = ({
           default:
         }
       },
-      responsive: ["xl"],
+      responsive: ['xl'],
     },
     {
-      title: "Hành động",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
+      title: 'Hành động',
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
       render: (__, record: BankAccount) => (
         <div className="flex justify-center gap-2 text-center">
           <div>
             <Button
               type="primary"
               className="!flex items-center justify-center !rounded-lg"
-              onClick={() =>
-                handleShowModalBankAccount(ModalType.UPDATE, record.id)
-              }
+              onClick={() => handleShowModalBankAccount(ModalType.UPDATE, record.id)}
             >
               <EditOutlined />
             </Button>
@@ -123,7 +116,7 @@ const BankAccountTable = ({
               title="Xác nhận xóa tài khoản ngân hàng này"
             >
               <Button
-                type={"danger" as "primary"}
+                type={'danger' as 'primary'}
                 className={` flex  items-center justify-center !rounded-lg`}
               >
                 <DeleteOutlined className="!flex" />

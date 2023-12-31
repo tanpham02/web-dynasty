@@ -1,18 +1,16 @@
-import { Key } from "react";
-import qs from "qs";
+import { Key } from 'react';
+import qs from 'qs';
 
-import { ListResponse, SearchParams } from "~/types";
-import axiosService from "../axiosService";
-import { CATEGORY_URL } from "../apiUrl";
-import { Category } from "~/models/category";
+import { ListResponse, SearchParams } from '~/types';
+import axiosService from '../axiosService';
+import { CATEGORY_URL } from '../apiUrl';
+import { Category } from '~/models/category';
 
 export const categoryService = {
-  getCategoryByCriteria: async (
-    params: SearchParams,
-  ): Promise<ListResponse<Category>> => {
+  getCategoryByCriteria: async (params: SearchParams): Promise<ListResponse<Category>> => {
     return axiosService()({
       url: `${CATEGORY_URL}/search`,
-      method: "GET",
+      method: 'GET',
       params,
     })
       .then((res) => res.data)
@@ -23,9 +21,9 @@ export const categoryService = {
   createCategory: async (data: FormData): Promise<Category> => {
     return axiosService()({
       url: CATEGORY_URL,
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       data,
     })
@@ -37,9 +35,9 @@ export const categoryService = {
   updateCategory: async (id?: Key, data?: FormData): Promise<Category> => {
     return axiosService()({
       url: `${CATEGORY_URL}/${id}`,
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       data,
     })
@@ -51,10 +49,9 @@ export const categoryService = {
   deleteCategoryByIds: async (ids?: Key[]): Promise<string> => {
     return axiosService()({
       url: CATEGORY_URL,
-      method: "DELETE",
+      method: 'DELETE',
       params: { ids },
-      paramsSerializer: (params) =>
-        qs.stringify(params, { arrayFormat: "repeat" }),
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((err) => {
@@ -64,7 +61,7 @@ export const categoryService = {
   getCategoryById: async (id?: Key): Promise<Category> => {
     return axiosService()({
       url: `${CATEGORY_URL}/${id}`,
-      method: "GET",
+      method: 'GET',
     })
       .then((res) => res.data)
       .catch((err) => {

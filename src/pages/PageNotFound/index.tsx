@@ -1,5 +1,5 @@
-import { Button, Result } from "antd";
-import { PATH_NAME } from "~/constants/router";
+import { Button, Result } from 'antd';
+import { PATH_NAME } from '~/constants/router';
 
 const PageNotFound = () => {
   return (

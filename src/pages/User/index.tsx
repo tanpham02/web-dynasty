@@ -80,14 +80,12 @@ const UserListPage = () => {
 
   const columns: ColumnType<Users>[] = [
     {
-      key: '_id',
       align: 'center',
       name: 'STT',
       render: (_user: Users, index?: number) => index || 0 + 1,
     },
     {
       name: 'Hình ảnh',
-      key: 'image',
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
@@ -107,30 +105,25 @@ const UserListPage = () => {
     },
     {
       name: 'Họ tên',
-      key: 'fullName',
       align: 'center',
       render: (user: Users) => user?.fullName || '',
     },
     {
       name: 'Số điện thoại',
-      key: 'phoneNumber',
       align: 'center',
       render: (user: Users) => user?.phoneNumber || '',
     },
     {
       name: 'Ngày sinh',
-      key: 'birthday',
       render: (user: Users) =>
         user?.birthday ? formatDate(user.birthday, DATE_FORMAT_DDMMYYYY) : '',
     },
     {
       name: 'Địa chỉ',
-      key: 'address',
       align: 'center',
       render: (user: Users) => user?.address || '',
     },
     {
-      key: 'status',
       align: 'center',
       name: 'Trạng thái',
       render: (user: Users) => (
@@ -146,7 +139,6 @@ const UserListPage = () => {
       ),
     },
     {
-      key: '_id',
       align: 'center',
       name: 'Hành động',
       render: (_user: Users) => (
@@ -307,9 +299,7 @@ const UserListPage = () => {
               value={UserRole.ALL.toString()}
               classNames={{
                 trigger: 'bg-white',
-                
               }}
-              
             >
               {(status) => (
                 <SelectItem key={status.value.toString()} value={status.value?.toString()}>

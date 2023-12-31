@@ -1,16 +1,14 @@
-import { Link } from "react-router-dom";
-import UserOne from "~ assets/images/user/user-01.png";
-import UserTwo from "~ assets/images/user/user-02.png";
-import UserThree from "~ assets/images/user/user-03.png";
-import UserFour from "~ assets/images/user/user-04.png";
-import UserFive from "~ assets/images/user/user-05.png";
+import { Link } from 'react-router-dom';
+import UserOne from '~ assets/images/user/user-01.png';
+import UserTwo from '~ assets/images/user/user-02.png';
+import UserThree from '~ assets/images/user/user-03.png';
+import UserFour from '~ assets/images/user/user-04.png';
+import UserFive from '~ assets/images/user/user-05.png';
 
 const ChatCard = () => {
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
-      <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Chats
-      </h4>
+      <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">Chats</h4>
 
       <div>
         <Link
@@ -24,13 +22,9 @@ const ChatCard = () => {
 
           <div className="flex flex-1 items-center justify-between">
             <div>
-              <h5 className="font-medium text-black dark:text-white">
-                Devid Heilo
-              </h5>
+              <h5 className="font-medium text-black dark:text-white">Devid Heilo</h5>
               <p>
-                <span className="text-sm text-black dark:text-white">
-                  Hello, how are you?
-                </span>
+                <span className="text-sm text-black dark:text-white">Hello, how are you?</span>
                 <span className="text-xs"> . 12 min</span>
               </p>
             </div>
@@ -88,13 +82,9 @@ const ChatCard = () => {
 
           <div className="flex flex-1 items-center justify-between">
             <div>
-              <h5 className="font-medium text-black dark:text-white">
-                Henry Deco
-              </h5>
+              <h5 className="font-medium text-black dark:text-white">Henry Deco</h5>
               <p>
-                <span className="text-sm text-black dark:text-white">
-                  Thank you so much!
-                </span>
+                <span className="text-sm text-black dark:text-white">Thank you so much!</span>
                 <span className="text-xs"> . Sun</span>
               </p>
             </div>

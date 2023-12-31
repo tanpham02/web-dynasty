@@ -1,19 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Col, DatePicker, Modal, Row, Typography } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import {
-  useForm,
-  useFieldArray,
-  Controller,
-  FormProvider,
-} from "react-hook-form";
-import { Material } from "~/models/materials";
-import { DATE_FORMAT_YYYYMMDDTHHMMSS, formatDate } from "~/utils/date.utils";
-import MaterialModalInfoChild from "./MaterialModalInfoChild";
-import materialService from "~/services/materialService";
-import toast from "react-hot-toast";
-import moment from "moment";
-import { ModalType } from "~/pages/User/UserModal";
+import { Button, Col, DatePicker, Modal, Row, Typography } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm, useFieldArray, Controller, FormProvider } from 'react-hook-form';
+import { Material } from '~/models/materials';
+import { DATE_FORMAT_YYYYMMDDTHHMMSS, formatDate } from '~/utils/date.utils';
+import MaterialModalInfoChild from './MaterialModalInfoChild';
+import materialService from '~/services/materialService';
+import toast from 'react-hot-toast';
+import moment from 'moment';
+import { ModalType } from '~/pages/User/UserModal';
 
 interface MaterialModalProps {
   visible?: boolean;
@@ -25,12 +20,12 @@ interface MaterialModalProps {
 }
 
 const defaultMaterialValues: Material = {
-  importDate: "",
+  importDate: '',
   materialInfo: [
     {
-      name: "",
+      name: '',
       price: 0,
-      quantity: "",
+      quantity: '',
     },
   ],
 };
@@ -54,7 +49,7 @@ const MaterialModal = ({
     reset,
   } = methodUseForm;
   const { fields, append, remove } = useFieldArray({
-    name: "materialInfo",
+    name: 'materialInfo',
     control,
   });
 
@@ -70,21 +65,21 @@ const MaterialModal = ({
       textTitle: string;
       textButton: any;
     } = {
-      textTitle: "",
-      textButton: "",
+      textTitle: '',
+      textButton: '',
     };
 
     switch (modalType) {
       case ModalType.CREATE:
         result = {
-          textButton: "Thêm",
-          textTitle: "Thêm thông tin nhập hàng",
+          textButton: 'Thêm',
+          textTitle: 'Thêm thông tin nhập hàng',
         };
         break;
       case ModalType.INFORMATION:
         result = {
           textButton: null,
-          textTitle: "Chỉnh sửa thông tin nhập hàng",
+          textTitle: 'Chỉnh sửa thông tin nhập hàng',
         };
         break;
     }
@@ -104,28 +99,21 @@ const MaterialModal = ({
       onCloseModal?.();
       refetch();
       toast.success(
-        `${
-          modalType === ModalType.CREATE ? "Thêm" : "Cập nhật"
-        } nguyên liệu thành công`,
+        `${modalType === ModalType.CREATE ? 'Thêm' : 'Cập nhật'} nguyên liệu thành công`,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           duration: 2000,
-          icon: "🤪",
+          icon: '🤪',
         },
       );
     } catch (error) {
       console.log(error);
       onLoading(false);
-      toast.error(
-        `${
-          modalType === ModalType.CREATE ? "Thêm" : "Cập nhật"
-        } nguyên liệu thất bại`,
-        {
-          position: "bottom-right",
-          duration: 2000,
-          icon: "😞",
-        },
-      );
+      toast.error(`${modalType === ModalType.CREATE ? 'Thêm' : 'Cập nhật'} nguyên liệu thất bại`, {
+        position: 'bottom-right',
+        duration: 2000,
+        icon: '😞',
+      });
     }
   };
 
@@ -138,13 +126,13 @@ const MaterialModal = ({
   };
 
   const handleChangeValueImportDate = (value: any) => {
-    setValue("importDate", value);
-    setError("importDate", {
-      type: "required",
+    setValue('importDate', value);
+    setError('importDate', {
+      type: 'required',
     });
     if (value._d) {
-      setValue("importDate", formatDate(value._d, DATE_FORMAT_YYYYMMDDTHHMMSS));
-      clearErrors("importDate");
+      setValue('importDate', formatDate(value._d, DATE_FORMAT_YYYYMMDDTHHMMSS));
+      clearErrors('importDate');
       return;
     }
   };
@@ -154,12 +142,10 @@ const MaterialModal = ({
       <Modal
         title={handleGenerateTextTitleAndButtonModal?.textTitle}
         open={visible}
-        style={{ minWidth: "70%" }}
+        style={{ minWidth: '70%' }}
         onCancel={onCloseModal}
         footer={[
-          modalType !== ModalType.INFORMATION && (
-            <Button onClick={onCloseModal}>Hủy</Button>
-          ),
+          modalType !== ModalType.INFORMATION && <Button onClick={onCloseModal}>Hủy</Button>,
           <Button
             form="form-materials"
             key="submit"
@@ -175,12 +161,8 @@ const MaterialModal = ({
             <Row gutter={24}>
               {modalType !== ModalType.INFORMATION && (
                 <Col span={12}>
-                  <Typography.Text
-                    type="secondary"
-                    className="!text-black !mb-2 text-[14.5px]"
-                  >
-                    Ngày nhập hàng{" "}
-                    <strong className="text-xl text-danger">*</strong>
+                  <Typography.Text type="secondary" className="!text-black !mb-2 text-[14.5px]">
+                    Ngày nhập hàng <strong className="text-xl text-danger">*</strong>
                   </Typography.Text>
                   <Controller
                     control={control}
@@ -189,20 +171,20 @@ const MaterialModal = ({
                     render={({ field: { value } }) => (
                       <DatePicker
                         className={`!py-[7px] w-full border-solid border rounded-md ${
-                          errors.importDate?.type === "required"
-                            ? "border  !border-danger"
-                            : "border-current"
+                          errors.importDate?.type === 'required'
+                            ? 'border  !border-danger'
+                            : 'border-current'
                         } blur-0 `}
                         placeholder="Chọn ngày nhập hàng"
-                        format={"HH:mm:ss DD/MM/YYYY "}
-                        showTime={{ format: "HH:mm:ss" }}
+                        format={'HH:mm:ss DD/MM/YYYY '}
+                        showTime={{ format: 'HH:mm:ss' }}
                         allowClear
                         onChange={handleChangeValueImportDate}
                         value={value ? moment(value) : null}
                       />
                     )}
                   />
-                  {errors?.importDate?.type === "required" && (
+                  {errors?.importDate?.type === 'required' && (
                     <small className="text-danger text-[13px]">
                       Ngày nhập hàng không được rỗng
                     </small>
@@ -212,10 +194,7 @@ const MaterialModal = ({
 
               {modalType === ModalType.INFORMATION && (
                 <Col span={12} className="mt-[5px]">
-                  <Typography.Text
-                    type="secondary"
-                    className="!text-black !mb-2 text-[14.5px]"
-                  >
+                  <Typography.Text type="secondary" className="!text-black !mb-2 text-[14.5px]">
                     Ngày nhập hàng
                   </Typography.Text>
                   <Controller
@@ -226,8 +205,8 @@ const MaterialModal = ({
                       <DatePicker
                         className={`!py-[10px] w-full !border-none !outline-none !bg-gray/70 !z-10 pointer-events-none`}
                         placeholder="Thời gian cập nhật"
-                        format={"HH:mm:ss DD/MM/YYYY "}
-                        showTime={{ format: "HH:mm:ss" }}
+                        format={'HH:mm:ss DD/MM/YYYY '}
+                        showTime={{ format: 'HH:mm:ss' }}
                         allowClear={false}
                         suffixIcon={null}
                         onChange={handleChangeValueImportDate}
@@ -240,10 +219,7 @@ const MaterialModal = ({
 
               {modalType === ModalType.INFORMATION && (
                 <Col span={12} className="mt-[5px]">
-                  <Typography.Text
-                    type="secondary"
-                    className="!text-black !mb-2 text-[14.5px]"
-                  >
+                  <Typography.Text type="secondary" className="!text-black !mb-2 text-[14.5px]">
                     Thời gian cập nhật gần đây
                   </Typography.Text>
                   <Controller
@@ -254,8 +230,8 @@ const MaterialModal = ({
                       <DatePicker
                         className={`!py-[10px] w-full !border-none !outline-none !bg-gray/70 !z-10 pointer-events-none`}
                         placeholder="Thời gian cập nhật"
-                        format={"HH:mm:ss DD/MM/YYYY "}
-                        showTime={{ format: "HH:mm:ss" }}
+                        format={'HH:mm:ss DD/MM/YYYY '}
+                        showTime={{ format: 'HH:mm:ss' }}
                         allowClear={false}
                         suffixIcon={null}
                         onChange={handleChangeValueImportDate}
@@ -263,7 +239,7 @@ const MaterialModal = ({
                       />
                     )}
                   />
-                  {errors?.importDate?.type === "required" && (
+                  {errors?.importDate?.type === 'required' && (
                     <small className="text-danger text-[13px]">
                       Ngày nhập hàng không được rỗng
                     </small>
@@ -280,9 +256,7 @@ const MaterialModal = ({
                 <div className="grid grid-cols-2 gap-4">
                   {fields?.map((field, index) => (
                     <div className="mt-1.5">
-                      <span className="text-[14px] text-meta-1 font-bold">{`${
-                        index + 1
-                      })`}</span>
+                      <span className="text-[14px] text-meta-1 font-bold">{`${index + 1})`}</span>
                       <MaterialModalInfoChild
                         {...{ field, control, index, errors }}
                         key={field.id}
@@ -292,16 +266,12 @@ const MaterialModal = ({
                       {modalType !== ModalType.INFORMATION && (
                         <div
                           className={`mt-5 flex ${
-                            index === fields?.length - 1
-                              ? "!justify-between"
-                              : "!justify-end"
+                            index === fields?.length - 1 ? '!justify-between' : '!justify-end'
                           } items-center px-4 flex-wrap gap-y-2`}
                         >
                           {index === fields?.length - 1 && (
                             <button
-                              onClick={() =>
-                                handleAddProductInfoImport(field, index)
-                              }
+                              onClick={() => handleAddProductInfoImport(field, index)}
                               className="px-3 py-2 bg-primary text-white font-medium rounded-md"
                             >
                               + Thêm sản phẩm
