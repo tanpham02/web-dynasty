@@ -61,7 +61,6 @@ export default function CustomTable<T>({
     <div className="space-y-2">
       <Table
         aria-label={tableName}
-        disabledKeys={disabledKeys}
         selectedKeys={selectedKeys}
         selectionMode={selectionMode}
         onSelectionChange={onSelectionChange}

@@ -165,10 +165,8 @@ const UserListPage = () => {
             disable={handleCheckRolePermission(user, currentUserLogin)}
             icon={EditIcon}
             status={handleCheckRolePermission(user, currentUserLogin) ? 'warning' : 'default'}
-            tooltipProps={{
-              showArrow: true,
-              delay: 500,
-            }}
+            showArrow
+            delay={500}
             onClick={() => {
               setModal({
                 isEdit: true,
@@ -181,10 +179,8 @@ const UserListPage = () => {
             title="Xóa nhân viên này"
             icon={DeleteIcon}
             status="danger"
-            tooltipProps={{
-              showArrow: true,
-              delay: 500,
-            }}
+            showArrow
+            delay={500}
             onClick={() => {
               setModalConfirmDelete({
                 desc: 'Bạn có chắc chắn muốn xoá nhân viên này?',

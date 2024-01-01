@@ -305,7 +305,6 @@ const UserModal = ({
                 <DatePicker
                   allowClear
                   ref={ref}
-                  
                   value={value ? moment(value) : null}
                   format={DATE_FORMAT_DDMMYYYY}
                   placeholder="Ngày sinh"

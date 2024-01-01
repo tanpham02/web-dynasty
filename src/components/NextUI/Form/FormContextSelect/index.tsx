@@ -22,7 +22,7 @@ const FormContextSelect = (props: FormContextSelectProps) => {
           <Select
             {...props}
             ref={ref}
-            selectedKeys={new Set([...(value || [])])}
+            selectedKeys={value && new Set([...(value || [])])}
             size="md"
             classNames={{
               label: 'font-semibold',
