@@ -220,6 +220,7 @@ li.ant-pagination-item:hover a,
   ) !important;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
     var(--tw-shadow) !important;
+  overflow: auto !important;
 }
 .ant-picker input::placeholder {
   color: #006a31 !important;

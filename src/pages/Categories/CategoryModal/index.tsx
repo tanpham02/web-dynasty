@@ -73,7 +73,6 @@ const CategoryModal = ({
     () => categories?.pages?.flatMap((page) => page?.data),
     [categories],
   );
-  console.log('🚀 ~ file: index.tsx:76 ~ categoriesData:', categoriesData);
 
   const onSubmit = async (data: Category) => {
     try {
@@ -135,15 +134,16 @@ const CategoryModal = ({
       isLoading={isSubmitting}
     >
       <FormProvider {...forms}>
-        {Array.isArray(categoriesData) && categoriesData.length > 0 && (
+        {Array.isArray(categoriesData) && categoriesData.length > 0 ? (
           <Box className="space-y-4">
             <FormContextSelect
               isLoading={isLoadingCategory || isFetchingCategory}
               name="childrenCategory.parentId"
               label="Danh mục cha (nếu có)"
-              items={categoriesData}
             >
-              {(category: any) => <SelectItem key={category?._id}>{category?.name}</SelectItem>}
+              {categoriesData?.map((category) => (
+                <SelectItem key={category?._id}>{category?.name}</SelectItem>
+              ))}
             </FormContextSelect>
             <FormContextInput
               isRequired
@@ -155,10 +155,10 @@ const CategoryModal = ({
             />
             <FormContextInput name="priority" label="Thứ tự hiển thị" type="number" />
             <FormContextSwitch name="isShowHomePage" label="Hiển thị trên trang chủ" />
-            <CustomTable />
           </Box>
+        ) : (
+          <ModalCategorySkeleton />
         )}
-        <ModalCategorySkeleton />
       </FormProvider>
     </CustomModal>
   );

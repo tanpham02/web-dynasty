@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, ImageProps } from '@nextui-org/react';
 import SVG from 'react-inlinesvg';
+
 import UploadIcon from '~/assets/svg/upload.svg';
 import ButtonIcon from '../ButtonIcon';
 import EyeIcon from '~/assets/svg/eye.svg';
@@ -33,12 +34,13 @@ const Upload: React.FC<UploadProps> = (props) => {
     reader.readAsDataURL(file as any);
   };
 
+  // o tren radíu bao nhi3u, thì cai image rádíu bay nhieu
   return (
     <>
       <div
         id="FileUpload"
         className={`relative pt-[45%] xl:pt-[100%] mx-auto w-[45%] xl:w-full cursor-pointer appearance-none border-2 border-dashed border-primary bg-gray rounded-${props.radius}`}
-      >
+      > 
         <input
           type="file"
           accept="image/*"

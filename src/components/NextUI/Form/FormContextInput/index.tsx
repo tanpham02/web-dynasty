@@ -37,7 +37,7 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
           errorMessage={error?.message}
           ref={ref}
           classNames={{
-            inputWrapper: 'bg-white border hover:!border-primary',
+            inputWrapper: 'bg-white !border hover:!border-primary',
             label: 'font-semibold',
             input: 'text-primary-text-color',
           }}

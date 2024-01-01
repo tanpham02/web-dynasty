@@ -42,7 +42,7 @@ const ProductListPage = () => {
           src={getFullImageUrl(product?.image)}
           fallbackSrc="https://via.placeholder.com/80x80"
           alt={product?.name}
-          className="w-20 h-20"
+          className="w-20 h-20 object-contain"
           loading="lazy"
         />
       ),

@@ -13,8 +13,10 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
+import WarningIcon from '~/assets/svg/warning.svg';
 import GridLayoutIcon from '~/assets/svg/grid-layout.svg';
 import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
 import { QUERY_KEY } from '~/constants/queryKey';
@@ -23,7 +25,7 @@ import { ProductChildrenAttribute, ProductMain } from '~/models/product';
 import { attributeService } from '~/services/attributeService';
 
 const ProductAttributeCard = () => {
-  const { control } = useFormContext<ProductMain>();
+  const { control, setValue } = useFormContext<ProductMain>();
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
 
@@ -35,16 +37,14 @@ const ProductAttributeCard = () => {
     {
       name: <Box className="text-center">Tên thuộc tính</Box>,
       render: (record: ProductChildrenAttribute, index?: number) => (
-        <Box className="space-y-1">
+        <Box className="flex justify-around flex-col gap-8">
           {record?.productAttributeItem?.map((attributeValue, fieldIndex) => (
-            <FormContextInput
-              name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.name`}
-              value={attributeValue?.name}
-              classNames={{
-                input: 'text-center',
-              }}
-              isReadOnly
-            />
+            // <FormContextInput
+            //   name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.name`}
+            //   value={attributeValue?.name}
+            //   isReadOnly
+            // />
+            <span className="block my-auto">- {attributeValue?.name}</span>
           ))}
         </Box>
       ),
@@ -58,11 +58,8 @@ const ProductAttributeCard = () => {
               name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
               endContent={<span className="font-bold">đ</span>}
               type="number"
-              classNames={{
-                input: 'text-right',
-              }}
               rules={{
-                required: 'Vui lòng nhập giá sản phẩm tăng thêm cho thuộc tính này!',
+                required: 'Vui lòng nhập giá cho thuộc tính này!',
               }}
             />
           ))}
@@ -73,14 +70,12 @@ const ProductAttributeCard = () => {
       name: <span className="block text-center">Hành động</span>,
       render: (_record, index?: number) => (
         <div className="flex justify-center">
-          <Tooltip color="danger" content="Xóa sản phẩm con này" showArrow>
-            <span
-              className="text-lg text-danger cursor-pointer active:opacity-50"
-              onClick={() => removeProductAttribute(index)}
-            >
-              <Svg src={DeleteIcon} />
-            </span>
-          </Tooltip>
+          <ButtonIcon
+            icon={DeleteIcon}
+            title="Xóa sản phẩm con này"
+            onClick={() => removeProductAttribute(index)}
+            status="danger"
+          />
         </div>
       ),
     },
@@ -105,6 +100,7 @@ const ProductAttributeCard = () => {
 
   useEffect(() => {
     removeProductAttribute(undefined);
+    setValue('productAttributeList', []);
     if (attributeSelected.length > 0) generateCombinations(0, [], [], []);
   }, [JSON.stringify(attributeSelected)]);
 
@@ -169,22 +165,27 @@ const ProductAttributeCard = () => {
       </CardHeader>
       <Divider />
       <CardBody className="p-6 space-y-4">
-        <Box className="grid gap-4">
-          <CheckboxGroup>
-            <Box className="grid grid-cols-4 lg:grid-cols-6">
-              {attributes?.map((attribute, index) => (
-                <Checkbox
-                  key={index}
-                  value={attribute?._id}
-                  onValueChange={(checked) => handleChangeAttributeSelected(checked, attribute)}
-                >
-                  {attribute?.name}
-                </Checkbox>
-              ))}
-            </Box>
-          </CheckboxGroup>
+        <CheckboxGroup value={attributeSelected}>
+          <Box className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:grid-cols-5 2xl:grid-cols-7">
+            {attributes?.map((attribute, index) => (
+              <Checkbox
+                key={index}
+                value={attribute?._id}
+                onValueChange={(checked) => handleChangeAttributeSelected(checked, attribute)}
+              >
+                {attribute?.name}
+              </Checkbox>
+            ))}
+          </Box>
+        </CheckboxGroup>
+        <Box className="my-2 flex items-center bg-orange-100 p-2 rounded-lg">
+          <Svg src={WarningIcon} className="bg-orange-500 text-white w-5 h-5 rounded-full mr-2" />
+          <span>
+            Vui lòng cập nhật lại giá bán cộng thêm cho từng thuộc tính nếu thay đổi lựa chọn!
+          </span>
         </Box>
         <CustomTable
+          rowKey="id"
           tableName="product attribute"
           columns={columns}
           isLoading={false}

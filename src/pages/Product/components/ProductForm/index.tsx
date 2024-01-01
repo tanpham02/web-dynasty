@@ -1,21 +1,19 @@
 import { Button, Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
+import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
-import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 import DescriptionIcon from '~/assets/svg/description.svg';
 import Box from '~/components/Box';
 import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
+import Upload, { onChangeProps } from '~/components/Upload';
 import { PATH_NAME } from '~/constants/router';
 import { ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
-import { categoryService } from '~/services/categoryService';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { QUERY_KEY } from '~/constants/queryKey';
 
 interface ProductFormProps {
   currentProduct?: ProductMain;
@@ -29,23 +27,16 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
 
   const navigate = useNavigate();
 
+  const [productImage, setProductImage] = useState<onChangeProps>({});
+
   const {
     handleSubmit,
     reset,
     formState: { isSubmitting },
   } = forms;
 
-  const {
-    data: categories,
-    isLoading: isLoadingCategory,
-    isFetching: isFetchingCategory,
-  } = useInfiniteQuery(
-    [QUERY_KEY.CATEGORY],
-    async () => await categoryService.getCategoryByCriteria({}),
-  );
-
   useEffect(() => {
-    if (isEdit && currentProduct && Object.keys(currentProduct).length > 0 && !isFetchingCategory) {
+    if (isEdit && currentProduct && Object.keys(currentProduct).length > 0) {
       reset({
         ...currentProduct,
         categoryId: Array.isArray(currentProduct?.categoryId)
@@ -53,7 +44,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
           : [currentProduct?.categoryId],
       });
     }
-  }, [isEdit, currentProduct, isFetchingCategory]);
+  }, [isEdit, currentProduct]);
 
   const onSubmit = async (data: ProductMain) => {
     console.log('🚀 ~ file: index.tsx:29 ~ onSubmit ~ data:', data);
@@ -69,7 +60,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             ...attribute,
             productAttributeItem: attribute?.productAttributeItem?.map((attributeValue) => {
               return {
-                attributeId: attributeValue?._id,
+                attributeId: attributeValue?._id ? JSON.parse(attributeValue?._id)?.id : '',
                 priceAdjustmentValue: attributeValue?.priceAdjustmentValue,
               };
             }),
@@ -79,12 +70,16 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
 
       formData.append('productInfo', jsonData);
 
+      if (productImage?.srcRequest) {
+        formData.append('file', productImage.srcRequest);
+      }
+
       if (isEdit) await productService.updateProduct(formData, currentProduct?._id);
       else await productService.createProduct(formData);
-      enqueueSnackbar('Tạo sản phẩm thành công!');
+      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Tạo'} sản phẩm thành công!`);
       navigate(PATH_NAME.PRODUCT_LIST);
     } catch (err) {
-      enqueueSnackbar('Tạo sản phẩm thành công!', {
+      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Tạo'} sản phẩm thất bại!`, {
         variant: 'error',
       });
       console.log('🚀 ~ file: index.tsx:47 ~ onSubmit ~ err:', err);
@@ -95,10 +90,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
     <FormProvider {...forms}>
       <Box className="space-y-4">
         <Box className="grid xl:grid-cols-2 gap-4">
-          <ProductInfoCard
-            categories={categories}
-            isLoading={isLoadingCategory || isFetchingCategory}
-          />
+          <ProductInfoCard />
           <Card>
             <CardHeader>
               <Svg src={DescriptionIcon} className="w-5 h-5 mr-2" />
@@ -110,6 +102,27 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             </CardBody>
           </Card>
         </Box>
+        <Card>
+          <CardHeader>
+            <Svg src={DescriptionIcon} className="w-5 h-5 mr-2" />
+            <span className="text-lg font-bold">Hình ảnh sản phẩm</span>
+          </CardHeader>
+          <Divider />
+          <CardBody className="p-4 grid grid-cols-2 lg:grid-cols-4">
+            <Upload
+              onChange={({ srcPreview, srcRequest }: onChangeProps) => {
+                setProductImage({
+                  srcPreview,
+                  srcRequest,
+                });
+              }}
+              src={productImage?.srcPreview}
+              loading="lazy"
+              radius="full"
+              isPreview
+            />
+          </CardBody>
+        </Card>
         <ProductAttributeCard />
       </Box>
       <Button
@@ -119,7 +132,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
         isLoading={isSubmitting}
         onClick={handleSubmit(onSubmit)}
       >
-        Thêm sản phẩm
+        {isEdit ? 'Lưu thay đổi' : 'Thêm sản phẩm'}
       </Button>
     </FormProvider>
   );

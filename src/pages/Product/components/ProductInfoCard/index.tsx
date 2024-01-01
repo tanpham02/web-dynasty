@@ -1,21 +1,25 @@
 import { Card, CardBody, CardHeader, Divider, SelectItem } from '@nextui-org/react';
-import { InfiniteData } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import Svg from 'react-inlinesvg';
 
 import InfoIcon from '~/assets/svg/info.svg';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
-import { Category } from '~/models/category';
+import { QUERY_KEY } from '~/constants/queryKey';
 import { ProductStatusOptions } from '~/models/product';
-import { ListResponse } from '~/types';
+import { categoryService } from '~/services/categoryService';
 
-interface ProductInfoCardProps {
-  categories?: InfiniteData<ListResponse<Category>>;
-  isLoading?: boolean;
-}
+const ProductInfoCard = () => {
+  const {
+    data: categories,
+    isLoading: isLoadingCategory,
+    isFetching: isFetchingCategory,
+  } = useInfiniteQuery(
+    [QUERY_KEY.CATEGORY],
+    async () => await categoryService.getCategoryByCriteria({}),
+  );
 
-const ProductInfoCard = ({ categories, isLoading }: ProductInfoCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -36,7 +40,7 @@ const ProductInfoCard = ({ categories, isLoading }: ProductInfoCardProps) => {
           isRequired
           name="categoryId"
           label="Danh mục sản phẩm"
-          isLoading={isLoading}
+          isLoading={isLoadingCategory || isFetchingCategory}
           rules={{
             required: 'Vui lòng chọn danh mục sản phẩm!',
           }}
@@ -65,15 +69,7 @@ const ProductInfoCard = ({ categories, isLoading }: ProductInfoCardProps) => {
             required: 'Vui lòng nhập giá bán!',
           }}
         />
-        <FormContextInput
-          name="oldPrice"
-          label="Giá cũ"
-          type="number"
-          endContent="đ"
-          classNames={{
-            input: '',
-          }}
-        />
+        <FormContextInput name="oldPrice" label="Giá cũ" type="number" endContent="đ" />
         <FormContextSelect name="types" label="Loại sản phẩm" selectionMode="multiple">
           {ProductStatusOptions.map((item) => (
             <SelectItem key={item.value} value={item.value}>

@@ -42,6 +42,7 @@ const ProductFormPage = () => {
     },
     {
       enabled: Boolean(id),
+      refetchOnWindowFocus: false,
     },
   );
   console.log('🚀 ~ file: index.tsx:21 ~ ProductFormPage ~ currentProduct:', currentProduct);

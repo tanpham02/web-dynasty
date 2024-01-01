@@ -304,6 +304,7 @@ const UserModal = ({
                 <DatePicker
                   allowClear
                   ref={ref}
+                  
                   value={value ? moment(value) : null}
                   format={DATE_FORMAT_DDMMYYYY}
                   placeholder="Ngày sinh"
@@ -325,7 +326,7 @@ const UserModal = ({
               label="E-mail"
               isClearable
             />
-            <FormContextSelect
+            {/* <FormContextSelect
               isRequired
               name="role"
               label="Vai trò"
@@ -369,7 +370,7 @@ const UserModal = ({
                   {item?.name}
                 </SelectItem>
               ))}
-            </FormContextSelect>
+            </FormContextSelect> */}
             <FormContextInput<Users> name="location" label="Số nhà, tên đường" isClearable />
             <FormContextInput<Users>
               isRequired
