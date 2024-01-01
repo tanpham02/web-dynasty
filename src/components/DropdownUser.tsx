@@ -75,6 +75,7 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
               e.target.onerror = null;
               e.target.src = UserOne;
             }}
+            loading="lazy"
             className="h-10 w-10 object-cover !rounded-full"
           />
         </span>
@@ -101,7 +102,7 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+        className={`absolute right-0 mt-2 flex w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >

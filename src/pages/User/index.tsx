@@ -1,11 +1,11 @@
 import { Button } from '@nextui-org/button';
 import { Chip, Input, Select, SelectItem, useDisclosure, usePagination } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { Avatar, Modal, TablePaginationConfig } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
+import { Avatar, Modal } from 'antd';
+import { useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
 
 import trash from '~/assets/svg/trash.svg';
 import { QUERY_KEY } from '~/constants/queryKey';
@@ -13,7 +13,6 @@ import useDebounce from '~/hooks/useDebounce';
 import { Users, UserRole, UserStatus } from '~/models/user';
 import { RootState } from '~/redux/store';
 import userService from '~/services/userService';
-import { SearchParams } from '~/types';
 import UserModal, { ModalType } from './UserModal';
 import CustomTable from '~/components/NextUI/CustomTable';
 import { ColumnType } from '~/components/NextUI/CustomTable';
@@ -24,6 +23,8 @@ import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import ButtonIcon from '~/components/ButtonIcon';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import { globalLoading } from '~/components/GlobalLoading';
 
 export interface ModalKey {
   visible?: boolean;
@@ -34,17 +35,16 @@ export interface ModalKey {
 const UserListPage = () => {
   const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
   const [showDeleteUserModal, setShowDeleteUserModal] = useState<boolean>(false);
-  const [userModal, setUserModal] = useState<ModalKey>({
-    visible: false,
-  });
+  const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
+  console.log('🚀 ~ file: index.tsx:39 ~ UserListPage ~ selectedRowKeys:', selectedRowKeys);
+
   const [searchText, setSearchText] = useState<string>('');
   const [filterRole, setFilterRole] = useState<UserStatus | string>('');
-  const [listIdsUserForDelete, setListIdsUserForDelete] = useState<React.Key[]>([]);
-  const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
-  const [pagination, setPagination] = useState<SearchParams>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+
+  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const { setPage, total, activePage } = usePagination({
     page: 0,
     total: 100,
@@ -52,25 +52,39 @@ const UserListPage = () => {
   const [modal, setModal] = useState<{
     isEdit?: boolean;
     userId?: string;
-  }>();
+  }>({ isEdit: false });
 
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
     onOpenChange: onOpenChangeModal,
+    onClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenModalConfirmDeleteUser,
+    onOpen: onOpenModalConfirmDeleteUser,
+    onOpenChange: onOpenChangeModalConfirmDeleteUser,
   } = useDisclosure();
 
   const search = useDebounce(searchText, 500);
   const role = useDebounce(filterRole, 500);
 
+  const handleGetAddress = (user: Users) => {
+    const address = [user.location, user.ward, user.district, user.city]
+      .filter((item) => Boolean(item))
+      .join(', ');
+    return address;
+  };
+
   const optionStatus = [
     {
-      value: UserRole.ALL,
+      value: '',
       label: 'Tất cả',
     },
     {
       value: UserRole.ADMIN,
-      label: 'Quản trị',
+      label: 'Quản trị viên',
     },
     {
       value: UserRole.USER,
@@ -82,7 +96,7 @@ const UserListPage = () => {
     {
       align: 'center',
       name: 'STT',
-      render: (_user: Users, index?: number) => index || 0 + 1,
+      render: (_user: Users, index?: number) => index! + 1,
     },
     {
       name: 'Hình ảnh',
@@ -121,7 +135,7 @@ const UserListPage = () => {
     {
       name: 'Địa chỉ',
       align: 'center',
-      render: (user: Users) => user?.address || '',
+      render: (user: Users) => handleGetAddress(user),
     },
     {
       align: 'center',
@@ -141,14 +155,21 @@ const UserListPage = () => {
     {
       align: 'center',
       name: 'Hành động',
-      render: (_user: Users) => (
-        <div className="flex items-center gap-3">
+      render: (user: Users) => (
+        <div className="flex items-center gap-2">
           <ButtonIcon
             title="Chỉnh sửa nhân viên"
             icon={EditIcon}
             tooltipProps={{
               showArrow: true,
               delay: 500,
+            }}
+            onClick={() => {
+              setModal({
+                isEdit: true,
+                userId: user._id,
+              });
+              onOpenModal();
             }}
           />
           <ButtonIcon
@@ -158,6 +179,13 @@ const UserListPage = () => {
             tooltipProps={{
               showArrow: true,
               delay: 500,
+            }}
+            onClick={() => {
+              setModalConfirmDelete({
+                desc: 'Bạn có chắc chắn muốn xoá nhân viên này?',
+                id: user._id,
+              });
+              onOpenModalConfirmDeleteUser();
             }}
           />
         </div>
@@ -170,11 +198,11 @@ const UserListPage = () => {
     refetch: refetchUser,
     isLoading: isLoadingUser,
   } = useQuery(
-    [QUERY_KEY.USERS, search, role, pagination, activePage],
+    [QUERY_KEY.USERS, search, role, activePage],
     async () => {
       const params = {
-        pageIndex: pagination.pageIndex,
-        pageSize: pagination.pageSize,
+        // pageIndex: pagination.pageIndex,
+        // pageSize: pagination.pageSize,
         fullName: search,
         role: role,
       };
@@ -185,87 +213,42 @@ const UserListPage = () => {
     },
   );
 
-  const handleShowModalDeleteUser = () => {
-    setShowDeleteUserModal(true);
+  const handleChangeSelectedRowsKey = (keys: any) => {
+    console.log('🚀 ~ file: index.tsx:215 ~ handleChangeSelectedRowsKey ~ keys:', keys);
+    setSelectedRowKeys(keys);
   };
 
-  const handleGetPagination = (paginationFromTable: TablePaginationConfig) => {
-    if (paginationFromTable.current && pagination.pageSize)
-      setPagination({
-        pageIndex: paginationFromTable.current - 1,
-        pageSize: paginationFromTable.pageSize,
-      });
-  };
-
-  const handleOk = () => {
-    handleDeleteUser(listIdsUserForDelete);
-  };
-
-  const handleCancel = () => {
-    setShowDeleteUserModal(false);
-  };
-
-  useEffect(() => {
-    if (users) {
-      if (users?.data?.length <= 0) {
-        setPagination((prev) => ({
-          ...prev,
-          pageIndex: prev?.pageIndex && prev?.pageIndex - 1,
-        }));
-      }
+  const handleDeleteUser = async () => {
+    globalLoading.show();
+    setModalConfirmDelete((prev) => ({
+      ...prev,
+      isLoading: true,
+    }));
+    let ids: string[] = [];
+    if (modalConfirmDelete?.id) {
+      ids.push(modalConfirmDelete.id);
     }
-  }, [users]);
-
-  const handleShowModalUser = (type?: ModalType, userId?: string) => {
-    if (userId && type !== ModalType.CREATE) {
-      const userAfterFindById = users?.data?.find((user) => user._id === userId);
-      setUserModal({
-        type,
-        user: userAfterFindById,
-        visible: true,
-      });
-    } else {
-      setUserModal({
-        type,
-        visible: true,
-      });
-    }
-  };
-
-  const handleDeleteUser = async (ids: any) => {
-    setIsLoadingDelete(true);
-    console.log('ids', ids);
 
     try {
       await userService.deleteUser(ids);
-      toast.success('Xóa thành công', {
-        position: 'bottom-right',
-        duration: 3000,
-        icon: '👏',
-        style: { width: '70%' },
-      });
-
-      setIsLoadingDelete(false);
-      if (Array.isArray(ids)) {
-        setListIdsUserForDelete([]);
-        if (!isLoadingDelete) {
-          setShowDeleteUserModal(false);
-        }
-      }
       refetchUser();
+      enqueueSnackbar({
+        message: 'Xoá thành công!',
+      });
     } catch (err) {
       console.log(err);
-      toast.success('Xóa thất bại', {
-        position: 'bottom-right',
-        duration: 3500,
-        icon: '😔',
+      enqueueSnackbar({
+        message: 'Xoá thất bại!',
+        variant: 'error',
       });
+    } finally {
+      globalLoading.hide();
+      onOpenChangeModalConfirmDeleteUser();
+      setModalConfirmDelete((prev) => ({
+        ...prev,
+        isLoading: false,
+      }));
     }
-  };
-
-  const handleOpenModalEdit = (user: Users) => {
-    setModal({ isEdit: true, userId: user?._id });
-    onOpenModal();
   };
 
   return (
@@ -282,24 +265,33 @@ const UserListPage = () => {
         <div className="flex items-center mb-2">
           <div className="flex flex-1 items-center space-x-2">
             <Input
-              size="sm"
+              size="md"
               variant="faded"
-              className="w-full max-w-[250px] text-sm"
+              className="w-full max-w-[250px] text-md"
               label="Tìm kiếm..."
               classNames={{
                 inputWrapper: 'bg-white',
+                label: 'font-semibold',
+                input: 'text-primary-text-color text-md',
               }}
+              onChange={(e) => setSearchText(e.target.value)}
+              value={searchText}
+              isClearable
+              onClear={() => setSearchText('')}
             />
             <Select
-              size="sm"
-              variant="faded"
+              size="md"
+              variant="bordered"
               className="w-full max-w-[250px] "
               label="Chọn trạng thái"
               items={optionStatus}
-              value={UserRole.ALL.toString()}
+              value={filterRole}
               classNames={{
-                trigger: 'bg-white',
+                mainWrapper: 'bg-white rounded-xl',
+                label: 'font-semibold',
+                value: 'text-primary-text-color text-md',
               }}
+              onChange={(e) => setFilterRole(e.target.value)}
             >
               {(status) => (
                 <SelectItem key={status.value.toString()} value={status.value?.toString()}>
@@ -312,7 +304,8 @@ const UserListPage = () => {
             Thêm nhân viên
           </Button>
         </div>
-        {listIdsUserForDelete.length !== 0 ? (
+
+        {/* {listIdsUserForDelete.length !== 0 ? (
           <div
             className="rounded-lg cursor-pointer transition duration-1000 linear bg-danger px-4 py-2 font-normal text-white flex items-center justify-between float-right"
             onClick={handleShowModalDeleteUser}
@@ -322,9 +315,9 @@ const UserListPage = () => {
           </div>
         ) : (
           ''
-        )}
+        )} */}
       </div>
-      {showDeleteUserModal && (
+      {/* {showDeleteUserModal && (
         <Modal
           title="Xác nhận xóa danh sách nhân viên này"
           open={showDeleteUserModal}
@@ -333,12 +326,12 @@ const UserListPage = () => {
             <Button title="cancel" onClick={handleCancel}>
               Hủy bỏ
             </Button>,
-            <Button key="submit" onClick={handleOk} isLoading={isLoadingDelete}>
+            <Button key="submit" onClick={() => {}} isLoading={isLoadingDelete}>
               Lưu thay đổi
             </Button>,
           ]}
         />
-      )}
+      )} */}
 
       <CustomTable
         columns={columns}
@@ -347,32 +340,24 @@ const UserListPage = () => {
         pagination
         tableName="Danh sách nhân viên"
         emptyContent="Không có nhân viên nào"
+        onSelectionChange={handleChangeSelectedRowsKey}
       />
 
       <UserModal
         isOpen={isOpenModal}
-        onOpenChange={onOpenChangeModal}
+        onClose={onClose}
         onRefetch={refetchUser}
+        onOpenChange={onOpenChangeModal}
+        setModal={setModal}
         {...modal}
       />
-      {/* <UserTable
-        data={users?.pages[users?.pages?.length - 1]}
-        refreshData={refetch}
-        onGetPagination={handleGetPagination}
-        handleDeleteSingleUser={handleDeleteUser}
-        handleChangeListIdsUserForDelete={setListIdsUserForDelete}
-        handleShowModalUser={handleShowModalUser}
-      /> */}
 
-      {/* {userModal.visible && ( */}
-      {/* <UserModal
-        refetchData={refetch}
-        onClose={() => setUserModal({ visible: false })}
-        visible={userModal.visible}
-        modalType={userModal.type}
-        user={userModal.user}
-      /> */}
-      {/* )} */}
+      <ModalConfirmDelete
+        {...modalConfirmDelete}
+        onAgree={handleDeleteUser}
+        isOpen={isOpenModalConfirmDeleteUser}
+        onOpenChange={onOpenChangeModalConfirmDeleteUser}
+      />
     </div>
   );
 };

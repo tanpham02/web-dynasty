@@ -44,7 +44,6 @@ const AttributeModal = ({
 
   const columns: ColumnType<AttributeValue>[] = [
     {
-      key: '_id',
       align: 'center',
       name: 'STT',
       render: (_attribute: AttributeValue, index?: number) => (
@@ -52,7 +51,6 @@ const AttributeModal = ({
       ),
     },
     {
-      key: 'name',
       align: 'center',
       name: 'Tên giá trị',
       render: (_attribute: AttributeValue, index?: number) => (
@@ -65,7 +63,6 @@ const AttributeModal = ({
       ),
     },
     {
-      key: 'value',
       align: 'center',
       name: 'Giá trị',
       render: (_attribute: AttributeValue, index?: number) => (
@@ -78,7 +75,6 @@ const AttributeModal = ({
       ),
     },
     {
-      key: 'value',
       align: 'center',
       name: <span className="block text-center">Hành động</span>,
       render: (_attribute: AttributeValue, index?: number) => (

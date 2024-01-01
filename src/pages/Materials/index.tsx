@@ -14,7 +14,7 @@ import { QUERY_KEY } from '~/constants/queryKey';
 import materialService from '~/services/materialService';
 import MaterialModal from './MaterialTable/MaterialModal';
 import useDebounce from '~/hooks/useDebounce';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 import { Material } from '~/models/materials';
 import { ModalType } from '../User/UserModal';
 

@@ -1,25 +1,28 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useMemo, useState } from 'react';
-import { Controller, FieldValue, FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useSnackbar } from 'notistack';
 import { Users, UserRole } from '~/models/user';
 import { getProvincesWithDetail } from 'vietnam-provinces';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '~/redux/store';
 import CustomModal from '~/components/NextUI/CustomModal';
 import { FormContextInput } from '~/components/NextUI/Form';
 import Box from '~/components/Box';
 import { PATTERN } from '~/utils/regex';
-import Upload from '~/components/Upload';
-import dayjs from 'dayjs';
+import Upload, { onChangeProps } from '~/components/Upload';
 import { DatePicker } from 'antd';
-import { DATE_FORMAT_DDMMYYYY } from '~/utils/date.utils';
+import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
 import moment from 'moment';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
-import { Select, SelectItem } from '@nextui-org/react';
+import { Button, SelectItem } from '@nextui-org/react';
+import { globalLoading } from '~/components/GlobalLoading';
+import userService from '~/services/userService';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { getFullImageUrl } from '~/utils/image';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '~/redux/store';
+import { getUserInfo } from '~/redux/slice/userSlice';
 
-const defaultUserValues: Users = {
-  role: UserRole.ADMIN,
-};
+const defaultUserValues: Users = {};
 
 export enum ModalType {
   CREATE = 'CREATE',
@@ -29,7 +32,9 @@ export enum ModalType {
 }
 export interface UserModalProps {
   isOpen?: boolean;
+  onClose?(): void;
   onOpenChange?(): void;
+  setModal?({ isEdit, userId }: { isEdit?: boolean; userId?: string }): void;
   onRefetch?(): Promise<any>;
   isEdit?: boolean;
   userId?: string;
@@ -37,7 +42,7 @@ export interface UserModalProps {
 const roleSelection = [
   {
     value: UserRole.ADMIN,
-    label: 'Quản trị',
+    label: 'Quản trị viên',
   },
   {
     value: UserRole.USER,
@@ -45,13 +50,55 @@ const roleSelection = [
   },
 ];
 
-const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModalProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<any>();
-  const [isShowInputUpdatePw, setIsShowInputUpdatePw] = useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>();
-
+const UserModal = ({
+  isOpen,
+  onClose,
+  onOpenChange,
+  onRefetch,
+  isEdit,
+  userId,
+  setModal,
+}: UserModalProps) => {
   const vietnamLocations = getProvincesWithDetail();
+  const [avatar, setAvatar] = useState<onChangeProps>();
+  const { enqueueSnackbar } = useSnackbar();
+  const [changePw, setChangePw] = useState<boolean>(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const forms = useForm<Users>({
+    defaultValues: defaultUserValues,
+  });
+
+  const {
+    control,
+    formState: { isSubmitting },
+    reset,
+    watch,
+    setValue,
+    handleSubmit,
+    getFieldState,
+  } = forms;
+
+  useQuery(
+    [QUERY_KEY.USERS_DETAIL, userId],
+    async () => {
+      globalLoading.show();
+      if (userId) {
+        const response = await userService.getUserByUserId(userId);
+        reset(response);
+        if (response?.image) {
+          setAvatar({
+            srcPreview: getFullImageUrl(response.image),
+          });
+        }
+      }
+      globalLoading.hide();
+    },
+    {
+      enabled: Boolean(userId) && isEdit,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const mappingVietNamLocation = useMemo(() => {
     if (vietnamLocations) {
@@ -63,128 +110,140 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
     }
   }, [vietnamLocations]);
 
-  const forms = useForm<Users>({
-    defaultValues: defaultUserValues,
-  });
+  const handleGetDistrictsFromVietnamLocation = useMemo(() => {
+    const cityIdWatchValue = watch('cityId')?.toString();
 
-  const {
-    control,
-    formState: { errors, isSubmitting },
-    reset,
-    watch,
-    setValue,
-    getValues,
-    handleSubmit,
-  } = forms;
+    if (cityIdWatchValue) {
+      const districtsMapping = mappingVietNamLocation?.find(
+        (city) => city?.code === cityIdWatchValue,
+      );
 
-  // useEffect(() => {
-  //   if (user && visible) {
-  //     setAvatarBlob(user?.image || '');
-  //     return reset(user);
-  //   }
-  //   return reset(defaultUserValues);
-  // }, [user]);
+      reset((prev) => ({
+        ...prev,
+        city: districtsMapping?.name,
+        districtId: getFieldState('cityId').isDirty ? undefined : prev.districtId,
+        wardId: getFieldState('cityId').isDirty ? undefined : prev.wardId,
+      }));
 
-  // useEffect(() => {
-  //   if (!visible || modalType === ModalType.CREATE) {
-  //     setAvatarBlob('');
-  //   }
-  // }, [visible, modalType]);
+      if (districtsMapping?.districts) {
+        const districts = Object.keys(districtsMapping.districts)
+          .map((key) => [districtsMapping.districts[key]])
+          .flatMap((item) => item);
+        return districts;
+      }
+    }
+  }, [watch('cityId')]);
 
-  // const getTitleModalAndButton = useMemo(() => {
-  //   let result = {
-  //     titleModal: '',
-  //     titleButton: '',
-  //   };
-  //   switch (modalType) {
-  //     case ModalType.CREATE:
-  //       result = {
-  //         titleModal: 'Thêm nhân viên mới',
-  //         titleButton: 'Thêm nhân viên',
-  //       };
-  //       setIsShowInputUpdatePw(true);
-  //       break;
-  //     case ModalType.UPDATE:
-  //       result = {
-  //         titleModal: 'Cập nhật thông tin nhân viên',
-  //         titleButton: 'Cập nhật',
-  //       };
-  //       setIsShowInputUpdatePw(false);
-  //       break;
-  //     case ModalType.INFORMATION:
-  //       result = {
-  //         titleModal: 'Thông tin nhân viên',
-  //         titleButton: '',
-  //       };
-  //       break;
-  //   }
+  const handleGetWardsFromVietnamLocation = useMemo(() => {
+    const districtIdWatchValue = watch('districtId')?.toString();
+    if (districtIdWatchValue) {
+      const districtsMapping = handleGetDistrictsFromVietnamLocation?.find(
+        (districts) =>
+          districts?.code ===
+          (Number(districtIdWatchValue) < 100 ? `0${districtIdWatchValue}` : districtIdWatchValue),
+      );
 
-  //   return result;
-  // }, [modalType]);
+      reset((prev) => ({
+        ...prev,
+        district: districtsMapping?.name,
+        wardId: getFieldState('districtId').isDirty ? undefined : prev.wardId,
+      }));
+      if (districtsMapping?.wards) {
+        const wards = Object.keys(districtsMapping.wards)
+          .map((key) => [districtsMapping.wards[key]])
+          .flatMap((item) => item);
+        return wards;
+      }
+    }
+  }, [watch('districtId')]);
+
+  useEffect(() => {
+    const wardIdWatchValue = watch('wardId')?.toString();
+    if (wardIdWatchValue) {
+      const wards = handleGetWardsFromVietnamLocation?.find(
+        (ward) => ward?.code === wardIdWatchValue,
+      );
+
+      setValue('ward', wards?.name);
+    }
+  }, [watch('wardId')]);
+
+  const handleResetFormValue = () => {
+    reset({
+      birthday: '',
+      username: '',
+      fullName: '',
+      phoneNumber: '',
+      email: '',
+      location: '',
+      city: '',
+      cityId: undefined,
+      district: '',
+      districtId: undefined,
+      ward: '',
+      wardId: undefined,
+      password: '',
+      role: undefined,
+      status: undefined,
+      image: '',
+      confirmPw: '',
+    });
+    setAvatar({
+      srcPreview: '',
+      srcRequest: '',
+    });
+    setChangePw(false);
+  };
 
   const onSubmit = async (data: Users) => {
-    console.log('🚀 ~ file: index.tsx:127 ~ onSubmit ~ data:', data);
-    // setIsLoading(true);
-    // const formData = new FormData();
-    // if (avatar) {
-    //   formData.append('files', avatar);
-    // }
+    globalLoading.show();
+    const formData = new FormData();
+    if (avatar) {
+      formData.append('file', avatar.srcRequest);
+    }
+    const newData: Users = {
+      ...data,
+      birthday: data?.birthday ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD) : null,
+    };
+    formData.append('userInfo', JSON.stringify(newData));
 
-    // try {
-    //   formData.append('userInfo', JSON.stringify(data));
-    //   modalType === ModalType.CREATE
-    //     ? await userService.createUser(formData)
-    //     : modalType === ModalType.UPDATE &&
-    //       user?._id &&
-    //       (await userService.updateUser(formData, user._id));
+    try {
+      if (!isEdit) {
+        await userService.createUser(formData);
+      } else if (userId) {
+        await userService.updateUser(formData, userId);
+        dispatch(getUserInfo(userId));
+      }
 
-    //   if (modalType !== ModalType.CREATE && currentUserLogin._id === user?._id) {
-    //     dispatch(getUserInfo(currentUserLogin?._id || ''));
-    //   }
-
-    //   toast.success(
-    //     `${
-    //       modalType === ModalType.CREATE
-    //         ? 'Thêm nhân viên thành công'
-    //         : modalType === ModalType.UPDATE
-    //         ? 'Cập nhật nhân viên thành công'
-    //         : ''
-    //     }`,
-    //     {
-    //       position: 'bottom-right',
-    //       duration: 4000,
-    //       icon: '🤪',
-    //     },
-    //   );
-    //   setIsShowInputUpdatePw(false);
-    //   setIsLoading(false);
-    //   setAvatarBlob('');
-    //   refetchData();
-    //   reset({});
-    //   onClose();
-    // } catch (err) {
-    //   console.log(err);
-    //   toast.success('Thêm nhân viên thất bại', {
-    //     position: 'bottom-right',
-    //     duration: 4000,
-    //     icon: '😞',
-    //   });
-    //   setIsLoading(false);
-    // }
+      handleResetFormValue();
+      onClose?.();
+      onRefetch?.();
+      setModal?.({
+        userId: undefined,
+      });
+      enqueueSnackbar({
+        message: `${!isEdit ? 'Thêm' : 'Cập nhật'} nhân viên thành công!`,
+        autoHideDuration: 2000,
+      });
+    } catch (err) {
+      console.log('🚀 ~ file: index.tsx:219 ~ onSubmit ~ err:', err);
+      enqueueSnackbar({
+        message: `${!isEdit ? 'Thêm' : 'Cập nhật'} nhân viên thất bại!`,
+        variant: 'error',
+        autoHideDuration: 2000,
+      });
+    } finally {
+      globalLoading.hide();
+    }
   };
 
-  const handleShowInputUpdatePassword = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setIsShowInputUpdatePw(!isShowInputUpdatePw);
-  };
-
-  const handleCheckRolePermission = (recordRole: UserRole, currentUserLoginRole: UserRole) => {
-    if (currentUserLoginRole === UserRole.ADMIN) {
-      if (recordRole === UserRole.ADMIN) {
-        return true;
-      } else return false;
-    } else return true;
-  };
+  // const handleCheckRolePermission = (recordRole: UserRole, currentUserLoginRole: UserRole) => {
+  //   if (currentUserLoginRole === UserRole.ADMIN) {
+  //     if (recordRole === UserRole.ADMIN) {
+  //       return true;
+  //     } else return false;
+  //   } else return true;
+  // };
 
   return (
     <CustomModal
@@ -196,13 +255,26 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
       onOk={handleSubmit(onSubmit)}
       isLoading={isSubmitting}
       isDismissable={false}
+      scrollBehavior="inside"
+      placement="center"
+      onClose={() => {
+        handleResetFormValue();
+        setModal?.({
+          userId: undefined,
+        });
+      }}
     >
       <FormProvider {...forms}>
         <Box className="grid grid-cols-1 xl:grid-cols-[3fr_7fr] gap-8">
           <Box>
             <Upload
-              onChange={(src) => setAvatar(src)}
-              src={avatar}
+              onChange={({ srcPreview, srcRequest }: onChangeProps) => {
+                setAvatar({
+                  srcPreview,
+                  srcRequest,
+                });
+              }}
+              src={avatar?.srcPreview}
               loading="lazy"
               radius="full"
               isPreview
@@ -211,7 +283,6 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
 
           <Box className="space-y-4">
             <FormContextInput<Users> name="fullName" label="Họ và tên" isClearable />
-
             <FormContextInput<Users>
               name="phoneNumber"
               rules={{
@@ -225,7 +296,6 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
               label="Số điện thoại"
               isClearable
             />
-
             <Controller
               control={control}
               name="birthday"
@@ -233,7 +303,7 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
                 <DatePicker
                   allowClear
                   ref={ref}
-                  value={value || null}
+                  value={value ? moment(value) : null}
                   format={DATE_FORMAT_DDMMYYYY}
                   placeholder="Ngày sinh"
                   onChange={(date) => (date ? onChange(moment(date)) : '')}
@@ -241,7 +311,6 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
                 />
               )}
             />
-
             <FormContextInput<Users>
               name="email"
               rules={{
@@ -256,17 +325,6 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
               label="E-mail"
               isClearable
             />
-
-            <FormContextInput<Users>
-              isRequired
-              name="username"
-              label="Tên đăng nhập"
-              rules={{
-                required: 'Vui lòng nhập tên đăng nhập',
-              }}
-              isClearable
-            />
-
             <FormContextSelect
               isRequired
               name="role"
@@ -274,60 +332,139 @@ const UserModal = ({ isOpen, onOpenChange, onRefetch, isEdit, userId }: UserModa
               rules={{
                 required: 'Vui lòng chọn vai trò',
               }}
-              items={roleSelection}
             >
-              {(optionItem: any) => (
-                <SelectItem key={optionItem.value.toString()} value={optionItem.value?.toString()}>
-                  {optionItem.label}
+              {roleSelection.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
+                  {item.label}
                 </SelectItem>
-              )}
+              ))}
             </FormContextSelect>
-
-            {/* <FormContextSelect
-              isRequired
-              name="city"
-              label="Tỉnh / Thành phố"
-              rules={{
-                required: 'Vui lòng chọn Tỉnh / Thành phố',
-              }}
-              value={UserRole.ADMIN}
-              items={roleSelection}
-            >
-              {(optionItem: any) => (
-                <SelectItem key={optionItem.value.toString()} value={optionItem.value?.toString()}>
-                  {optionItem.label}
+            <FormContextSelect name="cityId" label="Tỉnh/Thành">
+              {(mappingVietNamLocation as any[])?.map((item) => (
+                <SelectItem key={item?.code} value={item?.code}>
+                  {item?.name}
                 </SelectItem>
-              )}
-            </FormContextSelect> */}
-
+              ))}
+            </FormContextSelect>
+            <FormContextSelect
+              name="districtId"
+              label="Quận/Huyện"
+              isDisabled={!handleGetDistrictsFromVietnamLocation}
+              disallowEmptySelection
+            >
+              {(handleGetDistrictsFromVietnamLocation as any[])?.map((item) => (
+                <SelectItem key={Number(item?.code)} value={Number(item?.code)}>
+                  {item?.name}
+                </SelectItem>
+              ))}
+            </FormContextSelect>
+            <FormContextSelect
+              name="wardId"
+              label="Phường/Xã"
+              isDisabled={!handleGetWardsFromVietnamLocation}
+              disallowEmptySelection
+            >
+              {(handleGetWardsFromVietnamLocation as any[])?.map((item) => (
+                <SelectItem key={Number(item?.code)} value={Number(item?.code)}>
+                  {item?.name}
+                </SelectItem>
+              ))}
+            </FormContextSelect>
+            <FormContextInput<Users> name="location" label="Số nhà, tên đường" isClearable />
             <FormContextInput<Users>
               isRequired
-              name="password"
-              label="Mật khẩu"
-              type="password"
+              name="username"
+              label="Tên đăng nhập"
               rules={{
-                required: 'Vui lòng nhập mật khẩu',
-                pattern: {
-                  value: PATTERN.PASSWORD,
-                  message:
-                    'Sai định dạng (Mật khẩu ít nhất 8 ký tự, bao gồm ít nhất một chữ số, một ký tự đặc biệt, một chứ cái thường và một chữ cái in hoa)',
-                },
+                required: 'Vui lòng nhập tên đăng nhập',
               }}
+              isClearable={!isEdit}
+              isDisabled={isEdit}
             />
 
-            <FormContextInput<Users>
-              isRequired
-              name="confirmPw"
-              label="Xác nhận mật khẩu"
-              type="password"
-              rules={{
-                required: 'Vui lòng nhập mật khẩu xác nhận',
-                validate: {
-                  confirmPw: (value) =>
-                    value !== watch('password') ? 'Mật khẩu và mật khẩu xác nhận không khớp' : true,
-                },
-              }}
-            />
+            {!isEdit && (
+              <>
+                <FormContextInput<Users>
+                  isRequired
+                  name="password"
+                  label="Mật khẩu"
+                  type="password"
+                  rules={{
+                    required: 'Vui lòng nhập mật khẩu',
+                    pattern: {
+                      value: PATTERN.PASSWORD,
+                      message:
+                        'Sai định dạng (Mật khẩu ít nhất 8 ký tự, bao gồm ít nhất một chữ số, một ký tự đặc biệt, một chứ cái thường và một chữ cái in hoa)',
+                    },
+                  }}
+                />
+
+                <FormContextInput<Users>
+                  isRequired
+                  name="confirmPw"
+                  label="Xác nhận mật khẩu"
+                  type="password"
+                  rules={{
+                    required: 'Vui lòng nhập mật khẩu xác nhận',
+                    validate: {
+                      confirmPw: (value) =>
+                        value !== watch('password')
+                          ? 'Mật khẩu và mật khẩu xác nhận không khớp'
+                          : true,
+                    },
+                  }}
+                />
+              </>
+            )}
+
+            {isEdit && (
+              <>
+                {changePw && (
+                  <>
+                    <FormContextInput<Users>
+                      isRequired
+                      name="password"
+                      label="Mật khẩu"
+                      type="password"
+                      rules={{
+                        required: 'Vui lòng nhập mật khẩu',
+                        pattern: {
+                          value: PATTERN.PASSWORD,
+                          message:
+                            'Sai định dạng (Mật khẩu ít nhất 8 ký tự, bao gồm ít nhất một chữ số, một ký tự đặc biệt, một chứ cái thường và một chữ cái in hoa)',
+                        },
+                      }}
+                    />
+
+                    <FormContextInput<Users>
+                      isRequired
+                      name="confirmPw"
+                      label="Xác nhận mật khẩu"
+                      type="password"
+                      rules={{
+                        required: 'Vui lòng nhập mật khẩu xác nhận',
+                        validate: {
+                          confirmPw: (value) =>
+                            value !== watch('password')
+                              ? 'Mật khẩu và mật khẩu xác nhận không khớp'
+                              : true,
+                        },
+                      }}
+                    />
+                  </>
+                )}
+
+                <Button
+                  onClick={() => {
+                    setChangePw(!changePw);
+                  }}
+                  radius="sm"
+                  className="bg-white border border-primary hover:text-primary"
+                >
+                  {`${changePw ? 'Huỷ' : 'Đổi mật khẩu'}`}
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
       </FormProvider>

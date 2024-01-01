@@ -24,7 +24,7 @@ import { PATTERN } from '~/utils/regex';
 import { toast } from 'react-hot-toast';
 import useShippingLocation from '~/hooks/useShippingLocation';
 import { LocationEnum, SearchParams } from '~/types';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 
 export interface CreateOrUpdateCustomerModalProps {
   type: 'UPDATE' | 'CREATE' | 'DETAIL';

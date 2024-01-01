@@ -6,6 +6,7 @@ import { Users } from '~/models/user';
 import { getUserInfo } from '~/redux/slice/userSlice';
 import { AppDispatch, RootState } from '~/redux/store';
 import DropdownUser from './DropdownUser';
+import { LOCAL_STORAGE } from '~/constants/local_storage';
 interface DecodedJWT {
   id: string;
   role?: string;
@@ -19,7 +20,7 @@ const Header = (props: {
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const userInformation = useSelector<RootState, Users>((state) => state.userStore.user);
-  const token = localStorage.getItem('@refresh_token');
+  const token = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
 
   useEffect(() => {
     if (token) {

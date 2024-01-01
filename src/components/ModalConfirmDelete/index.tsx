@@ -1,17 +1,16 @@
 import SVG from 'react-inlinesvg';
 import { Button } from '@nextui-org/react';
-import { Key } from 'react';
 
 import CustomModal from '../NextUI/CustomModal';
 import WarningIcon from '~/assets/svg/warning.svg';
 
 export interface ModalConfirmDeleteState {
   desc?: string;
-  id?: Key;
+  id?: string;
   isLoading?: boolean;
 }
 
-interface ModalConfirmDeleteProps {
+export interface ModalConfirmDeleteProps {
   isOpen?: boolean;
   onOpenChange?(): void;
   desc?: string;

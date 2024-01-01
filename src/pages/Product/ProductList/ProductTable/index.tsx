@@ -22,7 +22,7 @@ import './index.scss';
 import ProductModal from './ProductModal';
 import { ModalType } from '~/pages/User/UserModal';
 import { formatCurrencyVND } from '~/utils/number';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 
 export const ProductTypeTagRenderMapping = {
   [`${ProductType.NORMAL}`]: 'black',

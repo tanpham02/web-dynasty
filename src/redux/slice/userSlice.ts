@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import authService from '../../services/authService';
-import { User } from '~/models/user';
+import { Users } from '~/models/user';
 import userService from '~/services/userService';
 
 type initialStateType = {
-  user: User;
+  user: Users;
 };
 
 const initialState: initialStateType = {
@@ -23,7 +23,7 @@ export const getUserInfo = createAsyncThunk(
   'user/getUserInfo',
   async (userId: string, { dispatch }) => {
     try {
-      const userRes = await userService.getUserInfo(userId);
+      const userRes = await userService.getUserByUserId(userId);
       dispatch(setUserInfo(userRes));
     } catch (error) {
       console.log('Error when login zalo', error);

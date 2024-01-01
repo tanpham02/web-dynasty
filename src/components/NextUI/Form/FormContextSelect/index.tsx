@@ -17,23 +17,24 @@ const FormContextSelect = (props: FormContextSelectProps) => {
       control={control}
       name={props.name}
       rules={props.rules}
-      render={({ field: { value, onChange, ref }, fieldState: { error } }) => (
-        <Select
-          {...props}
-          ref={ref}
-          selectedKeys={value}
-          size="sm"
-          classNames={{
-            // trigger: 'border',
-            label: 'font-semibold',
-            value: 'text-primary-text-color',
-          }}
-          onSelectionChange={onChange}
-          color={!!error ? 'danger' : 'primary'}
-          variant="bordered"
-          errorMessage={error?.message}
-        />
-      )}
+      render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
+        return (
+          <Select
+            {...props}
+            ref={ref}
+            selectedKeys={value ? [String(value)] : []}
+            size="md"
+            classNames={{
+              label: 'font-semibold',
+              value: 'text-primary-text-color',
+            }}
+            onChange={(e) => onChange(e.target.value)}
+            color={!!error ? 'danger' : 'primary'}
+            variant="bordered"
+            errorMessage={error?.message}
+          />
+        );
+      }}
     />
   );
 };

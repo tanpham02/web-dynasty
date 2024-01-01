@@ -22,7 +22,7 @@ import { voucherService } from '~/services/voucherService';
 import { toast } from 'react-hot-toast';
 import VoucherForNewCustomerModal from './VoucherForNewCustomerModal';
 import { data } from 'autoprefixer';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 
 export interface ModalKey {
   visible?: boolean;

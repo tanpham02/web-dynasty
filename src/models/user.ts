@@ -17,13 +17,13 @@ export interface Users {
   fullName?: string;
   phoneNumber?: string;
   email?: string;
-  address?: string;
+  location?: string;
   city?: string;
-  cityId?: number;
+  cityId?: number | string;
   district?: string;
-  districtId?: number;
+  districtId?: number | string;
   ward?: string;
-  wardId?: number;
+  wardId?: number | string;
   password?: string;
   role?: UserRole;
   status?: UserStatus;
