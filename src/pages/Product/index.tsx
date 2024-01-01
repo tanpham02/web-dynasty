@@ -1,20 +1,17 @@
-import {
-  Button,
-  Chip,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Image,
-  Input,
-} from '@nextui-org/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { Button, Chip, Image, Input, Selection, useDisclosure } from '@nextui-org/react';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import SVG from 'react-inlinesvg';
 import { useNavigate } from 'react-router-dom';
 
+import DeleteIcon from '~/assets/svg/delete.svg';
+import EditIcon from '~/assets/svg/edit.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
+import ModalConfirmDelete, {
+  ModalConfirmDeleteProps,
+  ModalConfirmDeleteState,
+} from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
@@ -25,39 +22,9 @@ import { productService } from '~/services/productService';
 import { SearchParams } from '~/types';
 import { getFullImageUrl } from '~/utils/image';
 import { formatCurrencyVND } from '~/utils/number';
-import EditIcon from '~/assets/svg/edit.svg';
-import DeleteIcon from '~/assets/svg/delete.svg';
 
 const ProductListPage = () => {
   const navigate = useNavigate();
-
-  const [pageParameter, setPageParameter] = useState<SearchParams>({
-    page: 0,
-    pageSize: 10,
-  });
-  const [valueSearch, setValueSearch] = useState<string>('');
-
-  const queryText = useDebounce(valueSearch, 700);
-  const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
-
-  const {
-    data: productList,
-    isLoading: isLoadingProduct,
-    isFetching: isFetchingProduct,
-  } = useInfiniteQuery(
-    [QUERY_KEY.PRODUCTS, pageParameter, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
-    async () => {
-      const params = {
-        pageIndex: pageParameter.page,
-        pageSize: pageParameter.pageSize,
-        name: queryText,
-      };
-      return await productService.getProductPagination(params);
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
 
   const columns: ColumnType<ProductMain>[] = [
     {
@@ -75,7 +42,7 @@ const ProductListPage = () => {
           src={getFullImageUrl(product?.image)}
           fallbackSrc="https://via.placeholder.com/80x80"
           alt={product?.name}
-          className="w-20 h-20"
+          className="w-20 h-20 object-contain"
           loading="lazy"
         />
       ),
@@ -109,11 +76,82 @@ const ProductListPage = () => {
             icon={EditIcon}
             onClick={() => navigate(`${PATH_NAME.PRODUCT}/${record?._id}`)}
           />
-          <ButtonIcon title="Xóa sản phẩm này" icon={DeleteIcon} status="danger" />
+          <ButtonIcon
+            title="Xóa sản phẩm này"
+            icon={DeleteIcon}
+            status="danger"
+            onClick={() => onDeleteProduct(record)}
+          />
         </Box>
       ),
     },
   ];
+
+  const [pageParameter, setPageParameter] = useState<SearchParams>({
+    page: 0,
+    pageSize: 10,
+  });
+  const [valueSearch, setValueSearch] = useState<string>('');
+  const [productSelectedKeys, setProductSelectedKeys] = useState<Selection>();
+  const { isOpen: isOpenModalDelete, onOpenChange: onOpenChangeModalDelete } = useDisclosure();
+  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>({});
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryText = useDebounce(valueSearch, 700);
+  const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
+
+  const onDeleteProduct = (product: ProductMain) => {
+    setModalDelete({
+      id: product?._id,
+      desc: `Bạn có chắc muốn xóa sản phẩm ${product?.name} này không?`,
+    });
+    onOpenChangeModalDelete();
+  };
+
+  const {
+    data: productList,
+    isLoading: isLoadingProduct,
+    isFetching: isFetchingProduct,
+  } = useQuery(
+    [QUERY_KEY.PRODUCTS, pageParameter, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
+    async () => {
+      const params = {
+        pageIndex: pageParameter.page,
+        pageSize: pageParameter.pageSize,
+        name: queryText,
+      };
+      return await productService.getProductPagination(params);
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const { isLoading: isLoadDeleteProduct, mutate: deleteProduct } = useMutation({
+    mutationKey: [QUERY_KEY.PRODUCTS_DELETE],
+    mutationFn: async () => {
+      try {
+        let productDeleteIDs = [];
+        if (productSelectedKeys === 'all') {
+          productDeleteIDs = productList?.data?.map((product) => product?._id) || [];
+        } else {
+          productDeleteIDs = [...(productSelectedKeys || [])];
+        }
+        console.log('🚀 ~ file: index.tsx:120 ~ mutationFn: ~ productDeleteIDs:', productDeleteIDs);
+      } catch (err) {
+        enqueueSnackbar('Xóa sản phẩm không thành công!', {
+          variant: 'error',
+        });
+        console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err);
+      }
+    },
+  });
+
+  const onCloseModalDeleteProduct = () => {
+    setProductSelectedKeys(new Set());
+    onOpenChangeModalDelete();
+  };
 
   return (
     <Box>
@@ -141,11 +179,20 @@ const ProductListPage = () => {
       </Box>
       <CustomTable
         rowKey="_id"
+        selectedKeys={productSelectedKeys}
+        onSelectionChange={setProductSelectedKeys}
         columns={columns}
-        data={productList?.pages?.[0]?.data}
+        data={productList?.data || []}
         isLoading={isLoadingProduct || isFetchingProduct}
         emptyContent="Không có sản phẩm nào"
         tableName="Danh sách sản phẩm"
+      />
+      <ModalConfirmDelete
+        desc={modalDelete?.desc}
+        isOpen={isOpenModalDelete}
+        isLoading={isLoadDeleteProduct}
+        onAgree={deleteProduct}
+        onOpenChange={onCloseModalDeleteProduct}
       />
     </Box>
   );

@@ -37,7 +37,6 @@ export default function CustomTable<T>({
   pagination,
   removeWrapper,
   isStriped,
-  disabledKeys,
 }: {
   rowKey?: keyof T;
   columns?: ColumnType<T>[];
@@ -57,7 +56,6 @@ export default function CustomTable<T>({
   pagination?: boolean;
   removeWrapper?: boolean;
   isStriped?: boolean;
-  disabledKeys?: Iterable<Key>;
 }): React.ReactNode {
   return (
     <div className="space-y-2">
@@ -67,7 +65,6 @@ export default function CustomTable<T>({
         selectedKeys={selectedKeys}
         selectionMode={selectionMode}
         onSelectionChange={onSelectionChange}
-        disabledKeys={disabledKeys}
         removeWrapper={removeWrapper}
         isStriped={isStriped}
         classNames={{

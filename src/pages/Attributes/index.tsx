@@ -15,6 +15,7 @@ import DeleteIcon from '~/assets/svg/delete.svg';
 import EyeIcon from '~/assets/svg/eye.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import ButtonIcon from '~/components/ButtonIcon';
 
 const Attributes = () => {
   const {
@@ -39,19 +40,16 @@ const Attributes = () => {
 
   const columns: ColumnType<Attribute>[] = [
     {
-      key: '_id',
       align: 'center',
       name: 'STT',
       render: (_attribute: Attribute, index?: number) => (index || 0) + 1,
     },
     {
-      key: 'name',
       align: 'center',
       name: 'Tên thuộc tính',
       render: (attribute: Attribute) => attribute?.name,
     },
     {
-      key: 'attributeList',
       align: 'center',
       name: 'Số lượng giá trị',
       render: (attribute: Attribute) => (
@@ -59,27 +57,21 @@ const Attributes = () => {
       ),
     },
     {
-      key: 'id',
       align: 'center',
       name: 'Hành động',
       render: (attribute: Attribute) => (
         <div className="relative flex items-center gap-2">
-          <Tooltip content="Chỉnh sửa thuộc tính" showArrow delay={1500}>
-            <span
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-              onClick={() => handleOpenModalEdit(attribute)}
-            >
-              <SVG src={EditIcon} />
-            </span>
-          </Tooltip>
-          <Tooltip color="danger" content="Xóa thuộc tính này" showArrow delay={1500}>
-            <span
-              className="text-lg text-danger cursor-pointer active:opacity-50"
-              onClick={() => handleOpenDeleteModal(attribute)}
-            >
-              <SVG src={DeleteIcon} />
-            </span>
-          </Tooltip>
+          <ButtonIcon
+            title="Chỉnh sửa thuộc tính"
+            icon={EditIcon}
+            onClick={() => handleOpenModalEdit(attribute)}
+          />
+          <ButtonIcon
+            icon={DeleteIcon}
+            onClick={() => handleOpenDeleteModal(attribute)}
+            title="Xóa thuộc tính này"
+            status="danger"
+          />
         </div>
       ),
     },
