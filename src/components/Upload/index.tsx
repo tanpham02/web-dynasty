@@ -34,7 +34,7 @@ const Upload: React.FC<UploadProps> = (props) => {
     <>
       <div
         id="FileUpload"
-        className={`relative pt-[45%] xl:pt-[100%] mx-auto w-[45%] xl:w-full cursor-pointer appearance-none border-2 border-dashed border-primary bg-gray rounded-${props.radius}`}
+        className={`relative pt-[35vw] xl:pt-[100%] mx-auto w-[35vw] xl:w-[25vw] h-[35vw] lg:h-[25vw]  cursor-pointer appearance-none border-2 border-dashed border-primary bg-gray rounded-${props.radius}`}
       >
         <input
           type="file"
