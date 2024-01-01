@@ -13,7 +13,7 @@ import CustomModal from '~/components/NextUI/CustomModal';
 import { FormContextInput } from '~/components/NextUI/Form';
 import Box from '~/components/Box';
 import { PATTERN } from '~/utils/regex';
-import Upload, { onChangeProps } from '~/components/Upload';
+import Upload, { onChangeUploadState } from '~/components/Upload';
 import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import { globalLoading } from '~/components/GlobalLoading';
@@ -61,7 +61,7 @@ const UserModal = ({
   setModal,
 }: UserModalProps) => {
   const vietnamLocations = getProvincesWithDetail();
-  const [avatar, setAvatar] = useState<onChangeProps>();
+  const [avatar, setAvatar] = useState<onChangeUploadState>();
   const { enqueueSnackbar } = useSnackbar();
   const [changePw, setChangePw] = useState<boolean>(false);
 
@@ -269,7 +269,7 @@ const UserModal = ({
         <Box className="grid grid-cols-1 xl:grid-cols-[3fr_7fr] gap-8">
           <Box>
             <Upload
-              onChange={({ srcPreview, srcRequest }: onChangeProps) => {
+              onChange={({ srcPreview, srcRequest }: onChangeUploadState) => {
                 setAvatar({
                   srcPreview,
                   srcRequest,
@@ -277,6 +277,7 @@ const UserModal = ({
               }}
               src={avatar?.srcPreview}
               loading="lazy"
+              className="!relative"
               radius="full"
               isPreview
             />

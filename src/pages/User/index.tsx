@@ -1,13 +1,19 @@
 import { Button } from '@nextui-org/button';
-import { Chip, Input, Select, SelectItem, useDisclosure, usePagination } from '@nextui-org/react';
+import {
+  Chip,
+  Image,
+  Input,
+  Select,
+  SelectItem,
+  useDisclosure,
+  usePagination,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar, Modal } from 'antd';
 import { useState } from 'react';
-import SVG from 'react-inlinesvg';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 
-import trash from '~/assets/svg/trash.svg';
 import { QUERY_KEY } from '~/constants/queryKey';
 import useDebounce from '~/hooks/useDebounce';
 import { Users, UserRole, UserStatus } from '~/models/user';
@@ -25,6 +31,7 @@ import EditIcon from '~/assets/svg/edit.svg';
 import ButtonIcon from '~/components/ButtonIcon';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import { globalLoading } from '~/components/GlobalLoading';
+import CustomImage from '~/components/NextUI/CustomImage';
 
 export interface ModalKey {
   visible?: boolean;
@@ -36,8 +43,6 @@ const UserListPage = () => {
   const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
   const [showDeleteUserModal, setShowDeleteUserModal] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
-  console.log('🚀 ~ file: index.tsx:39 ~ UserListPage ~ selectedRowKeys:', selectedRowKeys);
-
   const [searchText, setSearchText] = useState<string>('');
   const [filterRole, setFilterRole] = useState<UserStatus | string>('');
 
@@ -103,18 +108,11 @@ const UserListPage = () => {
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
-          <Avatar
-            src={getFullImageUrl(user.image)}
-            shape="square"
-            className="!w-[70px] !h-[70px] !rounded-[10px]"
-          />
+          <CustomImage src={getFullImageUrl(user.image)} radius="lg" isPreview />
         ) : (
-          <Avatar
-            shape="square"
-            className="!w-[70px] !h-[70px] !bg-primary !rounded-[10px] !text-[18px] font-medium !leading-[70px]"
-          >
+          <Image className="!w-[70px] !h-[70px] !bg-primary !rounded-[10px] !text-[18px] font-medium !leading-[70px]">
             {user?.fullName && user.fullName.charAt(0).toUpperCase()}
-          </Avatar>
+          </Image>
         ),
     },
     {
@@ -213,8 +211,9 @@ const UserListPage = () => {
     },
   );
 
+  const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {};
+
   const handleChangeSelectedRowsKey = (keys: any) => {
-    console.log('🚀 ~ file: index.tsx:215 ~ handleChangeSelectedRowsKey ~ keys:', keys);
     setSelectedRowKeys(keys);
   };
 
@@ -229,16 +228,23 @@ const UserListPage = () => {
       ids.push(modalConfirmDelete.id);
     }
 
+    if (selectedRowKeys.size !== 0) {
+      console.log(
+        '🚀 ~ file: index.tsx:228 ~ handleDeleteUser ~ selectedRowKeys:',
+        selectedRowKeys,
+      );
+    }
+
     try {
       await userService.deleteUser(ids);
       refetchUser();
       enqueueSnackbar({
-        message: 'Xoá thành công!',
+        message: 'Xoá nhân viên thành công!',
       });
     } catch (err) {
       console.log(err);
       enqueueSnackbar({
-        message: 'Xoá thất bại!',
+        message: 'Xoá nhân viên thất bại!',
         variant: 'error',
       });
     } finally {
@@ -300,46 +306,42 @@ const UserListPage = () => {
               )}
             </Select>
           </div>
-          <Button color="primary" variant="shadow" onClick={onOpenModal}>
-            Thêm nhân viên
-          </Button>
-        </div>
 
-        {/* {listIdsUserForDelete.length !== 0 ? (
-          <div
-            className="rounded-lg cursor-pointer transition duration-1000 linear bg-danger px-4 py-2 font-normal text-white flex items-center justify-between float-right"
-            onClick={handleShowModalDeleteUser}
-          >
-            <SVG src={trash} className="mr-1" />
-            Xóa danh sách đã chọn
+          <div className="space-x-4">
+            {selectedRowKeys.size !== 0 ? (
+              <Button
+                color="danger"
+                variant="shadow"
+                onClick={() => {
+                  setModalConfirmDelete({
+                    desc: `Bạn có chắc chắn muốn xoá ${
+                      (selectedRowKeys as any) === 'all' ? 'danh sách' : `${selectedRowKeys.size}`
+                    } nhân viên này?`,
+                  });
+                  onOpenChangeModalConfirmDeleteUser();
+                }}
+              >
+                Xác nhận xoá danh sách nhân viên
+              </Button>
+            ) : (
+              ''
+            )}
+            <Button color="primary" variant="shadow" onClick={onOpenModal}>
+              Thêm nhân viên
+            </Button>
           </div>
-        ) : (
-          ''
-        )} */}
+        </div>
       </div>
-      {/* {showDeleteUserModal && (
-        <Modal
-          title="Xác nhận xóa danh sách nhân viên này"
-          open={showDeleteUserModal}
-          onCancel={handleCancel}
-          footer={[
-            <Button title="cancel" onClick={handleCancel}>
-              Hủy bỏ
-            </Button>,
-            <Button key="submit" onClick={() => {}} isLoading={isLoadingDelete}>
-              Lưu thay đổi
-            </Button>,
-          ]}
-        />
-      )} */}
 
       <CustomTable
+        rowKey="_id"
         columns={columns}
         isLoading={isLoadingUser}
         data={users?.data}
         pagination
         tableName="Danh sách nhân viên"
         emptyContent="Không có nhân viên nào"
+        selectedKeys={selectedRowKeys}
         onSelectionChange={handleChangeSelectedRowsKey}
       />
 
