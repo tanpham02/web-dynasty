@@ -36,10 +36,10 @@ const CustomModal = (props: CustomModalProps) => {
   } = props!;
 
   return createPortal(
-    <div className="z-[9999]">
+    <div className="z-[99999]">
       <Modal
         isOpen={isOpen}
-        // onOpenChange={onOpenChange}
+        onOpenChange={onOpenChange}
         classNames={{
           backdrop: 'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
         }}
@@ -73,7 +73,7 @@ const CustomModal = (props: CustomModalProps) => {
               <ModalBody>{children}</ModalBody>
               {controls && (
                 <ModalFooter>
-                  <Button color="default" variant="shadow" onPress={onClose}>
+                  <Button color="secondary" variant="shadow" onPress={onClose}>
                     {cancelButtonText || 'Đóng'}
                   </Button>
                   <Button color="primary" variant="shadow" onPress={onOk} isLoading={isLoading}>

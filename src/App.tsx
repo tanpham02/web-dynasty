@@ -11,6 +11,7 @@ import PrivateRoute from './routers/PrivateRoute';
 import PublicRoute from './routers/PublicRoute';
 import NotistackProvider from './components/NotistackProvider';
 import 'react-quill/dist/quill.snow.css';
+import GlobalLoading, { globalLoadingRef } from './components/GlobalLoading';
 
 function App() {
   // Create a client
@@ -39,6 +40,7 @@ function App() {
               ))}
               <Route path={'*'} element={<PageNotFound />} />
             </Routes>
+            <GlobalLoading ref={globalLoadingRef} />
             <Toaster
               reverseOrder={false}
               position="bottom-right"

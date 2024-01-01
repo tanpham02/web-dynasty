@@ -1,21 +1,11 @@
-import { User } from '~/models/user';
+import { Users } from '~/models/user';
 import axiosService from '../axiosService';
 import { FIND_USER_BY_CRITERIA_URL, USER_URL } from '../apiUrl';
 import { ListDataResponse, SearchParams } from '~/types';
 import qs from 'qs';
 
 const userService = {
-  getUserInfo: async (userId: string): Promise<User> => {
-    return axiosService()({
-      url: `${USER_URL}/${userId}`,
-      method: 'GET',
-    })
-      .then((res) => res.data)
-      .catch((error) => {
-        throw error;
-      });
-  },
-  searchUserByCriteria: async (params: SearchParams): Promise<ListDataResponse<User>> => {
+  searchUserByCriteria: async (params: SearchParams): Promise<ListDataResponse<Users>> => {
     return axiosService()({
       url: `${FIND_USER_BY_CRITERIA_URL}`,
       method: 'GET',
@@ -26,9 +16,9 @@ const userService = {
         throw error;
       });
   },
-  getUserByUserID: async (id: string): Promise<User> => {
+  getUserByUserId: async (id: string): Promise<Users> => {
     return axiosService()({
-      url: `${USER_URL}/${id}`,
+      baseURL: `${USER_URL}/${id}`,
       method: 'GET',
     })
       .then((res) => res.data)
@@ -36,12 +26,12 @@ const userService = {
         throw error;
       });
   },
-  createUser: async (data: User): Promise<User> => {
+  createUser: async (data: FormData): Promise<Users> => {
     return axiosService()({
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      url: `${USER_URL}/create`,
+      baseURL: `${USER_URL}`,
       method: 'POST',
       data: data,
     })
@@ -50,13 +40,14 @@ const userService = {
         throw error;
       });
   },
-  updateUser: async (data: User, userId: string): Promise<User> => {
+
+  updateUser: async (data: FormData, userId: string): Promise<Users> => {
     return axiosService()({
+      method: 'PATCH',
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      url: `${USER_URL}/${userId}`,
-      method: 'PATCH',
+      baseURL: `${USER_URL}/${userId}`,
       data: data,
     })
       .then((res) => res.data)
@@ -64,9 +55,9 @@ const userService = {
         throw error;
       });
   },
-  deleteUser: async (ids: number[]) => {
+  deleteUser: async (ids: string[]) => {
     return axiosService()({
-      url: `${USER_URL}`,
+      baseURL: `${USER_URL}`,
       method: 'DELETE',
       params: {
         ids: ids,

@@ -14,7 +14,7 @@ const Preview: React.FC<PreviewProps> = ({ visible, srcPreview, onClose }) => {
       preview={{
         visible: visible,
         src: srcPreview,
-        className: 'flex justify-center items-center ',
+        className: 'flex justify-center items-center',
         onVisibleChange: () => {
           onClose?.();
         },

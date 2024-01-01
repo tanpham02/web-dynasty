@@ -11,9 +11,11 @@ import ICO_EYE_INACTIVE from '~/assets/svg/eye-inactive.svg';
 import { SignInType } from '~/models/authen';
 import { PATH_NAME } from '~/constants/router';
 import { Button } from '@nextui-org/react';
+import { useSnackbar } from 'notistack';
 
 const SignIn = () => {
   const navigation = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [isRevealPwd, setIsRevealPwd] = useState<boolean>(false);
   const {
     register,
@@ -29,7 +31,6 @@ const SignIn = () => {
   const onSubmit: SubmitHandler<SignInType> = async (data: SignInType) => {
     try {
       const formData = new FormData();
-
       formData.append(
         'userLoginInfo',
         JSON.stringify({
@@ -42,16 +43,16 @@ const SignIn = () => {
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, response.accessToken);
       localStorage.setItem(LOCAL_STORAGE.REFRESH_TOKEN, response.refreshToken);
       navigation(PATH_NAME.STAFF_MANAGEMENT);
-      toast.success('Đăng nhập thành công', {
-        position: 'bottom-right',
-        duration: 4000,
-        icon: '👏',
+      enqueueSnackbar({
+        message: 'Đăng nhập thành công!',
+        autoHideDuration: 2000,
       });
       reset();
     } catch (error) {
-      toast.error('Đăng nhập thất bại !', {
-        position: 'bottom-right',
-        duration: 4000,
+      enqueueSnackbar({
+        message: 'Đăng nhập thất bại!',
+        variant: 'error',
+        autoHideDuration: 2000,
       });
       console.log(error);
     }
@@ -295,6 +296,7 @@ const SignIn = () => {
                     size="lg"
                     variant="shadow"
                     type="submit"
+                    isLoading={isSubmitting}
                   >
                     Đăng nhập
                   </Button>

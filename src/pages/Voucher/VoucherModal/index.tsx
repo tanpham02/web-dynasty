@@ -49,7 +49,7 @@ import ListProductGetFromVoucher from '../ListProductGetFromVoucher';
 import snippingLoading from '~/assets/gif/sniping-loading.gif';
 import { PATTERN } from '~/utils/regex';
 import convertViToEn from '~/utils/convertViToEn';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 
 const defaultVoucherValues: VoucherOverriding = {
   name: '',

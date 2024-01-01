@@ -7,7 +7,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '~/constants/queryKey';
 import orderService from '~/services/orderService';
 import { SearchParams } from '~/types';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 import SelectCustom from '~/components/customs/Select';
 import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
 import useDebounce from '~/hooks/useDebounce';

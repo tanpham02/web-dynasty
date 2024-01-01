@@ -3,7 +3,7 @@ import { Button, Col, Input, InputNumber, Modal, Row, Select, Tag, Typography } 
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import Loading from '~/components/Loading';
+import Loading from '~/components/GlobalLoading';
 import { ProductMain, ProductStatusOptions, ProductType } from '~/models/product';
 import { ModalType } from '~/pages/User/UserModal';
 import { ProductTypeTagRenderMapping } from '..';

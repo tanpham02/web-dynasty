@@ -29,7 +29,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   };
 
   return (
-    <Tooltip content={title} color={status} {...tooltipProps}>
+    <Tooltip content={title} color={status} {...tooltipProps} placement="top">
       <div
         onClick={() => !disable && onClick?.()}
         className={`w-7 h-7 cursor-pointer rounded inline-flex justify-center items-center ${

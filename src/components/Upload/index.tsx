@@ -7,8 +7,12 @@ import EyeIcon from '~/assets/svg/eye.svg';
 import Box from '../Box';
 import Preview from '../Preview';
 
+export interface onChangeProps {
+  srcPreview?: any;
+  srcRequest?: any;
+}
 interface UploadProps extends ImageProps {
-  onChange?: (src: string | any) => void;
+  onChange?: (props: onChangeProps | any) => void;
   className?: string;
   isPreview?: boolean;
 }
@@ -17,10 +21,13 @@ const Upload: React.FC<UploadProps> = (props) => {
   const [visiblePreview, setVisiblePreview] = useState<boolean>(false);
 
   const handleChangeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    var file = e.target.files?.[0];
-    var reader = new FileReader();
+    const file = e.target.files?.[0];
+    const reader = new FileReader();
     reader.onload = function () {
-      props.onChange?.(reader.result);
+      props.onChange?.({
+        srcPreview: reader.result,
+        srcRequest: file,
+      });
     };
 
     reader.readAsDataURL(file as any);
@@ -70,7 +77,7 @@ const Upload: React.FC<UploadProps> = (props) => {
             height="100%"
             classNames={{
               wrapper: 'absolute top-0 left-0 w-full h-full',
-              img: 'w-full h-full object-contain p-1.5',
+              img: 'w-full h-full object-contain p-1',
             }}
             {...props}
           />
