@@ -1,24 +1,24 @@
 import { Tooltip, TooltipProps } from '@nextui-org/react';
-import React, { useMemo } from 'react';
 import SVG from 'react-inlinesvg';
 
-interface ButtonIconProps {
+interface ButtonIconProps extends TooltipProps {
   title?: string;
   icon: string;
-  tooltipProps?: TooltipProps;
   onClick?: () => void;
   status?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
   disable?: boolean;
 }
 
-const ButtonIcon: React.FC<ButtonIconProps> = ({
-  title,
-  icon,
-  tooltipProps,
-  onClick,
-  disable = false,
-  status = 'default',
-}) => {
+const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
+  const {
+    title,
+    icon,
+    onClick,
+    disable = false,
+    status = 'default',
+    placement = 'top-end',
+  } = props;
+
   const statusesClassName: { [key: string]: string } = {
     danger: 'text-danger hover:bg-danger/20',
     warning: 'text-warning hover:bg-warning/20',
@@ -29,7 +29,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   };
 
   return (
-    <Tooltip content={title} color={status} {...tooltipProps} placement="top" showArrow>
+    <Tooltip content={title} color={status} placement={placement} showArrow {...props}>
       <div
         onClick={() => !disable && onClick?.()}
         className={`w-7 h-7 cursor-pointer rounded inline-flex justify-center items-center ${

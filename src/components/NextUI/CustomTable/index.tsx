@@ -35,7 +35,6 @@ export default function CustomTable<T>({
   onSelectionChange,
   selectionMode = 'multiple',
   pagination,
-  disabledKeys,
   removeWrapper,
   isStriped,
   disabledKeys,
@@ -53,7 +52,6 @@ export default function CustomTable<T>({
   emptyContent?: React.ReactNode;
   tableName?: string;
   selectedKeys?: Selection;
-  disabledKeys?: Selection;
   onSelectionChange?(keys: Selection): void;
   selectionMode?: 'multiple' | 'single' | 'none';
   pagination?: boolean;
