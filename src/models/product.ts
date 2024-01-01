@@ -94,7 +94,7 @@ export interface ProductMain {
   name: string;
   description?: string;
   information?: string;
-  categoryId?: string;
+  categoryId?: string | string[];
   price: number;
   oldPrice?: number;
   image?: string;

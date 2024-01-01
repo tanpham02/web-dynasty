@@ -48,8 +48,9 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
     if (isEdit && currentProduct && Object.keys(currentProduct).length > 0 && !isFetchingCategory) {
       reset({
         ...currentProduct,
-        categoryId: new Set([currentProduct?.categoryId]),
-        types: new Set([...currentProduct?.types]),
+        categoryId: Array.isArray(currentProduct?.categoryId)
+          ? [...currentProduct?.categoryId]
+          : [currentProduct?.categoryId],
       });
     }
   }, [isEdit, currentProduct, isFetchingCategory]);

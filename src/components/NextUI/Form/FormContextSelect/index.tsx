@@ -22,14 +22,14 @@ const FormContextSelect = (props: FormContextSelectProps) => {
           <Select
             {...props}
             ref={ref}
-            selectedKeys={value ? [String(value)] : []}
+            selectedKeys={new Set([...(value || [])])}
             size="md"
             classNames={{
               label: 'font-semibold',
               value: 'text-primary-text-color',
               trigger: 'border hover:!border-primary',
             }}
-            onChange={(e) => onChange(e.target.value)}
+            onSelectionChange={(value) => onChange([...value])}
             color={!!error ? 'danger' : 'primary'}
             variant="bordered"
             errorMessage={error?.message}
