@@ -1,6 +1,5 @@
 import React from 'react';
-import { Image, Modal } from 'antd';
-import { createPortal } from 'react-dom';
+import { Image } from 'antd';
 interface PreviewProps {
   visible?: boolean;
   srcPreview?: string;
