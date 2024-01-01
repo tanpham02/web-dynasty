@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react';
-import React from 'react';
+import React, { Key } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ColumnType<T> {
@@ -37,6 +37,7 @@ export default function CustomTable<T>({
   pagination,
   removeWrapper,
   isStriped,
+  disabledKeys,
 }: {
   rowKey?: keyof T;
   columns?: ColumnType<T>[];
@@ -56,11 +57,13 @@ export default function CustomTable<T>({
   pagination?: boolean;
   removeWrapper?: boolean;
   isStriped?: boolean;
+  disabledKeys?: Iterable<Key>;
 }): React.ReactNode {
   return (
     <div className="space-y-2">
       <Table
         aria-label={tableName}
+        disabledKeys={disabledKeys}
         selectedKeys={selectedKeys}
         selectionMode={selectionMode}
         onSelectionChange={onSelectionChange}

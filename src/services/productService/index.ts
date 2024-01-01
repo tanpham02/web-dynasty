@@ -57,7 +57,7 @@ export const productService = {
         throw err;
       });
   },
-  updateProduct: async (products: FormData, id: string): Promise<Product> => {
+  updateProduct: async (products?: FormData, id?: string): Promise<Product> => {
     return axiosService()({
       baseURL: `${PRODUCT_URL}/${id}`,
       method: 'PATCH',

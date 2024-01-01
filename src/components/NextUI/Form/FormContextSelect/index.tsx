@@ -27,6 +27,7 @@ const FormContextSelect = (props: FormContextSelectProps) => {
             classNames={{
               label: 'font-semibold',
               value: 'text-primary-text-color',
+              trigger: 'border hover:!border-primary',
             }}
             onChange={(e) => onChange(e.target.value)}
             color={!!error ? 'danger' : 'primary'}

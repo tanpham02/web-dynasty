@@ -112,6 +112,7 @@ export interface ProductChildrenAttribute {
 }
 
 export interface ProductChildrenAttributeItem {
+  _id?: string;
   attributeId?: string;
   name?: string; // Nhỏ
   priceAdjustmentValue?: number; // 80000   => 2 cai này là biến thế nếu giá thay đổi thì có, còn không thôi

@@ -181,7 +181,7 @@ const privateRoutes = [
   },
   {
     key: ROUTER_KEY.PRODUCTS,
-    path: `${PATH_NAME.PRODUCT}:id`,
+    path: `${PATH_NAME.PRODUCT}/:id`,
     component: ProductFormPage,
     title: 'Thêm sản phẩm',
   },

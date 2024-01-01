@@ -3,6 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import DescriptionIcon from '~/assets/svg/description.svg';
 import Box from '~/components/Box';
@@ -12,8 +13,16 @@ import { ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
+import { categoryService } from '~/services/categoryService';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '~/constants/queryKey';
 
-const ProductForm = () => {
+interface ProductFormProps {
+  currentProduct?: ProductMain;
+  isEdit?: boolean;
+}
+
+const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
   const forms = useForm<ProductMain>();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -22,11 +31,31 @@ const ProductForm = () => {
 
   const {
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = forms;
 
+  const {
+    data: categories,
+    isLoading: isLoadingCategory,
+    isFetching: isFetchingCategory,
+  } = useInfiniteQuery(
+    [QUERY_KEY.CATEGORY],
+    async () => await categoryService.getCategoryByCriteria({}),
+  );
+
+  useEffect(() => {
+    if (isEdit && currentProduct && Object.keys(currentProduct).length > 0 && !isFetchingCategory) {
+      reset({
+        ...currentProduct,
+        categoryId: new Set([currentProduct?.categoryId]),
+        types: new Set([...currentProduct?.types]),
+      });
+    }
+  }, [isEdit, currentProduct, isFetchingCategory]);
+
   const onSubmit = async (data: ProductMain) => {
-    console.log('🚀 ~ file: index.tsx:51 ~ onSubmit ~ data:', data);
+    console.log('🚀 ~ file: index.tsx:29 ~ onSubmit ~ data:', data);
     try {
       const formData = new FormData();
 
@@ -49,7 +78,8 @@ const ProductForm = () => {
 
       formData.append('productInfo', jsonData);
 
-      await productService.createProduct(formData);
+      if (isEdit) await productService.updateProduct(formData, currentProduct?._id);
+      else await productService.createProduct(formData);
       enqueueSnackbar('Tạo sản phẩm thành công!');
       navigate(PATH_NAME.PRODUCT_LIST);
     } catch (err) {
@@ -64,7 +94,10 @@ const ProductForm = () => {
     <FormProvider {...forms}>
       <Box className="space-y-4">
         <Box className="grid xl:grid-cols-2 gap-4">
-          <ProductInfoCard />
+          <ProductInfoCard
+            categories={categories}
+            isLoading={isLoadingCategory || isFetchingCategory}
+          />
           <Card>
             <CardHeader>
               <Svg src={DescriptionIcon} className="w-5 h-5 mr-2" />

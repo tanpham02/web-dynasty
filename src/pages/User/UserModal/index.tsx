@@ -1,24 +1,25 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import { Users, UserRole } from '~/models/user';
 import { getProvincesWithDetail } from 'vietnam-provinces';
+import { DatePicker } from 'antd';
+import moment from 'moment';
+import { Button, SelectItem } from '@nextui-org/react';
+import { useDispatch } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
+
+import { Users, UserRole } from '~/models/user';
 import CustomModal from '~/components/NextUI/CustomModal';
 import { FormContextInput } from '~/components/NextUI/Form';
 import Box from '~/components/Box';
 import { PATTERN } from '~/utils/regex';
 import Upload, { onChangeProps } from '~/components/Upload';
-import { DatePicker } from 'antd';
 import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
-import moment from 'moment';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
-import { Button, SelectItem } from '@nextui-org/react';
 import { globalLoading } from '~/components/GlobalLoading';
 import userService from '~/services/userService';
-import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { getFullImageUrl } from '~/utils/image';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '~/redux/store';
 import { getUserInfo } from '~/redux/slice/userSlice';
 
@@ -307,7 +308,6 @@ const UserModal = ({
                   format={DATE_FORMAT_DDMMYYYY}
                   placeholder="Ngày sinh"
                   onChange={(date) => (date ? onChange(moment(date)) : '')}
-                  className="w-1/2 !mt-10 h-[48px] "
                 />
               )}
             />

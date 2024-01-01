@@ -1,25 +1,21 @@
 import { Card, CardBody, CardHeader, Divider, SelectItem } from '@nextui-org/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { InfiniteData } from '@tanstack/react-query';
 import Svg from 'react-inlinesvg';
 
 import InfoIcon from '~/assets/svg/info.svg';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
-import { QUERY_KEY } from '~/constants/queryKey';
+import { Category } from '~/models/category';
 import { ProductStatusOptions } from '~/models/product';
-import { categoryService } from '~/services/categoryService';
+import { ListResponse } from '~/types';
 
-const ProductInfoCard = () => {
-  const {
-    data: categories,
-    isLoading: isLoadingCategory,
-    isFetching: isFetchingCategory,
-  } = useInfiniteQuery(
-    [QUERY_KEY.CATEGORY],
-    async () => await categoryService.getCategoryByCriteria({}),
-  );
+interface ProductInfoCardProps {
+  categories?: InfiniteData<ListResponse<Category>>;
+  isLoading?: boolean;
+}
 
+const ProductInfoCard = ({ categories, isLoading }: ProductInfoCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -40,7 +36,7 @@ const ProductInfoCard = () => {
           isRequired
           name="categoryId"
           label="Danh mục sản phẩm"
-          isLoading={isLoadingCategory || isFetchingCategory}
+          isLoading={isLoading}
           rules={{
             required: 'Vui lòng chọn danh mục sản phẩm!',
           }}

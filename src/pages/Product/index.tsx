@@ -13,10 +13,8 @@ import { useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { useNavigate } from 'react-router-dom';
 
-import { getProvincesWithDetail } from 'vietnam-provinces';
-
-import VerticalDotIcon from '~/assets/svg/vertical-dot.svg';
 import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
@@ -27,6 +25,8 @@ import { productService } from '~/services/productService';
 import { SearchParams } from '~/types';
 import { getFullImageUrl } from '~/utils/image';
 import { formatCurrencyVND } from '~/utils/number';
+import EditIcon from '~/assets/svg/edit.svg';
+import DeleteIcon from '~/assets/svg/delete.svg';
 
 const ProductListPage = () => {
   const navigate = useNavigate();
@@ -39,7 +39,6 @@ const ProductListPage = () => {
 
   const queryText = useDebounce(valueSearch, 700);
   const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
-  console.log(getProvincesWithDetail());
 
   const {
     data: productList,
@@ -103,19 +102,15 @@ const ProductListPage = () => {
     {
       align: 'center',
       name: 'Hành động',
-      render: () => (
-        <Dropdown>
-          <DropdownTrigger>
-            <Button isIconOnly size="sm" variant="light">
-              <SVG src={VerticalDotIcon} className="text-default-300" />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu>
-            <DropdownItem>Xem chi tiết</DropdownItem>
-            <DropdownItem>Chỉnh sửa</DropdownItem>
-            <DropdownItem>Xóa</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+      render: (record: ProductMain) => (
+        <Box className="space-x-2">
+          <ButtonIcon
+            title="Chỉnh sửa sản phẩm"
+            icon={EditIcon}
+            onClick={() => navigate(`${PATH_NAME.PRODUCT}/${record?._id}`)}
+          />
+          <ButtonIcon title="Xóa sản phẩm này" icon={DeleteIcon} status="danger" />
+        </Box>
       ),
     },
   ];
@@ -145,6 +140,7 @@ const ProductListPage = () => {
         </Button>
       </Box>
       <CustomTable
+        rowKey="_id"
         columns={columns}
         data={productList?.pages?.[0]?.data}
         isLoading={isLoadingProduct || isFetchingProduct}
