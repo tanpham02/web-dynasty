@@ -14,7 +14,7 @@ const FormContextSwitch = (props: FormContextSwitchProps) => {
       control={control}
       name={props.name}
       render={({ field: { value, onChange } }) => (
-        <Switch value={value} onValueChange={onChange} {...props}>
+        <Switch isSelected={value} onValueChange={onChange} {...props}>
           {props?.label}
         </Switch>
       )}

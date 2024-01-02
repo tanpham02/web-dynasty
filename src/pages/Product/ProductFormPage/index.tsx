@@ -45,7 +45,6 @@ const ProductFormPage = () => {
       refetchOnWindowFocus: false,
     },
   );
-  console.log('🚀 ~ file: index.tsx:21 ~ ProductFormPage ~ currentProduct:', currentProduct);
 
   return (
     <Box>

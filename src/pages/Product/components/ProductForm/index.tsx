@@ -10,7 +10,7 @@ import Box from '~/components/Box';
 import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
 import Upload, { onChangeProps } from '~/components/Upload';
 import { PATH_NAME } from '~/constants/router';
-import { ProductMain } from '~/models/product';
+import { AttributeValue, ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
@@ -35,6 +35,8 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
     formState: { isSubmitting },
   } = forms;
 
+  // mai mot doc code chac dien, category lú hơn này chủ yếu là fill dâtta cho dung thoi, de demo thu
+
   useEffect(() => {
     if (isEdit && currentProduct && Object.keys(currentProduct).length > 0) {
       reset({
@@ -42,12 +44,27 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
         categoryId: Array.isArray(currentProduct?.categoryId)
           ? [...currentProduct?.categoryId]
           : [currentProduct?.categoryId],
+        productAttributeList: currentProduct?.productAttributeList?.map((attribute) => {
+          return {
+            ...attribute,
+            productAttributeItem: attribute?.productAttributeItem?.map((attributeValue) => {
+              const attributeValueData = attributeValue.attributeId
+                ? JSON.parse(attributeValue.attributeId)
+                : '';
+
+              return {
+                ...attributeValue,
+                name: attributeValueData?.name,
+                attributeId: attributeValueData?._id,
+              };
+            }),
+          };
+        }),
       });
     }
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data: ProductMain) => {
-    console.log('🚀 ~ file: index.tsx:29 ~ onSubmit ~ data:', data);
     try {
       const formData = new FormData();
 
@@ -60,7 +77,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             ...attribute,
             productAttributeItem: attribute?.productAttributeItem?.map((attributeValue) => {
               return {
-                attributeId: attributeValue?._id ? JSON.parse(attributeValue?._id)?.id : '',
+                attributeId: isEdit ? attributeValue?.attributeId : attributeValue?._id,
                 priceAdjustmentValue: attributeValue?.priceAdjustmentValue,
               };
             }),

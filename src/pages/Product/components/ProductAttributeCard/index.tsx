@@ -58,9 +58,6 @@ const ProductAttributeCard = () => {
               name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
               endContent={<span className="font-bold">đ</span>}
               type="number"
-              rules={{
-                required: 'Vui lòng nhập giá cho thuộc tính này!',
-              }}
             />
           ))}
         </Box>
@@ -165,7 +162,7 @@ const ProductAttributeCard = () => {
       </CardHeader>
       <Divider />
       <CardBody className="p-6 space-y-4">
-        <CheckboxGroup value={attributeSelected}>
+        <CheckboxGroup>
           <Box className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:grid-cols-5 2xl:grid-cols-7">
             {attributes?.map((attribute, index) => (
               <Checkbox
