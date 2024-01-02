@@ -64,6 +64,11 @@ const UserModal = ({
   const [avatar, setAvatar] = useState<onChangeUploadState>();
   const { enqueueSnackbar } = useSnackbar();
   const [changePw, setChangePw] = useState<boolean>(false);
+  const [locations, setLocations] = useState({
+    city: {},
+    ward: {},
+    district: {},
+  });
 
   const dispatch = useDispatch<AppDispatch>();
   const forms = useForm<Users>({
@@ -79,6 +84,7 @@ const UserModal = ({
     handleSubmit,
     getFieldState,
   } = forms;
+  // debugger;
 
   useQuery(
     [QUERY_KEY.USERS_DETAIL, userId],
@@ -86,7 +92,14 @@ const UserModal = ({
       globalLoading.show();
       if (userId) {
         const response = await userService.getUserByUserId(userId);
-        reset(response);
+        reset({
+          ...response,
+          cityId: response?.cityId ? ([String(response.cityId)] as any) : [],
+          districtId: response?.districtId ? ([String(response.districtId)] as any) : [],
+          wardId: response?.wardId ? ([String(response.wardId)] as any) : [],
+          role: response?.role ? ([response.role] as any) : [],
+        });
+
         if (response?.image) {
           setAvatar({
             srcPreview: getFullImageUrl(response.image),
@@ -103,13 +116,11 @@ const UserModal = ({
 
   const mappingVietNamLocation = useMemo(() => {
     if (vietnamLocations) {
-      const newLocationsArray = Object.keys(vietnamLocations)
-        .map((key) => [vietnamLocations[key]])
-        .flatMap((item) => item);
+      const newLocationsArray = Object.keys(vietnamLocations).map((key) => vietnamLocations[key]);
 
       return newLocationsArray;
     }
-  }, [vietnamLocations]);
+  }, [JSON.stringify(vietnamLocations)]);
 
   const handleGetDistrictsFromVietnamLocation = useMemo(() => {
     const cityIdWatchValue = watch('cityId')?.toString();
@@ -118,13 +129,18 @@ const UserModal = ({
       const districtsMapping = mappingVietNamLocation?.find(
         (city) => city?.code === cityIdWatchValue,
       );
+      console.log('districtsMapping', districtsMapping);
 
-      reset((prev) => ({
-        ...prev,
-        city: districtsMapping?.name,
-        districtId: getFieldState('cityId').isDirty ? undefined : prev.districtId,
-        wardId: getFieldState('cityId').isDirty ? undefined : prev.wardId,
-      }));
+      // reset(
+      //   (prev) =>
+      //     ({
+      //       ...prev,
+      //       city: districtsMapping?.name,
+      //       cityId: [cityIdWatchValue],
+      //       districtId: getFieldState('cityId').isDirty ? [] : [prev.districtId],
+      //       wardId: getFieldState('cityId').isDirty ? [] : [prev.wardId],
+      //     }) as any,
+      // );
 
       if (districtsMapping?.districts) {
         const districts = Object.keys(districtsMapping.districts)
@@ -144,11 +160,14 @@ const UserModal = ({
           (Number(districtIdWatchValue) < 100 ? `0${districtIdWatchValue}` : districtIdWatchValue),
       );
 
-      reset((prev) => ({
-        ...prev,
-        district: districtsMapping?.name,
-        wardId: getFieldState('districtId').isDirty ? undefined : prev.wardId,
-      }));
+      // reset(
+      //   (prev) =>
+      //     ({
+      //       ...prev,
+      //       district: districtsMapping?.name,
+      //       wardId: getFieldState('districtId').isDirty ? [] : [prev.wardId],
+      //     }) as any,
+      // );
       if (districtsMapping?.wards) {
         const wards = Object.keys(districtsMapping.wards)
           .map((key) => [districtsMapping.wards[key]])
@@ -158,16 +177,16 @@ const UserModal = ({
     }
   }, [watch('districtId')]);
 
-  useEffect(() => {
-    const wardIdWatchValue = watch('wardId')?.toString();
-    if (wardIdWatchValue) {
-      const wards = handleGetWardsFromVietnamLocation?.find(
-        (ward) => ward?.code === wardIdWatchValue,
-      );
+  // useEffect(() => {
+  //   const wardIdWatchValue = watch('wardId')?.toString();
+  //   if (wardIdWatchValue) {
+  //     const wards = handleGetWardsFromVietnamLocation?.find(
+  //       (ward) => ward?.code === wardIdWatchValue,
+  //     );
 
-      setValue('ward', wards?.name);
-    }
-  }, [watch('wardId')]);
+  //     setValue('ward', wards?.name);
+  //   }
+  // }, [watch('wardId')]);
 
   const handleResetFormValue = () => {
     reset({
@@ -305,7 +324,6 @@ const UserModal = ({
                 <DatePicker
                   allowClear
                   ref={ref}
-                  
                   value={value ? moment(value) : null}
                   format={DATE_FORMAT_DDMMYYYY}
                   placeholder="Ngày sinh"
@@ -327,7 +345,7 @@ const UserModal = ({
               label="E-mail"
               isClearable
             />
-            {/* <FormContextSelect
+            <FormContextSelect
               isRequired
               name="role"
               label="Vai trò"
@@ -342,11 +360,13 @@ const UserModal = ({
               ))}
             </FormContextSelect>
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
-              {(mappingVietNamLocation as any[])?.map((item) => (
-                <SelectItem key={item?.code} value={item?.code}>
-                  {item?.name}
-                </SelectItem>
-              ))}
+              {mappingVietNamLocation &&
+                mappingVietNamLocation.length > 0 &&
+                (mappingVietNamLocation.map((item) => (
+                  <SelectItem key={item?.code} value={item?.code}>
+                    {item?.name}
+                  </SelectItem>
+                )) as any)}
             </FormContextSelect>
             <FormContextSelect
               name="districtId"
@@ -371,7 +391,7 @@ const UserModal = ({
                   {item?.name}
                 </SelectItem>
               ))}
-            </FormContextSelect> */}
+            </FormContextSelect>
             <FormContextInput<Users> name="location" label="Số nhà, tên đường" isClearable />
             <FormContextInput<Users>
               isRequired

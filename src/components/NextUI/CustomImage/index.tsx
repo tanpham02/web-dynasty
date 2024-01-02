@@ -8,10 +8,23 @@ import EyeIcon from '~/assets/svg/eye.svg';
 
 interface CustomImageProps extends ImageProps {
   isPreview?: boolean;
+  placement?:
+    | 'top'
+    | 'bottom'
+    | 'right'
+    | 'left'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'left-start'
+    | 'left-end'
+    | 'right-start'
+    | 'right-end';
 }
 
 const CustomImage: React.FC<CustomImageProps> = (props) => {
-  const { isPreview, src } = props;
+  const { isPreview, src, placement = 'top' } = props;
 
   const [visiblePreviewImage, setVisiblePreviewImage] = useState<boolean>(false);
 
@@ -24,6 +37,7 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         >
           <ButtonIcon
             title="Xem trước"
+            placement={placement}
             icon={EyeIcon}
             status="default"
             onClick={() => setVisiblePreviewImage(true)}
@@ -31,7 +45,6 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         </Box>
       )}
 
-      {/* css laij cho nay ne */}
       <Image
         src={src}
         width="100%"

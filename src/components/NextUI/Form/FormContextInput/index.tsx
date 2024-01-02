@@ -49,12 +49,12 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
               <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
                 {isVisible ? (
                   <Svg
-                    src={EyeSlashIcon}
+                    src={EyeIcon}
                     className="text-2xl text-default-400 pointer-events-none w-5 h-5"
                   />
                 ) : (
                   <Svg
-                    src={EyeIcon}
+                    src={EyeSlashIcon}
                     className="text-2xl text-default-400 pointer-events-none w-5 h-5"
                   />
                 )}

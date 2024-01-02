@@ -9,7 +9,6 @@ import {
   usePagination,
 } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { Avatar, Modal } from 'antd';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
@@ -108,7 +107,9 @@ const UserListPage = () => {
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
-          <CustomImage src={getFullImageUrl(user.image)} radius="lg" isPreview />
+          <div className="image-table relative !h-[100px] !w-[100px]">
+            <CustomImage src={getFullImageUrl(user.image)} radius="lg" isPreview loading="lazy" />
+          </div>
         ) : (
           <Image className="!w-[70px] !h-[70px] !bg-primary !rounded-[10px] !text-[18px] font-medium !leading-[70px]">
             {user?.fullName && user.fullName.charAt(0).toUpperCase()}
@@ -156,12 +157,16 @@ const UserListPage = () => {
       render: (user: Users) => (
         <div className="flex items-center gap-2">
           <ButtonIcon
-            title="Chỉnh sửa nhân viên"
+            title={`${
+              handleCheckRolePermission(user, currentUserLogin)
+                ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
+                : 'Chỉnh sửa nhân viên'
+            }`}
+            disable={handleCheckRolePermission(user, currentUserLogin)}
             icon={EditIcon}
-            tooltipProps={{
-              showArrow: true,
-              delay: 500,
-            }}
+            status={handleCheckRolePermission(user, currentUserLogin) ? 'warning' : 'default'}
+            showArrow
+            delay={500}
             onClick={() => {
               setModal({
                 isEdit: true,
@@ -174,10 +179,8 @@ const UserListPage = () => {
             title="Xóa nhân viên này"
             icon={DeleteIcon}
             status="danger"
-            tooltipProps={{
-              showArrow: true,
-              delay: 500,
-            }}
+            showArrow
+            delay={500}
             onClick={() => {
               setModalConfirmDelete({
                 desc: 'Bạn có chắc chắn muốn xoá nhân viên này?',
@@ -211,7 +214,9 @@ const UserListPage = () => {
     },
   );
 
-  const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {};
+  const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {
+    return false;
+  };
 
   const handleChangeSelectedRowsKey = (keys: any) => {
     setSelectedRowKeys(keys);
@@ -314,9 +319,7 @@ const UserListPage = () => {
                 variant="shadow"
                 onClick={() => {
                   setModalConfirmDelete({
-                    desc: `Bạn có chắc chắn muốn xoá ${
-                      (selectedRowKeys as any) === 'all' ? 'danh sách' : `${selectedRowKeys.size}`
-                    } nhân viên này?`,
+                    desc: 'Bạn có chắc chắn muốn xoá danh sách nhân viên đã chọn?',
                   });
                   onOpenChangeModalConfirmDeleteUser();
                 }}

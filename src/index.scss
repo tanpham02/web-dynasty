@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap");
 
 @layer base {
   html {
@@ -13,7 +13,7 @@
 *,
 body,
 html {
-  font-family: 'Nunito', sans-serif !important;
+  font-family: "Nunito", sans-serif !important;
 }
 
 @layer components {
@@ -40,12 +40,12 @@ html {
   min-height: 350px;
 }
 
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
   display: none;
 }
 
 /* Fallback for other browsers */
-input[type='number'] {
+input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
   -webkit-appearance: textfield;
@@ -153,7 +153,8 @@ li.ant-pagination-item:hover a,
   background-color: #aaa;
 }
 
-#FileUpload:hover #preview-icon {
+#FileUpload:hover #preview-icon,
+.image-table:hover #preview-icon {
   display: block !important;
 }
 
@@ -203,7 +204,7 @@ li.ant-pagination-item:hover a,
 }
 
 .ant-image-preview-img {
-  height: 75vh !important;
+  height: 70vh !important;
 }
 
 .ant-picker {
