@@ -51,6 +51,13 @@ const roleSelection = [
   },
 ];
 
+interface Locations {
+  [key: string]: {
+    name?: string;
+    id?: string;
+  };
+}
+
 const UserModal = ({
   isOpen,
   onClose,
@@ -64,7 +71,7 @@ const UserModal = ({
   const [avatar, setAvatar] = useState<onChangeUploadState>();
   const { enqueueSnackbar } = useSnackbar();
   const [changePw, setChangePw] = useState<boolean>(false);
-  const [locations, setLocations] = useState({
+  const [locations, setLocations] = useState<Locations>({
     city: {},
     ward: {},
     district: {},
@@ -80,11 +87,10 @@ const UserModal = ({
     formState: { isSubmitting },
     reset,
     watch,
-    setValue,
     handleSubmit,
     getFieldState,
+    getValues,
   } = forms;
-  // debugger;
 
   useQuery(
     [QUERY_KEY.USERS_DETAIL, userId],
@@ -98,6 +104,20 @@ const UserModal = ({
           districtId: response?.districtId ? ([String(response.districtId)] as any) : [],
           wardId: response?.wardId ? ([String(response.wardId)] as any) : [],
           role: response?.role ? ([response.role] as any) : [],
+        });
+        setLocations({
+          city: {
+            id: String(response?.cityId) || undefined,
+            name: response?.city || '',
+          },
+          district: {
+            id: String(response?.districtId) || undefined,
+            name: response?.district || '',
+          },
+          ward: {
+            id: String(response?.wardId) || undefined,
+            name: response?.ward || '',
+          },
         });
 
         if (response?.image) {
@@ -129,18 +149,13 @@ const UserModal = ({
       const districtsMapping = mappingVietNamLocation?.find(
         (city) => city?.code === cityIdWatchValue,
       );
-      console.log('districtsMapping', districtsMapping);
 
-      // reset(
-      //   (prev) =>
-      //     ({
-      //       ...prev,
-      //       city: districtsMapping?.name,
-      //       cityId: [cityIdWatchValue],
-      //       districtId: getFieldState('cityId').isDirty ? [] : [prev.districtId],
-      //       wardId: getFieldState('cityId').isDirty ? [] : [prev.wardId],
-      //     }) as any,
-      // );
+      setLocations({
+        city: {
+          id: cityIdWatchValue,
+          name: districtsMapping?.name,
+        },
+      });
 
       if (districtsMapping?.districts) {
         const districts = Object.keys(districtsMapping.districts)
@@ -168,6 +183,21 @@ const UserModal = ({
       //       wardId: getFieldState('districtId').isDirty ? [] : [prev.wardId],
       //     }) as any,
       // );
+
+      setLocations((prev) => ({
+        ...prev,
+        district: {
+          id: getFieldState('districtId').isDirty
+            ? String(getValues('districtId'))
+            : districtIdWatchValue,
+          name: districtsMapping?.name,
+        },
+        ward: {
+          id: getFieldState('districtId').isDirty ? undefined : String(getValues('wardId')),
+          name: getFieldState('districtId').isDirty ? '' : prev.ward?.name,
+        },
+      }));
+
       if (districtsMapping?.wards) {
         const wards = Object.keys(districtsMapping.wards)
           .map((key) => [districtsMapping.wards[key]])
@@ -177,16 +207,28 @@ const UserModal = ({
     }
   }, [watch('districtId')]);
 
-  // useEffect(() => {
-  //   const wardIdWatchValue = watch('wardId')?.toString();
-  //   if (wardIdWatchValue) {
-  //     const wards = handleGetWardsFromVietnamLocation?.find(
-  //       (ward) => ward?.code === wardIdWatchValue,
-  //     );
+  useEffect(() => {
+    const wardIdWatchValue = watch('wardId')?.toString();
+    console.log('🚀 ~ file: index.tsx:212 ~ useEffect ~ wardIdWatchValue:', wardIdWatchValue);
+    if (wardIdWatchValue) {
+      const wards = handleGetWardsFromVietnamLocation?.find(
+        (ward) => ward?.code === wardIdWatchValue,
+      );
+      console.log(
+        '🚀 ~ file: index.tsx:215 ~ useEffect ~ handleGetWardsFromVietnamLocation:',
+        handleGetWardsFromVietnamLocation,
+      );
+      console.log('🚀 ~ file: index.tsx:215 ~ useEffect ~ wards:', wards);
 
-  //     setValue('ward', wards?.name);
-  //   }
-  // }, [watch('wardId')]);
+      setLocations((prev) => ({
+        ...prev,
+        ward: {
+          id: wardIdWatchValue,
+          name: wards?.name,
+        },
+      }));
+    }
+  }, [watch('wardId')]);
 
   const handleResetFormValue = () => {
     reset({
@@ -213,6 +255,8 @@ const UserModal = ({
       srcRequest: '',
     });
     setChangePw(false);
+
+    setLocations({});
   };
 
   const onSubmit = async (data: Users) => {
@@ -224,7 +268,48 @@ const UserModal = ({
     const newData: Users = {
       ...data,
       birthday: data?.birthday ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD) : null,
+      role: (data.role && Array.isArray(data.role)
+        ? Array.from(data.role).join()
+        : data.role) as UserRole,
     };
+
+    delete newData.cityId;
+    delete newData.city;
+    delete newData.districtId;
+    delete newData.district;
+    delete newData.wardId;
+    delete newData.ward;
+
+    if (
+      locations?.city &&
+      Object.keys(locations.city).length > 0 &&
+      !!locations.city?.id &&
+      !!locations.city?.name
+    ) {
+      newData.cityId = locations.city.id;
+      newData.city = locations.city?.name;
+    }
+
+    if (
+      locations?.district &&
+      Object.keys(locations.district).length > 0 &&
+      !!locations.district?.id &&
+      !!locations.district?.name
+    ) {
+      newData.districtId = locations.district?.id;
+      newData.district = locations.district?.name;
+    }
+
+    if (
+      locations?.ward &&
+      Object.keys(locations.ward).length > 0 &&
+      !!locations.ward?.id &&
+      !!locations.ward?.name
+    ) {
+      newData.wardId = locations.ward?.id;
+      newData.ward = locations.ward?.name;
+    }
+
     formData.append('userInfo', JSON.stringify(newData));
 
     try {

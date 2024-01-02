@@ -46,6 +46,8 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
       )}
 
       <Image
+        isBlurred
+        isZoomed
         src={src}
         width="100%"
         height="100%"

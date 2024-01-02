@@ -18,12 +18,12 @@ export interface Users {
   phoneNumber?: string;
   email?: string;
   location?: string;
-  city?: string;
-  cityId?: number | string;
-  district?: string;
-  districtId?: number | string;
-  ward?: string;
-  wardId?: number | string;
+  city?: string | null;
+  cityId?: number | string | null;
+  district?: string | null;
+  districtId?: number | string | null;
+  ward?: string | null;
+  wardId?: number | string | null;
   password?: string;
   role?: UserRole;
   status?: UserStatus;
