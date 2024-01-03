@@ -1,22 +1,27 @@
+import { Avatar } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import UserOne from '~ assets/images/user/user-01.png';
 import { Users, UserRole } from '~/models/user';
 import { getFullImageUrl } from '~/utils/image';
+import Box from './Box';
+import { useSelector } from 'react-redux';
+import { RootState } from '~/redux/store';
 
 interface DropdownUserType {
   userInformation: Users;
 }
 
 const UserRoleMapping: { [key: string]: any } = {
-  [`${UserRole.ADMIN}`]: 'Quản trị viên',
+  [`${UserRole.ADMIN}`]: 'Quản trị viên cửa hàng',
   [`${UserRole.USER}`]: 'Nhân viên',
 };
 
 const DropdownUser = ({ userInformation }: DropdownUserType) => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -55,7 +60,7 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
       <Link
         ref={trigger}
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-4"
+        className="flex items-center gap-1"
         to="#"
       >
         <span className="hidden text-right lg:block">
@@ -67,15 +72,21 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
           </span>
         </span>
 
-        <span className="h-12 w-12 !rounded-full flex justify-center items-center">
-          <img
-            src={userInformation?.image ? getFullImageUrl(userInformation?.image) : UserOne}
+        <span className="h-14 w-14 !rounded-full flex justify-center items-center">
+          <Avatar
+            src={userInformation?.image && getFullImageUrl(userInformation.image)}
             alt={`${userInformation?.fullName}`}
-            onError={(e: any) => {
-              e.target.onerror = null;
-              e.target.src = UserOne;
-            }}
-            loading="lazy"
+            isBordered={!!userInformation?.image}
+            showFallback={!userInformation?.image}
+            size="lg"
+            fallback={
+              <Box className="!h-[100px] !w-[100px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
+                {currentUserLogin?.fullName
+                  ? currentUserLogin.fullName?.charAt(0)
+                  : currentUserLogin?.username &&
+                    currentUserLogin.username?.charAt(0)?.toUpperCase()}
+              </Box>
+            }
             className="h-10 w-10 object-cover !rounded-full"
           />
         </span>
