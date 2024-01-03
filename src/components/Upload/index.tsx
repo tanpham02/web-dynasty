@@ -51,8 +51,8 @@ const Upload: React.FC<UploadProps> = (props) => {
             <p className="text-center">
               <span className="text-primary">Click to upload</span> or drag and drop
             </p>
-            <p className="mt-1.5 text-center">SVG, PNG, JPG or GIF</p>
-            <p className="text-center">(max, 800 X 800px)</p>
+            <p className="mt-1.5 text-center hidden sm:block">SVG, PNG, JPG or GIF</p>
+            <p className="text-center hidden sm:block">(max, 800 X 800px)</p>
           </div>
         ) : (
           <CustomImage isPreview={isPreview} src={src} {...props} />

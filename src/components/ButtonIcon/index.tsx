@@ -31,7 +31,9 @@ const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
   return (
     <Tooltip content={title} color={status} placement={placement} showArrow {...props}>
       <div
-        onClick={() => !disable && onClick?.()}
+        onClick={() => {
+          !disable && onClick?.();
+        }}
         className={`w-7 h-7 cursor-pointer rounded inline-flex justify-center items-center ${
           statusesClassName[status]
         } ${disable && '!cursor-not-allowed !hover:bg-opacity-20 !bg-opacity-20'}`}

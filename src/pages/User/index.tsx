@@ -1,36 +1,29 @@
 import { Button } from '@nextui-org/button';
-import {
-  Chip,
-  Image,
-  Input,
-  Select,
-  SelectItem,
-  useDisclosure,
-  usePagination,
-} from '@nextui-org/react';
+import { Chip, Input, Select, SelectItem, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
 
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import useDebounce from '~/hooks/useDebounce';
-import { Users, UserRole, UserStatus } from '~/models/user';
+import { UserRole, UserStatus, Users } from '~/models/user';
 import { RootState } from '~/redux/store';
 import userService from '~/services/userService';
-import UserModal, { ModalType } from './UserModal';
-import CustomTable from '~/components/NextUI/CustomTable';
-import { ColumnType } from '~/components/NextUI/CustomTable';
-import { getFullImageUrl } from '~/utils/image';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import { getFullImageUrl } from '~/utils/image';
+import UserModal, { ModalType } from './UserModal';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import ButtonIcon from '~/components/ButtonIcon';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import { globalLoading } from '~/components/GlobalLoading';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomImage from '~/components/NextUI/CustomImage';
+import Box from '~/components/Box';
+import usePagination from '~/hooks/usePagination';
 
 export interface ModalKey {
   visible?: boolean;
@@ -40,23 +33,18 @@ export interface ModalKey {
 
 const UserListPage = () => {
   const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
-  const [showDeleteUserModal, setShowDeleteUserModal] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
   const [searchText, setSearchText] = useState<string>('');
   const [filterRole, setFilterRole] = useState<UserStatus | string>('');
-
-  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { setPage, total, activePage } = usePagination({
-    page: 0,
-    total: 100,
-  });
   const [modal, setModal] = useState<{
     isEdit?: boolean;
     userId?: string;
   }>({ isEdit: false });
+  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
 
   const {
     isOpen: isOpenModal,
@@ -107,13 +95,21 @@ const UserListPage = () => {
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
-          <div className="image-table relative !h-[100px] !w-[100px]">
-            <CustomImage src={getFullImageUrl(user.image)} radius="lg" isPreview loading="lazy" />
-          </div>
+          <Box className="image-table relative !h-[100px] !w-[100px] flex items-center">
+            <CustomImage
+              src={getFullImageUrl(user.image)}
+              radius="lg"
+              isPreview
+              loading="lazy"
+              classNames={{
+                img: '!object-contain',
+              }}
+            />
+          </Box>
         ) : (
-          <Image className="!w-[70px] !h-[70px] !bg-primary !rounded-[10px] !text-[18px] font-medium !leading-[70px]">
-            {user?.fullName && user.fullName.charAt(0).toUpperCase()}
-          </Image>
+          <Box className="rounded-2xl !h-[100px] !w-[100px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
+            {user?.fullName ? user.fullName.charAt(0) : user?.username!.charAt(0).toUpperCase()}
+          </Box>
         ),
     },
     {
@@ -157,14 +153,14 @@ const UserListPage = () => {
       render: (user: Users) => (
         <div className="flex items-center gap-2">
           <ButtonIcon
-            title={`${
-              handleCheckRolePermission(user, currentUserLogin)
-                ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
-                : 'Chỉnh sửa nhân viên'
-            }`}
-            disable={handleCheckRolePermission(user, currentUserLogin)}
+            // title={`${
+            //   handleCheckRolePermission(user, currentUserLogin)
+            //     ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
+            //     : 'Chỉnh sửa nhân viên'
+            // }`}
+            title="Chỉnh sửa nhân viên"
+            // disable={handleCheckRolePermission(user, currentUserLogin)}
             icon={EditIcon}
-            status={handleCheckRolePermission(user, currentUserLogin) ? 'warning' : 'default'}
             showArrow
             delay={500}
             onClick={() => {
@@ -199,11 +195,11 @@ const UserListPage = () => {
     refetch: refetchUser,
     isLoading: isLoadingUser,
   } = useQuery(
-    [QUERY_KEY.USERS, search, role, activePage],
+    [QUERY_KEY.USERS, search, role, pageIndex, pageSize],
     async () => {
       const params = {
-        // pageIndex: pagination.pageIndex,
-        // pageSize: pagination.pageSize,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
         fullName: search,
         role: role,
       };
@@ -214,13 +210,16 @@ const UserListPage = () => {
     },
   );
 
-  const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {
-    return false;
-  };
-
-  const handleChangeSelectedRowsKey = (keys: any) => {
-    setSelectedRowKeys(keys);
-  };
+  // const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {
+  //   if (userRecord._id === userCurrentLogin._id) {
+  //    if (userCurrentLogin.role === UserRole.ADMIN) {
+  //     if(userRecord.role === UserRole.USER) {
+  //       return false
+  //     } return true
+  //    }
+  //   }
+  //   return true;
+  // };
 
   const handleDeleteUser = async () => {
     globalLoading.show();
@@ -233,11 +232,14 @@ const UserListPage = () => {
       ids.push(modalConfirmDelete.id);
     }
 
-    if (selectedRowKeys.size !== 0) {
-      console.log(
-        '🚀 ~ file: index.tsx:228 ~ handleDeleteUser ~ selectedRowKeys:',
-        selectedRowKeys,
-      );
+    if (selectedRowKeys && Array.from(selectedRowKeys).length) {
+      if (String(selectedRowKeys) === 'all') {
+        ids = users?.data
+          .filter((user) => user._id !== currentUserLogin._id)
+          ?.map((user) => user._id) as any;
+      } else {
+        ids = Array.from(selectedRowKeys);
+      }
     }
 
     try {
@@ -246,6 +248,7 @@ const UserListPage = () => {
       enqueueSnackbar({
         message: 'Xoá nhân viên thành công!',
       });
+      setSelectedRowKeys(new Set([]));
     } catch (err) {
       console.log(err);
       enqueueSnackbar({
@@ -273,15 +276,15 @@ const UserListPage = () => {
         ]}
       />
       <div>
-        <div className="flex items-center mb-2">
-          <div className="flex flex-1 items-center space-x-2">
+        <div className="flex items-center mb-2 gap-2 flex-wrap">
+          <div className="flex flex-1 items-center flex-wrap gap-2 min-w-fit">
             <Input
               size="md"
               variant="faded"
               className="w-full max-w-[250px] text-md"
               label="Tìm kiếm..."
               classNames={{
-                inputWrapper: 'bg-white',
+                inputWrapper: 'bg-white ',
                 label: 'font-semibold',
                 input: 'text-primary-text-color text-md',
               }}
@@ -301,6 +304,7 @@ const UserListPage = () => {
                 mainWrapper: 'bg-white rounded-xl',
                 label: 'font-semibold',
                 value: 'text-primary-text-color text-md',
+                base: '!ml-0',
               }}
               onChange={(e) => setFilterRole(e.target.value)}
             >
@@ -312,8 +316,8 @@ const UserListPage = () => {
             </Select>
           </div>
 
-          <div className="space-x-4">
-            {selectedRowKeys.size !== 0 ? (
+          <div className="space-x-2 space-y-2 w-fit ml-auto">
+            {selectedRowKeys && Array.from(selectedRowKeys).length ? (
               <Button
                 color="danger"
                 variant="shadow"
@@ -329,7 +333,12 @@ const UserListPage = () => {
             ) : (
               ''
             )}
-            <Button color="primary" variant="shadow" onClick={onOpenModal}>
+            <Button
+              color="primary"
+              variant="shadow"
+              className="w-fit ml-auto"
+              onClick={onOpenModal}
+            >
               Thêm nhân viên
             </Button>
           </div>
@@ -342,10 +351,16 @@ const UserListPage = () => {
         isLoading={isLoadingUser}
         data={users?.data}
         pagination
+        disabledKeys={[currentUserLogin._id] as any}
         tableName="Danh sách nhân viên"
         emptyContent="Không có nhân viên nào"
         selectedKeys={selectedRowKeys}
-        onSelectionChange={handleChangeSelectedRowsKey}
+        onSelectionChange={(keys) => setSelectedRowKeys(keys as any)}
+        page={pageIndex}
+        totalPage={users?.totalPage}
+        rowPerPage={pageSize}
+        onChangePage={setPage}
+        onChangeRowPerPage={setRowPerPage}
       />
 
       <UserModal
