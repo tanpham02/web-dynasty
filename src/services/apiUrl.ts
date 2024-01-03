@@ -52,7 +52,7 @@ export const FIND_FREQUENTLY_ASKED_QUESTION_BY_CRITERIA_URL = `${FREQUENTLY_ASKE
 export const VOUCHER_URL = `${API_URL}/voucher`;
 
 //VOUCHER
-export const MATERIALS_URL = `${API_URL}/material`;
+export const MATERIALS_URL = `${API_URL}/materials`;
 
 export const ATTRIBUTES_URL = `${API_URL}/product-attributes`;
 

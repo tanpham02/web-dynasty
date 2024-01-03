@@ -9,13 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react';
-import React, { Key } from 'react';
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ColumnType<T> {
   name?: React.ReactNode;
   align?: 'start' | 'center' | 'end';
   render: (value: T, index?: number) => React.ReactNode;
+  className?: string;
 }
 
 export default function CustomTable<T>({
@@ -38,6 +39,7 @@ export default function CustomTable<T>({
   removeWrapper,
   isStriped,
   disabledKeys,
+  total = 0,
 }: {
   rowKey?: keyof T;
   columns?: ColumnType<T>[];
@@ -46,6 +48,7 @@ export default function CustomTable<T>({
   isLoading?: boolean;
   totalPage?: number;
   rowPerPage?: number;
+  total?: number;
   onChangePage?(page: number): void;
   rowPerPageOptions?: number[];
   onChangeRowPerPage?(rowPerPage: number): void;
@@ -64,7 +67,7 @@ export default function CustomTable<T>({
       <Table
         aria-label={tableName}
         selectedKeys={selectedKeys}
-        selectionMode={selectionMode}
+        selectionMode={isLoading || !total ? 'none' : selectionMode}
         onSelectionChange={onSelectionChange}
         removeWrapper={removeWrapper}
         isStriped={isStriped}
@@ -73,12 +76,11 @@ export default function CustomTable<T>({
           th: ['bg-zinc-200', 'text-black'],
         }}
       >
-        <TableHeader columns={columns as ColumnType<T>[]}>
+        <TableHeader columns={columns as ColumnType<T>[]} className="relative">
           {(column: ColumnType<T>) => (
             <TableColumn
               key={uuidv4()}
-              align={column?.align}
-              className={`font-bold text-sm select-none`}
+              className={`font-bold text-sm select-none ${column?.className}`}
             >
               {column?.name}
             </TableColumn>

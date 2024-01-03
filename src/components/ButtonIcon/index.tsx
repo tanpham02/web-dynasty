@@ -10,14 +10,7 @@ interface ButtonIconProps extends TooltipProps {
 }
 
 const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
-  const {
-    title,
-    icon,
-    onClick,
-    disable = false,
-    status = 'default',
-    placement = 'top-end',
-  } = props;
+  const { title, icon, onClick, disable = false, status = 'default', placement = 'top' } = props;
 
   const statusesClassName: { [key: string]: string } = {
     danger: 'text-danger hover:bg-danger/20',

@@ -5,6 +5,7 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import SVG from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
+import Box from '~/components/Box';
 import CustomModal from '~/components/NextUI/CustomModal';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
@@ -52,7 +53,7 @@ const AttributeModal = ({
     },
     {
       align: 'center',
-      name: 'Tên giá trị',
+      name: <Box className="flex justify-center">Tên giá trị</Box>,
       render: (_attribute: AttributeValue, index?: number) => (
         <FormContextInput<Attribute>
           name={`attributeList.${index}.name` as any}
@@ -64,7 +65,7 @@ const AttributeModal = ({
     },
     {
       align: 'center',
-      name: 'Giá trị',
+      name: <Box className="flex justify-center">Giá trị</Box>,
       render: (_attribute: AttributeValue, index?: number) => (
         <FormContextInput<Attribute>
           name={`attributeList.${index}.value` as any}
@@ -79,7 +80,7 @@ const AttributeModal = ({
       name: <span className="block text-center">Hành động</span>,
       render: (_attribute: AttributeValue, index?: number) => (
         <div className="flex justify-center">
-          <Tooltip content="Xóa giá trị thuộc tính này" showArrow color="danger" delay={1500}>
+          <Tooltip content="Xóa giá trị thuộc tính này" showArrow color="danger">
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50 p-2"
               onClick={() => removeAttributeValue(index)}

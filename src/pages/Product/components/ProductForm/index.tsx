@@ -8,12 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import DescriptionIcon from '~/assets/svg/description.svg';
 import Box from '~/components/Box';
 import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
-import Upload, { onChangeProps } from '~/components/Upload';
+import Upload, { onChangeUploadState } from '~/components/Upload';
 import { PATH_NAME } from '~/constants/router';
 import { AttributeValue, ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
+import { getFullImageUrl } from '~/utils/image';
 
 interface ProductFormProps {
   currentProduct?: ProductMain;
@@ -27,7 +28,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
 
   const navigate = useNavigate();
 
-  const [productImage, setProductImage] = useState<onChangeProps>({});
+  const [productImage, setProductImage] = useState<onChangeUploadState>({});
 
   const {
     handleSubmit,
@@ -61,6 +62,11 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
           };
         }),
       });
+      if (currentProduct?.image) {
+        setProductImage({
+          srcPreview: getFullImageUrl(currentProduct.image),
+        });
+      }
     }
   }, [isEdit, currentProduct]);
 
@@ -125,22 +131,24 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             <span className="text-lg font-bold">Hình ảnh sản phẩm</span>
           </CardHeader>
           <Divider />
-          <CardBody className="p-4 grid grid-cols-2 lg:grid-cols-4">
-            <Upload
-              onChange={({ srcPreview, srcRequest }: onChangeProps) => {
-                setProductImage({
-                  srcPreview,
-                  srcRequest,
-                });
-              }}
-              src={productImage?.srcPreview}
-              loading="lazy"
-              radius="full"
-              isPreview
-            />
+          <CardBody>
+            <Box className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-8">
+              <Upload
+                onChange={({ srcPreview, srcRequest }: onChangeUploadState) => {
+                  setProductImage({
+                    srcPreview,
+                    srcRequest,
+                  });
+                }}
+                src={productImage?.srcPreview}
+                loading="lazy"
+                description="Tải lên"
+                isPreview
+              />
+            </Box>
           </CardBody>
         </Card>
-        <ProductAttributeCard />
+        <ProductAttributeCard isEdit={isEdit} />
       </Box>
       <Button
         color="primary"

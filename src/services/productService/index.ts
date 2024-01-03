@@ -9,6 +9,7 @@ import {
   PRODUCT_CONFIG_TYPE_URL,
 } from '../apiUrl';
 import qs from 'qs';
+import { Key } from 'react';
 
 export const productService = {
   getProductFromThirdParty: async (params: SearchParams): Promise<ListResponse<Product>> => {
@@ -71,7 +72,7 @@ export const productService = {
         throw err;
       });
   },
-  deleteProduct: async (ids: number[]) => {
+  deleteProduct: async (ids?: Key[]) => {
     return axiosService()({
       url: `${PRODUCT_URL}`,
       method: 'DELETE',

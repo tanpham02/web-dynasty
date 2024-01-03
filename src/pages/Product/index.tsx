@@ -1,5 +1,5 @@
 import { Button, Chip, Image, Input, Selection, useDisclosure } from '@nextui-org/react';
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,18 +8,15 @@ import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
-import ModalConfirmDelete, {
-  ModalConfirmDeleteProps,
-  ModalConfirmDeleteState,
-} from '~/components/ModalConfirmDelete';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { PATH_NAME } from '~/constants/router';
 import useDebounce from '~/hooks/useDebounce';
+import usePagination from '~/hooks/usePagination';
 import { ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
-import { SearchParams } from '~/types';
 import { getFullImageUrl } from '~/utils/image';
 import { formatCurrencyVND } from '~/utils/number';
 
@@ -87,25 +84,28 @@ const ProductListPage = () => {
     },
   ];
 
-  const [pageParameter, setPageParameter] = useState<SearchParams>({
-    page: 0,
-    pageSize: 10,
-  });
   const [valueSearch, setValueSearch] = useState<string>('');
   const [productSelectedKeys, setProductSelectedKeys] = useState<Selection>();
   const { isOpen: isOpenModalDelete, onOpenChange: onOpenChangeModalDelete } = useDisclosure();
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>({});
+
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const queryText = useDebounce(valueSearch, 700);
   const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
 
-  const onDeleteProduct = (product: ProductMain) => {
-    setModalDelete({
-      id: product?._id,
-      desc: `Bạn có chắc muốn xóa sản phẩm ${product?.name} này không?`,
-    });
+  const onDeleteProduct = (product?: ProductMain) => {
+    if (product && Object.keys(product).length > 0)
+      setModalDelete({
+        id: product?._id,
+        desc: `Bạn có chắc muốn xóa sản phẩm ${product?.name} này không?`,
+      });
+    else
+      setModalDelete({
+        desc: `Bạn có chắc muốn xóa tất cả sản phẩm đã chọn không?`,
+      });
     onOpenChangeModalDelete();
   };
 
@@ -113,12 +113,13 @@ const ProductListPage = () => {
     data: productList,
     isLoading: isLoadingProduct,
     isFetching: isFetchingProduct,
+    refetch: refetchProduct,
   } = useQuery(
-    [QUERY_KEY.PRODUCTS, pageParameter, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
+    [QUERY_KEY.PRODUCTS, pageIndex, pageSize, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
     async () => {
       const params = {
-        pageIndex: pageParameter.page,
-        pageSize: pageParameter.pageSize,
+        pageIndex: pageIndex,
+        pageSize,
         name: queryText,
       };
       return await productService.getProductPagination(params);
@@ -134,16 +135,24 @@ const ProductListPage = () => {
       try {
         let productDeleteIDs = [];
         if (productSelectedKeys === 'all') {
-          productDeleteIDs = productList?.data?.map((product) => product?._id) || [];
+          productDeleteIDs =
+            productList?.data
+              ?.filter((product) => Boolean(product?._id))
+              ?.map((product) => product?._id) || [];
         } else {
-          productDeleteIDs = [...(productSelectedKeys || [])];
+          productDeleteIDs = [...(productSelectedKeys || [modalDelete?.id] || [])];
         }
-        console.log('🚀 ~ file: index.tsx:120 ~ mutationFn: ~ productDeleteIDs:', productDeleteIDs);
+        console.log('🚀 ~ file: index.tsx:144 ~ mutationFn: ~ productDeleteIDs:', productDeleteIDs);
+
+        await productService.deleteProduct(productDeleteIDs as string[]);
+        await refetchProduct();
       } catch (err) {
         enqueueSnackbar('Xóa sản phẩm không thành công!', {
           variant: 'error',
         });
         console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err);
+      } finally {
+        onCloseModalDeleteProduct();
       }
     },
   });
@@ -166,9 +175,11 @@ const ProductListPage = () => {
       <Box className="flex justify-between items-center mt-4 mb-2">
         <Input
           size="sm"
-          color="primary"
-          variant="bordered"
+          variant="faded"
           label="Tìm kiếm theo tên sản phẩm..."
+          classNames={{
+            inputWrapper: 'bg-white',
+          }}
           className="max-w-[300px]"
           value={valueSearch}
           onValueChange={setValueSearch}
@@ -177,6 +188,11 @@ const ProductListPage = () => {
           Thêm sản phẩm
         </Button>
       </Box>
+      {(productSelectedKeys == 'all' || (productSelectedKeys && productSelectedKeys?.size > 0)) && (
+        <Button color="danger" size="sm" className="mb-2" onClick={() => onDeleteProduct()}>
+          Xoá tất cả
+        </Button>
+      )}
       <CustomTable
         rowKey="_id"
         selectedKeys={productSelectedKeys}
@@ -186,6 +202,13 @@ const ProductListPage = () => {
         isLoading={isLoadingProduct || isFetchingProduct}
         emptyContent="Không có sản phẩm nào"
         tableName="Danh sách sản phẩm"
+        pagination={true}
+        page={pageIndex + 1}
+        rowPerPage={pageSize}
+        onChangePage={setPage}
+        onChangeRowPerPage={setRowPerPage}
+        totalPage={productList?.totalPage || 1}
+        total={productList?.totalElement || 0}
       />
       <ModalConfirmDelete
         desc={modalDelete?.desc}

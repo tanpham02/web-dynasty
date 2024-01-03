@@ -3,6 +3,7 @@ import SVG from 'react-inlinesvg';
 
 import UploadIcon from '~/assets/svg/upload.svg';
 import CustomImage from '../NextUI/CustomImage';
+import Box from '../Box';
 
 export interface onChangeUploadState {
   srcPreview?: any;
@@ -12,6 +13,7 @@ interface UploadProps extends ImageProps {
   onChange?: (props: onChangeUploadState | any) => void;
   className?: string;
   isPreview?: boolean;
+  description?: string;
 }
 
 const Upload: React.FC<UploadProps> = (props) => {
@@ -34,7 +36,7 @@ const Upload: React.FC<UploadProps> = (props) => {
     <>
       <div
         id="FileUpload"
-        className={`relative pt-[35vw] xl:pt-[100%] mx-auto w-[35vw] xl:w-[25vw] h-[35vw] lg:h-[25vw]  cursor-pointer appearance-none border-2 border-dashed border-primary bg-gray rounded-${props.radius}`}
+        className={`relative pt-[35%] aspect-square xl:pt-[100%] mx-auto cursor-pointer appearance-none border-2 border-dashed border-primary bg-gray rounded-${props.radius}`}
       >
         <input
           type="file"
@@ -48,11 +50,20 @@ const Upload: React.FC<UploadProps> = (props) => {
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
               <SVG src={UploadIcon} className="text-[#3C50E0]" />
             </span>
-            <p className="text-center">
-              <span className="text-primary">Click to upload</span> or drag and drop
-            </p>
-            <p className="mt-1.5 text-center hidden sm:block">SVG, PNG, JPG or GIF</p>
-            <p className="text-center hidden sm:block">(max, 800 X 800px)</p>
+            {!props?.description ? (
+              <>
+                <p className="text-center line-clamp-1">
+                  <span className="text-primary line-clamp-1">Click to upload</span> or drag and
+                  drop
+                </p>
+                <p className="mt-1.5 text-center hidden sm:block line-clamp-1">
+                  SVG, PNG, JPG or GIF
+                </p>
+                <p className="text-center hidden sm:block line-clamp-1">(max, 800 X 800px)</p>
+              </>
+            ) : (
+              <Box className="text-center">{props.description}</Box>
+            )}
           </div>
         ) : (
           <CustomImage isPreview={isPreview} src={src} {...props} />

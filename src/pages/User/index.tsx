@@ -358,6 +358,7 @@ const UserListPage = () => {
         onSelectionChange={(keys) => setSelectedRowKeys(keys as any)}
         page={pageIndex}
         totalPage={users?.totalPage}
+        total={users?.totalElement}
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}

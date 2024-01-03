@@ -1,133 +1,201 @@
-import React, { useState } from 'react';
-import { STATUS_ORDER_OPTIONS } from '../Order/OrderTable';
-import SelectCustom from '~/components/customs/Select';
-import {
-  DATE_FORMAT_DDMMYYYY,
-  DATE_FORMAT_DDMMYYYYHHMMSS,
-  DATE_FORMAT_YYYYMMDDTHHMMSS,
-  formatDate,
-} from '~/utils/date.utils';
-import { DatePicker, Skeleton } from 'antd';
-import MaterialTable from './MaterialTable';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { Button, Input, Selection, useDisclosure } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+
+import DeleteIcon from '~/assets/svg/delete.svg';
+import EditIcon from '~/assets/svg/edit.svg';
+import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
-import materialService from '~/services/materialService';
-import MaterialModal from './MaterialTable/MaterialModal';
 import useDebounce from '~/hooks/useDebounce';
-import Loading from '~/components/GlobalLoading';
+import usePagination from '~/hooks/usePagination';
+import { Category } from '~/models/category';
 import { Material } from '~/models/materials';
-import { ModalType } from '../User/UserModal';
+import { categoryService } from '~/services/categoryService';
+import materialService from '~/services/materialService';
+import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
+import { formatCurrencyVND } from '~/utils/number';
+import CategoryModal from './CategoryModal';
 
-const Materials = () => {
-  const [materialModal, setMaterialModal] = useState<{
-    hasShow?: boolean;
-    materialDetail?: Material;
-    modalType?: string;
-  }>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [dateTimeFilter, setDateTimeFilter] = useState<{
-    startDateTime: string | null;
-    endDateTime: string | null;
-  }>();
-
-  const fromDateTimeDebounce = useDebounce(dateTimeFilter?.startDateTime, 500);
-  const toDateTimeDebounce = useDebounce(dateTimeFilter?.endDateTime, 500);
+const MaterialsPage = () => {
+  const {
+    isOpen: isOpenModal,
+    onOpen: onOpenModal,
+    onOpenChange: onOpenChangeModal,
+  } = useDisclosure();
 
   const {
-    data: dataMaterials,
-    isLoading: isLoadingMaterial,
-    refetch,
-  } = useInfiniteQuery(
-    [QUERY_KEY.MATERIALS, fromDateTimeDebounce, toDateTimeDebounce],
-    async () => {
-      const params = {
-        pageIndex: 0,
-        pageSize: 10,
-        from: fromDateTimeDebounce,
-        to: toDateTimeDebounce,
-      };
+    isOpen: isOpenModalDelete,
+    onOpen: onOpenModalDelete,
+    onOpenChange: onOpenChangeModalDelete,
+  } = useDisclosure();
 
-      return await materialService.searchPagination(params);
+  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
+  const [materialSelectedKeys, setMaterialSelectedKeys] = useState<Selection>();
+  const [modal, setModal] = useState<{
+    isEdit?: boolean;
+    materialId?: string;
+  }>();
+
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const columns: ColumnType<Category>[] = [
+    {
+      align: 'center',
+      name: 'STT',
+      render: (_category: Material, index?: number) => (index || 0) + 1,
+    },
+    {
+      align: 'center',
+      name: 'Ngày nhập',
+      render: (material: Material) =>
+        material?.importDate ? formatDate(material.importDate, DATE_FORMAT_DDMMYYYY) : '',
+    },
+    {
+      align: 'center',
+      name: <Box className="flex justify-center">Số lượng nguyên liệu</Box>,
+      render: (material: Material) => (
+        <Box className="flex justify-center">{material?.materialInfo?.length || 0}</Box>
+      ),
+    },
+    {
+      align: 'center',
+      name: <Box className="flex justify-center">Tổng giá trị</Box>,
+      render: (material: Material) => (
+        <Box className="flex justify-center">{formatCurrencyVND(material?.totalPrice || 0)}</Box>
+      ),
+    },
+    {
+      align: 'center',
+      name: <Box className="flex justify-center">Hành động</Box>,
+      render: (material: Material) => (
+        <div className="flex justify-center space-x-2">
+          <ButtonIcon
+            icon={EditIcon}
+            title="Chỉnh sửa hóa đơn"
+            onClick={() => handleOpenModalEdit(material)}
+          />
+          <ButtonIcon
+            icon={DeleteIcon}
+            title="Xóa hóa đơn này"
+            onClick={() => handleOpenDeleteModal(material)}
+            status="danger"
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const {
+    data: materials,
+    isLoading: isLoadingMaterials,
+    isFetching: isFetchingMaterials,
+    isRefetching: isRefetchingMaterials,
+    refetch: refetchMaterials,
+  } = useQuery(
+    [QUERY_KEY.MATERIALS, pageIndex, pageSize],
+    async () =>
+      await materialService.searchPagination({
+        pageSize: pageSize,
+        pageIndex: pageIndex,
+      }),
+    {
+      refetchOnWindowFocus: false,
     },
   );
 
-  const handleChangeDateFilter = (value: any) => {
-    if (!value) {
-      setDateTimeFilter({
-        startDateTime: null,
-        endDateTime: null,
-      });
-      return;
-    }
-    const startDateTime = formatDate(value[0], DATE_FORMAT_YYYYMMDDTHHMMSS);
-    const endDateTime = formatDate(value[1], DATE_FORMAT_YYYYMMDDTHHMMSS);
-    setDateTimeFilter({
-      startDateTime,
-      endDateTime,
-    });
+  const handleOpenModalEdit = (material: Material) => {
+    setModal({ isEdit: true, materialId: material?._id });
+    onOpenModal();
   };
 
-  const handleGetMateriaDetail = async (id?: string, typeModal?: string) => {
+  const handleOpenDeleteModal = (material: Material) => {
+    setModalDelete({
+      id: material?._id,
+      desc: `Bạn có chắc muốn xóa hóa đơn này  không?`,
+    });
+    onOpenModalDelete();
+  };
+
+  const onOpenAddMaterialModal = () => {
+    setModal({});
+    onOpenModal();
+  };
+
+  const onCloseMaterialDeleteModal = () => {
+    setModalDelete({});
+    onOpenChangeModalDelete();
+  };
+
+  const handleDeleteMaterial = async () => {
     try {
-      if (id && typeModal) {
-        const materialDetail = await materialService.getById(id);
-        if (Object.keys.length > 0) {
-          setMaterialModal({
-            hasShow: true,
-            materialDetail: materialDetail,
-            modalType: typeModal,
-          });
-        }
-      }
-    } catch (error) {
-      console.log(error);
+      setModalDelete((prev) => ({ ...prev, isLoading: true }));
+      await categoryService.deleteCategoryByIds(modalDelete?.id ? [modalDelete.id] : []);
+      enqueueSnackbar('Xóa hóa đơn nhập nguyên liệu thành công!');
+    } catch (err) {
+      enqueueSnackbar('Có lỗi xảy ra khi xóa hóa đơn nhập nguyên liệu!', {
+        variant: 'error',
+      });
+      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteMaterial ~ err:', err);
+    } finally {
+      await refetchMaterials();
+      onCloseMaterialDeleteModal();
     }
   };
 
   return (
-    <>
-      <div className="flex flex-row justify-between items-center gap-2 w-full">
-        <span className="font-bold text-title-xl block pb-2">Danh sách nhập hàng</span>
-        <button
-          onClick={() => setMaterialModal({ hasShow: true, modalType: ModalType.CREATE })}
-          className="rounded-lg bg-primary px-4 py-2 font-normal text-white"
-        >
-          Thêm thông tin nhập hàng
-        </button>
-      </div>
-      <div className="flex items-center flex-row lg:w-[50%] sm:w-[40%] xs:w-full flex-wrap gap-2 mt-3 mb-5">
-        <DatePicker.RangePicker
-          className="!py-[7px] !rounded-md lg:w-[80%] sm:w-[70%]"
-          placeholder={['Từ ngày', 'Đến ngày']}
-          format={[DATE_FORMAT_DDMMYYYYHHMMSS, DATE_FORMAT_DDMMYYYYHHMMSS]}
-          showTime={{ format: 'HH:mm:ss' }}
-          onChange={handleChangeDateFilter}
-        />
-
-        <button className="rounded-lg bg-primary px-4 py-2 font-normal text-white">Tìm</button>
-      </div>
-      {isLoadingMaterial ? (
-        Array(5).map((__item, index) => <Skeleton key={index} />)
-      ) : (
-        <MaterialTable
-          data={dataMaterials}
-          onLoading={setIsLoading}
-          refetch={refetch}
-          onGetMaterialId={handleGetMateriaDetail}
-        />
-      )}
-
-      <MaterialModal
-        onCloseModal={() => setMaterialModal({ hasShow: false })}
-        visible={materialModal?.hasShow}
-        refetch={refetch}
-        onLoading={setIsLoading}
-        modalType={materialModal?.modalType}
-        dataMaterialDetail={materialModal?.materialDetail}
+    <div>
+      <CustomBreadcrumb
+        pageName="Danh sách nguyên liệu"
+        routes={[
+          {
+            label: 'Danh sách nguyên liệu',
+          },
+        ]}
       />
-      {isLoading && <Loading />}
-    </>
+      <div className="flex justify-end items-end mb-2">
+        <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
+          Thêm nguyên liệu
+        </Button>
+      </div>
+      <CustomTable
+        pagination
+        rowKey="_id"
+        columns={columns}
+        data={materials?.data}
+        tableName="Danh sách nguyên liệu"
+        emptyContent="Không có nguyên nào nào"
+        selectedKeys={materialSelectedKeys}
+        onSelectionChange={setMaterialSelectedKeys}
+        totalPage={materials?.totalPage || 1}
+        total={materials?.totalElement}
+        page={pageIndex + 1}
+        rowPerPage={pageSize}
+        onChangePage={setPage}
+        onChangeRowPerPage={setRowPerPage}
+        isLoading={isLoadingMaterials || isFetchingMaterials || isRefetchingMaterials}
+      />
+      <CategoryModal
+        isOpen={isOpenModal}
+        onOpenChange={onOpenChangeModal}
+        onRefetch={refetchMaterials}
+        {...modal}
+      />
+      <ModalConfirmDelete
+        isOpen={isOpenModalDelete}
+        onOpenChange={onOpenChangeModalDelete}
+        desc={modalDelete?.desc}
+        onAgree={handleDeleteMaterial}
+        isLoading={modalDelete?.isLoading}
+      />
+    </div>
   );
 };
 
-export default Materials;
+export default MaterialsPage;

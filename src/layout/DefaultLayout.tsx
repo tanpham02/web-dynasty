@@ -24,7 +24,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}
-          <main>
+          <main className="z-0">
             <div className="mx-auto max-w-screen-2xl p-4 sm:p-10 md:p-7 2xl:p-5">{children}</div>
           </main>
           {/* <!-- ===== Main Content End ===== --> */}

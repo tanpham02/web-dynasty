@@ -15,6 +15,8 @@ import { Category, CategoryStatus } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
 import CategoryModal from './CategoryModal';
 import usePagination from '~/hooks/usePagination';
+import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
 
 const Categories = () => {
   const {
@@ -56,50 +58,51 @@ const Categories = () => {
     },
     {
       align: 'center',
-      name: 'Số lượng sản phẩm',
-      render: (category: Category) => category?.products?.length || 0,
-    },
-    {
-      align: 'center',
-      name: 'Thứ tự hiển thị',
-      render: (category: Category) => category?.priority || 0,
-    },
-    {
-      align: 'center',
-      name: 'Trạng thái',
+      name: <Box className="flex justify-center">Số lượng sản phẩm</Box>,
       render: (category: Category) => (
-        <Chip
-          color={category?.status === CategoryStatus.ACTIVE ? 'success' : 'danger'}
-          variant="flat"
-          classNames={{
-            content: 'font-semibold',
-          }}
-        >
-          {category?.status === CategoryStatus.ACTIVE ? 'Đang kinh doanh' : 'Ngưng kinh doanh'}
-        </Chip>
+        <Box className="flex justify-center">{category?.products?.length || 0}</Box>
       ),
     },
     {
       align: 'center',
-      name: 'Hành động',
+      name: <Box className="flex justify-center">Thứ tự hiển thị</Box>,
       render: (category: Category) => (
-        <div className="relative flex items-center gap-3">
-          <Tooltip content="Chỉnh sửa thuộc tính" showArrow>
-            <span
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-              onClick={() => handleOpenModalEdit(category)}
-            >
-              <SVG src={EditIcon} />
-            </span>
-          </Tooltip>
-          <Tooltip color="danger" content="Xóa thuộc tính này" showArrow>
-            <span
-              className="text-lg text-danger cursor-pointer active:opacity-50"
-              onClick={() => handleOpenDeleteModal(category)}
-            >
-              <SVG src={DeleteIcon} />
-            </span>
-          </Tooltip>
+        <Box className="flex justify-center">{category?.priority || 0}</Box>
+      ),
+    },
+    {
+      align: 'center',
+      name: <Box className="flex justify-center">Trạng thái</Box>,
+      render: (category: Category) => (
+        <Box className="flex justify-center">
+          <Chip
+            color={category?.status === CategoryStatus.ACTIVE ? 'success' : 'danger'}
+            variant="flat"
+            classNames={{
+              content: 'font-semibold',
+            }}
+          >
+            {category?.status === CategoryStatus.ACTIVE ? 'Đang kinh doanh' : 'Ngưng kinh doanh'}
+          </Chip>
+        </Box>
+      ),
+    },
+    {
+      align: 'center',
+      name: <Box className="flex justify-center">Hành động</Box>,
+      render: (category: Category) => (
+        <div className="flex justify-center space-x-2">
+          <ButtonIcon
+            icon={EditIcon}
+            title="Chỉnh sửa thuộc tính"
+            onClick={() => handleOpenModalEdit(category)}
+          />
+          <ButtonIcon
+            icon={DeleteIcon}
+            title="Xóa thuộc tính này"
+            onClick={() => handleOpenDeleteModal(category)}
+            status="danger"
+          />
         </div>
       ),
     },
@@ -174,7 +177,6 @@ const Categories = () => {
           label="Tìm kiếm tên danh mục..."
           size="sm"
           className="max-w-[250px]"
-          color="primary"
           variant="faded"
           value={searchCategory}
           onValueChange={setSearchCategory}
@@ -195,7 +197,8 @@ const Categories = () => {
         emptyContent="Không có danh mục nào"
         selectedKeys={categorySelectedKeys}
         onSelectionChange={setCategorySelectedKeys}
-        totalPage={categories?.totalPage}
+        totalPage={categories?.totalPage || 1}
+        total={categories?.totalElement}
         page={pageIndex + 1}
         rowPerPage={pageSize}
         onChangePage={setPage}

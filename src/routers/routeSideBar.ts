@@ -8,29 +8,23 @@ import MATERIAL_ICON from '~/assets/svg/material-sidebar.svg';
 import VOUCHER_ICON from '~/assets/svg/ticket.svg';
 import CATEGORY_ICON from '~/assets/svg/grid.svg';
 import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
+import OVERVIEW_ICON from '~/assets/svg/overview.svg';
 
 const routeSideBar = [
-  // {
-  //   key: ROUTER_KEY.STATISTIC,
-  //   path: PATH_NAME.NEW_CUSTOMER_STATISTIC,
-  //   title: 'Báo cáo & Thống kê',
-  //   menu: [
-  //     {
-  //       key: ROUTER_KEY.STATISTIC,
-  //       path: PATH_NAME.REVENUE_STATISTIC,
-  //       title: 'Doanh thu trên Mini App',
-  //       icon: CHART_ICON,
-  //       child: [],
-  //     },
-  //     {
-  //       key: ROUTER_KEY.STATISTIC,
-  //       path: PATH_NAME.NEW_CUSTOMER_STATISTIC,
-  //       title: 'Khách hàng mới trên Mini App',
-  //       icon: CUSTOMER_ICON,
-  //       child: [],
-  //     },
-  //   ],
-  // },
+  {
+    key: ROUTER_KEY.STATISTIC,
+    path: PATH_NAME.NEW_CUSTOMER_STATISTIC,
+    title: 'Báo cáo & Thống kê',
+    menu: [
+      {
+        key: ROUTER_KEY.STATISTIC,
+        path: PATH_NAME.REVENUE_STATISTIC,
+        title: 'Thống kê doanh thu',
+        icon: OVERVIEW_ICON,
+        child: [],
+      },
+    ],
+  },
   {
     key: ROUTER_KEY.STAFF_MANAGEMENT,
     path: PATH_NAME.STAFF_MANAGEMENT,

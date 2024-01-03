@@ -24,7 +24,11 @@ import { Attribute, AttributeValue } from '~/models/attribute';
 import { ProductChildrenAttribute, ProductMain } from '~/models/product';
 import { attributeService } from '~/services/attributeService';
 
-const ProductAttributeCard = () => {
+interface ProductAttributeCardProps {
+  isEdit?: boolean;
+}
+
+const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
   const { control, setValue } = useFormContext<ProductMain>();
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
@@ -162,12 +166,23 @@ const ProductAttributeCard = () => {
       </CardHeader>
       <Divider />
       <CardBody className="p-6 space-y-4">
+        {isEdit && (
+          <Box className="mb-1 flex items-center bg-orange-100 p-2 rounded-lg">
+            <Svg src={WarningIcon} className="bg-orange-500 text-white w-5 h-5 rounded-full mr-2" />
+            <span>
+              Vui lòng cập nhật lại giá bán cộng thêm cho từng thuộc tính nếu thay đổi lựa chọn!
+            </span>
+          </Box>
+        )}
         <CheckboxGroup>
           <Box className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:grid-cols-5 2xl:grid-cols-7">
             {attributes?.map((attribute, index) => (
               <Checkbox
                 key={index}
                 value={attribute?._id}
+                isSelected={attributeSelected
+                  ?.map((attribute) => attribute?._id)
+                  ?.includes(attribute?._id)}
                 onValueChange={(checked) => handleChangeAttributeSelected(checked, attribute)}
               >
                 {attribute?.name}
@@ -175,12 +190,7 @@ const ProductAttributeCard = () => {
             ))}
           </Box>
         </CheckboxGroup>
-        <Box className="my-2 flex items-center bg-orange-100 p-2 rounded-lg">
-          <Svg src={WarningIcon} className="bg-orange-500 text-white w-5 h-5 rounded-full mr-2" />
-          <span>
-            Vui lòng cập nhật lại giá bán cộng thêm cho từng thuộc tính nếu thay đổi lựa chọn!
-          </span>
-        </Box>
+
         <CustomTable
           rowKey="id"
           tableName="product attribute"

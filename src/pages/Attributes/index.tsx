@@ -16,6 +16,8 @@ import EyeIcon from '~/assets/svg/eye.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import ButtonIcon from '~/components/ButtonIcon';
+import Box from '~/components/Box';
+import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 
 const Attributes = () => {
   const {
@@ -51,16 +53,25 @@ const Attributes = () => {
     },
     {
       align: 'center',
-      name: 'Số lượng giá trị',
+      name: <Box className="flex justify-center">Số lượng giá trị</Box>,
       render: (attribute: Attribute) => (
-        <span className="font-bold">{attribute?.attributeList?.length || 0}</span>
+        <Box className="flex justify-center">{attribute?.attributeList?.length || 0}</Box>
       ),
     },
     {
       align: 'center',
-      name: 'Hành động',
+      name: <Box className="flex justify-center">Ngày tạo</Box>,
       render: (attribute: Attribute) => (
-        <div className="relative flex items-center gap-2">
+        <Box className="flex justify-center">
+          {attribute.createdAt ? formatDate(attribute?.createdAt, DATE_FORMAT_DDMMYYYY) : ''}
+        </Box>
+      ),
+    },
+    {
+      align: 'center',
+      name: <Box className="flex justify-center">Hành động</Box>,
+      render: (attribute: Attribute) => (
+        <div className="flex items-center justify-center space-x-2">
           <ButtonIcon
             title="Chỉnh sửa thuộc tính"
             icon={EditIcon}
@@ -132,18 +143,19 @@ const Attributes = () => {
             label: 'Danh sách thuộc tính',
           },
         ]}
+        renderRight={
+          <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>
+            Thêm thuộc tính
+          </Button>
+        }
       />
-      <div className="flex justify-end mb-2">
-        <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>
-          Thêm thuộc tính
-        </Button>
-      </div>
       <CustomTable
         columns={columns}
         data={attributes}
         tableName="Danh sách thuộc tính"
         emptyContent="Không có thuộc tính nào"
         isLoading={isLoadingAttributes || isFetchingAttributes || isRefetchingAttributes}
+        total={attributes?.length || 0}
       />
       <AttributeModal
         isOpen={isOpenModal}

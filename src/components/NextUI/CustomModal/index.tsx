@@ -36,7 +36,7 @@ const CustomModal = (props: CustomModalProps) => {
   } = props!;
 
   return createPortal(
-    <div className="z-[99999]">
+    <div className="z-[99999999]">
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -73,7 +73,7 @@ const CustomModal = (props: CustomModalProps) => {
               <ModalBody>{children}</ModalBody>
               {controls && (
                 <ModalFooter>
-                  <Button color="secondary" variant="shadow" onPress={onClose}>
+                  <Button variant="shadow" onPress={onClose}>
                     {cancelButtonText || 'Đóng'}
                   </Button>
                   <Button color="primary" variant="shadow" onPress={onOk} isLoading={isLoading}>

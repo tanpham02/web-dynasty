@@ -1,14 +1,17 @@
-import { Card, CardBody, CardHeader, Divider, SelectItem } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Divider, SelectItem, SelectSection } from '@nextui-org/react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Svg from 'react-inlinesvg';
 
 import InfoIcon from '~/assets/svg/info.svg';
+import GridIcon from '~/assets/svg/grid.svg';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { ProductStatusOptions } from '~/models/product';
 import { categoryService } from '~/services/categoryService';
+import Box from '~/components/Box';
+import React from 'react';
 
 const ProductInfoCard = () => {
   const {
@@ -48,13 +51,41 @@ const ProductInfoCard = () => {
           {
             categories?.pages?.map(
               (page) =>
-                page?.data?.map(
-                  (category) =>
+                page?.data?.map((category) =>
+                  Array.isArray(category?.childrenCategory?.category) &&
+                  category?.childrenCategory?.category.length > 0 ? (
+                    <SelectSection
+                      showDivider
+                      title={
+                        (
+                          <Box className="flex items-center space-x-2 ml-2 font-bold text-base">
+                            <Svg src={GridIcon} className="w-3.5 h-3.5" />
+                            <span>{category?.name}</span>
+                          </Box>
+                        ) as any
+                      }
+                    >
+                      {
+                        category?.childrenCategory?.category.map(
+                          (childrenCategory) =>
+                            childrenCategory?._id && (
+                              <SelectItem
+                                key={childrenCategory._id}
+                                textValue={`${category?.name} ${childrenCategory?.name}`}
+                              >
+                                {category?.name} {childrenCategory?.name}
+                              </SelectItem>
+                            ),
+                        ) as any
+                      }
+                    </SelectSection>
+                  ) : (
                     category?._id && (
-                      <SelectItem key={category._id} value={category._id}>
+                      <SelectItem key={category._id} textValue={category?.name}>
                         {category?.name}
                       </SelectItem>
-                    ),
+                    )
+                  ),
                 ),
             ) as any
           }
