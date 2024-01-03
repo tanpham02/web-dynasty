@@ -209,17 +209,11 @@ const UserModal = ({
 
   useEffect(() => {
     const wardIdWatchValue = watch('wardId')?.toString();
-    console.log('🚀 ~ file: index.tsx:212 ~ useEffect ~ wardIdWatchValue:', wardIdWatchValue);
+
     if (wardIdWatchValue) {
       const wards = handleGetWardsFromVietnamLocation?.find(
         (ward) => ward?.code === wardIdWatchValue,
       );
-      console.log(
-        '🚀 ~ file: index.tsx:215 ~ useEffect ~ handleGetWardsFromVietnamLocation:',
-        handleGetWardsFromVietnamLocation,
-      );
-      console.log('🚀 ~ file: index.tsx:215 ~ useEffect ~ wards:', wards);
-
       setLocations((prev) => ({
         ...prev,
         ward: {
@@ -268,9 +262,10 @@ const UserModal = ({
     const newData: Users = {
       ...data,
       birthday: data?.birthday ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD) : null,
-      role: (data.role && Array.isArray(data.role)
-        ? Array.from(data.role).join()
-        : data.role) as UserRole,
+      // role: (data.role && Array.isArray(data.role)
+      //   ? Array.from(data.role).join()
+      //   : data.role) as UserRole,
+      role: UserRole.USER,
     };
 
     delete newData.cityId;
@@ -430,7 +425,8 @@ const UserModal = ({
               label="E-mail"
               isClearable
             />
-            <FormContextSelect
+
+            {/* <FormContextSelect
               isRequired
               name="role"
               label="Vai trò"
@@ -443,7 +439,8 @@ const UserModal = ({
                   {item.label}
                 </SelectItem>
               ))}
-            </FormContextSelect>
+            </FormContextSelect> */}
+
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
               {mappingVietNamLocation &&
                 mappingVietNamLocation.length > 0 &&

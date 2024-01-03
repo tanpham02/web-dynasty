@@ -1,8 +1,8 @@
 import { Button } from '@nextui-org/button';
-import { Chip, Input, Select, SelectItem, useDisclosure, usePagination } from '@nextui-org/react';
+import { Chip, Input, Select, SelectItem, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
@@ -23,6 +23,7 @@ import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomImage from '~/components/NextUI/CustomImage';
 import Box from '~/components/Box';
+import usePagination from '~/hooks/usePagination';
 
 export interface ModalKey {
   visible?: boolean;
@@ -35,19 +36,15 @@ const UserListPage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
   const [searchText, setSearchText] = useState<string>('');
   const [filterRole, setFilterRole] = useState<UserStatus | string>('');
-
-  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { setPage, total, activePage } = usePagination({
-    page: 0,
-    total: 100,
-  });
   const [modal, setModal] = useState<{
     isEdit?: boolean;
     userId?: string;
   }>({ isEdit: false });
+  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
 
   const {
     isOpen: isOpenModal,
@@ -111,7 +108,7 @@ const UserListPage = () => {
           </Box>
         ) : (
           <Box className="rounded-2xl !h-[100px] !w-[100px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
-            {user?.fullName && user.fullName.charAt(0).toUpperCase()}
+            {user?.fullName ? user.fullName.charAt(0) : user?.username!.charAt(0).toUpperCase()}
           </Box>
         ),
     },
@@ -156,14 +153,14 @@ const UserListPage = () => {
       render: (user: Users) => (
         <div className="flex items-center gap-2">
           <ButtonIcon
-            title={`${
-              handleCheckRolePermission(user, currentUserLogin)
-                ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
-                : 'Chỉnh sửa nhân viên'
-            }`}
-            //disable={handleCheckRolePermission(user, currentUserLogin)}
+            // title={`${
+            //   handleCheckRolePermission(user, currentUserLogin)
+            //     ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
+            //     : 'Chỉnh sửa nhân viên'
+            // }`}
+            title="Chỉnh sửa nhân viên"
+            // disable={handleCheckRolePermission(user, currentUserLogin)}
             icon={EditIcon}
-            status={handleCheckRolePermission(user, currentUserLogin) ? 'warning' : 'default'}
             showArrow
             delay={500}
             onClick={() => {
@@ -198,11 +195,11 @@ const UserListPage = () => {
     refetch: refetchUser,
     isLoading: isLoadingUser,
   } = useQuery(
-    [QUERY_KEY.USERS, search, role, activePage],
+    [QUERY_KEY.USERS, search, role, pageIndex, pageSize],
     async () => {
       const params = {
-        // pageIndex: handlePagination.pageIndex,
-        // pageSize: pagination.pageSize,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
         fullName: search,
         role: role,
       };
@@ -213,16 +210,16 @@ const UserListPage = () => {
     },
   );
 
-  const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {
-    // if(userRecord._id && userCurrentLogin._id &&  ) {
-
-    // }
-    return false;
-  };
-
-  const handleChangeSelectedRowsKey = (keys: any) => {
-    setSelectedRowKeys(keys);
-  };
+  // const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {
+  //   if (userRecord._id === userCurrentLogin._id) {
+  //    if (userCurrentLogin.role === UserRole.ADMIN) {
+  //     if(userRecord.role === UserRole.USER) {
+  //       return false
+  //     } return true
+  //    }
+  //   }
+  //   return true;
+  // };
 
   const handleDeleteUser = async () => {
     globalLoading.show();
@@ -235,11 +232,14 @@ const UserListPage = () => {
       ids.push(modalConfirmDelete.id);
     }
 
-    if (selectedRowKeys.size !== 0) {
-      console.log(
-        '🚀 ~ file: index.tsx:228 ~ handleDeleteUser ~ selectedRowKeys:',
-        selectedRowKeys,
-      );
+    if (selectedRowKeys && Array.from(selectedRowKeys).length) {
+      if (String(selectedRowKeys) === 'all') {
+        ids = users?.data
+          .filter((user) => user._id !== currentUserLogin._id)
+          ?.map((user) => user._id) as any;
+      } else {
+        ids = Array.from(selectedRowKeys);
+      }
     }
 
     try {
@@ -316,7 +316,7 @@ const UserListPage = () => {
           </div>
 
           <div className="space-x-2 space-y-2 w-fit ml-auto">
-            {selectedRowKeys.size !== 0 ? (
+            {selectedRowKeys && Array.from(selectedRowKeys).length ? (
               <Button
                 color="danger"
                 variant="shadow"
@@ -350,10 +350,16 @@ const UserListPage = () => {
         isLoading={isLoadingUser}
         data={users?.data}
         pagination
+        disabledKeys={[currentUserLogin._id] as any}
         tableName="Danh sách nhân viên"
         emptyContent="Không có nhân viên nào"
         selectedKeys={selectedRowKeys}
-        onSelectionChange={handleChangeSelectedRowsKey}
+        onSelectionChange={(keys) => setSelectedRowKeys(keys as any)}
+        page={pageIndex}
+        totalPage={users?.totalPage}
+        rowPerPage={pageSize}
+        onChangePage={setPage}
+        onChangeRowPerPage={setRowPerPage}
       />
 
       <UserModal
