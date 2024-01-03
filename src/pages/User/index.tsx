@@ -248,6 +248,7 @@ const UserListPage = () => {
       enqueueSnackbar({
         message: 'Xoá nhân viên thành công!',
       });
+      setSelectedRowKeys(new Set([]));
     } catch (err) {
       console.log(err);
       enqueueSnackbar({
