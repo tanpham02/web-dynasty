@@ -31,7 +31,6 @@ const Upload: React.FC<UploadProps> = (props) => {
     reader.readAsDataURL(file as any);
   };
 
-  // o tren radíu bao nhi3u, thì cai image rádíu bay nhieu
   return (
     <>
       <div

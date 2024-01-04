@@ -1,3 +1,4 @@
+import { Attribute } from './attribute';
 export interface PercentSale {
   type: 'percent';
   percent: number;
@@ -103,6 +104,7 @@ export interface ProductMain {
   productVariantId?: string;
   attribute?: string[];
   productAttributeList?: ProductChildrenAttribute[];
+  attributeMapping?: string[] | Attribute[];
 }
 
 export interface ProductChildrenAttribute {

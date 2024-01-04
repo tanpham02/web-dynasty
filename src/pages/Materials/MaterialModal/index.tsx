@@ -17,21 +17,22 @@ import { Category } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
 import DeleteIcon from '~/assets/svg/delete.svg';
 import { globalLoading } from '~/components/GlobalLoading';
+import { DatePicker } from 'antd';
 
-interface CategoryModalProps {
+interface MaterialModalProps {
   isOpen?: boolean;
   onOpenChange?(): void;
   onRefetch?(): Promise<any>;
   isEdit?: boolean;
   categoryId?: string;
 }
-const CategoryModal = ({
+const MaterialModal = ({
   isOpen,
   onOpenChange,
   onRefetch,
   isEdit,
   categoryId,
-}: CategoryModalProps) => {
+}: MaterialModalProps) => {
   const forms = useForm<Category>({
     defaultValues: { priority: 0, childrenCategory: {} },
   });
@@ -214,57 +215,18 @@ const CategoryModal = ({
       onOpenChange={onOpenChange}
       title={isEdit ? 'Cập nhật danh mục' : 'Thêm danh mục mới'}
       okButtonText={isEdit ? 'Lưu thay đổi' : 'Thêm'}
-      className="w-full max-w-[1000px]"
+      isDismissable={false}
+      scrollBehavior="inside"
+      className="w-full max-w-[800px]"
       onOk={handleSubmit(onSubmit)}
       isLoading={isSubmitting}
     >
       <FormProvider {...forms}>
-        {Array.isArray(categoriesData) ? (
-          <Box className="space-y-4">
-            {Boolean(!childrenCategory?.length && categoriesData?.length) && (
-              <FormContextSelect
-                isLoading={isLoadingCategory || isFetchingCategory}
-                name="childrenCategory.parentId"
-                label="Danh mục cha (nếu có)"
-              >
-                {
-                  categoriesData?.map((category) =>
-                    category?._id && category._id !== categoryId ? (
-                      <SelectItem key={category._id}>{category?.name}</SelectItem>
-                    ) : null,
-                  ) as any
-                }
-              </FormContextSelect>
-            )}
-            <FormContextInput
-              isRequired
-              name="name"
-              label="Tên danh mục"
-              rules={{
-                required: 'Vui lòng nhập tên danh mục',
-              }}
-            />
-            <FormContextInput name="priority" label="Thứ tự hiển thị" type="number" />
-            <FormContextSwitch name="isShowHomePage" label="Hiển thị trên trang chủ" />
-            {Boolean(childrenCategory?.length) && (
-              <Box>
-                <span className="font-semibold mb-2 block text-base">Danh mục con</span>
-                <CustomTable
-                  columns={columns}
-                  data={childrenCategory as any}
-                  isLoading={isLoadingCategory || isFetchingCategory}
-                  selectionMode="none"
-                  rowPerPage={5}
-                />
-              </Box>
-            )}
-          </Box>
-        ) : (
-          <ModalCategorySkeleton />
-        )}
+        <DatePicker placeholder="Ngày nhập hóa đơn" />
+        <FormContextInput name="totalPrice" label="Tổng giá trị hóa đơn" />
       </FormProvider>
     </CustomModal>
   );
 };
 
-export default CategoryModal;
+export default MaterialModal;

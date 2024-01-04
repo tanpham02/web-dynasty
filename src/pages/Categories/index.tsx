@@ -94,17 +94,17 @@ const Categories = () => {
         <div className="flex justify-center space-x-2">
           <ButtonIcon
             icon={EditIcon}
-            title="Chỉnh sửa thuộc tính"
+            title="Chỉnh sửa danh mục"
             onClick={() => handleOpenModalEdit(category)}
           />
           <ButtonIcon
             icon={DeleteIcon}
-            title="Xóa thuộc tính này"
+            title="Xóa thuộc danh mục này"
             onClick={() => handleOpenDeleteModal(category)}
             status="danger"
           />
         </div>
-      ),
+      ), 
     },
   ];
 

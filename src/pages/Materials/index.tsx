@@ -19,7 +19,7 @@ import { categoryService } from '~/services/categoryService';
 import materialService from '~/services/materialService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
-import CategoryModal from './CategoryModal';
+import CategoryModal from './MaterialModal';
 
 const MaterialsPage = () => {
   const {
