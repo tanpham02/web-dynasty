@@ -1,23 +1,19 @@
-import { Chip, SelectItem, Skeleton } from '@nextui-org/react';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { Button } from '@nextui-org/react';
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { DatePicker } from 'antd';
 
+import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
+import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
-import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
-import FormContextSwitch from '~/components/NextUI/Form/FormContextSwitch';
-import ModalCategorySkeleton from '~/components/Skeleton/ModalCategorySkeleton';
-import { QUERY_KEY } from '~/constants/queryKey';
 import { Category } from '~/models/category';
+import { Material, MaterialInformation } from '~/models/materials';
 import { categoryService } from '~/services/categoryService';
-import DeleteIcon from '~/assets/svg/delete.svg';
-import { globalLoading } from '~/components/GlobalLoading';
-import { DatePicker } from 'antd';
 
 interface MaterialModalProps {
   isOpen?: boolean;
@@ -33,9 +29,7 @@ const MaterialModal = ({
   isEdit,
   categoryId,
 }: MaterialModalProps) => {
-  const forms = useForm<Category>({
-    defaultValues: { priority: 0, childrenCategory: {} },
-  });
+  const forms = useForm<Material>();
 
   const {
     handleSubmit,
@@ -44,40 +38,79 @@ const MaterialModal = ({
     control,
   } = forms;
 
-  const { fields: childrenCategory, remove: removeChildrenCategory } = useFieldArray({
+  const {
+    fields: materials,
+    remove: removeMaterial,
+    append: appendMaterial,
+  } = useFieldArray({
     control,
-    name: 'childrenCategory.category',
+    name: 'materialInfo',
   });
 
   const columns: ColumnType<Category>[] = [
     {
-      name: 'Tên danh mục',
-      render: (_record: Category, index?: number) => (
-        <FormContextInput name={`childrenCategory.category.${index}.name`} />
+      name: 'Tên nguyên liệu',
+      render: (_record: MaterialInformation, index?: number) => (
+        <FormContextInput
+          name={`materialInfo.${index}.name`}
+          rules={{
+            required: 'Vui lòng nhập tên nguyên liệu!',
+          }}
+        />
       ),
     },
     {
-      name: 'Thứ tự hiển thị',
-      render: (_record: Category, index?: number) => (
-        <FormContextInput name={`childrenCategory.category.${index}.priority`} type="number" />
+      name: 'Giá nhập',
+      width: 200,
+      render: (_record: MaterialInformation, index?: number) => (
+        <FormContextInput
+          name={`materialInfo.${index}.price`}
+          type="number"
+          rules={{
+            required: 'Vui lòng nhập giá nguyên liệu!',
+          }}
+        />
       ),
     },
     {
-      name: 'Hiển trị trên trang chủ',
-      render: (record: Category, index?: number) => (
-        <FormContextSwitch name={`childrenCategory.category.${index}.isShowHomePage`} />
+      name: 'Số lượng',
+      width: 200,
+      render: (_record: MaterialInformation, index?: number) => (
+        <FormContextInput
+          name={`materialInfo.${index}.quantity`}
+          type="number"
+          rules={{
+            required: 'Vui lòng nhập số lượng nguyên liệu!',
+            min: {
+              value: 0.01,
+              message: 'Số lượng nguyên liệu nhập không được nhỏ hơn 0!',
+            },
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Đơn vị tính',
+      width: 200,
+      render: (_record: MaterialInformation, index?: number) => (
+        <FormContextInput
+          name={`materialInfo.${index}.unit`}
+          rules={{
+            required: 'Vui lòng nhập đơn vị tính nguyên liệu!',
+          }}
+        />
       ),
     },
     {
       name: <Box className="flex justify-center">Hành động</Box>,
-      render: (record: Category, index?: number) => (
+      width: 100,
+      render: (_record: MaterialInformation, index?: number) => (
         <Box className="flex justify-center">
           <ButtonIcon
             icon={DeleteIcon}
-            title="Xóa danh mục này"
+            title="Xóa danh nguyên liệu nhập này"
             status="danger"
-            placement="top"
-            onClick={() => removeChildrenCategory(index)}
+            onClick={() => removeMaterial(index)}
           />
         </Box>
       ),
@@ -87,21 +120,11 @@ const MaterialModal = ({
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if (categoryId && isEdit && isOpen) getCategoryDetail();
-    else resetFormValue({ name: '', childrenCategory: { category: [] } });
+    if (categoryId && isEdit && isOpen) getMaterialDetail();
+    else resetFormValue({ materialInfo: [] });
   }, [isEdit, categoryId, isOpen]);
 
-  const {
-    data: categories,
-    isLoading: isLoadingCategory,
-    isFetching: isFetchingCategory,
-  } = useInfiniteQuery(
-    [QUERY_KEY.CATEGORY],
-    async () => categoryService.getCategoryByCriteria({}),
-    { enabled: isOpen },
-  );
-
-  const getCategoryDetail = async () => {
+  const getMaterialDetail = async () => {
     try {
       globalLoading.show();
       const response = await categoryService.getCategoryById(categoryId);
@@ -109,9 +132,9 @@ const MaterialModal = ({
         resetFormValue(response);
       }
     } catch (err) {
-      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu danh mục!');
+      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu hóa đơn nhập nguyên liệu!');
       onOpenChange?.();
-      console.log('🚀 ~ file: index.tsx:125 ~ getCategoryDetail ~ err:', err);
+      console.log('🚀 ~ file: index.tsx:125 ~ getMaterialDetail ~ err:', err);
     } finally {
       setTimeout(() => {
         globalLoading.hide();
@@ -119,83 +142,24 @@ const MaterialModal = ({
     }
   };
 
-  const categoriesData = useMemo(
-    () => categories?.pages?.flatMap((page) => page?.data),
-    [categories],
-  );
-
   const onSubmit = async (data: Category) => {
     try {
       const formData = new FormData();
 
-      let jsonData: Category = {};
-      let parentCategoryId: string = '';
-      let isCreateChildrenCategory: boolean = false;
-
-      if (data?.childrenCategory?.parentId) {
-        parentCategoryId =
-          Array.isArray(data.childrenCategory.parentId) && data.childrenCategory.parentId.length > 0
-            ? data.childrenCategory.parentId[0]
-            : data.childrenCategory.parentId;
-        const parentCategory = categoriesData?.find((item) => item._id === parentCategoryId);
-        isCreateChildrenCategory = true;
-
-        if (!isEdit) {
-          jsonData = {
-            ...parentCategory,
-            childrenCategory: {
-              parentId: parentCategoryId,
-              category: [
-                ...(parentCategory?.childrenCategory?.category || []),
-                {
-                  name: data?.name,
-                  priority: data?.priority,
-                  isShowHomePage: data?.isShowHomePage,
-                },
-              ],
-            },
-          };
-        } else {
-          jsonData = {
-            ...parentCategory,
-            childrenCategory: {
-              parentId: parentCategoryId,
-              category: !data?.childrenCategory?.category?.length
-                ? data?.childrenCategory?.parentId === parentCategoryId
-                  ? []
-                  : [
-                      ...(parentCategory?.childrenCategory?.category || []),
-                      {
-                        name: data?.name,
-                        priority: data?.priority,
-                        isShowHomePage: data?.isShowHomePage,
-                      },
-                    ]
-                : data?.childrenCategory?.category,
-            },
-          };
-        }
-        delete jsonData?._id;
-      } else {
-        jsonData = data;
-      }
-
-      formData.append('categoryInfo', JSON.stringify(jsonData));
-
-      if (isEdit || isCreateChildrenCategory) {
-        await categoryService.updateCategory(
-          !isCreateChildrenCategory ? categoryId : parentCategoryId,
-          formData,
-        );
-        // if (
-        //   isCreateChildrenCategory &&
-        //   categoryId &&
-        //   data?.childrenCategory?.parentId === parentCategoryId
-        // )
-        //   await categoryService.deleteCategoryByIds([categoryId]);
-      } else {
-        await categoryService.createCategory(formData);
-      }
+      // if (isEdit || isCreateChildrenCategory) {
+      //   await categoryService.updateCategory(
+      //     !isCreateChildrenCategory ? categoryId : parentCategoryId,
+      //     formData,
+      //   );
+      //   // if (
+      //   //   isCreateChildrenCategory &&
+      //   //   categoryId &&
+      //   //   data?.childrenCategory?.parentId === parentCategoryId
+      //   // )
+      //   //   await categoryService.deleteCategoryByIds([categoryId]);
+      // } else {
+      //   await categoryService.createCategory(formData);
+      // }
 
       enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} danh mục thành công!`);
     } catch (err) {
@@ -213,17 +177,40 @@ const MaterialModal = ({
     <CustomModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={isEdit ? 'Cập nhật danh mục' : 'Thêm danh mục mới'}
+      title={isEdit ? 'Cập nhật hóa đơn nhập hàng' : 'Thêm hóa đơn nhập hàng mới'}
       okButtonText={isEdit ? 'Lưu thay đổi' : 'Thêm'}
+      className="w-full max-w-[1200px]"
       isDismissable={false}
-      scrollBehavior="inside"
-      className="w-full max-w-[800px]"
       onOk={handleSubmit(onSubmit)}
       isLoading={isSubmitting}
     >
       <FormProvider {...forms}>
-        <DatePicker placeholder="Ngày nhập hóa đơn" />
-        <FormContextInput name="totalPrice" label="Tổng giá trị hóa đơn" />
+        <Box className="space-y-4">
+          <DatePicker placeholder="Ngày nhập hàng" />
+          <Box className="flex justify-between items-end mb-2">
+            <span className="font-bold text-base">Danh sách nguyên liệu</span>
+            <Box className="space-x-2">
+              <Button
+                color="danger"
+                size="sm"
+                variant="flat"
+                className="font-bold"
+                onClick={() => removeMaterial(undefined)}
+              >
+                Xóa tất cả
+              </Button>
+              <Button
+                color="default"
+                size="sm"
+                className="bg-sky-100 text-sky-500 font-bold"
+                onClick={() => appendMaterial({ name: '', price: 0, quantity: 0, unit: '' })}
+              >
+                Thêm nguyên liệu nhập
+              </Button>
+            </Box>
+          </Box>
+          <CustomTable key="id" columns={columns} data={materials || []} isLoading={false} />
+        </Box>
       </FormProvider>
     </CustomModal>
   );

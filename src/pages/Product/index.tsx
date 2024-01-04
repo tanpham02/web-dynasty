@@ -145,13 +145,13 @@ const ProductListPage = () => {
         console.log('🚀 ~ file: index.tsx:144 ~ mutationFn: ~ productDeleteIDs:', productDeleteIDs);
 
         await productService.deleteProduct(productDeleteIDs as string[]);
-        await refetchProduct();
       } catch (err) {
         enqueueSnackbar('Xóa sản phẩm không thành công!', {
           variant: 'error',
         });
         console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err);
       } finally {
+        await refetchProduct();
         onCloseModalDeleteProduct();
       }
     },

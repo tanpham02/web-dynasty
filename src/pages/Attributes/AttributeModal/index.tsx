@@ -166,7 +166,7 @@ const AttributeModal = ({
                   color="secondary"
                   size="sm"
                   variant="flat"
-                  className="bg-sky-200 text-sky-500 font-bold"
+                  className="bg-sky-100 text-sky-500 font-bold"
                   onClick={() =>
                     appendAttributeValue({
                       name: '',

@@ -10,11 +10,11 @@ import Box from '~/components/Box';
 import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
 import Upload, { onChangeUploadState } from '~/components/Upload';
 import { PATH_NAME } from '~/constants/router';
-import { AttributeValue, ProductMain } from '~/models/product';
+import { ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
+import { getFullImageUrl } from '~/utils/image';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
-import { getFullImageUrl } from '~/utils/image';
 
 interface ProductFormProps {
   currentProduct?: ProductMain;
@@ -71,6 +71,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data: ProductMain) => {
+    console.log('🚀 ~ file: index.tsx:74 ~ onSubmit ~ data:', data);
     try {
       const formData = new FormData();
 
@@ -89,6 +90,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             }),
           };
         }),
+        attributeMapping: data?.attributeIds || [],
       });
 
       formData.append('productInfo', jsonData);

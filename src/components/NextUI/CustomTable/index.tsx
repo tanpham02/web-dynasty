@@ -17,6 +17,7 @@ export interface ColumnType<T> {
   align?: 'start' | 'center' | 'end';
   render: (value: T, index?: number) => React.ReactNode;
   className?: string;
+  width?: number;
 }
 
 export default function CustomTable<T>({
@@ -72,8 +73,10 @@ export default function CustomTable<T>({
         removeWrapper={removeWrapper}
         isStriped={isStriped}
         disabledKeys={disabledKeys}
+        isHeaderSticky
         classNames={{
           th: ['bg-zinc-200', 'text-black'],
+          base: 'max-h-[450px]',
         }}
       >
         <TableHeader columns={columns as ColumnType<T>[]} className="relative">
@@ -81,6 +84,7 @@ export default function CustomTable<T>({
             <TableColumn
               key={uuidv4()}
               className={`font-bold text-sm select-none ${column?.className}`}
+              width={column?.width}
             >
               {column?.name}
             </TableColumn>

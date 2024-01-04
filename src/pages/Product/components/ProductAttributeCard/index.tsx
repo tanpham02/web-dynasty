@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 
@@ -33,7 +33,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
   const [attributeIds, setAttributeIds] = useState<string[]>([]);
-  console.log('🚀 ~ file: index.tsx:36 ~ ProductAttributeCard ~ attributeIds:', attributeIds);
+  const isCheckedAttributeBefore = useRef<boolean>(false);
 
   const columns: ColumnType<ProductChildrenAttribute>[] = [
     {
@@ -106,21 +106,18 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     setValue('productAttributeList', []);
     if (attributeSelected.length > 0) {
       generateCombinations(0, [], [], []);
-      // setValue(
-      //   'attributeMapping',
-      //   attributeSelected?.map((attribute) => attribute?._id) as string[],
-      // );
+      setValue('attributeIds', attributeSelected?.map((attribute) => attribute?._id) as string[]);
     }
   }, [JSON.stringify(attributeSelected)]);
 
-  // useEffect(() => {
-  //   const oldProductAttribute = getValues('attributeMapping');
-  //   if (isEdit && Array.isArray(oldProductAttribute) && oldProductAttribute.length > 0) {
-  //     console.log('jumb here', getValues('attributeMapping'));
-  //     setAttributeSelected(oldProductAttribute as Attribute[]);
-  //     setAttributeIds(oldProductAttribute?.map((attribute) => attribute?._id) || []);
-  //   }
-  // }, [isEdit, getValues('attributeMapping')]);
+  useEffect(() => {
+    const oldProductAttribute = getValues('attributeMapping');
+    if (isEdit && Array.isArray(oldProductAttribute) && oldProductAttribute.length > 0) {
+      setAttributeSelected(oldProductAttribute as Attribute[]);
+      setAttributeIds((oldProductAttribute?.map((attribute) => attribute?._id) as string[]) || []);
+      // isCheckedAttributeBefore.current = true;
+    }
+  }, [isEdit, getValues('attributeMapping')]);
 
   const generateCombinations = useCallback(
     (
@@ -168,14 +165,11 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
   );
 
   const handleChangeAttributeSelected = (checked: boolean, attribute: Attribute) => {
-    console.log('🚀 ~ file: index.tsx:170 ~ handleChangeAttributeSelected ~ checked:', checked);
     if (checked) {
       setAttributeSelected((prev) => [...prev, attribute]);
     } else {
       setAttributeSelected(attributeSelected?.filter((item) => item?._id != attribute?._id) || []);
     }
-
-    setAttributeIds((attributeSelected?.map((attribute) => attribute?._id) as string[]) || []);
   };
 
   return (
@@ -194,13 +188,13 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
             </span>
           </Box>
         )}
-        <CheckboxGroup>
+        <CheckboxGroup value={attributeIds} onValueChange={setAttributeIds}>
           <Box className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:grid-cols-5 2xl:grid-cols-7">
             {attributes?.map((attribute, index) => (
               <Checkbox
                 key={index}
                 value={attribute?._id}
-                // isSelected={attributeIds?.includes(attribute?._id)}
+                // checked={attributeIds?.includes(attribute?._id)}
                 onValueChange={(checked) => handleChangeAttributeSelected(checked, attribute)}
               >
                 {attribute?.name}

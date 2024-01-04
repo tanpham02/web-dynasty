@@ -104,7 +104,8 @@ export interface ProductMain {
   productVariantId?: string;
   attribute?: string[];
   productAttributeList?: ProductChildrenAttribute[];
-  attributeMapping?: string[] | Attribute[];
+  attributeMapping?: Attribute[];
+  attributeIds?: string[];
 }
 
 export interface ProductChildrenAttribute {
