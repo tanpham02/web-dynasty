@@ -2,6 +2,8 @@ import { Button, Selection, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
+import { DatePicker } from 'antd';
+import { Moment } from 'moment';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
@@ -18,8 +20,6 @@ import materialService from '~/services/materialService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
 import MaterialModal from './MaterialModal';
-import { DatePicker } from 'antd';
-import { Moment } from 'moment';
 
 const MaterialsPage = () => {
   const {
@@ -190,11 +190,10 @@ const MaterialsPage = () => {
       <CustomTable
         pagination
         rowKey="_id"
-        selectionMode="none"
         columns={columns}
         data={materials?.data}
         tableName="Danh sách nguyên liệu"
-        emptyContent="Không có nguyên nào nào"
+        emptyContent="Không có hóa đơn nhập hàng nào"
         selectedKeys={materialSelectedKeys}
         onSelectionChange={setMaterialSelectedKeys}
         totalPage={materials?.totalPage || 0}

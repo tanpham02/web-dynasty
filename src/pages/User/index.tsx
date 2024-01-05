@@ -198,7 +198,7 @@ const UserListPage = () => {
     [QUERY_KEY.USERS, search, role, pageIndex, pageSize],
     async () => {
       const params = {
-        pageIndex: pageIndex,
+        pageIndex: pageIndex - 1,
         pageSize: pageSize,
         fullName: search,
         role: role,
