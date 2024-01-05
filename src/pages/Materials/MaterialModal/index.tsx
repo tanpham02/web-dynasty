@@ -1,8 +1,10 @@
 import { Button } from '@nextui-org/react';
+import { DatePicker } from 'antd';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { DatePicker } from 'antd';
+import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
+import moment from 'moment';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
@@ -11,23 +13,25 @@ import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
+import { QUERY_KEY } from '~/constants/queryKey';
 import { Category } from '~/models/category';
 import { Material, MaterialInformation } from '~/models/materials';
-import { categoryService } from '~/services/categoryService';
+import materialService from '~/services/materialService';
+import { DATE_FORMAT_DDMMYYYY } from '~/utils/date.utils';
 
 interface MaterialModalProps {
   isOpen?: boolean;
   onOpenChange?(): void;
-  onRefetch?(): Promise<any>;
+  onRefetch?(): void;
   isEdit?: boolean;
-  categoryId?: string;
+  materialId?: string;
 }
 const MaterialModal = ({
   isOpen,
   onOpenChange,
   onRefetch,
   isEdit,
-  categoryId,
+  materialId,
 }: MaterialModalProps) => {
   const forms = useForm<Material>();
 
@@ -108,7 +112,7 @@ const MaterialModal = ({
         <Box className="flex justify-center">
           <ButtonIcon
             icon={DeleteIcon}
-            title="Xóa danh nguyên liệu nhập này"
+            title="Xóa nguyên liệu nhập này"
             status="danger"
             onClick={() => removeMaterial(index)}
           />
@@ -120,55 +124,65 @@ const MaterialModal = ({
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if (categoryId && isEdit && isOpen) getMaterialDetail();
-    else resetFormValue({ materialInfo: [] });
-  }, [isEdit, categoryId, isOpen]);
-
-  const getMaterialDetail = async () => {
-    try {
-      globalLoading.show();
-      const response = await categoryService.getCategoryById(categoryId);
-      if (response && Object.keys(response).length > 0) {
-        resetFormValue(response);
-      }
-    } catch (err) {
-      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu hóa đơn nhập nguyên liệu!');
-      onOpenChange?.();
-      console.log('🚀 ~ file: index.tsx:125 ~ getMaterialDetail ~ err:', err);
-    } finally {
-      setTimeout(() => {
-        globalLoading.hide();
-      }, 1000);
+    if (!(materialId && isEdit && isOpen)) {
+      resetFormValue({ materialInfo: [], importDate: undefined });
     }
-  };
+  }, [isEdit, materialId, isOpen]);
 
-  const onSubmit = async (data: Category) => {
+  useQuery(
+    [QUERY_KEY.MATERIALS, materialId],
+    async () => {
+      try {
+        globalLoading.show();
+        if (materialId) {
+          const response = await materialService.getById(materialId);
+          if (response && Object.keys(response).length > 0) {
+            resetFormValue(response);
+          }
+        }
+        return null;
+      } catch (err) {
+        enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu hóa đơn nhập nguyên liệu!', {
+          variant: 'error',
+        });
+        onOpenChange?.();
+        console.log('🚀 ~ file: index.tsx:125 ~ getMaterialDetail ~ err:', err);
+      } finally {
+        setTimeout(() => {
+          globalLoading.hide();
+        }, 1000);
+      }
+    },
+    { enabled: Boolean(materialId && isOpen && isEdit), refetchOnWindowFocus: false },
+  );
+
+  const onSubmit = async (data: Material) => {
+    if (!data?.materialInfo?.length) {
+      enqueueSnackbar('Vui lòng thêm ít nhất một nguyên liệu nhập!', {
+        variant: 'error',
+      });
+      return;
+    }
+
     try {
       const formData = new FormData();
 
-      // if (isEdit || isCreateChildrenCategory) {
-      //   await categoryService.updateCategory(
-      //     !isCreateChildrenCategory ? categoryId : parentCategoryId,
-      //     formData,
-      //   );
-      //   // if (
-      //   //   isCreateChildrenCategory &&
-      //   //   categoryId &&
-      //   //   data?.childrenCategory?.parentId === parentCategoryId
-      //   // )
-      //   //   await categoryService.deleteCategoryByIds([categoryId]);
-      // } else {
-      //   await categoryService.createCategory(formData);
-      // }
+      formData.append('materialInfo', JSON.stringify(data));
 
-      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} danh mục thành công!`);
+      if (isEdit) {
+        await materialService.update(materialId, formData);
+      } else {
+        await materialService.create(formData);
+      }
+
+      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} hóa đơn nhập hàng thành công!`);
     } catch (err) {
-      enqueueSnackbar(`Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} danh mục!`, {
+      enqueueSnackbar(`Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} hóa đơn nhập hàng!`, {
         variant: 'error',
       });
       console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
     } finally {
-      await onRefetch?.();
+      onRefetch?.();
       onOpenChange?.();
     }
   };
@@ -186,7 +200,26 @@ const MaterialModal = ({
     >
       <FormProvider {...forms}>
         <Box className="space-y-4">
-          <DatePicker placeholder="Ngày nhập hàng" />
+          <Controller
+            control={control}
+            name="importDate"
+            rules={{
+              required: 'Vui lòng chọn ngày nhập hàng!',
+            }}
+            render={({ field: { value, onChange, ref }, fieldState: { error } }) => (
+              <Box>
+                <DatePicker
+                  allowClear
+                  ref={ref}
+                  value={value ? moment(value) : undefined}
+                  format={DATE_FORMAT_DDMMYYYY}
+                  placeholder="Ngày nhập hàng"
+                  onChange={(date) => (date ? onChange(moment(date)) : '')}
+                />
+                <span className="text-xs text-danger">{error?.message}</span>
+              </Box>
+            )}
+          />
           <Box className="flex justify-between items-end mb-2">
             <span className="font-bold text-base">Danh sách nguyên liệu</span>
             <Box className="space-x-2">

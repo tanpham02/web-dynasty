@@ -14,12 +14,12 @@ interface PaginationProps {
 
 const usePagination = (): PaginationProps => {
   const [paginationValue, setPaginationValue] = useState<Pagination>({
-    pageIndex: 0,
+    pageIndex: 1,
     pageSize: 10,
   });
 
   const setPage = (pageIndex: number) => {
-    setPaginationValue((prev) => ({ ...prev, pageIndex: pageIndex - 1 }));
+    setPaginationValue((prev) => ({ ...prev, pageIndex }));
   };
 
   const setRowPerPage = (pageSize: number) => {

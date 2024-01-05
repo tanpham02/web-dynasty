@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export interface MaterialInformation {
   name?: string;
   price?: number;
@@ -6,7 +8,7 @@ export interface MaterialInformation {
 }
 export interface Material {
   _id?: string;
-  importDate?: string | Date | null;
+  importDate?: string | Moment;
   materialInfo?: MaterialInformation[];
   totalPrice?: number;
   updatedAt?: string;

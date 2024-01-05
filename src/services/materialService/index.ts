@@ -2,6 +2,7 @@ import { Material } from '~/models/materials';
 import { ListDataResponse, SearchParams } from '~/types';
 import axiosService from '../axiosService';
 import { MATERIALS_URL } from '../apiUrl';
+import { Key } from 'react';
 
 const materialService = {
   searchPagination: (params: SearchParams): Promise<ListDataResponse<Material>> => {
@@ -15,10 +16,13 @@ const materialService = {
         throw err;
       });
   },
-  create: (data: Material): Promise<Material> => {
+  create: (data: FormData): Promise<Material> => {
     return axiosService()({
       method: 'POST',
-      baseURL: `${MATERIALS_URL}/create`,
+      baseURL: `${MATERIALS_URL}`,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
       data,
     })
       .then((res) => res.data)
@@ -26,10 +30,13 @@ const materialService = {
         throw err;
       });
   },
-  update: (id: string, data: Material): Promise<Material> => {
+  update: (id?: string, data?: FormData): Promise<Material> => {
     return axiosService()({
       method: 'PATCH',
       baseURL: `${MATERIALS_URL}/${id}`,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
       data,
     })
       .then((res) => res.data)
@@ -47,7 +54,7 @@ const materialService = {
         throw err;
       });
   },
-  delete: (id: string) => {
+  delete: (id?: Key) => {
     return axiosService()({
       method: 'DELETE',
       baseURL: `${MATERIALS_URL}/${id}`,

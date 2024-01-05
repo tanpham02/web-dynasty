@@ -27,7 +27,7 @@ const ProductListPage = () => {
     {
       align: 'center',
       name: 'STT',
-      render: (_product: ProductMain, index?: number) => (index || 0) + 1,
+      render: (_product: ProductMain, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
     },
     {
       align: 'center',
@@ -118,7 +118,7 @@ const ProductListPage = () => {
     [QUERY_KEY.PRODUCTS, pageIndex, pageSize, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
     async () => {
       const params = {
-        pageIndex: pageIndex,
+        pageIndex: pageIndex - 1,
         pageSize,
         name: queryText,
       };
@@ -203,11 +203,11 @@ const ProductListPage = () => {
         emptyContent="Không có sản phẩm nào"
         tableName="Danh sách sản phẩm"
         pagination={true}
-        page={pageIndex + 1}
+        page={pageIndex}
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}
-        totalPage={productList?.totalPage || 1}
+        totalPage={productList?.totalPage || 0}
         total={productList?.totalElement || 0}
       />
       <ModalConfirmDelete

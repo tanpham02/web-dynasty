@@ -49,7 +49,7 @@ const Categories = () => {
     {
       align: 'center',
       name: 'STT',
-      render: (_category: Category, index?: number) => (index || 0) + 1,
+      render: (_category: Category, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
     },
     {
       align: 'center',
@@ -104,7 +104,7 @@ const Categories = () => {
             status="danger"
           />
         </div>
-      ), 
+      ),
     },
   ];
 
@@ -119,7 +119,7 @@ const Categories = () => {
     async () =>
       await categoryService.getCategoryByCriteria({
         pageSize: pageSize,
-        pageIndex: pageIndex,
+        pageIndex: pageIndex - 1,
         name: searchCategoryDebounce,
       }),
     {
@@ -197,9 +197,9 @@ const Categories = () => {
         emptyContent="Không có danh mục nào"
         selectedKeys={categorySelectedKeys}
         onSelectionChange={setCategorySelectedKeys}
-        totalPage={categories?.totalPage || 1}
+        totalPage={categories?.totalPage || 0}
         total={categories?.totalElement}
-        page={pageIndex + 1}
+        page={pageIndex}
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}

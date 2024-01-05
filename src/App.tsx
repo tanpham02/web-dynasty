@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
+import viVN from 'antd/lib/locale/vi_VN';
 
 import PageNotFound from './pages/PageNotFound';
 import store from './redux/store';
@@ -21,38 +23,40 @@ function App() {
     <NextUIProvider>
       <QueryClientProvider client={queryClient}>
         <NotistackProvider>
-          <Provider store={store}>
-            <Routes>
-              {privateRoutes.map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<PrivateRoute element={<route.component />} />}
-                />
-              ))}
+          <ConfigProvider locale={viVN}>
+            <Provider store={store}>
+              <Routes>
+                {privateRoutes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={<PrivateRoute element={<route.component />} />}
+                  />
+                ))}
 
-              {publicRoutes.map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<PublicRoute element={<route.component />} />}
-                />
-              ))}
-              <Route path={'*'} element={<PageNotFound />} />
-            </Routes>
-            <GlobalLoading ref={globalLoadingRef} />
-            <Toaster
-              reverseOrder={false}
-              position="bottom-right"
-              containerStyle={{ zIndex: 999999 }}
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  fontSize: '1rem',
-                },
-              }}
-            />
-          </Provider>
+                {publicRoutes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={<PublicRoute element={<route.component />} />}
+                  />
+                ))}
+                <Route path={'*'} element={<PageNotFound />} />
+              </Routes>
+              <GlobalLoading ref={globalLoadingRef} />
+              <Toaster
+                reverseOrder={false}
+                position="bottom-right"
+                containerStyle={{ zIndex: 999999 }}
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    fontSize: '1rem',
+                  },
+                }}
+              />
+            </Provider>
+          </ConfigProvider>
         </NotistackProvider>
       </QueryClientProvider>
     </NextUIProvider>

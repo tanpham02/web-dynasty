@@ -76,7 +76,7 @@ export default function CustomTable<T>({
         isHeaderSticky
         classNames={{
           th: ['bg-zinc-200', 'text-black'],
-          base: 'max-h-[450px]',
+          // base: 'max-h-[450px]',
         }}
       >
         <TableHeader columns={columns as ColumnType<T>[]} className="relative">
@@ -119,7 +119,7 @@ export default function CustomTable<T>({
           )}
         </TableBody>
       </Table>
-      {pagination && (
+      {Boolean(pagination && totalPage) && (
         <div className="flex justify-end items-center">
           <label
             id="row-per-page"
@@ -139,28 +139,10 @@ export default function CustomTable<T>({
               ))}
             </select>
           </label>
-          {/* <Select
-            label="Số lượng dòng"
-            labelPlacement="outside-left"
-            size="sm"
-            variant="faded"
-            classNames={{
-              mainWrapper: 'w-[120px]',
-              trigger: 'bg-white border-none shadow',
-              label: 'text-xs font-medium',
-              listboxWrapper: 'ml-auto w-fit',
-            }}
-          >
-            {rowPerPageOptions.map((quantity) => (
-              <SelectItem key={quantity} value={quantity}>
-                {quantity} / trang
-              </SelectItem>
-            ))}
-          </Select> */}
           <Pagination
-            showControls
-            showShadow
             loop
+            showShadow
+            showControls
             color="primary"
             variant="faded"
             page={page}

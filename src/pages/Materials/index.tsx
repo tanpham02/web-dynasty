@@ -1,4 +1,4 @@
-import { Button, Input, Selection, useDisclosure } from '@nextui-org/react';
+import { Button, Selection, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -11,15 +11,15 @@ import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalC
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
-import useDebounce from '~/hooks/useDebounce';
 import usePagination from '~/hooks/usePagination';
 import { Category } from '~/models/category';
 import { Material } from '~/models/materials';
-import { categoryService } from '~/services/categoryService';
 import materialService from '~/services/materialService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
-import CategoryModal from './MaterialModal';
+import MaterialModal from './MaterialModal';
+import { DatePicker } from 'antd';
+import { Moment } from 'moment';
 
 const MaterialsPage = () => {
   const {
@@ -42,6 +42,7 @@ const MaterialsPage = () => {
   }>();
 
   const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+  const [filterImportDate, setFilterImportDate] = useState<Moment[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,13 +50,13 @@ const MaterialsPage = () => {
     {
       align: 'center',
       name: 'STT',
-      render: (_category: Material, index?: number) => (index || 0) + 1,
+      render: (_category: Material, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
     },
     {
       align: 'center',
       name: 'Ngày nhập',
       render: (material: Material) =>
-        material?.importDate ? formatDate(material.importDate, DATE_FORMAT_DDMMYYYY) : '',
+        material?.importDate ? formatDate(material.importDate as string, DATE_FORMAT_DDMMYYYY) : '',
     },
     {
       align: 'center',
@@ -99,11 +100,13 @@ const MaterialsPage = () => {
     isRefetching: isRefetchingMaterials,
     refetch: refetchMaterials,
   } = useQuery(
-    [QUERY_KEY.MATERIALS, pageIndex, pageSize],
+    [QUERY_KEY.MATERIALS, pageIndex, pageSize, filterImportDate],
     async () =>
       await materialService.searchPagination({
         pageSize: pageSize,
-        pageIndex: pageIndex,
+        pageIndex: pageIndex - 1,
+        from: filterImportDate?.[0]?.toString(),
+        to: filterImportDate?.[1]?.toString(),
       }),
     {
       refetchOnWindowFocus: false,
@@ -118,7 +121,7 @@ const MaterialsPage = () => {
   const handleOpenDeleteModal = (material: Material) => {
     setModalDelete({
       id: material?._id,
-      desc: `Bạn có chắc muốn xóa hóa đơn này  không?`,
+      desc: `Bạn có chắc muốn xóa hóa đơn nhập hàng này không?`,
     });
     onOpenModalDelete();
   };
@@ -136,7 +139,7 @@ const MaterialsPage = () => {
   const handleDeleteMaterial = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await categoryService.deleteCategoryByIds(modalDelete?.id ? [modalDelete.id] : []);
+      await materialService.delete(modalDelete?.id);
       enqueueSnackbar('Xóa hóa đơn nhập nguyên liệu thành công!');
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi xóa hóa đơn nhập nguyên liệu!', {
@@ -146,6 +149,16 @@ const MaterialsPage = () => {
     } finally {
       await refetchMaterials();
       onCloseMaterialDeleteModal();
+    }
+  };
+
+  const handleChangeFilterImportDate = (e: [Moment, Moment]) => {
+    console.log('🚀 ~ file: index.tsx:154 ~ handleChangeFilterImportDate ~ e:', e);
+    if (e) {
+      const [start, end] = e;
+      setFilterImportDate([start, end]);
+    } else {
+      setFilterImportDate([]);
     }
   };
 
@@ -159,7 +172,17 @@ const MaterialsPage = () => {
           },
         ]}
       />
-      <div className="flex justify-end items-end mb-2">
+      <div className="flex justify-between items-end mb-2">
+        <DatePicker.RangePicker
+          size="small"
+          className="max-w-[300px]"
+          value={
+            Array.isArray(filterImportDate) && filterImportDate.length === 2
+              ? [filterImportDate[0], filterImportDate[1]]
+              : undefined
+          }
+          onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
+        />
         <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
           Thêm nguyên liệu
         </Button>
@@ -167,25 +190,26 @@ const MaterialsPage = () => {
       <CustomTable
         pagination
         rowKey="_id"
+        selectionMode="none"
         columns={columns}
         data={materials?.data}
         tableName="Danh sách nguyên liệu"
         emptyContent="Không có nguyên nào nào"
         selectedKeys={materialSelectedKeys}
         onSelectionChange={setMaterialSelectedKeys}
-        totalPage={materials?.totalPage || 1}
+        totalPage={materials?.totalPage || 0}
         total={materials?.totalElement}
-        page={pageIndex + 1}
+        page={pageIndex}
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}
         isLoading={isLoadingMaterials || isFetchingMaterials || isRefetchingMaterials}
       />
-      <CategoryModal
+      <MaterialModal
         isOpen={isOpenModal}
         onOpenChange={onOpenChangeModal}
-        onRefetch={refetchMaterials}
         {...modal}
+        onRefetch={refetchMaterials}
       />
       <ModalConfirmDelete
         isOpen={isOpenModalDelete}
