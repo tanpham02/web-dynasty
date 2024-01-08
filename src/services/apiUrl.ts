@@ -30,7 +30,7 @@ export const FIND_PRODUCT_BY_CRITERIA_URL = `${PRODUCT_URL}/search`;
 export const PRODUCT_CONFIG_TYPE_URL = `${API_URL}/product-config/types`;
 
 // ORDER URL
-export const ORDER_URL = `${API_URL}/order`;
+export const ORDER_URL = `${API_URL}/orders`;
 
 // STORE INFORMATION URL
 export const STORE_INFORMATION_URL = `${API_URL}/store-informations`;

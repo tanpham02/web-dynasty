@@ -5,6 +5,7 @@ export const DATE_FORMAT_DDMMYYYY = 'DD/MM/YYYY';
 export const DATE_FORMAT_YYYYMMDD = 'YYYY-MM-DD';
 export const DATE_FORMAT_YYYYMMDDTHHMMSS = 'YYYY-MM-DDTHH:mm:ss';
 export const DATE_FORMAT_DDMMYYYYTHHMMSS = 'DD-MM-YYYY HH:mm:ss';
+export const DATE_FORMAT_HHMMSS = 'HH:mm:ss';
 
 export const DATE_FORMAT_DDMMYYYY_THHMMSS = 'DD-MM-YYYY HH:mm:ss';
 

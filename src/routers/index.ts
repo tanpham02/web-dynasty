@@ -21,6 +21,7 @@ import Order from '~/pages/Order';
 import Materials from '~/pages/Materials';
 import Attributes from '~/pages/Attributes';
 import ProductFormPage from '~/pages/Product/ProductFormPage';
+import OrderFormPage from '~/pages/Order/OrderFormPage';
 
 const privateRoutes = [
   {
@@ -160,6 +161,12 @@ const privateRoutes = [
     path: PATH_NAME.ORDER,
     component: Order, //Done UI
     title: 'Quản lý đơn hàng',
+  },
+  {
+    key: ROUTER_KEY.ORDER_FORM,
+    path: PATH_NAME.ORDER_FORM,
+    component: OrderFormPage,
+    title: 'Thêm đơn hàng mới',
   },
   {
     key: ROUTER_KEY.MATERIAL,

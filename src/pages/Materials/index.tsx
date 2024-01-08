@@ -1,9 +1,13 @@
 import { Button, Selection, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 import { DatePicker } from 'antd';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { Moment } from 'moment';
+import { useSnackbar } from 'notistack';
+import { useId, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { pdf } from '@react-pdf/renderer';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
@@ -14,12 +18,13 @@ import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import usePagination from '~/hooks/usePagination';
-import { Category } from '~/models/category';
 import { Material } from '~/models/materials';
 import materialService from '~/services/materialService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
 import MaterialModal from './MaterialModal';
+import { globalLoading } from '~/components/GlobalLoading';
+import MaterialDetail from './MaterialDetail';
 
 const MaterialsPage = () => {
   const {
@@ -46,34 +51,33 @@ const MaterialsPage = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const columns: ColumnType<Category>[] = [
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const containerId = useId();
+
+  const columns: ColumnType<Material>[] = [
     {
-      align: 'center',
       name: 'STT',
       render: (_category: Material, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
     },
     {
-      align: 'center',
       name: 'Ngày nhập',
       render: (material: Material) =>
         material?.importDate ? formatDate(material.importDate as string, DATE_FORMAT_DDMMYYYY) : '',
     },
     {
-      align: 'center',
       name: <Box className="flex justify-center">Số lượng nguyên liệu</Box>,
       render: (material: Material) => (
         <Box className="flex justify-center">{material?.materialInfo?.length || 0}</Box>
       ),
     },
     {
-      align: 'center',
-      name: <Box className="flex justify-center">Tổng giá trị</Box>,
+      name: <Box className="flex justify-end">Tổng giá trị</Box>,
       render: (material: Material) => (
-        <Box className="flex justify-center">{formatCurrencyVND(material?.totalPrice || 0)}</Box>
+        <Box className="flex justify-end">{formatCurrencyVND(material?.totalPrice || 0)}</Box>
       ),
     },
     {
-      align: 'center',
       name: <Box className="flex justify-center">Hành động</Box>,
       render: (material: Material) => (
         <div className="flex justify-center space-x-2">
@@ -152,18 +156,38 @@ const MaterialsPage = () => {
     }
   };
 
-  const handleChangeFilterImportDate = (e: [Moment, Moment]) => {
-    console.log('🚀 ~ file: index.tsx:154 ~ handleChangeFilterImportDate ~ e:', e);
-    if (e) {
-      const [start, end] = e;
+  const handleChangeFilterImportDate = (range: [Moment, Moment]) => {
+    if (Array.isArray(range) && range.length === 2) {
+      const [start, end] = range;
       setFilterImportDate([start, end]);
     } else {
       setFilterImportDate([]);
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      globalLoading.show();
+      const blob = await pdf(<MaterialDetail />).toBlob();
+      var data = new Blob([blob], { type: 'pdf' });
+      var csvURL = window.URL.createObjectURL(data);
+      const tempLink = document.createElement('a');
+      tempLink.href = csvURL;
+      tempLink.setAttribute('download', 'filename.pdf');
+      tempLink.click();
+    } catch (err) {
+      enqueueSnackbar('Oops! Có lỗi xảy ra khi xuất hóa đơn nhập hàng!', {
+        variant: 'error',
+      });
+    } finally {
+      setTimeout(() => {
+        globalLoading.hide();
+      }, 3000);
+    }
+  };
+
   return (
-    <div>
+    <Box ref={containerRef} id={containerId} className="p-4">
       <CustomBreadcrumb
         pageName="Danh sách nguyên liệu"
         routes={[
@@ -172,7 +196,7 @@ const MaterialsPage = () => {
           },
         ]}
       />
-      <div className="flex justify-between items-end mb-2">
+      <Box className="flex justify-between items-end mb-2">
         <DatePicker.RangePicker
           size="small"
           className="max-w-[300px]"
@@ -183,10 +207,11 @@ const MaterialsPage = () => {
           }
           onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
         />
+        <Button onClick={handleDownload}>Click me</Button>
         <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
           Thêm nguyên liệu
         </Button>
-      </div>
+      </Box>
       <CustomTable
         pagination
         rowKey="_id"
@@ -197,7 +222,7 @@ const MaterialsPage = () => {
         selectedKeys={materialSelectedKeys}
         onSelectionChange={setMaterialSelectedKeys}
         totalPage={materials?.totalPage || 0}
-        total={materials?.totalElement}
+        // total={materials?.totalElement}
         page={pageIndex}
         rowPerPage={pageSize}
         onChangePage={setPage}
@@ -217,7 +242,7 @@ const MaterialsPage = () => {
         onAgree={handleDeleteMaterial}
         isLoading={modalDelete?.isLoading}
       />
-    </div>
+    </Box>
   );
 };
 

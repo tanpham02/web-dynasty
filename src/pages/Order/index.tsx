@@ -1,12 +1,24 @@
-import { Button, Selection, useDisclosure } from '@nextui-org/react';
+import {
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Selection,
+  useDisclosure,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 import { DatePicker } from 'antd';
 import { Moment } from 'moment';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Svg from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
+import ArrowDownIcon from '~/assets/svg/arrow-down.svg';
 import EditIcon from '~/assets/svg/edit.svg';
+import InfoIcon from '~/assets/svg/info.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
@@ -14,12 +26,16 @@ import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import usePagination from '~/hooks/usePagination';
-import { Category } from '~/models/category';
 import { Material } from '~/models/materials';
+import { Order, StatusCheckout, StatusOrder, TypeOrder } from '~/models/order';
 import materialService from '~/services/materialService';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
+import orderService from '~/services/orderService';
+import { convertOrderStatus } from '~/utils/convertUtil';
+import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_HHMMSS, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
-import MaterialModal from './MaterialModal';
+import { ORDER_STATUSES } from '~/constants/order';
+import { globalLoading } from '~/components/GlobalLoading';
+import OrderDetailModal from './components/OrderDetailModal';
 
 const OrderPage = () => {
   const {
@@ -35,7 +51,7 @@ const OrderPage = () => {
   } = useDisclosure();
 
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
-  const [materialSelectedKeys, setMaterialSelectedKeys] = useState<Selection>();
+  const [orderSelectedKeys, setOrderSelectedKeys] = useState<Selection>();
   const [modal, setModal] = useState<{
     isEdit?: boolean;
     materialId?: string;
@@ -46,63 +62,120 @@ const OrderPage = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const columns: ColumnType<Category>[] = [
+  const columns: ColumnType<Order>[] = [
     {
-      align: 'center',
-      name: 'STT',
-      render: (_category: Material, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
-    },
-    {
-      align: 'center',
-      name: 'Ngày nhập',
-      render: (material: Material) =>
-        material?.importDate ? formatDate(material.importDate as string, DATE_FORMAT_DDMMYYYY) : '',
-    },
-    {
-      align: 'center',
-      name: <Box className="flex justify-center">Số lượng nguyên liệu</Box>,
-      render: (material: Material) => (
-        <Box className="flex justify-center">{material?.materialInfo?.length || 0}</Box>
+      name: '#',
+      render: (order: Order, index?: number) => (
+        <Box className="flex flex-col">
+          <span>{(index || 0) + 1 + (pageIndex - 1) * 10}</span>
+          {order?.createdAt ? (
+            <>
+              <span className="text-[13px]">{formatDate(order.createdAt, DATE_FORMAT_HHMMSS)}</span>
+              <span className="text-[13px]">
+                {formatDate(order.createdAt, DATE_FORMAT_DDMMYYYY)}
+              </span>
+            </>
+          ) : (
+            ''
+          )}
+        </Box>
       ),
     },
     {
-      align: 'center',
+      name: 'Khách hàng',
+      render: (order: Order) => {
+        const address = [order?.location, order?.ward, order?.district, order?.city]
+          .filter((value) => Boolean(value))
+          .join(', ');
+        return (
+          <Box className="flex flex-col">
+            <span>{order?.fullName}</span>
+            <span className="text-[13px]">{order?.phoneNumber}</span>
+            <span className="text-[13px]">{address}</span>
+          </Box>
+        );
+      },
+    },
+    {
+      name: <Box className="flex justify-center">Số lượng sản phẩm</Box>,
+      render: (order: Order) => (
+        <Box className="flex justify-center">{order?.productsFromCart?.length || 0}</Box>
+      ),
+    },
+    {
       name: <Box className="flex justify-center">Tổng giá trị</Box>,
-      render: (material: Material) => (
-        <Box className="flex justify-center">{formatCurrencyVND(material?.totalPrice || 0)}</Box>
+      render: (order: Order) => (
+        <Box className="flex justify-center">{formatCurrencyVND(order?.totalOrder || 0)}</Box>
       ),
     },
     {
-      align: 'center',
+      name: <Box className="flex justify-center">Trạng thái</Box>,
+      render: (order: Order) => {
+        return (
+          <Box className="flex justify-center">
+            <Dropdown>
+              <DropdownTrigger>
+                <Chip
+                  style={{
+                    backgroundColor: order?.statusOrder
+                      ? ORDER_STATUSES?.[order.statusOrder]?.color
+                      : '#191919',
+                  }}
+                  classNames={{
+                    content: 'flex items-center space-x-2 text-white cursor-pointer',
+                  }}
+                >
+                  <span>
+                    {order?.statusOrder ? ORDER_STATUSES?.[order.statusOrder]?.label : 'Không có'}
+                  </span>
+                  <Svg src={ArrowDownIcon} className="w-5 h-5" />
+                </Chip>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Order Status">
+                {Object.keys(ORDER_STATUSES).map((key) => (
+                  <DropdownItem
+                    onClick={() => handleChangeOrderStatus(order?._id, key as StatusOrder)}
+                    key={key}
+                  >
+                    <Svg src={ORDER_STATUSES?.[key]?.icon} className="w-4 h-4 inline-block mr-2" />{' '}
+                    <span className="font-semibold">{ORDER_STATUSES?.[key]?.label}</span>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </Box>
+        );
+      },
+    },
+    {
       name: <Box className="flex justify-center">Hành động</Box>,
-      render: (material: Material) => (
-        <div className="flex justify-center space-x-2">
-          <ButtonIcon
-            icon={EditIcon}
-            title="Chỉnh sửa hóa đơn"
-            onClick={() => handleOpenModalEdit(material)}
-          />
-          <ButtonIcon
-            icon={DeleteIcon}
-            title="Xóa hóa đơn này"
-            onClick={() => handleOpenDeleteModal(material)}
-            status="danger"
-          />
-        </div>
+      render: (order: Order) => (
+        <Box className="flex justify-center space-x-2">
+          <ButtonIcon icon={InfoIcon} title="Xem chi tiết đơn hàng" />
+          {order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
+            (order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT && (
+              <ButtonIcon
+                icon={DeleteIcon}
+                title="Xóa đơn hàng này"
+                status="danger"
+                onClick={() => handleOpenDeleteModal(order)}
+              />
+            ))}
+        </Box>
       ),
     },
   ];
 
   const {
-    data: materials,
-    isLoading: isLoadingMaterials,
-    isFetching: isFetchingMaterials,
-    isRefetching: isRefetchingMaterials,
-    refetch: refetchMaterials,
+    data: orders,
+    isLoading: isLoadingOrders,
+    isFetching: isFetchingOrders,
+    isRefetching: isRefetchingOrders,
+    refetch: refetchOrders,
   } = useQuery(
-    [QUERY_KEY.MATERIALS, pageIndex, pageSize, filterImportDate],
+    [QUERY_KEY.ORDER, pageIndex, pageSize, filterImportDate],
     async () =>
-      await materialService.searchPagination({
+      await orderService.searchPagination({
         pageSize: pageSize,
         pageIndex: pageIndex - 1,
         from: filterImportDate?.[0]?.toString(),
@@ -118,17 +191,12 @@ const OrderPage = () => {
     onOpenModal();
   };
 
-  const handleOpenDeleteModal = (material: Material) => {
+  const handleOpenDeleteModal = (order: Order) => {
     setModalDelete({
-      id: material?._id,
-      desc: `Bạn có chắc muốn xóa hóa đơn nhập hàng này không?`,
+      id: order?._id,
+      desc: `Bạn có chắc muốn xóa đơn hàng này không?`,
     });
     onOpenModalDelete();
-  };
-
-  const onOpenAddMaterialModal = () => {
-    setModal({});
-    onOpenModal();
   };
 
   const onCloseMaterialDeleteModal = () => {
@@ -136,34 +204,50 @@ const OrderPage = () => {
     onOpenChangeModalDelete();
   };
 
-  const handleDeleteMaterial = async () => {
+  const handleDeleteOrder = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
       await materialService.delete(modalDelete?.id);
-      enqueueSnackbar('Xóa hóa đơn nhập nguyên liệu thành công!');
+      enqueueSnackbar('Xóa đơn hàng thành công!');
     } catch (err) {
-      enqueueSnackbar('Có lỗi xảy ra khi xóa hóa đơn nhập nguyên liệu!', {
+      enqueueSnackbar('Có lỗi xảy ra khi xóa đơn hàng!', {
         variant: 'error',
       });
-      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteMaterial ~ err:', err);
+      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteOrder ~ err:', err);
     } finally {
-      await refetchMaterials();
+      await refetchOrders();
       onCloseMaterialDeleteModal();
     }
   };
 
-  const handleChangeFilterImportDate = (e: [Moment, Moment]) => {
-    console.log('🚀 ~ file: index.tsx:154 ~ handleChangeFilterImportDate ~ e:', e);
-    if (e) {
-      const [start, end] = e;
+  const handleChangeFilterImportDate = (range: [Moment, Moment]) => {
+    if (Array.isArray(range) && range.length === 2) {
+      const [start, end] = range;
       setFilterImportDate([start, end]);
     } else {
       setFilterImportDate([]);
     }
   };
 
+  const handleChangeOrderStatus = async (orderId?: string, status?: StatusOrder) => {
+    if (orderId && status)
+      try {
+        globalLoading.show();
+        await orderService.updateOrderStatus(orderId, status);
+        enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+      } catch (err) {
+        enqueueSnackbar('Cập nhật trạng thái đơn hàng thất bại!', {
+          variant: 'error',
+        });
+        console.log('🚀 ~ file: index.tsx:224 ~ handleChangeOrderStatus ~ err:', err);
+      } finally {
+        await refetchOrders();
+        globalLoading.hide();
+      }
+  };
+
   return (
-    <div>
+    <Box>
       <CustomBreadcrumb
         pageName="Danh sách đơn hàng"
         routes={[
@@ -172,7 +256,7 @@ const OrderPage = () => {
           },
         ]}
       />
-      <div className="flex justify-between items-end mb-2">
+      <Box className="flex items-end mb-2">
         <DatePicker.RangePicker
           size="small"
           className="max-w-[300px]"
@@ -183,42 +267,34 @@ const OrderPage = () => {
           }
           onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
         />
-        <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
-          Thêm đơn hàng mới
-        </Button>
-      </div>
+      </Box>
       <CustomTable
         pagination
         rowKey="_id"
         selectionMode="none"
         columns={columns}
-        data={materials?.data}
+        data={orders?.data}
         tableName="Danh sách đơn hàng"
         emptyContent="Không có đơn hàng nào"
-        selectedKeys={materialSelectedKeys}
-        onSelectionChange={setMaterialSelectedKeys}
-        totalPage={materials?.totalPage || 0}
-        total={materials?.totalElement}
+        selectedKeys={orderSelectedKeys}
+        onSelectionChange={setOrderSelectedKeys}
+        totalPage={orders?.totalPage || 0}
+        total={orders?.totalElement}
         page={pageIndex}
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}
-        isLoading={isLoadingMaterials || isFetchingMaterials || isRefetchingMaterials}
-      />
-      <MaterialModal
-        isOpen={isOpenModal}
-        onOpenChange={onOpenChangeModal}
-        {...modal}
-        onRefetch={refetchMaterials}
+        isLoading={isLoadingOrders || isFetchingOrders || isRefetchingOrders}
       />
       <ModalConfirmDelete
         isOpen={isOpenModalDelete}
         onOpenChange={onOpenChangeModalDelete}
         desc={modalDelete?.desc}
-        onAgree={handleDeleteMaterial}
+        onAgree={handleDeleteOrder}
         isLoading={modalDelete?.isLoading}
       />
-    </div>
+      {/* <OrderDetailModal /> */}
+    </Box>
   );
 };
 

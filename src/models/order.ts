@@ -1,5 +1,8 @@
+import { Product, ProductMain } from './product';
+
 enum StatusOrder {
   WAITING_FOR_DELIVERING = 'WAITING_FOR_DELIVERING',
+  WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
   PENDING = 'PENDING',
   DELIVERING = 'DELIVERING',
   FAIL = 'FAIL',
@@ -11,32 +14,58 @@ enum TypeOrder {
   ORDER_DELIVERING = 'ORDER_DELIVERING',
 }
 
+enum StatusCheckout {
+  VERIFY_INFORMATION = 'VERIFY_INFORMATION',
+  ORDER_CONFIRMATION = 'ORDER_CONFIRMATION',
+}
+
+enum PaymentMethod {
+  PAYMENT_ON_DELIVERY = 'PAYMENT_ON_DELIVERY',
+  MONO = 'MONO',
+  ATM_CARD = 'ATM_CARD',
+  SHOPEE_PAY = 'SHOPEE_PAY',
+  ZALO_PAY = 'ZALO_PAY',
+}
+
 enum TimeOrder {
   NOW = 'NOW',
   SELECT_DATE_TIME = 'SELECT_DATE_TIME',
 }
 
 export interface Order {
-  _id?: string;
   customerId?: string;
+  productsFromCart?: ProductFromCart[];
+  productsWhenTheCustomerIsNotLoggedIn?: string[];
+  _id?: string;
   shipFee?: number;
+  totalAmountBeforeUsingDiscount?: number;
   statusOrder?: StatusOrder;
   fullName?: string;
   phoneNumber?: string;
-  address?: string;
+  location?: string;
   city?: string;
+  cityId?: number | number[];
   district?: string;
+  districtId?: number | number[];
   ward?: string;
-  totalOrder?: number;
+  wardId?: number | number[];
   typeOrder?: TypeOrder;
-  timeOrder: TimeOrder;
-  dateSelect?: Date | string;
-  timeSelect?: Date | string;
+  statusCheckout?: StatusCheckout;
+  paymentMethod?: PaymentMethod;
+  orderReceivingTime?: 'NOW';
+  dateTimeOrderReceive?: string;
   voucherId?: string;
-  systemStoreId?: string;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-  reasonCancelOrder?: string;
+  orderAtStore?: string;
+  reasonOrderCancel?: string;
+  totalOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export { StatusOrder, TypeOrder, TimeOrder };
+export interface ProductFromCart {
+  product?: ProductMain;
+  productQuantities?: number;
+  _id?: string;
+}
+
+export { StatusOrder, TypeOrder, TimeOrder, StatusCheckout, PaymentMethod };
