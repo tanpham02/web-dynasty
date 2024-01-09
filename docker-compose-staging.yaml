@@ -9,3 +9,9 @@ services:
       dockerfile: Dockerfile-staging
     ports:
       - '1311:1311'
+    networks:
+      - dynasty-dashboard-network
+
+networks:
+  dynasty-dashboard-network:
+    external: true

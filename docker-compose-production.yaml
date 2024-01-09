@@ -11,8 +11,8 @@ services:
     ports:
       - '2203:2203'
     networks:
-      - keitee_network
+      - dynasty-dashboard-network
 
 networks:
-  keitee_network:
+  dynasty-dashboard-network:
     external: true
