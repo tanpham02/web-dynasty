@@ -10,6 +10,7 @@ import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomImage from '~/components/NextUI/CustomImage';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { PATH_NAME } from '~/constants/router';
@@ -33,15 +34,18 @@ const ProductListPage = () => {
       align: 'center',
       name: 'Hình ảnh',
       render: (product: ProductMain) => (
-        <Image
-          isBlurred
-          isZoomed
-          src={getFullImageUrl(product?.image)}
-          fallbackSrc="https://via.placeholder.com/80x80"
-          alt={product?.name}
-          className="w-20 h-20 object-contain"
-          loading="lazy"
-        />
+        <div className="w-20 h-20 relative image-table">
+          <CustomImage
+            isPreview
+            src={getFullImageUrl(product?.image)}
+            fallbackSrc="https://via.placeholder.com/80x80"
+            radius="lg"
+            loading="lazy"
+            classNames={{
+              img: '!object-contain',
+            }}
+          />
+        </div>
       ),
     },
     {

@@ -40,7 +40,6 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
             title="Xem trước"
             placement={placement}
             icon={EyeIcon}
-            status="default"
             onClick={() => setVisiblePreviewImage(true)}
           />
         </Box>
@@ -52,6 +51,8 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
           wrapper: 'absolute top-0 left-0 !w-full !h-full flex item-center justify-center',
           img: '!w-full !h-full object-cover p-1',
         }}
+        isBlurred
+        isZoomed
         fallbackSrc={fallbackSrc}
       />
 
