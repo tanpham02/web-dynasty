@@ -1,5 +1,8 @@
-import { Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Chip, Image } from '@nextui-org/react';
 import Svg from 'react-inlinesvg';
+import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useMemo } from 'react';
 
 import Box from '~/components/Box';
 import BoxIcon from '~/assets/svg/box.svg';
@@ -7,18 +10,41 @@ import UserIcon from '~/assets/svg/user-circle.svg';
 import PaymentIcon from '~/assets/svg/payment.svg';
 
 import CustomModal from '~/components/NextUI/CustomModal';
-import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '~/constants/queryKey';
 import orderService from '~/services/orderService';
 import DataRow from '../DataRow';
-import { useMemo } from 'react';
 import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
+import { globalLoading } from '~/components/GlobalLoading';
+import { getFullImageUrl } from '~/utils/image';
+import { ORDER_STATUSES } from '~/constants/order';
 
-const OrderDetailModal = () => {
-  const { data: orderDetail, isFetching: isFetchingOrderDetail } = useQuery(
-    [QUERY_KEY.ORDER],
-    async () => await orderService.getOrderById('65982dc1bd687e5d728fc6a3'),
+interface OrderDetailModalProps {
+  isOpen?: boolean;
+  onOpenChange?(): void;
+  orderId?: string;
+}
+
+const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalProps) => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { data: orderDetail } = useQuery(
+    [QUERY_KEY.ORDER, orderId],
+    async () => {
+      try {
+        globalLoading.show();
+        return await orderService.getOrderById(orderId);
+      } catch (err) {
+        enqueueSnackbar('Có lỗi xảy ra khi lấy thông tin đơn hàng!', {
+          variant: 'error',
+        });
+        onOpenChange?.();
+        console.log('🚀 ~ file: index.tsx:25 ~ const{data:orderDetail}=useQuery ~ err:', err);
+      } finally {
+        globalLoading.hide();
+      }
+    },
+    { enabled: Boolean(orderId && open) },
   );
 
   const address = useMemo(() => {
@@ -29,7 +55,8 @@ const OrderDetailModal = () => {
 
   return (
     <CustomModal
-      isOpen
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
       controls={false}
       className="w-full max-w-[1000px]"
       title="Chi tiết đơn hàng"
@@ -37,7 +64,7 @@ const OrderDetailModal = () => {
         body: 'pb-8',
       }}
     >
-      <Box className="grid grid-cols-[3fr_2fr] gap-4">
+      <Box className="grid grid-cols-[3fr_2fr] gap-4 items-start">
         <Box className="space-y-4">
           <Card shadow="none" className="border border-zinc-300">
             <CardHeader>
@@ -55,8 +82,23 @@ const OrderDetailModal = () => {
               <Svg src={BoxIcon} className="w-5 h-5 mr-2" />
               <span className="text-base font-semibold">Thông tin sản phẩm</span>
             </CardHeader>
-            <CardBody className="px-4">
-              {orderDetail?.productsFromCart?.map((product) => <Box>{product?.product?.name}</Box>)}
+            <CardBody className="space-y-4">
+              {orderDetail?.productsFromCart?.map((product, index) => (
+                <Box className="flex justify-between">
+                  <Box className="flex items-start space-x-2">
+                    <Image
+                      src={getFullImageUrl(product?.product?.productItem?.image)}
+                      className="w-6 h-6"
+                    />
+                    <span>
+                      {product?.product?.productItem?.name} x {product?.productQuantities}
+                    </span>
+                  </Box>
+                  <span className="font-semibold">
+                    {formatCurrencyVND(product?.product?.productItem?.price || 0)}
+                  </span>
+                </Box>
+              ))}
             </CardBody>
           </Card>
         </Box>
@@ -65,39 +107,73 @@ const OrderDetailModal = () => {
             <Svg src={PaymentIcon} className="w-5 h-5 mr-2" />
             <span className="text-base font-semibold">Thông tin khác</span>
           </CardHeader>
-          <CardBody className="px-4 space-y-2">
+          <CardBody className="px-4 space-y-3">
+            <DataRow
+              label="Trạng thái đơn hàng"
+              className="flex justify-between"
+              value={
+                <Chip
+                  size="sm"
+                  className="text-right"
+                  style={{
+                    backgroundColor: orderDetail?.statusOrder
+                      ? ORDER_STATUSES?.[orderDetail.statusOrder]?.color
+                      : '#191919',
+                  }}
+                  classNames={{
+                    content: 'flex items-center space-x-2 text-white cursor-pointer',
+                  }}
+                >
+                  {orderDetail?.statusOrder
+                    ? ORDER_STATUSES?.[orderDetail?.statusOrder]?.label
+                    : 'Không có'}
+                </Chip>
+              }
+            />
             <DataRow
               label="Thời gian đặt hàng"
-              className="grid-cols-[5fr_5fr]"
+              className="flex justify-between"
               value={
-                orderDetail?.createdAt
-                  ? formatDate(orderDetail.createdAt, DATE_FORMAT_DDMMYYYYHHMMSS)
-                  : ''
+                <span className="text-right">
+                  {orderDetail?.createdAt
+                    ? formatDate(orderDetail.createdAt, DATE_FORMAT_DDMMYYYYHHMMSS)
+                    : ''}
+                </span>
               }
             />
             <DataRow
               label="Thời gian nhận hàng"
-              className="grid-cols-[5fr_5fr]"
-              value={orderDetail?.orderReceivingTime ? 'Nhận ngay sau 30 phút' : ''}
+              className="flex justify-between"
+              value={
+                <span className="text-right">
+                  {orderDetail?.orderReceivingTime ? 'Nhận ngay sau 30 phút' : ''}
+                </span>
+              }
             />
             <DataRow
               label="Phương thức thanh toán"
-              className="grid-cols-[5fr_5fr]"
+              className="flex justify-between"
               value={
-                orderDetail?.createdAt
-                  ? formatDate(orderDetail.createdAt, DATE_FORMAT_DDMMYYYYHHMMSS)
-                  : ''
+                <span className="text-right">
+                  {orderDetail?.createdAt
+                    ? formatDate(orderDetail.createdAt, DATE_FORMAT_DDMMYYYYHHMMSS)
+                    : ''}
+                </span>
               }
             />
             <DataRow
               label="Phí giao hàng"
-              className="grid-cols-[5fr_5fr]"
-              value={formatCurrencyVND(orderDetail?.shipFee || 0)}
+              className="flex justify-between"
+              value={<span>{formatCurrencyVND(orderDetail?.shipFee || 0)}</span>}
             />
             <DataRow
               label="Tổng thanh toán"
-              className="grid-cols-[5fr_5fr]"
-              value={formatCurrencyVND(orderDetail?.totalOrder || 0)}
+              className="flex justify-between"
+              value={
+                <span className="text-right font-bold text-base">
+                  {formatCurrencyVND(orderDetail?.totalOrder || 0)}
+                </span>
+              }
             />
           </CardBody>
         </Card>

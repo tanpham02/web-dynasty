@@ -63,7 +63,13 @@ export interface Order {
 }
 
 export interface ProductFromCart {
-  product?: ProductMain;
+  product?: {
+    createdAt?: string;
+    parentId?: string;
+    productItem?: ProductMain;
+    updatedAt?: string;
+    _id?: string;
+  };
   productQuantities?: number;
   _id?: string;
 }

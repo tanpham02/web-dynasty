@@ -22,14 +22,24 @@ const ButtonIcon: React.FC<ButtonIconProps> = (props) => {
   };
 
   return (
-    <Tooltip content={title} color={status} placement={placement} showArrow {...props}>
+    <Tooltip
+      content={title}
+      color={status}
+      placement={placement}
+      showArrow
+      {...props}
+      onClick={undefined}
+    >
       <div
         onClick={() => {
           !disable && onClick?.();
         }}
         className={`w-7 h-7 cursor-pointer rounded inline-flex justify-center items-center ${
           statusesClassName[status]
-        } ${disable && '!cursor-not-allowed !hover:bg-opacity-20 !bg-opacity-20'}`}
+        } ${disable && '!cursor-not-allowed hover:!bg-opacity-20 !bg-opacity-20'}`}
+        style={{
+          opacity: disable ? 0.2 : 1,
+        }}
       >
         <SVG src={icon} className="w-5 h-5 text-current" />
       </div>

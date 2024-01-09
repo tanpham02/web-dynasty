@@ -41,6 +41,7 @@ export default function CustomTable<T>({
   isStriped,
   disabledKeys,
   total = 0,
+  isScrollable,
 }: {
   rowKey?: keyof T;
   columns?: ColumnType<T>[];
@@ -62,6 +63,7 @@ export default function CustomTable<T>({
   removeWrapper?: boolean;
   isStriped?: boolean;
   disabledKeys?: Selection;
+  isScrollable?: boolean;
 }): React.ReactNode {
   return (
     <div className="space-y-2">
@@ -73,10 +75,11 @@ export default function CustomTable<T>({
         removeWrapper={removeWrapper}
         isStriped={isStriped}
         disabledKeys={disabledKeys}
+        onRowAction={() => {}}
         isHeaderSticky
         classNames={{
           th: ['bg-zinc-200', 'text-black'],
-          // base: 'max-h-[450px]',
+          base: isScrollable ? 'max-h-[450px]' : '',
         }}
       >
         <TableHeader columns={columns as ColumnType<T>[]} className="relative">

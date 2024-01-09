@@ -366,7 +366,7 @@ const UserModal = ({
     >
       <FormProvider {...forms}>
         <Box className="grid grid-cols-1 xl:grid-cols-[3fr_7fr] gap-8">
-          <Box>
+          <Box className="w-[20vw] mx-auto">
             <Upload
               onChange={({ srcPreview, srcRequest }: onChangeUploadState) => {
                 setAvatar({
@@ -381,7 +381,6 @@ const UserModal = ({
               isPreview
             />
           </Box>
-
           <Box className="space-y-4">
             <FormContextInput<Users> name="fullName" label="Họ và tên" isClearable />
             <FormContextInput<Users>

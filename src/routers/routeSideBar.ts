@@ -109,20 +109,6 @@ const routeSideBar = [
       },
     ],
   },
-  {
-    key: ROUTER_KEY.GENERAL_SETTING,
-    title: 'Cấu hình',
-    icon: GEAR_ICON,
-    menu: [
-      {
-        key: ROUTER_KEY.VOUCHER,
-        path: PATH_NAME.VOUCHERS,
-        title: 'Mã giảm giá',
-        icon: VOUCHER_ICON,
-        child: [],
-      },
-    ],
-  },
 ];
 
 export default routeSideBar;

@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
 
 import PageNotFound from './pages/PageNotFound';
 import store from './redux/store';
@@ -14,6 +16,8 @@ import PublicRoute from './routers/PublicRoute';
 import NotistackProvider from './components/NotistackProvider';
 import 'react-quill/dist/quill.snow.css';
 import GlobalLoading, { globalLoadingRef } from './components/GlobalLoading';
+
+dayjs.locale('vi');
 
 function App() {
   // Create a client

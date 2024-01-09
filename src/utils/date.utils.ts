@@ -24,3 +24,13 @@ export function subtractDays(date: Date, days: number | string) {
 export function addDays(date: Date, days: number | string) {
   return moment(date).add(days, 'days');
 }
+
+export const currentMonthFirstDate = (current: Date, format?: string) => {
+  let instance = moment(current, format);
+  return instance.isValid() ? instance.startOf('month') : null;
+};
+
+export const currentMonthLastDate = (current: Date, format?: string) => {
+  let instance = moment(current, format);
+  return instance.isValid() ? instance.endOf('month').startOf('day') : null;
+};

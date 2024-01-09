@@ -17,7 +17,11 @@ import { QUERY_KEY } from '~/constants/queryKey';
 import { Category } from '~/models/category';
 import { Material, MaterialInformation } from '~/models/materials';
 import materialService from '~/services/materialService';
-import { DATE_FORMAT_DDMMYYYY } from '~/utils/date.utils';
+import {
+  DATE_FORMAT_DDMMYYYY,
+  currentMonthFirstDate,
+  currentMonthLastDate,
+} from '~/utils/date.utils';
 
 interface MaterialModalProps {
   isOpen?: boolean;
@@ -215,6 +219,13 @@ const MaterialModal = ({
                   format={DATE_FORMAT_DDMMYYYY}
                   placeholder="Ngày nhập hàng"
                   onChange={(date) => (date ? onChange(moment(date)) : '')}
+                  disabledDate={(value) => {
+                    const date = new Date();
+                    return !value.isBetween(
+                      currentMonthFirstDate(date),
+                      currentMonthLastDate(date),
+                    );
+                  }}
                 />
                 <span className="text-xs text-danger">{error?.message}</span>
               </Box>
@@ -242,7 +253,14 @@ const MaterialModal = ({
               </Button>
             </Box>
           </Box>
-          <CustomTable key="id" columns={columns} data={materials || []} isLoading={false} />
+          <CustomTable
+            key="id"
+            isScrollable
+            columns={columns}
+            data={materials || []}
+            isLoading={false}
+            emptyContent="Chưa có nguyên liệu nào"
+          />
         </Box>
       </FormProvider>
     </CustomModal>

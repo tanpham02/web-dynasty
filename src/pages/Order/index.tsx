@@ -12,7 +12,7 @@ import { DatePicker } from 'antd';
 import { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Svg from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
@@ -36,13 +36,10 @@ import { formatCurrencyVND } from '~/utils/number';
 import { ORDER_STATUSES } from '~/constants/order';
 import { globalLoading } from '~/components/GlobalLoading';
 import OrderDetailModal from './components/OrderDetailModal';
+import { getLocationLinkByAddress } from '~/utils/googleMapUtil';
 
 const OrderPage = () => {
-  const {
-    isOpen: isOpenModal,
-    onOpen: onOpenModal,
-    onOpenChange: onOpenChangeModal,
-  } = useDisclosure();
+  const { isOpen: isOpenModal, onOpenChange: onOpenChangeModal } = useDisclosure();
 
   const {
     isOpen: isOpenModalDelete,
@@ -52,10 +49,7 @@ const OrderPage = () => {
 
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
   const [orderSelectedKeys, setOrderSelectedKeys] = useState<Selection>();
-  const [modal, setModal] = useState<{
-    isEdit?: boolean;
-    materialId?: string;
-  }>();
+  const [modalId, setModalId] = useState<string>();
 
   const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
   const [filterImportDate, setFilterImportDate] = useState<Moment[]>([]);
@@ -90,8 +84,16 @@ const OrderPage = () => {
         return (
           <Box className="flex flex-col">
             <span>{order?.fullName}</span>
-            <span className="text-[13px]">{order?.phoneNumber}</span>
-            <span className="text-[13px]">{address}</span>
+            {order?.phoneNumber && (
+              <Link to={`tel:${order.phoneNumber}`} className="text-[13px]">
+                {order.phoneNumber}
+              </Link>
+            )}
+            {address && (
+              <Link target="_blank" to={getLocationLinkByAddress(address)} className="text-[13px]">
+                {address}
+              </Link>
+            )}
           </Box>
         );
       },
@@ -151,7 +153,11 @@ const OrderPage = () => {
       name: <Box className="flex justify-center">Hành động</Box>,
       render: (order: Order) => (
         <Box className="flex justify-center space-x-2">
-          <ButtonIcon icon={InfoIcon} title="Xem chi tiết đơn hàng" />
+          <ButtonIcon
+            icon={InfoIcon}
+            title="Xem chi tiết đơn hàng"
+            onClick={() => handleOpenModalOrderDetail(order)}
+          />
           {order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
             (order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT && (
               <ButtonIcon
@@ -186,11 +192,6 @@ const OrderPage = () => {
     },
   );
 
-  const handleOpenModalEdit = (material: Material) => {
-    setModal({ isEdit: true, materialId: material?._id });
-    onOpenModal();
-  };
-
   const handleOpenDeleteModal = (order: Order) => {
     setModalDelete({
       id: order?._id,
@@ -217,6 +218,13 @@ const OrderPage = () => {
     } finally {
       await refetchOrders();
       onCloseMaterialDeleteModal();
+    }
+  };
+
+  const handleOpenModalOrderDetail = (order: Order) => {
+    if (order?._id) {
+      setModalId(order._id);
+      onOpenChangeModal();
     }
   };
 
@@ -293,7 +301,7 @@ const OrderPage = () => {
         onAgree={handleDeleteOrder}
         isLoading={modalDelete?.isLoading}
       />
-      {/* <OrderDetailModal /> */}
+      <OrderDetailModal orderId={modalId} isOpen={isOpenModal} onOpenChange={onOpenChangeModal} />
     </Box>
   );
 };

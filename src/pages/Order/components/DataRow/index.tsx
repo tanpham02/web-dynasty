@@ -8,7 +8,7 @@ interface DataRowProps {
 }
 const DataRow = ({ label, value, className }: DataRowProps) => {
   return (
-    <Box className={`text-sm grid ${className || 'grid-cols-[3fr_7fr]'}`}>
+    <Box className={`text-sm ${className || 'grid grid-cols-[3fr_7fr]'}`}>
       <span className="font-bold">{label}:</span> {value}
     </Box>
   );

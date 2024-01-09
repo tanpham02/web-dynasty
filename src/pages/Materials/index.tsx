@@ -1,18 +1,17 @@
 import { Button, Selection, useDisclosure } from '@nextui-org/react';
+import { pdf } from '@react-pdf/renderer';
 import { useQuery } from '@tanstack/react-query';
 import { DatePicker } from 'antd';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
-import { useId, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { pdf } from '@react-pdf/renderer';
+import { useId, useMemo, useRef, useState } from 'react';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
+import DownloadIcon from '~/assets/svg/download.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
+import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
@@ -22,9 +21,8 @@ import { Material } from '~/models/materials';
 import materialService from '~/services/materialService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
+import MaterialBillDetail from './MaterialBillDetail';
 import MaterialModal from './MaterialModal';
-import { globalLoading } from '~/components/GlobalLoading';
-import MaterialDetail from './MaterialDetail';
 
 const MaterialsPage = () => {
   const {
@@ -78,22 +76,37 @@ const MaterialsPage = () => {
       ),
     },
     {
-      name: <Box className="flex justify-center">Hành động</Box>,
-      render: (material: Material) => (
-        <div className="flex justify-center space-x-2">
-          <ButtonIcon
-            icon={EditIcon}
-            title="Chỉnh sửa hóa đơn"
-            onClick={() => handleOpenModalEdit(material)}
-          />
-          <ButtonIcon
-            icon={DeleteIcon}
-            title="Xóa hóa đơn này"
-            onClick={() => handleOpenDeleteModal(material)}
-            status="danger"
-          />
-        </div>
-      ),
+      name: <Box className="flex justify-end mr-4">Hành động</Box>,
+      render: (material: Material) => {
+        const isDisableEdit = !(moment().month() == moment(material?.importDate).month());
+
+        return (
+          <div className="flex justify-end space-x-2">
+            <ButtonIcon
+              disable={isDisableEdit}
+              icon={EditIcon}
+              title={
+                isDisableEdit ? 'Bạn chỉ có thể sửa hóa đơn tháng hiện tại' : 'Chỉnh sửa hóa đơn'
+              }
+              onClick={() => handleOpenModalEdit(material)}
+            />
+            <ButtonIcon
+              icon={DownloadIcon}
+              title="Xuất hóa đơn"
+              onClick={() => handleDownload(material)}
+            />
+            <ButtonIcon
+              icon={DeleteIcon}
+              disable={isDisableEdit}
+              title={
+                isDisableEdit ? 'Bạn chỉ có thể xóa hóa đơn tháng hiện tại' : 'Xóa hóa đơn này'
+              }
+              onClick={() => handleOpenDeleteModal(material)}
+              status="danger"
+            />
+          </div>
+        );
+      },
     },
   ];
 
@@ -107,7 +120,7 @@ const MaterialsPage = () => {
     [QUERY_KEY.MATERIALS, pageIndex, pageSize, filterImportDate],
     async () =>
       await materialService.searchPagination({
-        pageSize: pageSize,
+        pageSize: 20,
         pageIndex: pageIndex - 1,
         from: filterImportDate?.[0]?.toString(),
         to: filterImportDate?.[1]?.toString(),
@@ -116,6 +129,18 @@ const MaterialsPage = () => {
       refetchOnWindowFocus: false,
     },
   );
+
+  const isExistingBillInMonth = useMemo(() => {
+    if (Array.isArray(materials?.data) && materials.data.length > 0) {
+      const currentMonth = moment().month();
+
+      return materials?.data?.some(
+        (material) => moment(material?.importDate).month() == currentMonth,
+      );
+    }
+
+    return false;
+  }, [materials]);
 
   const handleOpenModalEdit = (material: Material) => {
     setModal({ isEdit: true, materialId: material?._id });
@@ -165,34 +190,39 @@ const MaterialsPage = () => {
     }
   };
 
-  const handleDownload = async () => {
-    try {
-      globalLoading.show();
-      const blob = await pdf(<MaterialDetail />).toBlob();
-      var data = new Blob([blob], { type: 'pdf' });
-      var csvURL = window.URL.createObjectURL(data);
-      const tempLink = document.createElement('a');
-      tempLink.href = csvURL;
-      tempLink.setAttribute('download', 'filename.pdf');
-      tempLink.click();
-    } catch (err) {
-      enqueueSnackbar('Oops! Có lỗi xảy ra khi xuất hóa đơn nhập hàng!', {
-        variant: 'error',
-      });
-    } finally {
-      setTimeout(() => {
-        globalLoading.hide();
-      }, 3000);
-    }
+  const handleDownload = async (billData?: Material) => {
+    if (billData && Object.keys(billData).length > 0)
+      try {
+        globalLoading.show();
+        const blob = await pdf(<MaterialBillDetail data={billData} />).toBlob();
+        var data = new Blob([blob], { type: 'pdf' });
+        var pdfURL = window.URL.createObjectURL(data);
+        const tempLink = document.createElement('a');
+        tempLink.href = pdfURL;
+        tempLink.setAttribute(
+          'download',
+          `hoa-don-nhap-hang-thang-${moment(billData?.importDate).month() + 1}.pdf`,
+        );
+        tempLink.click();
+        ('filename.pdf');
+      } catch (err) {
+        enqueueSnackbar('Oops! Có lỗi xảy ra khi xuất hóa đơn nhập hàng!', {
+          variant: 'error',
+        });
+      } finally {
+        setTimeout(() => {
+          globalLoading.hide();
+        }, 1500);
+      }
   };
 
   return (
     <Box ref={containerRef} id={containerId} className="p-4">
       <CustomBreadcrumb
-        pageName="Danh sách nguyên liệu"
+        pageName="Danh sách hóa đơn nhập hàng"
         routes={[
           {
-            label: 'Danh sách nguyên liệu',
+            label: 'Danh sách hóa đơn nhập hàng',
           },
         ]}
       />
@@ -207,17 +237,17 @@ const MaterialsPage = () => {
           }
           onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
         />
-        <Button onClick={handleDownload}>Click me</Button>
-        <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
-          Thêm nguyên liệu
-        </Button>
+        {!isExistingBillInMonth && (
+          <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
+            Thêm nguyên liệu
+          </Button>
+        )}
       </Box>
       <CustomTable
-        pagination
         rowKey="_id"
         columns={columns}
         data={materials?.data}
-        tableName="Danh sách nguyên liệu"
+        tableName="Danh sách hóa đơn nhập hàng"
         emptyContent="Không có hóa đơn nhập hàng nào"
         selectedKeys={materialSelectedKeys}
         onSelectionChange={setMaterialSelectedKeys}

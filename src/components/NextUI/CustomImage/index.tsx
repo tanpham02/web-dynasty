@@ -21,10 +21,11 @@ interface CustomImageProps extends ImageProps {
     | 'left-end'
     | 'right-start'
     | 'right-end';
+  fallbackSrc?: string;
 }
 
 const CustomImage: React.FC<CustomImageProps> = (props) => {
-  const { isPreview, src, placement = 'top' } = props;
+  const { isPreview, src, fallbackSrc, placement = 'top' } = props;
 
   const [visiblePreviewImage, setVisiblePreviewImage] = useState<boolean>(false);
 
@@ -44,18 +45,14 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
           />
         </Box>
       )}
-
       <Image
-        isBlurred
-        isZoomed
         src={src}
-        width="100%"
-        height="100%"
-        classNames={{
-          wrapper: 'absolute top-0 left-0 w-full h-full flex item-center justify-center',
-          img: 'w-full h-full object-cover p-1',
-        }}
         {...props}
+        classNames={{
+          wrapper: 'absolute top-0 left-0 !w-full !h-full flex item-center justify-center',
+          img: '!w-full !h-full object-cover p-1',
+        }}
+        fallbackSrc={fallbackSrc}
       />
 
       <Preview
