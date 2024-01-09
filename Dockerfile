@@ -17,8 +17,8 @@ RUN yarn cache clean
 COPY . .
 
 
-# Expose port 2203
-EXPOSE 2203
+# Expose port 1311
+EXPOSE 1311
 
 # Start the server
-CMD ["yarn", "run:dev"]
+CMD ["yarn", "dev"]

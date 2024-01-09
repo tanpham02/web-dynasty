@@ -1,14 +1,12 @@
-import { PATH_NAME, ROUTER_KEY } from '../constants/router';
-import USER_LIST_ICON from '~/assets/svg/customer.svg';
-import GEAR_ICON from '~ assets/svg/gear.svg';
 import STAFF_ICON from '~ assets/svg/staff.svg';
 import CART_ICON from '~/assets/svg/cart-shopping-sidebar.svg';
-import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
-import MATERIAL_ICON from '~/assets/svg/material-sidebar.svg';
-import VOUCHER_ICON from '~/assets/svg/ticket.svg';
+import USER_LIST_ICON from '~/assets/svg/customer.svg';
 import CATEGORY_ICON from '~/assets/svg/grid.svg';
-import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
+import MATERIAL_ICON from '~/assets/svg/material-sidebar.svg';
 import OVERVIEW_ICON from '~/assets/svg/overview.svg';
+import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
+import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
+import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
 const routeSideBar = [
   {

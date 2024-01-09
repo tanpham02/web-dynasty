@@ -65,7 +65,7 @@ const Upload: React.FC<UploadProps> = (props) => {
             )}
           </div>
         ) : (
-          <CustomImage isPreview={isPreview} src={src} {...props} />
+          <CustomImage isPreview={isPreview} src={src} {...(props as any)} />
         )}
       </div>
     </>

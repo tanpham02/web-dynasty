@@ -1,6 +1,5 @@
-import { data } from 'autoprefixer';
-import { Key } from 'react';
 import qs from 'qs';
+import { Key } from 'react';
 
 import { Attribute } from '~/models/attribute';
 import { ATTRIBUTES_URL } from '../apiUrl';

@@ -27,7 +27,7 @@ const RevenueFromMiniAppPage = () => {
         from: queryParameter.fromDate,
         to: queryParameter.toDate,
       };
-      return await statisticService.getStatisticData(params);
+      return await statisticService.getStatisticData({ params });
     },
   );
 

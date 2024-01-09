@@ -1,20 +1,12 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Checkbox,
-  CheckboxGroup,
-  Divider,
-  Tooltip,
-} from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
-import WarningIcon from '~/assets/svg/warning.svg';
 import GridLayoutIcon from '~/assets/svg/grid-layout.svg';
+import WarningIcon from '~/assets/svg/warning.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
@@ -33,7 +25,6 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
   const [attributeIds, setAttributeIds] = useState<string[]>([]);
-  const isCheckedAttributeBefore = useRef<boolean>(false);
 
   const columns: ColumnType<ProductChildrenAttribute>[] = [
     {
@@ -42,9 +33,9 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     },
     {
       name: <Box className="text-center">Tên thuộc tính</Box>,
-      render: (record: ProductChildrenAttribute, index?: number) => (
+      render: (record: ProductChildrenAttribute) => (
         <Box className="flex justify-around flex-col gap-8">
-          {record?.productAttributeItem?.map((attributeValue, fieldIndex) => (
+          {record?.productAttributeItem?.map((attributeValue) => (
             // <FormContextInput
             //   name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.name`}
             //   value={attributeValue?.name}
@@ -93,13 +84,13 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     name: 'productAttributeList',
   });
 
-  const {
-    data: attributes,
-    isLoading: isLoadingAttribute,
-    isFetching: isFetchingAttribute,
-  } = useQuery([QUERY_KEY.ATTRIBUTE], async () => await attributeService.getAllAttributes(), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: attributes } = useQuery(
+    [QUERY_KEY.ATTRIBUTE],
+    async () => await attributeService.getAllAttributes(),
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   useEffect(() => {
     removeProductAttribute(undefined);

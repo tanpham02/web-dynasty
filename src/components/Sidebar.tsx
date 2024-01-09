@@ -1,12 +1,12 @@
+import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { NavLink, useLocation } from 'react-router-dom';
-import { m, AnimatePresence } from 'framer-motion';
 
 import Logo from '~/assets/images/logo/logo-pizza.png';
-import SidebarLinkGroup from './SidebarLinkGroup';
-import routeSideBar from '~/routers/routeSideBar';
 import { PATH_NAME } from '~/constants/router';
+import routeSideBar from '~/routers/routeSideBar';
+import SidebarLinkGroup from './SidebarLinkGroup';
 
 interface SidebarProps {
   sidebarOpen: boolean;

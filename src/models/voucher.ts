@@ -1,4 +1,3 @@
-import { StatusOrder } from './order';
 import { Product } from './product';
 
 export enum VoucherStatus {

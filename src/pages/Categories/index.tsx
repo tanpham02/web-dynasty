@@ -1,22 +1,21 @@
-import { Button, Chip, Input, Selection, Tooltip, useDisclosure } from '@nextui-org/react';
+import { Button, Chip, Input, Selection, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import SVG from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
+import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import useDebounce from '~/hooks/useDebounce';
+import usePagination from '~/hooks/usePagination';
 import { Category, CategoryStatus } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
 import CategoryModal from './CategoryModal';
-import usePagination from '~/hooks/usePagination';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
 
 const Categories = () => {
   const {

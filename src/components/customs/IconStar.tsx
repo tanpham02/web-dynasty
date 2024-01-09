@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { memo, SVGProps } from 'react';
 
 const SvgIcoStar = (props: SVGProps<SVGSVGElement>) => (

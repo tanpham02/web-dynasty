@@ -84,7 +84,7 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
             </CardHeader>
             <CardBody className="space-y-4">
               {orderDetail?.productsFromCart?.map((product, index) => (
-                <Box className="flex justify-between">
+                <Box key={index} className="flex justify-between">
                   <Box className="flex items-start space-x-2">
                     <Image
                       src={getFullImageUrl(product?.product?.productItem?.image)}

@@ -12,31 +12,28 @@ import { DatePicker } from 'antd';
 import { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import Svg from 'react-inlinesvg';
+import { Link } from 'react-router-dom';
 
-import DeleteIcon from '~/assets/svg/delete.svg';
 import ArrowDownIcon from '~/assets/svg/arrow-down.svg';
-import EditIcon from '~/assets/svg/edit.svg';
+import DeleteIcon from '~/assets/svg/delete.svg';
 import InfoIcon from '~/assets/svg/info.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
+import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
+import { ORDER_STATUSES } from '~/constants/order';
 import { QUERY_KEY } from '~/constants/queryKey';
 import usePagination from '~/hooks/usePagination';
-import { Material } from '~/models/materials';
-import { Order, StatusCheckout, StatusOrder, TypeOrder } from '~/models/order';
+import { Order, StatusCheckout, StatusOrder } from '~/models/order';
 import materialService from '~/services/materialService';
 import orderService from '~/services/orderService';
-import { convertOrderStatus } from '~/utils/convertUtil';
 import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_HHMMSS, formatDate } from '~/utils/date.utils';
-import { formatCurrencyVND } from '~/utils/number';
-import { ORDER_STATUSES } from '~/constants/order';
-import { globalLoading } from '~/components/GlobalLoading';
-import OrderDetailModal from './components/OrderDetailModal';
 import { getLocationLinkByAddress } from '~/utils/googleMapUtil';
+import { formatCurrencyVND } from '~/utils/number';
+import OrderDetailModal from './components/OrderDetailModal';
 
 const OrderPage = () => {
   const { isOpen: isOpenModal, onOpenChange: onOpenChangeModal } = useDisclosure();

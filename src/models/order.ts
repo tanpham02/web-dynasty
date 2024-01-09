@@ -1,4 +1,4 @@
-import { Product, ProductMain } from './product';
+import { ProductMain } from './product';
 
 enum StatusOrder {
   WAITING_FOR_DELIVERING = 'WAITING_FOR_DELIVERING',
@@ -74,4 +74,4 @@ export interface ProductFromCart {
   _id?: string;
 }
 
-export { StatusOrder, TypeOrder, TimeOrder, StatusCheckout, PaymentMethod };
+export { PaymentMethod, StatusCheckout, StatusOrder, TimeOrder, TypeOrder };

@@ -1,5 +1,4 @@
 import { Select, SelectProps } from '@nextui-org/react';
-import React from 'react';
 import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
 
 interface FormContextSelectProps extends SelectProps {

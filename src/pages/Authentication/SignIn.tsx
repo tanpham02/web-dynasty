@@ -1,17 +1,15 @@
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
-import LogoDark from '~/assets/images/logo/logo-pizza.png';
-import Logo from '~/assets/images/logo/logo-pizza.png';
-import { LOCAL_STORAGE } from '~/constants/local_storage';
-import authService from '~/services/authService';
-import ICO_EYE_ACTIVE from '~/assets/svg/eye-active.svg';
-import ICO_EYE_INACTIVE from '~/assets/svg/eye-inactive.svg';
-import { SignInType } from '~/models/authen';
-import { PATH_NAME } from '~/constants/router';
 import { Button } from '@nextui-org/react';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+
+import ICO_EYE_ACTIVE from '~/assets/svg/eye-active.svg';
+import ICO_EYE_INACTIVE from '~/assets/svg/eye-inactive.svg';
+import { LOCAL_STORAGE } from '~/constants/local_storage';
+import { PATH_NAME } from '~/constants/router';
+import { SignInType } from '~/models/authen';
+import authService from '~/services/authService';
 
 const SignIn = () => {
   const navigation = useNavigate();

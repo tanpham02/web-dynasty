@@ -1,15 +1,11 @@
-version: "4"
-services:
-  the-pizza-company-dashboard:
-    image: the-pizza-company-dashboard:v1.0.0
-    container_name: the-pizza-company-dashboard
-    restart: always
-    build: .
-    ports:
-      - "2203:2203"
-    networks:
-      - the-pizza-company-dashboard-network
+version: '3.8'
 
-networks:
-  the-pizza-company-dashboard-network:
-    external: true
+services:
+  dynasty-dasboard:
+    container_name: dynasty-dashboard
+    image: dynasty-dasboard:dev
+    build:
+      context: .
+      dockerfile: Dockerfile-staging
+    ports:
+      - '1311:1311'

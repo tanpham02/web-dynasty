@@ -1,8 +1,7 @@
-import { Button, Tooltip, useDisclosure } from '@nextui-org/react';
+import { Button, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import SVG from 'react-inlinesvg';
-import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
@@ -12,11 +11,10 @@ import { attributeService } from '~/services/attributeService';
 import AttributeModal from './AttributeModal';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
-import EyeIcon from '~/assets/svg/eye.svg';
 import EditIcon from '~/assets/svg/edit.svg';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
-import ButtonIcon from '~/components/ButtonIcon';
 import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
+import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 
 const Attributes = () => {

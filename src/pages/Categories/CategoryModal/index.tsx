@@ -1,11 +1,13 @@
-import { Chip, SelectItem, Skeleton } from '@nextui-org/react';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { SelectItem } from '@nextui-org/react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
+import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
+import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
@@ -15,8 +17,6 @@ import ModalCategorySkeleton from '~/components/Skeleton/ModalCategorySkeleton';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { Category } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
-import DeleteIcon from '~/assets/svg/delete.svg';
-import { globalLoading } from '~/components/GlobalLoading';
 
 interface CategoryModalProps {
   isOpen?: boolean;
@@ -63,13 +63,13 @@ const CategoryModal = ({
     },
     {
       name: 'Hiển trị trên trang chủ',
-      render: (record: Category, index?: number) => (
+      render: (_record: Category, index?: number) => (
         <FormContextSwitch name={`childrenCategory.category.${index}.isShowHomePage`} />
       ),
     },
     {
       name: <Box className="flex justify-center">Hành động</Box>,
-      render: (record: Category, index?: number) => (
+      render: (_record: Category, index?: number) => (
         <Box className="flex justify-center">
           <ButtonIcon
             icon={DeleteIcon}

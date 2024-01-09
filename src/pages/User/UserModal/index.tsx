@@ -40,16 +40,16 @@ export interface UserModalProps {
   isEdit?: boolean;
   userId?: string;
 }
-const roleSelection = [
-  {
-    value: UserRole.ADMIN,
-    label: 'Quản trị viên',
-  },
-  {
-    value: UserRole.USER,
-    label: 'Nhân viên',
-  },
-];
+// const roleSelection = [
+//   {
+//     value: UserRole.ADMIN,
+//     label: 'Quản trị viên',
+//   },
+//   {
+//     value: UserRole.USER,
+//     label: 'Nhân viên',
+//   },
+// ];
 
 interface Locations {
   [key: string]: {

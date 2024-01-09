@@ -2,16 +2,15 @@ import { Card, CardBody, CardHeader, Divider, SelectItem, SelectSection } from '
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Svg from 'react-inlinesvg';
 
-import InfoIcon from '~/assets/svg/info.svg';
 import GridIcon from '~/assets/svg/grid.svg';
+import InfoIcon from '~/assets/svg/info.svg';
+import Box from '~/components/Box';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { ProductStatusOptions } from '~/models/product';
 import { categoryService } from '~/services/categoryService';
-import Box from '~/components/Box';
-import React from 'react';
 
 const ProductInfoCard = () => {
   const {

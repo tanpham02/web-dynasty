@@ -37,4 +37,6 @@ const firstLetterUpperCase = (words: string) => {
   return result;
 };
 
+export { currencyLocale, units, firstLetterUpperCase };
+
 export default convertCurrencyToWords;

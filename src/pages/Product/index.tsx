@@ -1,4 +1,4 @@
-import { Button, Chip, Image, Input, Selection, useDisclosure } from '@nextui-org/react';
+import { Button, Chip, Input, Selection, useDisclosure } from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -61,7 +61,7 @@ const ProductListPage = () => {
     {
       align: 'end',
       name: 'Loại sản phẩm',
-      render: (product: ProductMain) => (
+      render: (_product: ProductMain) => (
         <Chip color="success" variant="flat">
           Mới
         </Chip>
@@ -98,7 +98,7 @@ const ProductListPage = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryText = useDebounce(valueSearch, 700);
-  const [valueFilterFromCategory, setValueFilterFromCategory] = useState<string>();
+  const [valueFilterFromCategory] = useState<string>();
 
   const onDeleteProduct = (product?: ProductMain) => {
     if (product && Object.keys(product).length > 0)

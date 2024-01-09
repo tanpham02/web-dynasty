@@ -2,12 +2,11 @@ import { Avatar } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import UserOne from '~ assets/images/user/user-01.png';
-import { Users, UserRole } from '~/models/user';
+import { useSelector } from 'react-redux';
+import { UserRole, Users } from '~/models/user';
+import { RootState } from '~/redux/store';
 import { getFullImageUrl } from '~/utils/image';
 import Box from './Box';
-import { useSelector } from 'react-redux';
-import { RootState } from '~/redux/store';
 
 interface DropdownUserType {
   userInformation: Users;

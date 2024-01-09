@@ -1,8 +1,8 @@
-import { ListDataResponse, SearchParams } from '~/types';
-import axiosService from '../axiosService';
-import { Voucher, VoucherOverriding } from '~/models/voucher';
-import { VOUCHER_URL } from '../apiUrl';
 import qs from 'qs';
+import { VoucherOverriding } from '~/models/voucher';
+import { ListDataResponse, SearchParams } from '~/types';
+import { VOUCHER_URL } from '../apiUrl';
+import axiosService from '../axiosService';
 
 export const voucherService = {
   searchVoucher: async (params: SearchParams): Promise<ListDataResponse<VoucherOverriding>> => {

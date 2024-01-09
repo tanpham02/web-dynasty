@@ -14,12 +14,7 @@ import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 const OrderFormPage = () => {
   const forms = useForm<Order>();
 
-  const {
-    watch,
-    handleSubmit,
-    setValue,
-    formState: { isSubmitting },
-  } = forms;
+  const { watch, setValue } = forms;
 
   const cityId = watch('cityId');
   const districtId = watch('districtId');
