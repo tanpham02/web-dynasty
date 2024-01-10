@@ -30,7 +30,7 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
   const [visiblePreviewImage, setVisiblePreviewImage] = useState<boolean>(false);
 
   return (
-    <>
+    <Box id="custom-image">
       {isPreview && src && (
         <Box
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[99999999] hidden"
@@ -48,12 +48,12 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         src={src}
         {...props}
         classNames={{
-          wrapper: 'absolute top-0 left-0 !w-full !h-full flex item-center justify-center',
+          wrapper:
+            'absolute top-0 left-0 !w-full !h-full aspect-square flex item-center justify-center',
           img: '!w-full !h-full object-cover p-1',
         }}
         isBlurred
         isZoomed
-        fallbackSrc={fallbackSrc}
       />
 
       <Preview
@@ -61,7 +61,7 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         visible={visiblePreviewImage}
         onClose={() => setVisiblePreviewImage(false)}
       />
-    </>
+    </Box>
   );
 };
 

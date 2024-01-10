@@ -376,7 +376,6 @@ const UserModal = ({
               }}
               src={avatar?.srcPreview}
               loading="lazy"
-              className="!relative"
               radius="full"
               isPreview
             />

@@ -34,16 +34,13 @@ const ProductListPage = () => {
       align: 'center',
       name: 'Hình ảnh',
       render: (product: ProductMain) => (
-        <div className="w-20 h-20 relative image-table">
+        <div className="w-20 h-20 relative">
           <CustomImage
             isPreview
             src={getFullImageUrl(product?.image)}
             fallbackSrc="https://via.placeholder.com/80x80"
             radius="lg"
             loading="lazy"
-            classNames={{
-              img: '!object-contain',
-            }}
           />
         </div>
       ),
