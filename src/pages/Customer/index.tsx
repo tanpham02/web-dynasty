@@ -19,7 +19,7 @@ import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import { CUSTOMER_TYPES } from '~/constants/customer';
 import usePagination from '~/hooks/usePagination';
-import { Customer, CustomerStatus } from '~/models/customers';
+import { Customer, CustomerStatus, CustomerType } from '~/models/customers';
 import customerService from '~/services/customerService';
 
 export interface ModalKey {
@@ -105,10 +105,14 @@ const CustomerPage = () => {
           variant="dot"
           classNames={{
             content: 'font-semibold',
-            dot: customer?.customerType ? CUSTOMER_TYPES?.[customer?.customerType]?.color : '',
+            dot: customer?.customerType
+              ? CUSTOMER_TYPES?.[customer?.customerType as CustomerType]?.color
+              : '',
           }}
         >
-          {customer?.customerType ? CUSTOMER_TYPES?.[customer?.customerType]?.label : 'Không rõ'}
+          {customer?.customerType
+            ? CUSTOMER_TYPES?.[customer?.customerType as CustomerType]?.label
+            : 'Không rõ'}
         </Chip>
       ),
     },
@@ -117,16 +121,9 @@ const CustomerPage = () => {
       render: (customer: Customer) => (
         <div className="flex items-center gap-2 text-green-500">
           <ButtonIcon
-            // title={`${
-            //   handleCheckRolePermission(user, currentUserLogin)
-            //     ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
-            //     : 'Chỉnh sửa nhân viên'
-            // }`}
             title="Chỉnh sửa thông tin khách hàng"
-            // disable={handleCheckRolePermission(user, currentUserLogin)}
             icon={EditIcon}
             showArrow
-            delay={500}
             onClick={() => {
               setModal({
                 isEdit: true,
@@ -140,7 +137,6 @@ const CustomerPage = () => {
             icon={DeleteIcon}
             status="danger"
             showArrow
-            delay={500}
             onClick={() => {
               setModalConfirmDelete({
                 desc: 'Bạn có chắc chắn muốn xoá khách hàng này?',
