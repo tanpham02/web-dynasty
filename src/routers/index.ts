@@ -8,6 +8,7 @@ import ProductFormPage from '~/pages/Product/ProductFormPage';
 import NewCustomerStatisticPage from '~/pages/Statistics/NewCustomerStatistic';
 import RevenueFromMiniAppPage from '~/pages/Statistics/RevenueFromMiniApp';
 import UserListPage from '~/pages/User';
+import CustomerPage from '~/pages/Customer';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 import SignIn from '../pages/Authentication/SignIn';
 
@@ -83,6 +84,12 @@ const privateRoutes = [
     path: `${PATH_NAME.PRODUCT}/:id`,
     component: ProductFormPage,
     title: 'Chỉnh sủa sản phẩm',
+  },
+  {
+    key: ROUTER_KEY.CUSTOMER,
+    path: PATH_NAME.CUSTOMER_LIST,
+    component: CustomerPage,
+    title: 'Danh sách khách hàng',
   },
 ];
 

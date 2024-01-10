@@ -7,6 +7,7 @@ import {
 import { ListDataResponse, ListResponse, SearchParams } from '~/types';
 import qs from 'qs';
 import { Customer, CustomerHistory } from '~/models/customers';
+import { Key } from 'react';
 
 const customerService = {
   searchCustomerByCriteria: async (params: SearchParams): Promise<ListDataResponse<Customer>> => {
@@ -33,7 +34,7 @@ const customerService = {
         throw error;
       });
   },
-  getCustomerByCustomerID: async (id: number): Promise<Customer> => {
+  getCustomerByCustomerID: async (id?: Key): Promise<Customer> => {
     return axiosService()({
       url: `${CUSTOMER_URL}/${id}`,
       method: 'GET',
@@ -43,9 +44,10 @@ const customerService = {
         throw error;
       });
   },
-  updateCustomer: async (data: Customer): Promise<Customer> => {
+  updateCustomer: async (id?: Key, data?: FormData): Promise<Customer> => {
     return axiosService()({
-      url: `${CUSTOMER_URL}`,
+      url: `${CUSTOMER_URL}/${id}`,
+      headers: { 'Content-Type': 'multipart/form-data' },
       method: 'PATCH',
       data: data,
     })
@@ -65,7 +67,7 @@ const customerService = {
         throw error;
       });
   },
-  deleteCustomer: async (ids: number[]) => {
+  deleteCustomer: async (ids?: Key[]) => {
     return axiosService()({
       url: `${CUSTOMER_URL}`,
       method: 'DELETE',
