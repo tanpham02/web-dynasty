@@ -5,26 +5,20 @@ import Order from '~/pages/Order';
 import OrderFormPage from '~/pages/Order/OrderFormPage';
 import ProductListPage from '~/pages/Product';
 import ProductFormPage from '~/pages/Product/ProductFormPage';
-import NewCustomerStatisticPage from '~/pages/Statistics/NewCustomerStatistic';
-import RevenueFromMiniAppPage from '~/pages/Statistics/RevenueFromMiniApp';
 import UserListPage from '~/pages/User';
 import CustomerPage from '~/pages/Customer';
+import OverviewPage from '~/pages/Overview';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 import SignIn from '../pages/Authentication/SignIn';
 
 const privateRoutes = [
   {
-    key: ROUTER_KEY.STATISTIC,
-    path: PATH_NAME.NEW_CUSTOMER_STATISTIC,
-    component: NewCustomerStatisticPage, //Done UI
+    key: ROUTER_KEY.HOME,
+    path: PATH_NAME.HOME,
+    component: OverviewPage, //Done UI
     title: 'Khách hàng mới trên Zalo Mini App',
   },
-  {
-    key: ROUTER_KEY.STATISTIC,
-    path: PATH_NAME.REVENUE_STATISTIC,
-    component: RevenueFromMiniAppPage, //Done UI
-    title: 'Doanh thu trên Mini App',
-  },
+
   {
     key: ROUTER_KEY.PRODUCT,
     path: PATH_NAME.PRODUCT_LIST,

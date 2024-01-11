@@ -15,8 +15,8 @@ const routeSideBar = [
     title: 'Báo cáo & Thống kê',
     menu: [
       {
-        key: ROUTER_KEY.STATISTIC,
-        path: PATH_NAME.REVENUE_STATISTIC,
+        key: ROUTER_KEY.HOME,
+        path: PATH_NAME.HOME,
         title: 'Thống kê doanh thu',
         icon: OVERVIEW_ICON,
         child: [],

@@ -13,7 +13,7 @@ const PrivateRoute = ({ element }: { element: JSX.Element }) => {
 
   useEffect(() => {
     if (window.location.pathname === '/') {
-      navigate(PATH_NAME.STAFF_MANAGEMENT, { replace: true });
+      navigate(PATH_NAME.HOME, { replace: true });
     }
   }, [window.location.pathname]);
 

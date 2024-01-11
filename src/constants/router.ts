@@ -36,6 +36,8 @@ enum PATH_NAME {
   ATTRIBUTE = '/attributes',
   PRODUCT = '/product',
   ORDER_FORM = '/order-form',
+  OVERVIEW = '/overview',
+  HOME = '/',
 }
 
 enum ROUTER_KEY {
@@ -63,6 +65,8 @@ enum ROUTER_KEY {
   ATTRIBUTE = 'ATTRIBUTE',
   PRODUCTS = 'PRODUCTS',
   ORDER_FORM = 'ORDER_FORM',
+  OVERVIEW = 'OVERVIEW',
+  HOME = "HOME"
 }
 
 export { PATH_NAME, ROUTER_KEY };
