@@ -96,12 +96,12 @@ const routeSideBar = [
   {
     key: ROUTER_KEY.MATERIAL,
     path: PATH_NAME.MATERIAL,
-    title: 'Nguyên liệu',
+    title: 'Hóa đơn',
     menu: [
       {
         key: ROUTER_KEY.MATERIAL,
         path: PATH_NAME.MATERIAL,
-        title: 'Quản lí nguyên liệu',
+        title: 'Quản lí nhập hàng',
         icon: MATERIAL_ICON,
         child: [],
       },

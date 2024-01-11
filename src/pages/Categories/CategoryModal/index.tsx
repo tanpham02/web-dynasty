@@ -249,13 +249,43 @@ const CategoryModal = ({
             {Boolean(childrenCategory?.length) && (
               <Box>
                 <span className="font-semibold mb-2 block text-base">Danh mục con</span>
-                <CustomTable
-                  columns={columns}
-                  data={childrenCategory as any}
-                  isLoading={isLoadingCategory || isFetchingCategory}
-                  selectionMode="none"
-                  rowPerPage={5}
-                />
+                <Box className="border border-zinc-200 rounded-xl p-4 shadow">
+                  <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
+                    <Box className="font-bold flex-[3] text-center">Tên danh mục</Box>
+                    <Box className="font-bold flex-[2] text-center">Thứ tự hiển thị</Box>
+                    <Box className="font-bold flex-[2] text-center">Hiển thi trên trang chủ</Box>
+                    <Box className="font-bold flex-1 text-center">Hành động</Box>
+                  </Box>
+                  <Box>
+                    {childrenCategory?.map((category, index) => (
+                      <Box key={category?.id} className="px-3 py-2 flex items-center gap-2">
+                        <Box className="font-bold flex-[3] text-center">
+                          <FormContextInput name={`childrenCategory.category.${index}.name`} />
+                        </Box>
+                        <Box className="font-bold flex-[2] text-center">
+                          <FormContextInput
+                            name={`childrenCategory.category.${index}.priority`}
+                            type="number"
+                          />
+                        </Box>
+                        <Box className="font-bold flex-[2] text-center">
+                          <FormContextSwitch
+                            name={`childrenCategory.category.${index}.isShowHomePage`}
+                          />
+                        </Box>
+                        <Box className="font-bold flex-1 text-center">
+                          <ButtonIcon
+                            icon={DeleteIcon}
+                            title="Xóa danh mục này"
+                            status="danger"
+                            placement="top"
+                            onClick={() => removeChildrenCategory(index)}
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
               </Box>
             )}
           </Box>

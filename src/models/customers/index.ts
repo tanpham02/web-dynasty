@@ -1,3 +1,5 @@
+import { CustomerAddressItem } from './customerAddress';
+
 export enum CustomerStatus {
   ACTIVE = 'ACTIVE',
   IN_ACTIVE = 'IN_ACTIVE',
@@ -23,11 +25,13 @@ export interface Customer {
   password?: string;
   birthday?: string;
   customerAddressId?: string;
+  addressList?: CustomerAddressItem[];
   orderIds?: string[];
-  status?: CustomerStatus | CustomerStatus[];
-  customerType?: CustomerType | CustomerType[];
+  status?: CustomerStatus | string;
+  customerType?: CustomerType | string;
   createdAt?: string;
   updatedAt?: string;
+  address?: string;
 }
 
 export interface CustomerHistory {

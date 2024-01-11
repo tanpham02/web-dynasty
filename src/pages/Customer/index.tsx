@@ -4,27 +4,25 @@ import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { QUERY_KEY } from '~/constants/queryKey';
-import useDebounce from '~/hooks/useDebounce';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import UserModal, { ModalType } from './CustomerModal';
-
 import DeleteIcon from '~/assets/svg/delete.svg';
-import EditIcon from '~/assets/svg/edit.svg';
+import EyeIcon from '~/assets/svg/eye.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { CUSTOMER_TYPES } from '~/constants/customer';
+import { QUERY_KEY } from '~/constants/queryKey';
+import useDebounce from '~/hooks/useDebounce';
 import usePagination from '~/hooks/usePagination';
 import { Customer, CustomerStatus, CustomerType } from '~/models/customers';
 import customerService from '~/services/customerService';
+import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
+import UserModal from './CustomerModal';
 
 export interface ModalKey {
   visible?: boolean;
-  type?: ModalType;
   user?: Customer;
 }
 
@@ -121,8 +119,8 @@ const CustomerPage = () => {
       render: (customer: Customer) => (
         <div className="flex items-center gap-2 text-green-500">
           <ButtonIcon
-            title="Chỉnh sửa thông tin khách hàng"
-            icon={EditIcon}
+            title="Xem thông tin khách hàng"
+            icon={EyeIcon}
             showArrow
             onClick={() => {
               setModal({
@@ -261,7 +259,7 @@ const CustomerPage = () => {
         data={Customer?.data}
         pagination
         tableName="Danh sách khách hàng"
-        emptyContent="Không có nhân viên nào"
+        emptyContent="Không có khách hàng nào"
         selectedKeys={selectedRowKeys}
         onSelectionChange={(keys) => setSelectedRowKeys(keys as any)}
         page={pageIndex}

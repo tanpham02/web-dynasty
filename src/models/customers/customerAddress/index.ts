@@ -12,6 +12,9 @@ export interface CustomerAddressItem {
 }
 
 export interface CustomerAddressList {
+  _id?: string;
   customerId?: string;
   addressList?: CustomerAddressItem[];
+  createdAt?: string;
+  updatedAt?: string;
 }

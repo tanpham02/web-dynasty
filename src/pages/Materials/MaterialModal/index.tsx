@@ -253,14 +253,68 @@ const MaterialModal = ({
               </Button>
             </Box>
           </Box>
-          <CustomTable
-            key="id"
-            isScrollable
-            columns={columns}
-            data={materials || []}
-            isLoading={false}
-            emptyContent="Chưa có nguyên liệu nào"
-          />
+          <Box className="border border-zinc-200 rounded-xl p-4 shadow">
+            <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
+              <Box className="font-bold flex-[3] text-center">Tên nguyên liệu</Box>
+              <Box className="font-bold flex-[3] text-center">Giá nhập</Box>
+              <Box className="font-bold flex-[2] text-center">Số lượng</Box>
+              <Box className="font-bold flex-[2] text-center">Đơn vị tính</Box>
+              <Box className="font-bold flex-1 text-center">Hành động</Box>
+            </Box>
+            <Box>
+              {materials?.map((material, index) => (
+                <Box key={material?.id} className="px-3 py-2 flex items-center gap-2">
+                  <Box className="font-bold flex-[3] text-center">
+                    <FormContextInput
+                      name={`materialInfo.${index}.name`}
+                      rules={{
+                        required: 'Vui lòng nhập tên nguyên liệu!',
+                      }}
+                    />
+                  </Box>
+                  <Box className="font-bold flex-[3] text-center">
+                    <FormContextInput
+                      name={`materialInfo.${index}.price`}
+                      type="number"
+                      rules={{
+                        required: 'Vui lòng nhập giá nguyên liệu!',
+                      }}
+                      endContent="đ"
+                    />
+                  </Box>
+                  <Box className="font-bold flex-[2] text-center">
+                    <FormContextInput
+                      name={`materialInfo.${index}.quantity`}
+                      type="number"
+                      rules={{
+                        required: 'Vui lòng nhập số lượng nguyên liệu!',
+                        min: {
+                          value: 0.01,
+                          message: 'Số lượng nguyên liệu nhập không được nhỏ hơn 0!',
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box className="font-bold flex-[2] text-center">
+                    <FormContextInput
+                      name={`materialInfo.${index}.unit`}
+                      rules={{
+                        required: 'Vui lòng nhập đơn vị tính nguyên liệu!',
+                      }}
+                    />
+                  </Box>
+                  <Box className="font-bold flex-1 text-center">
+                    <ButtonIcon
+                      icon={DeleteIcon}
+                      title="Xóa nguyên liệu nhập này"
+                      status="danger"
+                      onClick={() => removeMaterial(index)}
+                    />
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Box>
         </Box>
       </FormProvider>
     </CustomModal>

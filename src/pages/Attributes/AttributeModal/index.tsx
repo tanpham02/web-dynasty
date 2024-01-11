@@ -6,6 +6,7 @@ import SVG from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
+import ButtonIcon from '~/components/ButtonIcon';
 import CustomModal from '~/components/NextUI/CustomModal';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
@@ -42,56 +43,6 @@ const AttributeModal = ({
     append: appendAttributeValue,
     remove: removeAttributeValue,
   } = useFieldArray({ control, name: 'attributeList' });
-
-  const columns: ColumnType<AttributeValue>[] = [
-    {
-      align: 'center',
-      name: 'STT',
-      render: (_attribute: AttributeValue, index?: number) => (
-        <span className="font-bold">{(index || 0) + 1}</span>
-      ),
-    },
-    {
-      align: 'center',
-      name: <Box className="flex justify-center">Tên giá trị</Box>,
-      render: (_attribute: AttributeValue, index?: number) => (
-        <FormContextInput<Attribute>
-          name={`attributeList.${index}.name` as any}
-          rules={{
-            required: 'Vui lòng nhập tên giá trị thuộc tính!',
-          }}
-        />
-      ),
-    },
-    {
-      align: 'center',
-      name: <Box className="flex justify-center">Giá trị</Box>,
-      render: (_attribute: AttributeValue, index?: number) => (
-        <FormContextInput<Attribute>
-          name={`attributeList.${index}.value` as any}
-          rules={{
-            required: 'Vui lòng nhập giá trị thuộc tính!',
-          }}
-        />
-      ),
-    },
-    {
-      align: 'center',
-      name: <span className="block text-center">Hành động</span>,
-      render: (_attribute: AttributeValue, index?: number) => (
-        <div className="flex justify-center">
-          <Tooltip content="Xóa giá trị thuộc tính này" showArrow color="danger">
-            <span
-              className="text-lg text-danger cursor-pointer active:opacity-50 p-2"
-              onClick={() => removeAttributeValue(index)}
-            >
-              <SVG src={DeleteIcon} />
-            </span>
-          </Tooltip>
-        </div>
-      ),
-    },
-  ];
 
   useEffect(() => {
     if (attributeId && isEdit && isOpen) getAttributeDetail();
@@ -178,13 +129,48 @@ const AttributeModal = ({
                 </Button>
               </div>
             </div>
-            <CustomTable
-              columns={columns}
-              data={attributeValue}
-              isLoading={false}
-              selectionMode="none"
-              tableName="Attribute values"
-            />
+            <Box className="border border-zinc-200 rounded-xl p-4 shadow">
+              <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
+                <Box className="font-bold flex-1 text-center">STT</Box>
+                <Box className="font-bold flex-[3] text-center">Tên giá trị</Box>
+                <Box className="font-bold flex-[3] text-center">Giá trị</Box>
+                <Box className="font-bold flex-1 text-center">Hành động</Box>
+              </Box>
+              <Box>
+                {attributeValue?.map((value, index) => (
+                  <Box key={value?.id} className="px-3 py-2 flex items-center gap-2">
+                    <Box className="font-bold flex-1 text-center">
+                      <span className="font-bold">{(index || 0) + 1}</span>
+                    </Box>
+                    <Box className="font-bold flex-[3] text-center">
+                      <FormContextInput<Attribute>
+                        name={`attributeList.${index}.name` as any}
+                        rules={{
+                          required: 'Vui lòng nhập tên giá trị thuộc tính!',
+                        }}
+                      />
+                    </Box>
+                    <Box className="font-bold flex-[3] text-center">
+                      <FormContextInput<Attribute>
+                        name={`attributeList.${index}.value` as any}
+                        rules={{
+                          required: 'Vui lòng nhập giá trị thuộc tính!',
+                        }}
+                      />
+                    </Box>
+                    <Box className="font-bold flex-1 text-center">
+                      <ButtonIcon
+                        icon={DeleteIcon}
+                        title="Xóa danh mục này"
+                        status="danger"
+                        placement="top"
+                        onClick={() => removeAttributeValue(index)}
+                      />
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           </div>
         </div>
       </FormProvider>
