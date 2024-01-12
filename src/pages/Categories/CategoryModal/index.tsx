@@ -40,6 +40,7 @@ const CategoryModal = ({
     handleSubmit,
     formState: { isSubmitting },
     reset: resetFormValue,
+    getFieldState,
     control,
   } = forms;
 
@@ -47,41 +48,6 @@ const CategoryModal = ({
     control,
     name: 'childrenCategory.category',
   });
-
-  const columns: ColumnType<Category>[] = [
-    {
-      name: 'Tên danh mục',
-      render: (_record: Category, index?: number) => (
-        <FormContextInput name={`childrenCategory.category.${index}.name`} />
-      ),
-    },
-    {
-      name: 'Thứ tự hiển thị',
-      render: (_record: Category, index?: number) => (
-        <FormContextInput name={`childrenCategory.category.${index}.priority`} type="number" />
-      ),
-    },
-    {
-      name: 'Hiển trị trên trang chủ',
-      render: (_record: Category, index?: number) => (
-        <FormContextSwitch name={`childrenCategory.category.${index}.isShowHomePage`} />
-      ),
-    },
-    {
-      name: <Box className="flex justify-center">Hành động</Box>,
-      render: (_record: Category, index?: number) => (
-        <Box className="flex justify-center">
-          <ButtonIcon
-            icon={DeleteIcon}
-            title="Xóa danh mục này"
-            status="danger"
-            placement="top"
-            onClick={() => removeChildrenCategory(index)}
-          />
-        </Box>
-      ),
-    },
-  ];
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -124,6 +90,7 @@ const CategoryModal = ({
   );
 
   const onSubmit = async (data: Category) => {
+    console.log(data);
     try {
       const formData = new FormData();
 
@@ -131,7 +98,11 @@ const CategoryModal = ({
       let parentCategoryId: string = '';
       let isCreateChildrenCategory: boolean = false;
 
-      if (data?.childrenCategory?.parentId) {
+      if (
+        data?.childrenCategory &&
+        Array.isArray(data.childrenCategory.parentId) &&
+        data.childrenCategory.parentId.length > 0
+      ) {
         parentCategoryId =
           Array.isArray(data.childrenCategory.parentId) && data.childrenCategory.parentId.length > 0
             ? data.childrenCategory.parentId[0]
@@ -177,6 +148,8 @@ const CategoryModal = ({
         delete jsonData?._id;
       } else {
         jsonData = data;
+
+        if (!jsonData?.childrenCategory?.parentId?.length) delete jsonData?.childrenCategory;
       }
 
       formData.append('categoryInfo', JSON.stringify(jsonData));
@@ -186,15 +159,16 @@ const CategoryModal = ({
           !isCreateChildrenCategory ? categoryId : parentCategoryId,
           formData,
         );
-        // if (
-        //   isCreateChildrenCategory &&
-        //   categoryId &&
-        //   data?.childrenCategory?.parentId === parentCategoryId
-        // )
-        //   await categoryService.deleteCategoryByIds([categoryId]);
       } else {
         await categoryService.createCategory(formData);
       }
+      if (
+        isEdit &&
+        categoryId &&
+        data?.childrenCategory?.parentId &&
+        getFieldState(`childrenCategory.parentId`).isDirty
+      )
+        await categoryService.deleteCategoryByIds([categoryId]);
 
       enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} danh mục thành công!`);
     } catch (err) {

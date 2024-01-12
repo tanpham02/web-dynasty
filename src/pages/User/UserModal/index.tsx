@@ -40,16 +40,16 @@ export interface UserModalProps {
   isEdit?: boolean;
   userId?: string;
 }
-// const roleSelection = [
-//   {
-//     value: UserRole.ADMIN,
-//     label: 'Quản trị viên',
-//   },
-//   {
-//     value: UserRole.USER,
-//     label: 'Nhân viên',
-//   },
-// ];
+const roleSelection = [
+  {
+    value: UserRole.ADMIN,
+    label: 'Quản trị viên',
+  },
+  {
+    value: UserRole.USER,
+    label: 'Nhân viên',
+  },
+];
 
 interface Locations {
   [key: string]: {
@@ -261,11 +261,11 @@ const UserModal = ({
     }
     const newData: Users = {
       ...data,
+      role: (data?.role?.[0] as UserRole) || UserRole.USER,
       birthday: data?.birthday ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD) : null,
       // role: (data.role && Array.isArray(data.role)
       //   ? Array.from(data.role).join()
       //   : data.role) as UserRole,
-      role: UserRole.USER,
     };
 
     delete newData.cityId;
@@ -337,14 +337,6 @@ const UserModal = ({
     }
   };
 
-  // const handleCheckRolePermission = (recordRole: UserRole, currentUserLoginRole: UserRole) => {
-  //   if (currentUserLoginRole === UserRole.ADMIN) {
-  //     if (recordRole === UserRole.ADMIN) {
-  //       return true;
-  //     } else return false;
-  //   } else return true;
-  // };
-
   return (
     <CustomModal
       isOpen={isOpen}
@@ -381,7 +373,7 @@ const UserModal = ({
             />
           </Box>
           <Box className="space-y-4">
-            <FormContextInput<Users> name="fullName" label="Họ và tên" isClearable />
+            <FormContextInput<Users> name="fullName" label="Họ và tên" />
             <FormContextInput<Users>
               name="phoneNumber"
               rules={{
@@ -393,7 +385,6 @@ const UserModal = ({
               }}
               isRequired
               label="Số điện thoại"
-              isClearable
             />
             <Controller
               control={control}
@@ -421,10 +412,9 @@ const UserModal = ({
               isRequired
               type="email"
               label="E-mail"
-              isClearable
             />
 
-            {/* <FormContextSelect
+            <FormContextSelect
               isRequired
               name="role"
               label="Vai trò"
@@ -437,7 +427,7 @@ const UserModal = ({
                   {item.label}
                 </SelectItem>
               ))}
-            </FormContextSelect> */}
+            </FormContextSelect>
 
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
               {mappingVietNamLocation &&
@@ -472,7 +462,7 @@ const UserModal = ({
                 </SelectItem>
               ))}
             </FormContextSelect>
-            <FormContextInput<Users> name="location" label="Số nhà, tên đường" isClearable />
+            <FormContextInput<Users> name="location" label="Số nhà, tên đường" />
             <FormContextInput<Users>
               isRequired
               name="username"
@@ -480,7 +470,6 @@ const UserModal = ({
               rules={{
                 required: 'Vui lòng nhập tên đăng nhập',
               }}
-              isClearable={!isEdit}
               isDisabled={isEdit}
             />
 

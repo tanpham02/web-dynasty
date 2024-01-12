@@ -59,7 +59,15 @@ const Categories = () => {
       align: 'center',
       name: <Box className="flex justify-center">Số lượng sản phẩm</Box>,
       render: (category: Category) => (
-        <Box className="flex justify-center">{category?.products?.length || 0}</Box>
+        <Box className="flex justify-center">
+          {category?.products?.length ||
+            category?.childrenCategory?.category?.reduce(
+              (totalProduct, childrenCategory) =>
+                totalProduct + (childrenCategory?.products?.length || 0),
+              0,
+            ) ||
+            0}
+        </Box>
       ),
     },
     {

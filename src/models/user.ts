@@ -25,7 +25,7 @@ export interface Users {
   ward?: string | null;
   wardId?: number | string | null;
   password?: string;
-  role?: UserRole;
+  role?: UserRole | UserRole[];
   status?: UserStatus;
   image?: string;
   confirmPw?: string;

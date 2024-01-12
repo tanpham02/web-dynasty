@@ -2,7 +2,7 @@ import { Button } from '@nextui-org/button';
 import { Chip, Input, Select, SelectItem, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
@@ -18,11 +18,11 @@ import UserModal, { ModalType } from './UserModal';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
+import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
 import CustomImage from '~/components/NextUI/CustomImage';
-import Box from '~/components/Box';
 import usePagination from '~/hooks/usePagination';
 
 export interface ModalKey {
@@ -45,6 +45,11 @@ const UserListPage = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+
+  const isHavePermission = useMemo(
+    () => currentUserLogin?.role === UserRole.ADMIN,
+    [currentUserLogin],
+  );
 
   const {
     isOpen: isOpenModal,
@@ -159,8 +164,12 @@ const UserListPage = () => {
             //     ? 'Bạn không có quyền chỉnh sửa thông tin người này!'
             //     : 'Chỉnh sửa nhân viên'
             // }`}
-            title="Chỉnh sửa nhân viên"
-            // disable={handleCheckRolePermission(user, currentUserLogin)}
+            title={
+              isHavePermission
+                ? 'Chỉnh sửa nhân viên'
+                : 'Bạn không có quyền chỉnh sửa thông tin người này'
+            }
+            disable={!isHavePermission}
             icon={EditIcon}
             showArrow
             delay={500}
@@ -173,8 +182,9 @@ const UserListPage = () => {
             }}
           />
           <ButtonIcon
-            title="Xóa nhân viên này"
+            title={isHavePermission ? 'Xóa nhân viên này' : 'Bạn không có quyền xóa nhân viên này'}
             icon={DeleteIcon}
+            disable={!isHavePermission}
             status="danger"
             showArrow
             delay={500}
@@ -211,16 +221,17 @@ const UserListPage = () => {
     },
   );
 
-  // const handleCheckRolePermission = (userRecord: Users, userCurrentLogin: Users) => {
-  //   if (userRecord._id === userCurrentLogin._id) {
-  //    if (userCurrentLogin.role === UserRole.ADMIN) {
-  //     if(userRecord.role === UserRole.USER) {
-  //       return false
-  //     } return true
-  //    }
-  //   }
-  //   return true;
-  // };
+  const userDisableId = useMemo(() => {
+    if (Array.isArray(users?.data) && users.data.length > 0) {
+      return isHavePermission
+        ? [currentUserLogin?._id, ...users.data.map((user) => user.role === UserRole.ADMIN)]
+        : users.data.map((user) => user._id);
+    }
+
+    return [currentUserLogin?._id];
+  }, [users?.data, isHavePermission]);
+
+  console.log(userDisableId);
 
   const handleDeleteUser = async () => {
     globalLoading.show();
@@ -334,14 +345,16 @@ const UserListPage = () => {
             ) : (
               ''
             )}
-            <Button
-              color="primary"
-              variant="shadow"
-              className="w-fit ml-auto"
-              onClick={onOpenModal}
-            >
-              Thêm nhân viên
-            </Button>
+            {!isHavePermission && (
+              <Button
+                color="primary"
+                variant="shadow"
+                className="w-fit ml-auto"
+                onClick={onOpenModal}
+              >
+                Thêm nhân viên
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -352,14 +365,14 @@ const UserListPage = () => {
         isLoading={isLoadingUser}
         data={users?.data}
         pagination
-        disabledKeys={[currentUserLogin._id] as any}
+        disabledKeys={userDisableId as any}
         tableName="Danh sách nhân viên"
         emptyContent="Không có nhân viên nào"
         selectedKeys={selectedRowKeys}
         onSelectionChange={(keys) => setSelectedRowKeys(keys as any)}
         page={pageIndex}
         totalPage={users?.totalPage}
-        total={users?.totalElement}
+        total={isHavePermission ? users?.totalElement : 0}
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}
