@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import Logo from '~/assets/images/logo/logo-pizza.png';
+// import Logo from '~/assets/images/logo/logo-pizza.png';
+import Logo from '~/assets/svg/logo-color.svg';
 import { PATH_NAME } from '~/constants/router';
 import routeSideBar from '~/routers/routeSideBar';
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -66,9 +67,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         }`}
       >
         {/* <!-- SIDEBAR HEADER --> */}
-        <div className="bg-white flex items-center justify-between gap-2 px-6 py-[11px]">
-          <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto">
-            <img src={Logo} alt="Logo" className="h-10" />
+        <div className="flex items-center justify-between gap-2 px-6 py-[11px]">
+          <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto -mt-14 -mb-16">
+            <SVG src={Logo} className="w-60 h-60" />
           </NavLink>
 
           <button

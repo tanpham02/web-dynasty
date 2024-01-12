@@ -26,55 +26,6 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
   const [attributeIds, setAttributeIds] = useState<string[]>([]);
 
-  const columns: ColumnType<ProductChildrenAttribute>[] = [
-    {
-      name: 'Tên mở rộng',
-      render: (record: ProductChildrenAttribute) => record?.extendedName,
-    },
-    {
-      name: <Box className="text-center">Tên thuộc tính</Box>,
-      render: (record: ProductChildrenAttribute) => (
-        <Box className="flex justify-around flex-col gap-8">
-          {record?.productAttributeItem?.map((attributeValue) => (
-            // <FormContextInput
-            //   name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.name`}
-            //   value={attributeValue?.name}
-            //   isReadOnly
-            // />
-            <span className="block my-auto">- {attributeValue?.name}</span>
-          ))}
-        </Box>
-      ),
-    },
-    {
-      name: <Box className="text-center">Giá bán cộng thêm</Box>,
-      render: (record: ProductChildrenAttribute, index?: number) => (
-        <Box className="space-y-1">
-          {record?.productAttributeItem?.map((_, fieldIndex) => (
-            <FormContextInput
-              name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
-              endContent={<span className="font-bold">đ</span>}
-              type="number"
-            />
-          ))}
-        </Box>
-      ),
-    },
-    {
-      name: <span className="block text-center">Hành động</span>,
-      render: (_record, index?: number) => (
-        <div className="flex justify-center">
-          <ButtonIcon
-            icon={DeleteIcon}
-            title="Xóa sản phẩm con này"
-            onClick={() => removeProductAttribute(index)}
-            status="danger"
-          />
-        </div>
-      ),
-    },
-  ];
-
   const {
     fields: productAttributes,
     append: appendProductAttribute,
@@ -101,14 +52,14 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     }
   }, [JSON.stringify(attributeSelected)]);
 
-  useEffect(() => {
-    const oldProductAttribute = getValues('attributeMapping');
-    if (isEdit && Array.isArray(oldProductAttribute) && oldProductAttribute.length > 0) {
-      setAttributeSelected(oldProductAttribute as Attribute[]);
-      setAttributeIds((oldProductAttribute?.map((attribute) => attribute?._id) as string[]) || []);
-      // isCheckedAttributeBefore.current = true;
-    }
-  }, [isEdit, getValues('attributeMapping')]);
+  // useEffect(() => {
+  //   const oldProductAttribute = getValues('attributeMapping');
+  //   if (isEdit && Array.isArray(oldProductAttribute) && oldProductAttribute.length > 0) {
+  //     setAttributeSelected(oldProductAttribute as Attribute[]);
+  //     setAttributeIds((oldProductAttribute?.map((attribute) => attribute?._id) as string[]) || []);
+  //     // isCheckedAttributeBefore.current = true;
+  //   }
+  // }, [isEdit, getValues('attributeMapping')]);
 
   const generateCombinations = useCallback(
     (
@@ -193,18 +144,53 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
             ))}
           </Box>
         </CheckboxGroup>
+        <Box className="border border-zinc-200 rounded-xl p-4 shadow">
+          <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
+            <Box className="font-bold flex-[3] text-center">Tên mở rộng</Box>
+            <Box className="font-bold flex-[3] text-center">Tên thuộc tính</Box>
+            <Box className="font-bold flex-[3] text-center">Giá bán cộng thêm</Box>
+            <Box className="font-bold flex-1 text-center">Hành động</Box>
+          </Box>
+          <Box>
+            {productAttributes?.map((attribute, index) => (
+              <Box
+                key={attribute?.id}
+                className={`px-3 py-2 flex items-center gap-2 ${
+                  index % 2 == 1 && 'bg-zinc-100 rounded-md'
+                }`}
+              >
+                <Box className="flex-[3] text-center">{attribute?.extendedName}</Box>
+                <Box className="flex-[3] text-center">
+                  <Box className="flex justify-around flex-col gap-8">
+                    {attribute?.productAttributeItem?.map((attributeValue) => (
+                      <span className="block my-auto">- {attributeValue?.name}</span>
+                    ))}
+                  </Box>
+                </Box>
+                <Box className="font-bold flex-[3] text-center">
+                  <Box className="space-y-1">
+                    {attribute?.productAttributeItem?.map((_, fieldIndex) => (
+                      <FormContextInput
+                        name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
+                        endContent={<span className="font-bold">đ</span>}
+                        type="number"
+                      />
+                    ))}
+                  </Box>
+                </Box>
 
-        <CustomTable
-          rowKey="id"
-          tableName="product attribute"
-          columns={columns}
-          isLoading={false}
-          selectionMode="none"
-          removeWrapper
-          isStriped
-          data={productAttributes}
-          emptyContent="Không có sản phẩm con nào"
-        />
+                <Box className="font-bold flex-1 text-center">
+                  <ButtonIcon
+                    icon={DeleteIcon}
+                    title="Xóa sản phẩm con này"
+                    onClick={() => removeProductAttribute(index)}
+                    status="danger"
+                  />
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
       </CardBody>
     </Card>
   );
