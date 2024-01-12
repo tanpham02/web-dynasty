@@ -165,9 +165,7 @@ const UserListPage = () => {
             //     : 'Chỉnh sửa nhân viên'
             // }`}
             title={
-              isHavePermission
-                ? 'Chỉnh sửa nhân viên'
-                : 'Bạn không có quyền chỉnh sửa thông tin người này'
+              isHavePermission ? 'Chỉnh sửa' : 'Bạn không có quyền chỉnh sửa thông tin người này'
             }
             disable={!isHavePermission}
             icon={EditIcon}
@@ -182,9 +180,13 @@ const UserListPage = () => {
             }}
           />
           <ButtonIcon
-            title={isHavePermission ? 'Xóa nhân viên này' : 'Bạn không có quyền xóa nhân viên này'}
+            title={
+              isHavePermission && !(currentUserLogin?._id === user._id)
+                ? 'Xóa'
+                : 'Bạn không có quyền xóa người này'
+            }
             icon={DeleteIcon}
-            disable={!isHavePermission}
+            disable={!isHavePermission || currentUserLogin?._id === user._id}
             status="danger"
             showArrow
             delay={500}
