@@ -421,6 +421,7 @@ const UserModal = ({
               rules={{
                 required: 'Vui lòng chọn vai trò',
               }}
+              isDisabled={isEdit}
             >
               {roleSelection.map((item) => (
                 <SelectItem key={item.value} value={item.value}>
