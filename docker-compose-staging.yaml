@@ -3,7 +3,7 @@ version: '3.8'
 services:
   dynasty-dasboard:
     container_name: dynasty-dashboard
-    image: dynasty-dasboard:dev
+    image: dynasty-dasboard:staging
     build:
       context: .
       dockerfile: Dockerfile-staging
