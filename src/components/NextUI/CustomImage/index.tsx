@@ -49,9 +49,10 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         {...props}
         classNames={{
           wrapper:
-            'absolute top-0 left-0 !w-full !h-full aspect-square flex item-center justify-center',
+            'absolute top-0 left-0 !w-full !h-full aspect-square flex item-center justify-center [&>div]:absolute [&>div]:inset-0',
           img: '!w-full !h-full object-cover p-1',
         }}
+        // className="absolute top-0 left-0 w-full h-full"
         isBlurred
         isZoomed
       />

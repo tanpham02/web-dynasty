@@ -117,7 +117,7 @@ const CustomerPage = () => {
     {
       name: 'Hành động',
       render: (customer: Customer) => (
-        <div className="flex items-center gap-2 text-green-500">
+        <div className="flex items-center justify-center gap-2 text-green-500">
           <ButtonIcon
             title="Xem thông tin khách hàng"
             icon={EyeIcon}
@@ -130,7 +130,7 @@ const CustomerPage = () => {
               onOpenModal();
             }}
           />
-          <ButtonIcon
+          {/* <ButtonIcon
             title="Xóa khách hàng này"
             icon={DeleteIcon}
             status="danger"
@@ -142,7 +142,7 @@ const CustomerPage = () => {
               });
               onOpenModalConfirmDeleteUser();
             }}
-          />
+          /> */}
         </div>
       ),
     },
