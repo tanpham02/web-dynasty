@@ -169,6 +169,7 @@ const UserListPage = () => {
             }
             disable={!isHavePermission}
             icon={EditIcon}
+            placement="top-end"
             showArrow
             delay={500}
             onClick={() => {
@@ -186,6 +187,7 @@ const UserListPage = () => {
                 : 'Bạn không có quyền xóa người này'
             }
             icon={DeleteIcon}
+            placement="top-end"
             disable={!isHavePermission || currentUserLogin?._id === user._id}
             status="danger"
             showArrow

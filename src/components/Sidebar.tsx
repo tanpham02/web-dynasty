@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { NavLink, useLocation } from 'react-router-dom';
 
-// import Logo from '~/assets/images/logo/logo-pizza.png';
 import Logo from '~/assets/svg/logo-color.svg';
 import { PATH_NAME } from '~/constants/router';
 import routeSideBar from '~/routers/routeSideBar';

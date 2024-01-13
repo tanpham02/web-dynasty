@@ -175,15 +175,6 @@ const UserModal = ({
           (Number(districtIdWatchValue) < 100 ? `0${districtIdWatchValue}` : districtIdWatchValue),
       );
 
-      // reset(
-      //   (prev) =>
-      //     ({
-      //       ...prev,
-      //       district: districtsMapping?.name,
-      //       wardId: getFieldState('districtId').isDirty ? [] : [prev.wardId],
-      //     }) as any,
-      // );
-
       setLocations((prev) => ({
         ...prev,
         district: {
