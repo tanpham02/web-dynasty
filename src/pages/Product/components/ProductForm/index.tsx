@@ -135,7 +135,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
           <Divider />
           <CardBody>
             <Box className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-8">
-              <Box>
+              <Box className="w-[20vw]">
                 <Upload
                   onChange={({ srcPreview, srcRequest }: onChangeUploadState) => {
                     setProductImage({
@@ -143,6 +143,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
                       srcRequest,
                     });
                   }}
+                  radius="lg"
                   src={productImage?.srcPreview}
                   loading="lazy"
                   description="Tải lên"

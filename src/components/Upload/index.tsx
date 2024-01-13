@@ -4,6 +4,7 @@ import SVG from 'react-inlinesvg';
 import UploadIcon from '~/assets/svg/upload.svg';
 import CustomImage from '../NextUI/CustomImage';
 import Box from '../Box';
+import { useState } from 'react';
 
 export interface onChangeUploadState {
   srcPreview?: any;
@@ -41,7 +42,13 @@ const Upload: React.FC<UploadProps> = (props) => {
           type="file"
           accept="image/*"
           className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-          onChange={handleChangeFileUpload}
+          onChange={(e) => {
+            props.onChange?.({
+              srcPreview: '',
+              srcRequest: '',
+            });
+            handleChangeFileUpload(e);
+          }}
         />
 
         {!props.src ? (

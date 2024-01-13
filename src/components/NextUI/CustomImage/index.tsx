@@ -55,6 +55,7 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         // className="absolute top-0 left-0 w-full h-full"
         isBlurred
         isZoomed
+        radius={props.radius}
       />
 
       <Preview
