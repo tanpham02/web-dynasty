@@ -4,4 +4,4 @@ Please install EditorConfig for VS Code extension in Visual Studio Code for whic
 
 Account login :
 username: admin
-password: 123456
+password: 13112002

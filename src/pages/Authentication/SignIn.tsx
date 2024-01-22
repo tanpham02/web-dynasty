@@ -23,7 +23,7 @@ const SignIn = () => {
   } = useForm<SignInType>({
     defaultValues: {
       username: 'admin',
-      password: '123456',
+      password: '13112002',
     },
   });
   const onSubmit: SubmitHandler<SignInType> = async (data: SignInType) => {

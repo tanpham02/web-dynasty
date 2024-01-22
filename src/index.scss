@@ -2,7 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap");
+
+// @font-face {
+//   font-family: 'nunitoextralight_italic';
+//   src: url('nunito-italic-variablefont_wght-webfont.woff2') format('woff2'),
+//        url('nunito-italic-variablefont_wght-webfont.woff') format('woff');
+//   font-weight: normal;
+//   font-style: normal;
+
+// }
+
+// @font-face {
+//   font-family: 'nunitoextralight';
+//   src: url('nunito-variablefont_wght-webfont.woff2') format('woff2'),
+//        url('nunito-variablefont_wght-webfont.woff') format('woff');
+//   font-weight: normal;
+//   font-style: normal;
+
+// }
 
 @layer base {
   html {
@@ -13,7 +31,7 @@
 *,
 body,
 html {
-  font-family: 'Nunito', sans-serif !important;
+  font-family: "Nunito", sans-serif !important;
 }
 
 @layer components {
@@ -40,12 +58,12 @@ html {
   min-height: 350px;
 }
 
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
   display: none;
 }
 
 /* Fallback for other browsers */
-input[type='number'] {
+input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
   -webkit-appearance: textfield;
@@ -208,11 +226,8 @@ li.ant-pagination-item:hover a,
   height: 56px;
   color: #006a31 !important;
   border-radius: 12px !important;
-  border-color: hsl(
-    var(--nextui-default-200) / var(--nextui-default-200-opacity, var(--tw-border-opacity))
-  ) !important;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-    var(--tw-shadow) !important;
+  border-color: hsl(var(--nextui-default-200) / var(--nextui-default-200-opacity, var(--tw-border-opacity))) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
   overflow: auto !important;
 }
 .ant-picker input::placeholder {
@@ -232,6 +247,5 @@ li.ant-pagination-item:hover a,
 .ant-picker-range {
   overflow: hidden !important;
   height: 40px;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
-    var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }

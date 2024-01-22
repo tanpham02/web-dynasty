@@ -30,4 +30,4 @@ EXPOSE 1311
 
 # Start the server
 
-CMD ["yarn", "staging"]
+CMD ["yarn", "run:staging"]

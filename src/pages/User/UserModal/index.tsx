@@ -137,7 +137,6 @@ const UserModal = ({
   const mappingVietNamLocation = useMemo(() => {
     if (vietnamLocations) {
       const newLocationsArray = Object.keys(vietnamLocations).map((key) => vietnamLocations[key]);
-
       return newLocationsArray;
     }
   }, [JSON.stringify(vietnamLocations)]);
@@ -430,6 +429,7 @@ const UserModal = ({
                   </SelectItem>
                 )) as any)}
             </FormContextSelect>
+
             <FormContextSelect
               name="districtId"
               label="Quận/Huyện"
@@ -442,6 +442,7 @@ const UserModal = ({
                 </SelectItem>
               ))}
             </FormContextSelect>
+            
             <FormContextSelect
               name="wardId"
               label="Phường/Xã"
