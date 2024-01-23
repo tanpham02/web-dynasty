@@ -161,15 +161,15 @@ const OrderPage = () => {
             title="Xem chi tiết đơn hàng"
             onClick={() => handleOpenModalOrderDetail(order)}
           />
-          {order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
-            (order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT && (
-              <ButtonIcon
+          {(order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
+            order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT ) && 
+              (<ButtonIcon
                 icon={DeleteIcon}
                 title="Xóa đơn hàng này"
                 status="danger"
                 onClick={() => handleOpenDeleteModal(order)}
-              />
-            ))}
+              />)
+            }
         </Box>
       ),
     },
@@ -219,7 +219,7 @@ const OrderPage = () => {
   const handleDeleteOrder = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await materialService.delete(modalDelete?.id);
+      await orderService.delete(modalDelete?.id);
       enqueueSnackbar('Xóa đơn hàng thành công!');
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi xóa đơn hàng!', {
