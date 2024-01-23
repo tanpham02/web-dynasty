@@ -217,7 +217,7 @@ const CustomerPage = () => {
             <Input
               size="md"
               variant="faded"
-              className="w-full max-w-[250px] text-md"
+              className="w-full max-w-[300px] text-md"
               label="Tìm kiếm tên khách hàng..."
               classNames={{
                 inputWrapper: 'bg-white',

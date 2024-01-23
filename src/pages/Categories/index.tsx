@@ -182,13 +182,15 @@ const Categories = () => {
       <div className="flex justify-between items-end mb-2">
         <Input
           label="Tìm kiếm tên danh mục..."
-          size="sm"
-          className="max-w-[250px]"
+          size="md"
+          className="max-w-[300px] text-md"
           variant="faded"
           value={searchCategory}
           onValueChange={setSearchCategory}
           classNames={{
-            inputWrapper: 'bg-white',
+            inputWrapper: 'bg-white text-md',
+            label: 'font-semibold',
+            input: 'text-primary-text-color text-md',
           }}
         />
         <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>

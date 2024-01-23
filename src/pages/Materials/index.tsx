@@ -19,10 +19,11 @@ import { QUERY_KEY } from '~/constants/queryKey';
 import usePagination from '~/hooks/usePagination';
 import { Material } from '~/models/materials';
 import materialService from '~/services/materialService';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
+import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
 import MaterialBillDetail from './MaterialBillDetail';
 import MaterialModal from './MaterialModal';
+import { SearchParams } from '~/types';
 
 const MaterialsPage = () => {
   const {
@@ -118,13 +119,22 @@ const MaterialsPage = () => {
     refetch: refetchMaterials,
   } = useQuery(
     [QUERY_KEY.MATERIALS, pageIndex, pageSize, filterImportDate],
-    async () =>
-      await materialService.searchPagination({
+    async () => {
+      let params: SearchParams = {
         pageSize: 20,
         pageIndex: pageIndex - 1,
-        from: filterImportDate?.[0]?.toString(),
-        to: filterImportDate?.[1]?.toString(),
-      }),
+      };
+
+      if (filterImportDate.length > 0) {
+        params = {
+          ...params,
+          from: moment(filterImportDate?.[0]?.toString()).format(DATE_FORMAT_YYYYMMDD),
+          to: moment(filterImportDate?.[1]?.toString()).format(DATE_FORMAT_YYYYMMDD),
+        };
+      }
+
+      return await materialService.searchPagination(params);
+    },
     {
       refetchOnWindowFocus: false,
     },
@@ -228,7 +238,7 @@ const MaterialsPage = () => {
       />
       <Box className="flex justify-between items-end mb-2">
         <DatePicker.RangePicker
-          size="small"
+          size="middle"
           className="max-w-[300px]"
           value={
             Array.isArray(filterImportDate) && filterImportDate.length === 2
@@ -237,11 +247,11 @@ const MaterialsPage = () => {
           }
           onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
         />
-        {!isExistingBillInMonth && (
-          <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
-            Thêm nguyên liệu
-          </Button>
-        )}
+        {/* {!isExistingBillInMonth && ( */}
+        <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
+          Thêm nguyên liệu
+        </Button>
+        {/* )} */}
       </Box>
       <CustomTable
         rowKey="_id"

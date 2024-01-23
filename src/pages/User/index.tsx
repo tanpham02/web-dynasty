@@ -100,11 +100,11 @@ const UserListPage = () => {
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
-          <Box className="image-table relative !h-[100px] !w-[100px] flex items-center">
+          <Box className="image-table relative !h-[120px] !w-[120px] flex items-center">
             <CustomImage
               src={getFullImageUrl(user.image)}
               fallbackSrc="https://via.placeholder.com/80x80"
-              radius="lg"
+              radius="full"
               isPreview
               loading="lazy"
               classNames={{
@@ -113,7 +113,7 @@ const UserListPage = () => {
             />
           </Box>
         ) : (
-          <Box className="rounded-2xl !h-[100px] !w-[100px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
+          <Box className="rounded-2xl !h-[120px] !w-[120px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
             {user?.fullName ? user.fullName.charAt(0) : user?.username!.charAt(0).toUpperCase()}
           </Box>
         ),
@@ -297,7 +297,7 @@ const UserListPage = () => {
             <Input
               size="md"
               variant="faded"
-              className="w-full max-w-[250px] text-md"
+              className="w-full max-w-[300px] text-md"
               label="Tìm kiếm..."
               classNames={{
                 inputWrapper: 'bg-white ',

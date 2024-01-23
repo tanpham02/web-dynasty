@@ -18,6 +18,7 @@ import { formatCurrencyVND } from '~/utils/number';
 import { globalLoading } from '~/components/GlobalLoading';
 import { getFullImageUrl } from '~/utils/image';
 import { ORDER_STATUSES } from '~/constants/order';
+import { PaymentMethod } from '~/models/order';
 
 interface OrderDetailModalProps {
   isOpen?: boolean;
@@ -155,9 +156,7 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
               className="flex justify-between"
               value={
                 <span className="text-right">
-                  {orderDetail?.createdAt
-                    ? formatDate(orderDetail.createdAt, DATE_FORMAT_DDMMYYYYHHMMSS)
-                    : ''}
+                  {orderDetail?.paymentMethod && orderDetail.paymentMethod === PaymentMethod.PAYMENT_ON_DELIVERY ? 'Thanh toán khi nhận hàng' : ''}
                 </span>
               }
             />

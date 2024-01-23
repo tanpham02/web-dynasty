@@ -173,13 +173,15 @@ const ProductListPage = () => {
           },
         ]}
       />
-      <Box className="flex justify-between items-center mt-4 mb-2">
+      <Box className="flex justify-between items-center mb-2">
         <Input
-          size="sm"
+          size="md"
           variant="faded"
           label="Tìm kiếm theo tên sản phẩm..."
           classNames={{
             inputWrapper: 'bg-white',
+            label: 'font-semibold',
+            input: 'text-primary-text-color text-md',
           }}
           className="max-w-[300px]"
           value={valueSearch}

@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { DatePicker } from 'antd';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import Svg from 'react-inlinesvg';
@@ -30,10 +30,16 @@ import usePagination from '~/hooks/usePagination';
 import { Order, StatusCheckout, StatusOrder } from '~/models/order';
 import materialService from '~/services/materialService';
 import orderService from '~/services/orderService';
-import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_HHMMSS, formatDate } from '~/utils/date.utils';
+import {
+  DATE_FORMAT_DDMMYYYY,
+  DATE_FORMAT_HHMMSS,
+  DATE_FORMAT_YYYYMMDD,
+  formatDate,
+} from '~/utils/date.utils';
 import { getLocationLinkByAddress } from '~/utils/googleMapUtil';
 import { formatCurrencyVND } from '~/utils/number';
 import OrderDetailModal from './components/OrderDetailModal';
+import { SearchParams } from '~/types';
 
 const OrderPage = () => {
   const { isOpen: isOpenModal, onOpenChange: onOpenChangeModal } = useDisclosure();
@@ -177,13 +183,21 @@ const OrderPage = () => {
     refetch: refetchOrders,
   } = useQuery(
     [QUERY_KEY.ORDER, pageIndex, pageSize, filterImportDate],
-    async () =>
-      await orderService.searchPagination({
+    async () => {
+      let params: SearchParams = {
         pageSize: pageSize,
         pageIndex: pageIndex - 1,
-        from: filterImportDate?.[0]?.toString(),
-        to: filterImportDate?.[1]?.toString(),
-      }),
+      };
+
+      if (filterImportDate.length > 0) {
+        params = {
+          ...params,
+          from: moment(filterImportDate?.[0]?.toString()).format(DATE_FORMAT_YYYYMMDD),
+          to: moment(filterImportDate?.[1]?.toString()).format(DATE_FORMAT_YYYYMMDD),
+        };
+      }
+      return await orderService.searchPagination(params);
+    },
     {
       refetchOnWindowFocus: false,
     },
@@ -263,7 +277,7 @@ const OrderPage = () => {
       />
       <Box className="flex items-end mb-2">
         <DatePicker.RangePicker
-          size="small"
+          size="middle"
           className="max-w-[300px]"
           value={
             Array.isArray(filterImportDate) && filterImportDate.length === 2
