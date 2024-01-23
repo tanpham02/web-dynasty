@@ -247,11 +247,11 @@ const MaterialsPage = () => {
           }
           onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
         />
-        {/* {!isExistingBillInMonth && ( */}
+         {!isExistingBillInMonth && ( 
         <Button color="primary" variant="shadow" onClick={onOpenAddMaterialModal}>
           Thêm nguyên liệu
         </Button>
-        {/* )} */}
+        )} 
       </Box>
       <CustomTable
         rowKey="_id"
