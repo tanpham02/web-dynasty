@@ -18,7 +18,6 @@ const OrderFormPage = () => {
 
   const cityId = watch('cityId');
   const districtId = watch('districtId');
-  console.log('🚀 ~ file: index.tsx:26 ~ OrderFormPage ~ districtId:', districtId);
 
   useEffect(() => {
     setValue('districtId', []);

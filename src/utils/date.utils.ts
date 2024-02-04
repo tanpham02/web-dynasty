@@ -32,5 +32,5 @@ export const currentMonthFirstDate = (current: Date, format?: string) => {
 
 export const currentMonthLastDate = (current: Date, format?: string) => {
   let instance = moment(current, format);
-  return instance.isValid() ? instance.endOf('month').startOf('day') : null;
+  return instance.isValid() ? instance.endOf('month').endOf('day') : null;
 };

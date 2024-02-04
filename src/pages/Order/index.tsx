@@ -154,24 +154,26 @@ const OrderPage = () => {
     },
     {
       name: <Box className="flex justify-center">Hành động</Box>,
-      render: (order: Order) => (
-        <Box className="flex justify-center space-x-2">
-          <ButtonIcon
-            icon={InfoIcon}
-            title="Xem chi tiết đơn hàng"
-            onClick={() => handleOpenModalOrderDetail(order)}
-          />
-          {order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
-            (order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT && (
+      render: (order: Order) => {
+        return (
+          <Box className="flex justify-center space-x-2">
+            <ButtonIcon
+              icon={InfoIcon}
+              title="Xem chi tiết đơn hàng"
+              onClick={() => handleOpenModalOrderDetail(order)}
+            />
+            {(order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
+              order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT) && (
               <ButtonIcon
                 icon={DeleteIcon}
                 title="Xóa đơn hàng này"
                 status="danger"
                 onClick={() => handleOpenDeleteModal(order)}
               />
-            ))}
-        </Box>
-      ),
+            )}
+          </Box>
+        );
+      },
     },
   ];
 

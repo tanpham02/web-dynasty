@@ -26,7 +26,7 @@ COPY . .
 
 # Expose port 1311
 
-EXPOSE 1311
+EXPOSE 1311 
 
 # Start the server
 

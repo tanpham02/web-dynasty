@@ -9,7 +9,6 @@ import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextSwitch from '~/components/NextUI/Form/FormContextSwitch';

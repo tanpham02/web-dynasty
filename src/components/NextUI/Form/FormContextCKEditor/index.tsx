@@ -19,7 +19,8 @@ const FormContextCKEditor = ({ name }: FormContextCKEditorProps) => {
             className="form-context"
             modules={{
               toolbar: [
-                [{ header: [1, 2, false] }],
+                [{ header: [1, 2, 3, 4, 5, false] }],
+                [{ align: [] }],
                 ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                 [{ list: 'ordered' }, { list: 'bullet' }],
                 ['link', 'image', 'video'],

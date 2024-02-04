@@ -160,6 +160,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                 }`}
               >
                 <Box className="flex-[3] text-center">{attribute?.extendedName}</Box>
+
                 <Box className="flex-[3] text-center">
                   <Box className="flex justify-around flex-col gap-8">
                     {attribute?.productAttributeItem?.map((attributeValue) => (
@@ -167,6 +168,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                     ))}
                   </Box>
                 </Box>
+
                 <Box className="font-bold flex-[3] text-center">
                   <Box className="space-y-1">
                     {attribute?.productAttributeItem?.map((_, fieldIndex) => (

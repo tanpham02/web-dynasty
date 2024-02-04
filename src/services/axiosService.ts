@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { LOCAL_STORAGE } from '../constants/local_storage';
-import authService from './authService';
-import { checkTokenExp } from '../utils/token.utils';
-import { asyncLocalStorage } from '../utils/localStorage.utils';
 import { toast } from 'react-hot-toast';
 import { BASE_URL } from '~/config';
+import { LOCAL_STORAGE } from '../constants/local_storage';
+import { asyncLocalStorage } from '../utils/localStorage.utils';
+import { checkTokenExp } from '../utils/token.utils';
+import authService from './authService';
 
 // closure: to save the refreshTokenRequest
 let refreshTokenRequest: any = null;

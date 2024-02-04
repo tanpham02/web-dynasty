@@ -20,6 +20,30 @@ export interface ColumnType<T> {
   width?: number;
 }
 
+interface CustomTableProps<T> {
+  rowKey?: keyof T;
+  columns?: ColumnType<T>[];
+  data?: T[];
+  page?: number;
+  isLoading?: boolean;
+  totalPage?: number;
+  rowPerPage?: number;
+  total?: number;
+  onChangePage?(page: number): void;
+  rowPerPageOptions?: number[];
+  onChangeRowPerPage?(rowPerPage: number): void;
+  emptyContent?: React.ReactNode;
+  tableName?: string;
+  selectedKeys?: Selection;
+  onSelectionChange?(keys: Selection): void;
+  selectionMode?: 'multiple' | 'single' | 'none';
+  pagination?: boolean;
+  removeWrapper?: boolean;
+  isStriped?: boolean;
+  disabledKeys?: Selection;
+  isScrollable?: boolean;
+}
+
 export default function CustomTable<T>({
   rowKey,
   selectedKeys,
@@ -42,29 +66,7 @@ export default function CustomTable<T>({
   disabledKeys,
   total = 0,
   isScrollable,
-}: {
-  rowKey?: keyof T;
-  columns?: ColumnType<T>[];
-  data?: T[];
-  page?: number;
-  isLoading?: boolean;
-  totalPage?: number;
-  rowPerPage?: number;
-  total?: number;
-  onChangePage?(page: number): void;
-  rowPerPageOptions?: number[];
-  onChangeRowPerPage?(rowPerPage: number): void;
-  emptyContent?: React.ReactNode;
-  tableName?: string;
-  selectedKeys?: Selection;
-  onSelectionChange?(keys: Selection): void;
-  selectionMode?: 'multiple' | 'single' | 'none';
-  pagination?: boolean;
-  removeWrapper?: boolean;
-  isStriped?: boolean;
-  disabledKeys?: Selection;
-  isScrollable?: boolean;
-}): React.ReactNode {
+}: CustomTableProps<T>): React.ReactNode {
   return (
     <div className="space-y-2">
       <Table
