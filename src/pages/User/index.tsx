@@ -100,7 +100,7 @@ const UserListPage = () => {
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
-          <Box className="image-table relative !h-[120px] !w-[120px] flex items-center">
+          <Box className="image-table relative !h-[80px] !w-[80px] flex items-center">
             <CustomImage
               src={getFullImageUrl(user.image)}
               fallbackSrc="https://via.placeholder.com/80x80"
@@ -113,7 +113,7 @@ const UserListPage = () => {
             />
           </Box>
         ) : (
-          <Box className="rounded-2xl !h-[120px] !w-[120px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
+          <Box className="rounded-2xl !h-[80px] !w-[80px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
             {user?.fullName ? user.fullName.charAt(0) : user?.username!.charAt(0).toUpperCase()}
           </Box>
         ),

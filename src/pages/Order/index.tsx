@@ -28,7 +28,6 @@ import { ORDER_STATUSES } from '~/constants/order';
 import { QUERY_KEY } from '~/constants/queryKey';
 import usePagination from '~/hooks/usePagination';
 import { Order, StatusCheckout, StatusOrder } from '~/models/order';
-import materialService from '~/services/materialService';
 import orderService from '~/services/orderService';
 import {
   DATE_FORMAT_DDMMYYYY,
@@ -221,7 +220,7 @@ const OrderPage = () => {
   const handleDeleteOrder = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await materialService.delete(modalDelete?.id);
+      await orderService.delete(modalDelete?.id);
       enqueueSnackbar('Xóa đơn hàng thành công!');
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi xóa đơn hàng!', {

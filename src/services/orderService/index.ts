@@ -40,6 +40,16 @@ const orderService = {
         throw err;
       });
   },
+  delete: async (id?: string): Promise<Order> => {
+    return axiosService()({
+      method: 'DELETE',
+      baseURL: `${ORDER_URL}/${id}`,
+    })
+      .then((res) => res.data)
+      .catch((err) => {
+        throw err;
+      });
+  },
 };
 
 export default orderService;
