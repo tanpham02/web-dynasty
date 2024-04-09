@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link, useNavigate } from 'react-router-dom';
 
-import Logo from '~/assets/svg/logo-color.svg';
+import Logo from '~/assets/images/logo/logo-bg-white.png';
 import { PATH_NAME } from '~/constants/router';
 import routeSideBar from '~/routers/routeSideBar';
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -15,6 +15,7 @@ interface SidebarProps {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
 
   const trigger = useRef<any>(null);
@@ -29,7 +30,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!sidebar.current || !trigger.current) return;
-      if (!sidebarOpen || sidebar.current.contains(target) || trigger.current.contains(target))
+      if (
+        !sidebarOpen ||
+        sidebar.current.contains(target) ||
+        trigger.current.contains(target)
+      )
         return;
       setSidebarOpen(false);
     };
@@ -67,8 +72,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-[11px]">
-          <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto -mt-14 -mb-16">
-            <SVG src={Logo} className="w-60 h-60" />
+          <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto mt-5">
+            <img src={Logo} className="w-20 h-20 select-none" />
           </NavLink>
 
           <button
@@ -76,7 +81,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-controls="sidebar"
             aria-expanded={sidebarOpen}
-            className="block lg:hidden"
+            className="block lg:hidden text-white"
           >
             <svg
               className="fill-current"
@@ -97,14 +102,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
           {/* <!-- Sidebar Menu --> */}
-          <nav className="mt-2 px-4 py-4 lg:px-6">
+          <nav className="mt-2 py-4">
             {/* <!-- Menu Group --> */}
             {routeSideBar.map((item, index) => (
               <div key={index}>
-                <h3 className="mb-[0.45rem] ml-4 text-sm font-semibold uppercase text-white">
+                <h3 className="mb-[0.45rem] ml-4 text-sm font-semibold uppercase text-white select-none">
                   {item.title}
                 </h3>
-                <ul className="mb-6 flex flex-col gap-1.5">
+                <ul className="mb-5 flex flex-col gap-1.5 ml-3">
                   {item.menu.map((menu, index) => {
                     return menu.child.length > 0 ? (
                       <SidebarLinkGroup
@@ -113,13 +118,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       >
                         {(handleClick, open) => {
                           return (
-                            <li key={`${menu.key}-${index} - ${index}`} className="list-none">
+                            <li
+                              key={`${menu.key}-${index} - ${index}`}
+                              className="list-none"
+                            >
                               <NavLink
                                 to={menu.path}
                                 className={`group relative flex list-none items-center gap-2.5 rounded-sm px-4 py-2 font-normal text-white duration-300 ease-in-out `}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  sidebarExpanded ? handleClick?.() : setSidebarExpanded?.(true);
+                                  sidebarExpanded
+                                    ? handleClick?.()
+                                    : setSidebarExpanded?.(true);
                                 }}
                               >
                                 <SVG
@@ -179,18 +189,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </SidebarLinkGroup>
                     ) : (
                       <li key={`${menu.key}-${index}`} className="list-none">
-                        <NavLink
-                          to={menu.path}
-                          className={`relative flex items-center gap-2.5 rounded-sm px-4 py-2 text-white transition-all ease-in-out hover:bg-white/10 dark:hover:!bg-[#005226] ${
+                        <div
+                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-3 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-10 hover:font-bold ${
                             pathname === `${menu.path}`
-                              ? 'bg-white/10 dark:bg-white/10 font-semibold'
-                              : 'font-normal'
+                              ? 'bg-zinc-100 font-bold text-primary'
+                              : 'font-normal cursor-pointer text-white'
                           }`}
-                          onClick={() => setSidebarOpen(false)}
+                          onClick={() => {
+                            setSidebarOpen(false);
+                            navigate(menu.path);
+                          }}
                         >
                           <SVG src={menu.icon} className="w-5 h-5" />
                           {menu.title}
-                        </NavLink>
+                          {pathname === menu.path && (
+                            <>
+                              <div className="absolute size-6 bg-zinc-100 top-0 right-0 -translate-y-full transition-all"></div>
+                              <div className="absolute size-12 bg-primary rounded-xl top-0 right-0 -translate-y-full transition-all "></div>{' '}
+                              <div className="absolute size-6 bg-zinc-100 bottom-0 right-0 translate-y-full transition-all"></div>
+                              <div className="absolute size-12 bg-primary rounded-xl bottom-0 right-0 translate-y-full transition-all"></div>
+                            </>
+                          )}
+                        </div>
                       </li>
                     );
                   })}
