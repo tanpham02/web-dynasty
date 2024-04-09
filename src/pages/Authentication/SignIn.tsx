@@ -8,7 +8,10 @@ const SignIn = () => {
         <WelcomeContent />
         <LoginForm />
       </div>
-      <img src={LoginBg} className="w-4/5 object-contain m-auto hidden lg:block" />
+      <img
+        src={LoginBg}
+        className="w-4/5 object-contain m-auto hidden lg:block"
+      />
     </div>
   );
 };
