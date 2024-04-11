@@ -72,7 +72,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-[11px]">
-          <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto mt-5">
+          <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto mt-2">
             <img src={Logo} className="w-20 h-20 select-none" />
           </NavLink>
 
@@ -109,7 +109,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <h3 className="mb-[0.45rem] ml-4 text-sm font-semibold uppercase text-white select-none">
                   {item.title}
                 </h3>
-                <ul className="mb-5 flex flex-col gap-1.5 ml-3">
+                <ul className="mb-2 flex flex-col gap-1.5 ml-3">
                   {item.menu.map((menu, index) => {
                     return menu.child.length > 0 ? (
                       <SidebarLinkGroup

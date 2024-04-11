@@ -5,17 +5,12 @@ export enum BannerType {
 }
 
 export interface Banner {
-  id?: number;
-  createdDate?: Date | string | null;
-  generatedName?: string;
-  mimeType?: string;
-  originalName?: string;
-  size?: number;
-  thumbnail?: string;
-  thumbnailSize?: number;
-  path?: string;
-  thumbnailPath?: string;
-  bannerType?: BannerType | string;
-  redirectId?: number | string | null;
-  link?: string | null;
+  _id?: string,
+  name?: string,
+  priority?: number,
+  url?: string,
+  redirect?: string,
+  createdAt?: string,
+  updatedAt?: string
+  banner?: Blob | string
 }

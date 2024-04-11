@@ -1,29 +1,37 @@
-import { Banner } from '~/models/banner';
-import { ListResponse, SearchParams } from '~/types';
-import axiosService from '../axiosService';
-import { BANNER_URL } from '../apiUrl';
 import qs from 'qs';
 
+import { Banner } from '~/models/banner';
+import { BANNER_URL } from '../apiUrl';
+import axiosService from '../axiosService';
+
 export const bannerService = {
-  getBanner: (params: SearchParams): Promise<ListResponse<Banner>> => {
+  getBanner: (): Promise<Banner[]> => {
     return axiosService()({
       baseURL: `${BANNER_URL}/search`,
       method: 'GET',
-      params,
     })
       .then((res) => res.data)
       .catch((err) => {
         throw err;
       });
   },
-  createBanner: (params: Banner, data: FormData): Promise<Banner> => {
+  getBannerById: (bannerId: string): Promise<Banner> => {
+    return axiosService()({
+      baseURL: `${BANNER_URL}/${bannerId}`,
+      method: 'GET',
+    })
+      .then((res) => res.data)
+      .catch((err) => {
+        throw err;
+      });
+  },
+  createBanner: (data: FormData): Promise<Banner> => {
     return axiosService()({
       headers: {
         'Content-Type': 'multipart/form-data',
       },
       baseURL: `${BANNER_URL}`,
       method: 'POST',
-      params,
       data,
     })
       .then((res) => res.data)
@@ -31,18 +39,13 @@ export const bannerService = {
         throw err;
       });
   },
-  updateBanner: (params: Banner, data: FormData): Promise<Banner> => {
+  updateBanner: (bannerId: string, data: FormData): Promise<Banner> => {
     return axiosService()({
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      baseURL: `${BANNER_URL}/${params.id}`,
+      baseURL: `${BANNER_URL}/${bannerId}`,
       method: 'PATCH',
-      params: {
-        redirectId: params.redirectId,
-        link: params.link,
-        bannerType: params.bannerType,
-      },
       data,
     })
       .then((res) => res.data)
@@ -50,12 +53,12 @@ export const bannerService = {
         throw err;
       });
   },
-  deleteBanner: async (ids: number[]) => {
+  deleteBanner: async (ids: string[]) => {
     return axiosService()({
       url: `${BANNER_URL}`,
       method: 'DELETE',
       params: {
-        ids: ids,
+        ids,
       },
       paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
     })

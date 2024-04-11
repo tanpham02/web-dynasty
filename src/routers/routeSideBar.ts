@@ -6,6 +6,7 @@ import MATERIAL_ICON from '~/assets/svg/material-sidebar.svg';
 import OVERVIEW_ICON from '~/assets/svg/overview.svg';
 import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
 import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
+import BANNER_ICON from '~/assets/svg/banner.svg';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
 const routeSideBar = [
@@ -96,13 +97,19 @@ const routeSideBar = [
   {
     key: ROUTER_KEY.MATERIAL,
     path: PATH_NAME.MATERIAL,
-    title: 'Hóa đơn',
+    title: 'Cửa hàng',
     menu: [
       {
         key: ROUTER_KEY.MATERIAL,
         path: PATH_NAME.MATERIAL,
         title: 'Quản lí nhập hàng',
         icon: MATERIAL_ICON,
+        child: [],
+      }, {
+        key: ROUTER_KEY.BANNER,
+        path: PATH_NAME.BANNER,
+        title: 'Banner quảng cáo',
+        icon: BANNER_ICON,
         child: [],
       },
     ],

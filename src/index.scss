@@ -262,3 +262,7 @@ li.ant-pagination-item:hover a,
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
+
+.form-upload-container:hover .form-upload-action {
+  display: flex;
+}
