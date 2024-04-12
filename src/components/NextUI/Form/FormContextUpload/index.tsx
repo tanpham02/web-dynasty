@@ -65,7 +65,7 @@ const FormContextUpload = ({
   className,
   resizeMode,
   showPreview = true,
-  acceptType = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'],
+  acceptType = ['image/*'],
 }: FormContextUploadProps) => {
   const uploadId = useId();
 

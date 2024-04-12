@@ -1,4 +1,10 @@
-import { Button, Chip, Input, Selection, useDisclosure } from '@nextui-org/react';
+import {
+  Button,
+  Chip,
+  Input,
+  Selection,
+  useDisclosure,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -7,7 +13,9 @@ import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import ModalConfirmDelete, {
+  ModalConfirmDeleteState,
+} from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
@@ -16,6 +24,9 @@ import usePagination from '~/hooks/usePagination';
 import { Category, CategoryStatus } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
 import CategoryModal from './CategoryModal';
+import { getFullImageUrl } from '~/utils/image';
+import ImagePreview from '~/components/ImagePreview';
+import CustomImage from '~/components/NextUI/CustomImage';
 
 const Categories = () => {
   const {
@@ -48,7 +59,20 @@ const Categories = () => {
     {
       align: 'center',
       name: 'STT',
-      render: (_category: Category, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
+      render: (_category: Category, index?: number) =>
+        (index || 0) + 1 + (pageIndex - 1) * 10,
+    },
+    {
+      name: <Box className="flex justify-center">Hình ảnh</Box>,
+      render: (category: Category) => {
+        return (
+          <CustomImage
+            isPreview
+            src={getFullImageUrl(category?.avatar)}
+            fallbackSrc="https://via.placeholder.com/80x80"
+          />
+        );
+      },
     },
     {
       align: 'center',
@@ -83,13 +107,17 @@ const Categories = () => {
       render: (category: Category) => (
         <Box className="flex justify-center">
           <Chip
-            color={category?.status === CategoryStatus.ACTIVE ? 'success' : 'danger'}
+            color={
+              category?.status === CategoryStatus.ACTIVE ? 'success' : 'danger'
+            }
             variant="flat"
             classNames={{
               content: 'font-semibold',
             }}
           >
-            {category?.status === CategoryStatus.ACTIVE ? 'Đang kinh doanh' : 'Ngưng kinh doanh'}
+            {category?.status === CategoryStatus.ACTIVE
+              ? 'Đang kinh doanh'
+              : 'Ngưng kinh doanh'}
           </Chip>
         </Box>
       ),
@@ -155,13 +183,18 @@ const Categories = () => {
   const handleDeleteAttribute = async () => {
     try {
       setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await categoryService.deleteCategoryByIds(modalDelete?.id ? [modalDelete.id] : []);
+      await categoryService.deleteCategoryByIds(
+        modalDelete?.id ? [modalDelete.id] : [],
+      );
       enqueueSnackbar('Xóa danh mục thành công!');
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi xóa danh mục!', {
         variant: 'error',
       });
-      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:', err);
+      console.log(
+        '🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:',
+        err,
+      );
     } finally {
       await refetchCategory();
       setModalDelete({});
@@ -193,7 +226,11 @@ const Categories = () => {
             input: 'text-primary-text-color text-md',
           }}
         />
-        <Button color="primary" variant="shadow" onClick={handleOpenModalAddAttribute}>
+        <Button
+          color="primary"
+          variant="shadow"
+          onClick={handleOpenModalAddAttribute}
+        >
           Thêm danh mục
         </Button>
       </div>
@@ -212,7 +249,9 @@ const Categories = () => {
         rowPerPage={pageSize}
         onChangePage={setPage}
         onChangeRowPerPage={setRowPerPage}
-        isLoading={isLoadingCategories || isFetchingCategories || isRefetchingCategories}
+        isLoading={
+          isLoadingCategories || isFetchingCategories || isRefetchingCategories
+        }
       />
       <CategoryModal
         isOpen={isOpenModal}

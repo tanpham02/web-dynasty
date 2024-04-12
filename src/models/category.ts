@@ -16,4 +16,6 @@ export interface Category {
     parentId?: string;
     category?: Category[];
   };
+  file?: Blob | string
+  avatar?: string
 }
