@@ -1,5 +1,5 @@
 import { Image, ImageProps } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
@@ -25,14 +25,19 @@ interface CustomImageProps extends ImageProps {
 }
 
 const CustomImage: React.FC<CustomImageProps> = (props) => {
+  const [isError, setIsError] = useState<boolean>(false);
   const { isPreview, src, fallbackSrc, placement = 'top' } = props;
+
+  useEffect(() => {
+    if (src) setIsError(false);
+  }, [src]);
 
   const [visiblePreviewImage, setVisiblePreviewImage] =
     useState<boolean>(false);
 
   return (
-    <Box className="w-20 relative pt-[50%] mx-auto" id="FileUpload">
-      {isPreview && src && (
+    <Box className="w-20 relative h-20 mx-auto" id="FileUpload">
+      {isPreview && src && !isError && (
         <Box
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[99999999] hidden"
           id="preview-icon"
@@ -50,14 +55,16 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         {...props}
         classNames={{
           wrapper:
-            'absolute top-0 left-0 !w-full !h-full aspect-square flex item-center justify-center [&>div]:absolute [&>div]:inset-0',
-          img: '!w-full !h-full object-contain p-1',
+            'absolute top-0 left-0 !w-full !h-full aspect-square flex item-center justify-center',
+          img: '!w-full object-contain !aspect-square',
+          // blurredImg: '!w-full object-contain !aspect-square',
         }}
         // className="absolute top-0 left-0 w-full h-full"
         isBlurred
         isZoomed
         fallbackSrc={fallbackSrc}
         radius={props.radius}
+        onError={() => setIsError(true)}
       />
 
       <Preview

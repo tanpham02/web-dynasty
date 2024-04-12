@@ -1,4 +1,10 @@
-import { Button, Chip, Input, Selection, useDisclosure } from '@nextui-org/react';
+import {
+  Button,
+  Chip,
+  Input,
+  Selection,
+  useDisclosure,
+} from '@nextui-org/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -8,7 +14,9 @@ import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import ModalConfirmDelete, {
+  ModalConfirmDeleteState,
+} from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomImage from '~/components/NextUI/CustomImage';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
@@ -28,27 +36,26 @@ const ProductListPage = () => {
     {
       align: 'center',
       name: 'STT',
-      render: (_product: ProductMain, index?: number) => (index || 0) + 1 + (pageIndex - 1) * 10,
+      render: (_product: ProductMain, index?: number) =>
+        (index || 0) + 1 + (pageIndex - 1) * 10,
     },
     {
       align: 'center',
-      name: 'Hình ảnh',
+      name: <Box className="flex justify-center">Hình ảnh</Box>,
       render: (product: ProductMain) => (
-        <div className="w-20 h-20 relative">
-          <CustomImage
-            isPreview
-            src={getFullImageUrl(product?.image)}
-            fallbackSrc="https://via.placeholder.com/80x80"
-            radius="lg"
-            loading="lazy"
-          />
-        </div>
+        <CustomImage
+          isPreview
+          src={getFullImageUrl(product?.image)}
+          fallbackSrc="https://via.placeholder.com/80x80"
+        />
       ),
     },
     {
       align: 'center',
       name: 'Tên',
-      render: (product: ProductMain) => <span className="line-clamp-1">{product?.name}</span>,
+      render: (product: ProductMain) => (
+        <span className="line-clamp-1">{product?.name}</span>
+      ),
     },
     {
       align: 'center',
@@ -87,7 +94,8 @@ const ProductListPage = () => {
 
   const [valueSearch, setValueSearch] = useState<string>('');
   const [productSelectedKeys, setProductSelectedKeys] = useState<Selection>();
-  const { isOpen: isOpenModalDelete, onOpenChange: onOpenChangeModalDelete } = useDisclosure();
+  const { isOpen: isOpenModalDelete, onOpenChange: onOpenChangeModalDelete } =
+    useDisclosure();
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>({});
 
   const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
@@ -116,7 +124,13 @@ const ProductListPage = () => {
     isFetching: isFetchingProduct,
     refetch: refetchProduct,
   } = useQuery(
-    [QUERY_KEY.PRODUCTS, pageIndex, pageSize, queryText, valueFilterFromCategory], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
+    [
+      QUERY_KEY.PRODUCTS,
+      pageIndex,
+      pageSize,
+      queryText,
+      valueFilterFromCategory,
+    ], // pageParameter thay đổi sẽ gọi lại useInfiniteQuery
     async () => {
       const params = {
         pageIndex: pageIndex - 1,
@@ -130,33 +144,40 @@ const ProductListPage = () => {
     },
   );
 
-  const { isLoading: isLoadDeleteProduct, mutate: deleteProduct } = useMutation({
-    mutationKey: [QUERY_KEY.PRODUCTS_DELETE],
-    mutationFn: async () => {
-      try {
-        let productDeleteIDs = [];
-        if (productSelectedKeys === 'all') {
-          productDeleteIDs =
-            productList?.data
-              ?.filter((product) => Boolean(product?._id))
-              ?.map((product) => product?._id) || [];
-        } else {
-          productDeleteIDs = [...(productSelectedKeys || [modalDelete?.id] || [])];
-        }
-        console.log('🚀 ~ file: index.tsx:144 ~ mutationFn: ~ productDeleteIDs:', productDeleteIDs);
+  const { isLoading: isLoadDeleteProduct, mutate: deleteProduct } = useMutation(
+    {
+      mutationKey: [QUERY_KEY.PRODUCTS_DELETE],
+      mutationFn: async () => {
+        try {
+          let productDeleteIDs = [];
+          if (productSelectedKeys === 'all') {
+            productDeleteIDs =
+              productList?.data
+                ?.filter((product) => Boolean(product?._id))
+                ?.map((product) => product?._id) || [];
+          } else {
+            productDeleteIDs = [
+              ...(productSelectedKeys || [modalDelete?.id] || []),
+            ];
+          }
+          console.log(
+            '🚀 ~ file: index.tsx:144 ~ mutationFn: ~ productDeleteIDs:',
+            productDeleteIDs,
+          );
 
-        await productService.deleteProduct(productDeleteIDs as string[]);
-      } catch (err) {
-        enqueueSnackbar('Xóa sản phẩm không thành công!', {
-          variant: 'error',
-        });
-        console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err);
-      } finally {
-        await refetchProduct();
-        onCloseModalDeleteProduct();
-      }
+          await productService.deleteProduct(productDeleteIDs as string[]);
+        } catch (err) {
+          enqueueSnackbar('Xóa sản phẩm không thành công!', {
+            variant: 'error',
+          });
+          console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err);
+        } finally {
+          await refetchProduct();
+          onCloseModalDeleteProduct();
+        }
+      },
     },
-  });
+  );
 
   const onCloseModalDeleteProduct = () => {
     setProductSelectedKeys(new Set());
@@ -187,12 +208,22 @@ const ProductListPage = () => {
           value={valueSearch}
           onValueChange={setValueSearch}
         />
-        <Button color="primary" variant="shadow" onClick={() => navigate(PATH_NAME.PRODUCT)}>
+        <Button
+          color="primary"
+          variant="shadow"
+          onClick={() => navigate(PATH_NAME.PRODUCT)}
+        >
           Thêm sản phẩm
         </Button>
       </Box>
-      {(productSelectedKeys == 'all' || (productSelectedKeys && productSelectedKeys?.size > 0)) && (
-        <Button color="danger" size="sm" className="mb-2" onClick={() => onDeleteProduct()}>
+      {(productSelectedKeys == 'all' ||
+        (productSelectedKeys && productSelectedKeys?.size > 0)) && (
+        <Button
+          color="danger"
+          size="sm"
+          className="mb-2"
+          onClick={() => onDeleteProduct()}
+        >
           Xoá tất cả
         </Button>
       )}

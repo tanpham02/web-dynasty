@@ -106,6 +106,7 @@ export interface ProductMain {
   productAttributeList?: ProductChildrenAttribute[];
   attributeMapping?: Attribute[];
   attributeIds?: string[];
+  files?: Blob | string
 }
 
 export interface ProductChildrenAttribute {

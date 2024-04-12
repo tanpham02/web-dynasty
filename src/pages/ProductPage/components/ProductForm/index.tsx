@@ -15,6 +15,7 @@ import { productService } from '~/services/productService';
 import { getFullImageUrl } from '~/utils/image';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
+import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
 
 interface ProductFormProps {
   currentProduct?: ProductMain;
@@ -42,38 +43,44 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
     if (isEdit && currentProduct && Object.keys(currentProduct).length > 0) {
       reset({
         ...currentProduct,
+        files: currentProduct?.image
+          ? getFullImageUrl(currentProduct.image)
+          : '',
         categoryId: Array.isArray(currentProduct?.categoryId)
           ? [...currentProduct?.categoryId]
           : [currentProduct?.categoryId],
-        productAttributeList: currentProduct?.productAttributeList?.map((attribute) => {
-          return {
-            ...attribute,
-            productAttributeItem: attribute?.productAttributeItem?.map((attributeValue) => {
-              const attributeValueData = attributeValue.attributeId
-                ? JSON.parse(attributeValue.attributeId)
-                : '';
+        productAttributeList: currentProduct?.productAttributeList?.map(
+          (attribute) => {
+            return {
+              ...attribute,
+              productAttributeItem: attribute?.productAttributeItem?.map(
+                (attributeValue) => {
+                  const attributeValueData = attributeValue.attributeId
+                    ? JSON.parse(attributeValue.attributeId)
+                    : '';
 
-              return {
-                ...attributeValue,
-                name: attributeValueData?.name,
-                attributeId: attributeValueData?._id,
-              };
-            }),
-          };
-        }),
+                  return {
+                    ...attributeValue,
+                    name: attributeValueData?.name,
+                    attributeId: attributeValueData?._id,
+                  };
+                },
+              ),
+            };
+          },
+        ),
       });
-      if (currentProduct?.image) {
-        setProductImage({
-          srcPreview: getFullImageUrl(currentProduct.image),
-        });
-      }
     }
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data: ProductMain) => {
-    console.log('🚀 ~ file: index.tsx:74 ~ onSubmit ~ data:', data);
     try {
       const formData = new FormData();
+
+      if (data?.files && data.files instanceof Blob) {
+        formData.append('files', data.files);
+        delete data.files;
+      }
 
       const jsonData = JSON.stringify({
         ...data,
@@ -82,12 +89,16 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
         productAttributeList: data?.productAttributeList?.map((attribute) => {
           return {
             ...attribute,
-            productAttributeItem: attribute?.productAttributeItem?.map((attributeValue) => {
-              return {
-                attributeId: isEdit ? attributeValue?.attributeId : attributeValue?._id,
-                priceAdjustmentValue: attributeValue?.priceAdjustmentValue,
-              };
-            }),
+            productAttributeItem: attribute?.productAttributeItem?.map(
+              (attributeValue) => {
+                return {
+                  attributeId: isEdit
+                    ? attributeValue?.attributeId
+                    : attributeValue?._id,
+                  priceAdjustmentValue: attributeValue?.priceAdjustmentValue,
+                };
+              },
+            ),
           };
         }),
         attributeMapping: data?.attributeIds || [],
@@ -99,7 +110,8 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
         formData.append('file', productImage.srcRequest);
       }
 
-      if (isEdit) await productService.updateProduct(formData, currentProduct?._id);
+      if (isEdit)
+        await productService.updateProduct(formData, currentProduct?._id);
       else await productService.createProduct(formData);
       enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Tạo'} sản phẩm thành công!`);
       navigate(PATH_NAME.PRODUCT_LIST);
@@ -136,19 +148,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
           <CardBody>
             <Box className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-8">
               <Box className="w-[20vw]">
-                <Upload
-                  onChange={({ srcPreview, srcRequest }: onChangeUploadState) => {
-                    setProductImage({
-                      srcPreview,
-                      srcRequest,
-                    });
-                  }}
-                  radius="lg"
-                  src={productImage?.srcPreview}
-                  loading="lazy"
-                  description="Tải lên"
-                  isPreview
-                />
+                <FormContextUpload name="files" />
               </Box>
             </Box>
           </CardBody>
