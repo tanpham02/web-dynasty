@@ -1,6 +1,6 @@
 
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
-import { OverviewPage, ProductPage, CategoryPage, UserPage, OrderPage, MaterialPage, AttributePage, BannerPage, CustomerPage, IncomingPage, PageNotFound, SignInPage, ProductFormPage, OrderFormPage } from "~/pages"
+import { OverviewPage, ProductPage, CategoryPage, UserPage, OrderPage, MaterialPage, AttributePage, BannerPage, CustomerPage, IncomingPage, PageNotFound, SignInPage, ProductFormPage, OrderFormPage, TermAndConditionPage } from "~/pages"
 
 const privateRoutes = [
   {
@@ -75,6 +75,12 @@ const privateRoutes = [
     path: PATH_NAME.BANNER,
     component: BannerPage,
     title: 'Danh sách banner quảng cáo',
+  },
+  {
+    key: ROUTER_KEY.TERM_AND_CONDITION,
+    path: PATH_NAME.TERM_AND_CONDITION,
+    component: TermAndConditionPage,
+    title: 'Chính sách và điều khoản',
   },
 ];
 

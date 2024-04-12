@@ -70,3 +70,6 @@ export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR = 'https://api.vietqr.io/v2/b
 
 // NHANH VN CONFIG
 export const NHANH_VN_CONFIG = `${API_URL}/nhanh-vn`;
+
+// TERM AND CONDITION
+export const TERM_AND_CONDITION_URL = `${API_URL}/term-and-policy`
