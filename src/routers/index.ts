@@ -1,6 +1,6 @@
 
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
-import { OverviewPage, ProductPage, CategoryPage, UserPage, OrderPage, MaterialPage, AttributePage, BannerPage, CustomerPage, IncomingPage, PageNotFound, SignInPage, ProductFormPage, OrderFormPage, TermAndConditionPage } from "~/pages"
+import { OverviewPage, ProductPage, CategoryPage, UserPage, OrderPage, MaterialPage, AttributePage, BannerPage, CustomerPage, IncomingPage, PageNotFound, SignInPage, ProductFormPage, OrderFormPage, TermAndConditionPage, StorePage } from "~/pages"
 
 const privateRoutes = [
   {
@@ -81,6 +81,12 @@ const privateRoutes = [
     path: PATH_NAME.TERM_AND_CONDITION,
     component: TermAndConditionPage,
     title: 'Chính sách và điều khoản',
+  },
+  {
+    key: ROUTER_KEY.STORE_LIST,
+    path: PATH_NAME.STORE_LIST,
+    component: StorePage,
+    title: 'Danh sách cửa hàng',
   },
 ];
 

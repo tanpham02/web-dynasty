@@ -73,3 +73,6 @@ export const NHANH_VN_CONFIG = `${API_URL}/nhanh-vn`;
 
 // TERM AND CONDITION
 export const TERM_AND_CONDITION_URL = `${API_URL}/term-and-policy`
+
+// STORE SYSTEM
+export const STORE_SYSTEM_URL = `${API_URL}/store-system`

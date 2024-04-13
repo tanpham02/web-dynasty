@@ -1,15 +1,15 @@
-import { useState } from 'react';
 import { Button, Card, CardBody, Tab, Tabs } from '@nextui-org/react';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import { TermAndConditionModel } from '~/models/termAndCondition';
-import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
 import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { termAndConditionService } from '~/services/termAndConditionService';
+import { useSnackbar } from 'notistack';
 import { globalLoading } from '~/components/GlobalLoading';
-import toast from 'react-hot-toast';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
+import { QUERY_KEY } from '~/constants/queryKey';
+import { TermAndConditionModel } from '~/models/termAndCondition';
+import { termAndConditionService } from '~/services/termAndConditionService';
 
 const enum TabKey {
   DELIVERY_POLICY,
@@ -18,6 +18,8 @@ const enum TabKey {
 }
 
 const TermAndConditionPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [selected, setSelected] = useState<TabKey>(TabKey.DELIVERY_POLICY);
 
   const formMethods = useForm<TermAndConditionModel>({
@@ -49,7 +51,9 @@ const TermAndConditionPage = () => {
         return response;
       } catch (err) {
         console.log('🚀 ~ queryFn: ~ err:', err);
-        toast.error('Có lỗi xảy ra vui lòng thử lại sau!');
+        enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
+          variant: 'error',
+        });
       } finally {
         globalLoading.hide();
       }
@@ -68,10 +72,12 @@ const TermAndConditionPage = () => {
         await termAndConditionService.update(termAndCondition._id, formData);
       else await termAndConditionService.createNew(formData);
 
-      toast.success('Cập nhật chính sách và điều khoản thành công');
+      enqueueSnackbar('Cập nhật chính sách và điều khoản thành công');
     } catch (err) {
       console.log('🚀 ~ createOrUpdateTermAndCondition ~ err:', err);
-      toast.error('Có lỗi xảy ra vui lòng thử lại sau!');
+      enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
+        variant: 'error',
+      });
     }
   };
 

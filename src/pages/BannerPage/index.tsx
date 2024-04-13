@@ -7,8 +7,9 @@ import {
   DropResult,
   Droppable,
 } from 'react-beautiful-dnd';
-import toast from 'react-hot-toast';
 
+import { useSnackbar } from 'notistack';
+import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
 } from '~/components/ModalConfirmDelete';
@@ -17,12 +18,14 @@ import { MUTATE_KEY } from '~/constants/mutateKey';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { bannerService } from '~/services/bannerService';
 import { BannerItem, FormBannerModal } from './components';
-import { globalLoading } from '~/components/GlobalLoading';
 
 const BannerPage = () => {
   const { isOpen, onClose, onOpenChange } = useDisclosure();
+
   const { isOpen: isOpenModalDelete, onOpenChange: onOpenChangeModalDelete } =
     useDisclosure();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [bannerUpdateId, setBannerUpdateId] = useState<string>('');
 
@@ -54,10 +57,12 @@ const BannerPage = () => {
     try {
       await bannerService.deleteBanner([bannerId]);
       await refetchBanner();
-      toast.success('Xóa banner thành công!');
+      enqueueSnackbar('Xóa banner thành công!');
     } catch (err) {
       console.log('🚀 ~ handleDeleteBannerById ~ err:', err);
-      toast.error('Có lỗi xảy ra vui lòng thử lại sau!');
+      enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
+        variant: 'error',
+      });
     } finally {
       onOpenChangeModalDelete();
     }
@@ -103,10 +108,12 @@ const BannerPage = () => {
         ),
       ]);
       await refetchBanner();
-      toast.success('Cập nhật thứ tự banner thành công!');
+      enqueueSnackbar('Cập nhật thứ tự banner thành công!');
     } catch (err) {
       console.log('🚀 ~ handleSwapBannerPosition ~ err:', err);
-      toast.error('Có lỗi xảy ra vui lòng thử lại sau!');
+      enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
+        variant: 'error',
+      });
     } finally {
       globalLoading.hide();
     }

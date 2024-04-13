@@ -40,6 +40,8 @@ enum PATH_NAME {
   HOME = '/',
   BANNER = "/banners",
   TERM_AND_CONDITION = "/term-and-conditions",
+  STORE_LIST = "/stores",
+  STORE = "/store",
 }
 
 enum ROUTER_KEY {
@@ -70,7 +72,9 @@ enum ROUTER_KEY {
   OVERVIEW = 'OVERVIEW',
   HOME = "HOME",
   BANNER = "BANNER",
-  TERM_AND_CONDITION = "TERM_AND_CONDITION"
+  TERM_AND_CONDITION = "TERM_AND_CONDITION",
+  STOTE_LIST = "STOTE_LIST",
+  STORE_LIST = "STORE_LIST"
 }
 
 export { PATH_NAME, ROUTER_KEY };

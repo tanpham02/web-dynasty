@@ -1,30 +1,69 @@
-import { ListResponse } from '~/types';
-import axiosService from '../axiosService';
-import { STORE_INFORMATION_URL } from '../apiUrl';
-import { StoreIntroductionInformation } from '~/models/storeIntroductionInformation';
+import { ListResponse, SearchParams } from "~/types";
+import { STORE_SYSTEM_URL } from "../apiUrl";
+import axiosService from "../axiosService";
+import { StoreModel } from "~/models/store";
+import qs from "qs";
 
 export const storeService = {
-  createStoreInformation: async (
-    data?: StoreIntroductionInformation,
-  ): Promise<ListResponse<StoreIntroductionInformation>> => {
+  searchStoreByCriteria: async (params: SearchParams): Promise<ListResponse<StoreModel>> => {
     return axiosService()({
-      baseURL: `${STORE_INFORMATION_URL}`,
-      method: 'POST',
-      data: data,
+      url: `${STORE_SYSTEM_URL}/search`,
+      method: "GET",
+      params
     })
-      .then((res) => res.data)
-      .catch((err) => {
-        throw err;
-      });
+      .then(res => res.data)
+      .catch(err => {
+        throw err
+      })
   },
-  getStoreInformation: (): Promise<StoreIntroductionInformation> => {
+  createNew: async (data: FormData): Promise<StoreModel> => {
     return axiosService()({
-      method: 'GET',
-      baseURL: `${STORE_INFORMATION_URL}`,
+      url: STORE_SYSTEM_URL,
+      method: "POST",
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     })
-      .then((res) => res.data)
-      .catch((err) => {
-        throw err;
-      });
+      .then(res => res.data)
+      .catch(err => {
+        throw err
+      })
   },
+  updateById: async (id: string, data: FormData): Promise<StoreModel> => {
+    return axiosService()({
+      url: `${STORE_SYSTEM_URL}/${id}`,
+      method: "PATCH",
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => res.data)
+      .catch(err => {
+        throw err
+      })
+  },
+  getById: async (id: string): Promise<StoreModel> => {
+    return axiosService()({
+      url: `${STORE_SYSTEM_URL}/${id}`,
+      method: "GET",
+    })
+      .then(res => res.data)
+      .catch(err => {
+        throw err
+      })
+  },
+  deleteByIds: async (ids: string[]): Promise<StoreModel> => {
+    return axiosService()({
+      url: STORE_SYSTEM_URL,
+      method: "DELETE",
+      params: { ids },
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+    })
+      .then(res => res.data)
+      .catch(err => {
+        throw err
+      })
+  }
 };

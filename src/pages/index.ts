@@ -13,4 +13,5 @@ export { default as UserPage } from "./UserPage"
 export { default as ProductFormPage } from "./ProductPage/ProductFormPage"
 export { default as OrderFormPage } from "./OrderPage/OrderFormPage"
 export { default as TermAndConditionPage } from "./TermAndConditionPage"
+export { default as StorePage } from "./StorePage"
 

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
 import { FormContextInput } from '~/components/NextUI/Form';
 import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
@@ -25,6 +25,8 @@ const FormBannerModal = ({
   bannerId,
   refetchData,
 }: FormBannerModalProps) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const formMethods = useForm<Banner>({
     defaultValues: {
       priority: 1,
@@ -69,16 +71,18 @@ const FormBannerModal = ({
 
       if (bannerId) {
         await bannerService.updateBanner(bannerId, formData);
-        toast.success('Cập nhật banner thành công!');
+        enqueueSnackbar('Cập nhật banner thành công!');
       } else {
         await bannerService.createBanner(formData);
-        toast.success('Thêm banner mới thành công!');
+        enqueueSnackbar('Thêm banner mới thành công!');
       }
 
       await refetchData();
     } catch (err) {
       console.log('🚀 ~ handleCreateOrUpdateBanner ~ err:', err);
-      toast.error('Có lỗi xảy ra vui lòng thử lại sau!');
+      enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
+        variant: 'error',
+      });
     } finally {
       onClose();
     }
