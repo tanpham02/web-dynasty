@@ -71,6 +71,7 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
+    "typescript": "^5.0.2",
     "@types/node": "^20.4.1",
     "@types/react": "^18.2.14",
     "@types/react-beautiful-dnd": "^13.1.8",
@@ -86,7 +87,6 @@
     "husky": "^8.0.3",
     "lint-staged": ">=10",
     "prettier": "^3.0.0",
-    "typescript": "^5.0.2",
     "vite": "^4.4.0"
   },
   "lint-staged": {

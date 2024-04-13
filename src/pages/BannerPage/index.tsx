@@ -6,6 +6,8 @@ import {
   Draggable,
   DropResult,
   Droppable,
+  DroppableProvided,
+  DroppableStateSnapshot,
 } from 'react-beautiful-dnd';
 
 import { useSnackbar } from 'notistack';
@@ -137,7 +139,10 @@ const BannerPage = () => {
         </div>
         <DragDropContext onDragEnd={handleSwapBannerPosition}>
           <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
+            {(
+              provided: DroppableProvided,
+              snapshot: DroppableStateSnapshot,
+            ) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {banners?.map((item, index) => (
                   <Draggable

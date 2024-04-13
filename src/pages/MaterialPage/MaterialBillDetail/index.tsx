@@ -1,4 +1,11 @@
-import { Document, Page, StyleSheet, Text, Font, View } from '@react-pdf/renderer';
+import {
+  Document,
+  Page,
+  StyleSheet,
+  Text,
+  Font,
+  View,
+} from '@react-pdf/renderer';
 import moment from 'moment';
 import { useMemo } from 'react';
 
@@ -108,26 +115,48 @@ const MaterialBillDetail = ({ data }: MaterialBillDetailProps) => {
 
         <View style={styles.billDetails}>
           <View style={styles.tableHeader}>
-            <Text style={[styles.columnHeader, styles.cell, { width: '30px' }]}>#</Text>
-            <Text style={[styles.columnHeader, styles.cell, { flexGrow: 1, marginLeft: '5px' }]}>
+            <Text style={[styles.columnHeader, styles.cell, { width: '30px' }]}>
+              #
+            </Text>
+            <Text
+              style={[
+                styles.columnHeader,
+                styles.cell,
+                { flexGrow: 1, marginLeft: '5px' },
+              ]}
+            >
               Tên nguyên liệu
             </Text>
-            <Text style={[styles.columnHeader, styles.cell, { width: '70px' }]}>Số lượng</Text>
-            <Text style={[styles.columnHeader, styles.cell, { width: '110px' }]}>Giá</Text>
-            <Text style={[styles.columnHeader, styles.cell, { width: '120px' }]}>Tổng</Text>
+            <Text style={[styles.columnHeader, styles.cell, { width: '70px' }]}>
+              Số lượng
+            </Text>
+            <Text
+              style={[styles.columnHeader, styles.cell, { width: '110px' }]}
+            >
+              Giá
+            </Text>
+            <Text
+              style={[styles.columnHeader, styles.cell, { width: '120px' }]}
+            >
+              Tổng
+            </Text>
           </View>
 
           {billData.items.map((item) => (
             <View key={item.id} style={styles.row}>
               <Text style={[styles.cell, { width: '30px' }]}>{item.id}</Text>
-              <Text style={[styles.cell, { flexGrow: 1, marginLeft: '5px' }]}>{item.name}</Text>
+              <Text style={[styles.cell, { flexGrow: 1, marginLeft: '5px' }]}>
+                {item.name}
+              </Text>
               <Text style={[styles.cell, { width: '120px' }]}>
                 {formatNumber(item.quantity || 0)} {item.unit}
               </Text>
               <Text style={[styles.cell, { width: '110px' }]}>
                 {formatCurrencyVND(item?.price || 0)}
               </Text>
-              <Text style={[styles.cell, { width: '120px' }]}>{formatCurrencyVND(item.total)}</Text>
+              <Text style={[styles.cell, { width: '120px' }]}>
+                {formatCurrencyVND(item.total)}
+              </Text>
             </View>
           ))}
           <View style={[styles.footer]}>
