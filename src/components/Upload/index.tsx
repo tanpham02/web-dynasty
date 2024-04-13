@@ -2,9 +2,8 @@ import { ImageProps } from '@nextui-org/react';
 import SVG from 'react-inlinesvg';
 
 import UploadIcon from '~/assets/svg/upload.svg';
-import CustomImage from '../NextUI/CustomImage';
 import Box from '../Box';
-import { useState } from 'react';
+import CustomImage from '../NextUI/CustomImage';
 
 export interface onChangeUploadState {
   srcPreview?: any;
@@ -59,13 +58,17 @@ const Upload: React.FC<UploadProps> = (props) => {
             {!props?.description ? (
               <>
                 <p className="text-center line-clamp-1">
-                  <span className="text-primary line-clamp-1">Click to upload</span> or drag and
-                  drop
+                  <span className="text-primary line-clamp-1">
+                    Click to upload
+                  </span>{' '}
+                  or drag and drop
                 </p>
                 <p className="mt-1.5 text-center hidden sm:block line-clamp-1">
                   SVG, PNG, JPG or GIF
                 </p>
-                <p className="text-center hidden sm:block line-clamp-1">(max, 800 X 800px)</p>
+                <p className="text-center hidden sm:block line-clamp-1">
+                  (max, 800 X 800px)
+                </p>
               </>
             ) : (
               <Box className="text-center">{props.description}</Box>

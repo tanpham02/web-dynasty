@@ -20,7 +20,9 @@ const UserRoleMapping: { [key: string]: any } = {
 const DropdownUser = ({ userInformation }: DropdownUserType) => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
+  const currentUserLogin = useSelector<RootState, Users>(
+    (state) => state.userStore.user,
+  );
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -29,7 +31,11 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return;
-      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target))
+      if (
+        !dropdownOpen ||
+        dropdown.current.contains(target) ||
+        trigger.current.contains(target)
+      )
         return;
       setDropdownOpen(false);
     };
@@ -67,13 +73,16 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
             {userInformation?.fullName || userInformation?.email}
           </span>
           <span className="block text-xs text-primary">
-            {userInformation?.role && UserRoleMapping[userInformation?.role]}
+            {userInformation?.role &&
+              UserRoleMapping[userInformation?.role as any]}
           </span>
         </span>
 
         <span className="h-14 w-14 !rounded-full flex justify-center items-center">
           <Avatar
-            src={userInformation?.image && getFullImageUrl(userInformation.image)}
+            src={
+              userInformation?.image && getFullImageUrl(userInformation.image)
+            }
             alt={`${userInformation?.fullName}`}
             isBordered={!!userInformation?.image}
             showFallback={!userInformation?.image}
@@ -91,7 +100,9 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         </span>
 
         <svg
-          className={`hidden fill-black sm:block ${dropdownOpen ? 'rotate-180' : ''}`}
+          className={`hidden fill-black sm:block ${
+            dropdownOpen ? 'rotate-180' : ''
+          }`}
           width="12"
           height="8"
           viewBox="0 0 12 8"

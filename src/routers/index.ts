@@ -1,6 +1,6 @@
 
+import { AttributePage, BannerPage, CategoryPage, CustomerPage, MaterialPage, OrderFormPage, OrderPage, OverviewPage, ProductFormPage, ProductPage, SignInPage, StorePage, TermAndConditionPage, UserPage } from "~/pages";
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
-import { OverviewPage, ProductPage, CategoryPage, UserPage, OrderPage, MaterialPage, AttributePage, BannerPage, CustomerPage, IncomingPage, PageNotFound, SignInPage, ProductFormPage, OrderFormPage, TermAndConditionPage, StorePage } from "~/pages"
 
 const privateRoutes = [
   {
@@ -100,3 +100,4 @@ const publicRoutes = [
 ];
 
 export { privateRoutes, publicRoutes };
+

@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
 import { useSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 import { useNavigate } from 'react-router-dom';
@@ -8,14 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import DescriptionIcon from '~/assets/svg/description.svg';
 import Box from '~/components/Box';
 import FormContextCKEditor from '~/components/NextUI/Form/FormContextCKEditor';
-import Upload, { onChangeUploadState } from '~/components/Upload';
+import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
 import { PATH_NAME } from '~/constants/router';
 import { ProductMain } from '~/models/product';
 import { productService } from '~/services/productService';
 import { getFullImageUrl } from '~/utils/image';
 import ProductAttributeCard from '../ProductAttributeCard';
 import ProductInfoCard from '../ProductInfoCard';
-import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
 
 interface ProductFormProps {
   currentProduct?: ProductMain;
@@ -28,8 +27,6 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
-
-  const [productImage, setProductImage] = useState<onChangeUploadState>({});
 
   const {
     handleSubmit,
@@ -105,10 +102,6 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
       });
 
       formData.append('productInfo', jsonData);
-
-      if (productImage?.srcRequest) {
-        formData.append('file', productImage.srcRequest);
-      }
 
       if (isEdit)
         await productService.updateProduct(formData, currentProduct?._id);

@@ -7,7 +7,6 @@ import OVERVIEW_ICON from '~/assets/svg/overview.svg';
 import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
 import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
 import BANNER_ICON from '~/assets/svg/banner.svg';
-import LOCATION_ICON from '~/assets/svg/location.svg';
 import STORE_ICON from '~/assets/svg/store.svg';
 import TERM_AND_CONDITION_ICON from '~/assets/svg/term-and-condition.svg';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
@@ -16,12 +15,12 @@ const routeSideBar = [
   {
     key: ROUTER_KEY.STATISTIC,
     path: PATH_NAME.NEW_CUSTOMER_STATISTIC,
-    title: 'Báo cáo & Thống kê',
+    title: '',
     menu: [
       {
         key: ROUTER_KEY.HOME,
         path: PATH_NAME.HOME,
-        title: 'Thống kê doanh thu',
+        title: 'Tổng quan',
         icon: OVERVIEW_ICON,
         child: [],
       },
@@ -30,26 +29,19 @@ const routeSideBar = [
   {
     key: ROUTER_KEY.STAFF_MANAGEMENT,
     path: PATH_NAME.STAFF_MANAGEMENT,
-    title: 'Nhân viên',
+    title: 'Người dùng',
     menu: [
       {
         key: ROUTER_KEY.STAFF_MANAGEMENT,
         path: PATH_NAME.STAFF_MANAGEMENT,
-        title: 'Quản lí nhân viên',
+        title: 'Quản lý nhân viên',
         icon: STAFF_ICON,
         child: [],
       },
-    ],
-  },
-  {
-    key: ROUTER_KEY.CUSTOMER,
-    path: PATH_NAME.CUSTOMER_LIST,
-    title: 'Khách hàng',
-    menu: [
       {
         key: ROUTER_KEY.CUSTOMER,
         path: PATH_NAME.CUSTOMER_LIST,
-        title: 'Danh sách khách hàng',
+        title: 'Quản lý khách hàng',
         icon: USER_LIST_ICON,
         child: [],
       },

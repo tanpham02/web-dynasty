@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getDistricts, getProvinces, getWards, getProvincesWithDetail, } from 'vietnam-provinces';
+import { getDistricts, getProvinces, getWards } from 'vietnam-provinces';
 
 interface AddressState {
     cityId?: string;
@@ -25,9 +25,9 @@ const useAddress = ({ cityId, districtId, wardId }: AddressState) => {
     const fullAddress = useMemo(() => {
         if (!cityId || !districtId || !wardId) return ''
 
-        const province = getProvincesWithDetail(cityId)
-        const district = getDistricts(cityId)
-        const ward = getWards(districtId)
+        // const province = getProvincesWithDetail(cityId)
+        // const district = getDistricts(cityId)
+        // const ward = getWards(districtId)
 
         return ''
 

@@ -82,6 +82,7 @@ export default function CustomTable<T>({
         classNames={{
           th: ['bg-zinc-200', 'text-black'],
           base: isScrollable ? 'max-h-[450px]' : '',
+          emptyWrapper: 'text-lg font-semibold',
         }}
       >
         <TableHeader columns={columns as ColumnType<T>[]} className="relative">
@@ -116,7 +117,9 @@ export default function CustomTable<T>({
                       </Skeleton>
                     </TableCell>
                   ) : (
-                    <TableCell key={uuidv4()}>{columns[index].render(row, rowIndex)}</TableCell>
+                    <TableCell key={uuidv4()}>
+                      {columns[index].render(row, rowIndex)}
+                    </TableCell>
                   ),
                 )}
               </TableRow>

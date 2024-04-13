@@ -4,12 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-import DeleteIcon from '~/assets/svg/delete.svg';
 import EyeIcon from '~/assets/svg/eye.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import ModalConfirmDelete, {
+  ModalConfirmDeleteState,
+} from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { CUSTOMER_TYPES } from '~/constants/customer';
@@ -33,7 +34,8 @@ const CustomerPage = () => {
     isEdit?: boolean;
     customerId?: string;
   }>({ isEdit: false });
-  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
+  const [modalConfirmDelete, setModalConfirmDelete] =
+    useState<ModalConfirmDeleteState>();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -48,7 +50,6 @@ const CustomerPage = () => {
 
   const {
     isOpen: isOpenModalConfirmDeleteUser,
-    onOpen: onOpenModalConfirmDeleteUser,
     onOpenChange: onOpenChangeModalConfirmDeleteCustomer,
   } = useDisclosure();
 
@@ -80,19 +81,25 @@ const CustomerPage = () => {
     {
       name: 'Ngày đăng ký',
       render: (customer: Customer) =>
-        customer?.createdAt ? formatDate(customer?.createdAt, DATE_FORMAT_DDMMYYYY) : '',
+        customer?.createdAt
+          ? formatDate(customer?.createdAt, DATE_FORMAT_DDMMYYYY)
+          : '',
     },
     {
       name: 'Trạng thái',
       render: (customer: Customer) => (
         <Chip
-          color={customer?.status === CustomerStatus.ACTIVE ? 'success' : 'danger'}
+          color={
+            customer?.status === CustomerStatus.ACTIVE ? 'success' : 'danger'
+          }
           variant="flat"
           classNames={{
             content: 'font-semibold',
           }}
         >
-          {customer?.status === CustomerStatus.ACTIVE ? 'Đang hoạt động' : 'Ngừng hoạt động'}
+          {customer?.status === CustomerStatus.ACTIVE
+            ? 'Đang hoạt động'
+            : 'Ngừng hoạt động'}
         </Chip>
       ),
     },

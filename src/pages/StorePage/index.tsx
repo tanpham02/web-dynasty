@@ -37,7 +37,7 @@ const StorePage = () => {
     {
       align: 'center',
       name: 'Địa chỉ',
-      render: (store: StoreModel) =>
+      render: (_store: StoreModel) =>
         '696/3 Âu Cơ, P.11, Quận Tân Bình, TP. Hồ Chí Minh',
     },
     {

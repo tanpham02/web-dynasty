@@ -17,16 +17,15 @@ import ModalConfirmDelete, {
   ModalConfirmDeleteState,
 } from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
+import CustomImage from '~/components/NextUI/CustomImage';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { QUERY_KEY } from '~/constants/queryKey';
 import useDebounce from '~/hooks/useDebounce';
 import usePagination from '~/hooks/usePagination';
 import { Category, CategoryStatus } from '~/models/category';
 import { categoryService } from '~/services/categoryService';
-import CategoryModal from './CategoryModal';
 import { getFullImageUrl } from '~/utils/image';
-import ImagePreview from '~/components/ImagePreview';
-import CustomImage from '~/components/NextUI/CustomImage';
+import CategoryModal from './CategoryModal';
 
 const Categories = () => {
   const {

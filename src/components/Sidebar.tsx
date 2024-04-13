@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
-import { NavLink, useLocation, Link, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import Logo from '~/assets/images/logo/logo-bg-white.png';
 import { PATH_NAME } from '~/constants/router';
@@ -106,7 +106,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             {/* <!-- Menu Group --> */}
             {routeSideBar.map((item, index) => (
               <div key={index}>
-                <h3 className="mb-[0.45rem] ml-4 text-sm font-semibold uppercase text-white select-none">
+                <h3 className="mb-[0.45rem] ml-4 text-[13px] font-semibold uppercase text-white select-none">
                   {item.title}
                 </h3>
                 <ul className="mb-2 flex flex-col gap-1.5 ml-3">
@@ -190,7 +190,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     ) : (
                       <li key={`${menu.key}-${index}`} className="list-none">
                         <div
-                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-3 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-10 hover:font-bold ${
+                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-2 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-10 hover:font-bold ${
                             pathname === `${menu.path}`
                               ? 'bg-zinc-100 font-bold text-primary'
                               : 'font-normal cursor-pointer text-white'

@@ -1,11 +1,14 @@
 # Specify the base image
-FROM node:16-alpine
+FROM node:18-alpine
+
+ENV NODE_ENV production
 
 # Set the working directory to /app
 WORKDIR /pages
 
 # Copy the package.json and package-lock.json files to the container
 COPY package.json ./
+COPY yarn.lock .
 
 # Install dependencies
 # RUN yarn install
@@ -16,9 +19,21 @@ RUN yarn cache clean
 # Copy the rest of the application code to the container
 COPY . .
 
+# build app
+RUN yarn build
 
-# Expose port 2203
-EXPOSE 2203
+# Bundle static assets with nginx
+FROM nginx:1.21.0-alpine as production
+ENV NODE_ENV production
 
-# Start the server
-CMD ["yarn", "run:prod"]
+# Copy built assets from builder
+COPY --from=builder /pages/build /usr/share/nginx/dynasty-dasboard
+
+# Add your nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port
+EXPOSE 1311
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

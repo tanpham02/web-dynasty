@@ -1,21 +1,24 @@
 import { Button } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
 import { DatePicker } from 'antd';
+import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
-import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
-import moment from 'moment';
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
 import { QUERY_KEY } from '~/constants/queryKey';
-import { Category } from '~/models/category';
-import { Material, MaterialInformation } from '~/models/materials';
+import { Material } from '~/models/materials';
 import materialService from '~/services/materialService';
 import {
   DATE_FORMAT_DDMMYYYY,
@@ -55,76 +58,6 @@ const MaterialModal = ({
     name: 'materialInfo',
   });
 
-  const columns: ColumnType<Category>[] = [
-    {
-      name: 'Tên nguyên liệu',
-      render: (_record: MaterialInformation, index?: number) => (
-        <FormContextInput
-          name={`materialInfo.${index}.name`}
-          rules={{
-            required: 'Vui lòng nhập tên nguyên liệu!',
-          }}
-        />
-      ),
-    },
-    {
-      name: 'Giá nhập',
-      width: 200,
-      render: (_record: MaterialInformation, index?: number) => (
-        <FormContextInput
-          name={`materialInfo.${index}.price`}
-          type="number"
-          rules={{
-            required: 'Vui lòng nhập giá nguyên liệu!',
-          }}
-        />
-      ),
-    },
-    {
-      name: 'Số lượng',
-      width: 200,
-      render: (_record: MaterialInformation, index?: number) => (
-        <FormContextInput
-          name={`materialInfo.${index}.quantity`}
-          type="number"
-          rules={{
-            required: 'Vui lòng nhập số lượng nguyên liệu!',
-            min: {
-              value: 0.01,
-              message: 'Số lượng nguyên liệu nhập không được nhỏ hơn 0!',
-            },
-          }}
-        />
-      ),
-    },
-    {
-      name: 'Đơn vị tính',
-      width: 200,
-      render: (_record: MaterialInformation, index?: number) => (
-        <FormContextInput
-          name={`materialInfo.${index}.unit`}
-          rules={{
-            required: 'Vui lòng nhập đơn vị tính nguyên liệu!',
-          }}
-        />
-      ),
-    },
-    {
-      name: <Box className="flex justify-center">Hành động</Box>,
-      width: 100,
-      render: (_record: MaterialInformation, index?: number) => (
-        <Box className="flex justify-center">
-          <ButtonIcon
-            icon={DeleteIcon}
-            title="Xóa nguyên liệu nhập này"
-            status="danger"
-            onClick={() => removeMaterial(index)}
-          />
-        </Box>
-      ),
-    },
-  ];
-
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -146,9 +79,12 @@ const MaterialModal = ({
         }
         return null;
       } catch (err) {
-        enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu hóa đơn nhập nguyên liệu!', {
-          variant: 'error',
-        });
+        enqueueSnackbar(
+          'Có lỗi xảy ra khi lấy dữ liệu hóa đơn nhập nguyên liệu!',
+          {
+            variant: 'error',
+          },
+        );
         onOpenChange?.();
         console.log('🚀 ~ file: index.tsx:125 ~ getMaterialDetail ~ err:', err);
       } finally {
@@ -157,7 +93,10 @@ const MaterialModal = ({
         }, 1000);
       }
     },
-    { enabled: Boolean(materialId && isOpen && isEdit), refetchOnWindowFocus: false },
+    {
+      enabled: Boolean(materialId && isOpen && isEdit),
+      refetchOnWindowFocus: false,
+    },
   );
 
   const onSubmit = async (data: Material) => {
@@ -179,11 +118,16 @@ const MaterialModal = ({
         await materialService.create(formData);
       }
 
-      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} hóa đơn nhập hàng thành công!`);
+      enqueueSnackbar(
+        `${isEdit ? 'Chỉnh sửa' : 'Thêm'} hóa đơn nhập hàng thành công!`,
+      );
     } catch (err) {
-      enqueueSnackbar(`Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} hóa đơn nhập hàng!`, {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        `Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} hóa đơn nhập hàng!`,
+        {
+          variant: 'error',
+        },
+      );
       console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
     } finally {
       onRefetch?.();
@@ -195,7 +139,9 @@ const MaterialModal = ({
     <CustomModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={isEdit ? 'Cập nhật hóa đơn nhập hàng' : 'Thêm hóa đơn nhập hàng mới'}
+      title={
+        isEdit ? 'Cập nhật hóa đơn nhập hàng' : 'Thêm hóa đơn nhập hàng mới'
+      }
       okButtonText={isEdit ? 'Lưu thay đổi' : 'Thêm'}
       className="w-full max-w-[1200px]"
       isDismissable={false}
@@ -210,7 +156,10 @@ const MaterialModal = ({
             rules={{
               required: 'Vui lòng chọn ngày nhập hàng!',
             }}
-            render={({ field: { value, onChange, ref }, fieldState: { error } }) => (
+            render={({
+              field: { value, onChange, ref },
+              fieldState: { error },
+            }) => (
               <Box>
                 <DatePicker
                   allowClear
@@ -247,7 +196,9 @@ const MaterialModal = ({
                 color="default"
                 size="sm"
                 className="bg-sky-100 text-sky-500 font-bold"
-                onClick={() => appendMaterial({ name: '', price: 0, quantity: 0, unit: '' })}
+                onClick={() =>
+                  appendMaterial({ name: '', price: 0, quantity: 0, unit: '' })
+                }
               >
                 Thêm nguyên liệu nhập
               </Button>
@@ -255,7 +206,9 @@ const MaterialModal = ({
           </Box>
           <Box className="border border-zinc-200 rounded-xl p-4 shadow">
             <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
-              <Box className="font-bold flex-[3] text-center">Tên nguyên liệu</Box>
+              <Box className="font-bold flex-[3] text-center">
+                Tên nguyên liệu
+              </Box>
               <Box className="font-bold flex-[3] text-center">Giá nhập</Box>
               <Box className="font-bold flex-[2] text-center">Số lượng</Box>
               <Box className="font-bold flex-[2] text-center">Đơn vị tính</Box>
@@ -263,7 +216,10 @@ const MaterialModal = ({
             </Box>
             <Box>
               {materials?.map((material, index) => (
-                <Box key={material?.id} className="px-3 py-2 flex items-center gap-2">
+                <Box
+                  key={material?.id}
+                  className="px-3 py-2 flex items-center gap-2"
+                >
                   <Box className="font-bold flex-[3] text-center">
                     <FormContextInput
                       name={`materialInfo.${index}.name`}
@@ -290,7 +246,8 @@ const MaterialModal = ({
                         required: 'Vui lòng nhập số lượng nguyên liệu!',
                         min: {
                           value: 0.01,
-                          message: 'Số lượng nguyên liệu nhập không được nhỏ hơn 0!',
+                          message:
+                            'Số lượng nguyên liệu nhập không được nhỏ hơn 0!',
                         },
                       }}
                     />

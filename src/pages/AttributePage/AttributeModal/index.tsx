@@ -1,16 +1,14 @@
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import SVG from 'react-inlinesvg';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import CustomModal from '~/components/NextUI/CustomModal';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
-import { Attribute, AttributeValue } from '~/models/attribute';
+import { Attribute } from '~/models/attribute';
 import { attributeService } from '~/services/attributeService';
 
 interface AttributeModalProps {
@@ -66,13 +64,19 @@ const AttributeModal = ({
     try {
       const formData = new FormData();
       formData.append('productAttributeInfo', JSON.stringify(data));
-      if (isEdit) await attributeService.updateAttributeById(attributeId, formData);
+      if (isEdit)
+        await attributeService.updateAttributeById(attributeId, formData);
       else await attributeService.createAttribute(formData);
-      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`);
+      enqueueSnackbar(
+        `${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`,
+      );
     } catch (err) {
-      enqueueSnackbar(`Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} thuộc tính!`, {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        `Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} thuộc tính!`,
+        {
+          variant: 'error',
+        },
+      );
       console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
     } finally {
       await onRefetch?.();
@@ -132,13 +136,18 @@ const AttributeModal = ({
             <Box className="border border-zinc-200 rounded-xl p-4 shadow">
               <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
                 <Box className="font-bold flex-1 text-center">STT</Box>
-                <Box className="font-bold flex-[3] text-center">Tên giá trị</Box>
+                <Box className="font-bold flex-[3] text-center">
+                  Tên giá trị
+                </Box>
                 <Box className="font-bold flex-[3] text-center">Giá trị</Box>
                 <Box className="font-bold flex-1 text-center">Hành động</Box>
               </Box>
               <Box>
                 {attributeValue?.map((value, index) => (
-                  <Box key={value?.id} className="px-3 py-2 flex items-center gap-2">
+                  <Box
+                    key={value?.id}
+                    className="px-3 py-2 flex items-center gap-2"
+                  >
                     <Box className="font-bold flex-1 text-center">
                       <span className="font-bold">{(index || 0) + 1}</span>
                     </Box>

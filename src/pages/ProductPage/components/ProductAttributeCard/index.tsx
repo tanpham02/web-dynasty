@@ -1,4 +1,11 @@
-import { Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider } from '@nextui-org/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Checkbox,
+  CheckboxGroup,
+  Divider,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
@@ -9,11 +16,10 @@ import GridLayoutIcon from '~/assets/svg/grid-layout.svg';
 import WarningIcon from '~/assets/svg/warning.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { FormContextInput } from '~/components/NextUI/Form';
 import { QUERY_KEY } from '~/constants/queryKey';
 import { Attribute, AttributeValue } from '~/models/attribute';
-import { ProductChildrenAttribute, ProductMain } from '~/models/product';
+import { ProductMain } from '~/models/product';
 import { attributeService } from '~/services/attributeService';
 
 interface ProductAttributeCardProps {
@@ -21,7 +27,7 @@ interface ProductAttributeCardProps {
 }
 
 const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
-  const { control, setValue, getValues } = useFormContext<ProductMain>();
+  const { control, setValue } = useFormContext<ProductMain>();
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
   const [attributeIds, setAttributeIds] = useState<string[]>([]);
@@ -48,7 +54,10 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     setValue('productAttributeList', []);
     if (attributeSelected.length > 0) {
       generateCombinations(0, [], [], []);
-      setValue('attributeIds', attributeSelected?.map((attribute) => attribute?._id) as string[]);
+      setValue(
+        'attributeIds',
+        attributeSelected?.map((attribute) => attribute?._id) as string[],
+      );
     }
   }, [JSON.stringify(attributeSelected)]);
 
@@ -96,8 +105,12 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
         for (const attr of attributeSelected[index].attributeList || []) {
           generateCombinations(
             index + 1,
-            attr?.name ? [...currentCombination, attr.name] : [...currentCombination],
-            attr?.value ? [...currentCombinationValue, attr.value] : [...currentCombinationValue],
+            attr?.name
+              ? [...currentCombination, attr.name]
+              : [...currentCombination],
+            attr?.value
+              ? [...currentCombinationValue, attr.value]
+              : [...currentCombinationValue],
             attr ? [...attributeValue, attr] : [...attributeValue],
           );
         }
@@ -106,11 +119,16 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     [attributeSelected],
   );
 
-  const handleChangeAttributeSelected = (checked: boolean, attribute: Attribute) => {
+  const handleChangeAttributeSelected = (
+    checked: boolean,
+    attribute: Attribute,
+  ) => {
     if (checked) {
       setAttributeSelected((prev) => [...prev, attribute]);
     } else {
-      setAttributeSelected(attributeSelected?.filter((item) => item?._id != attribute?._id) || []);
+      setAttributeSelected(
+        attributeSelected?.filter((item) => item?._id != attribute?._id) || [],
+      );
     }
   };
 
@@ -124,9 +142,13 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
       <CardBody className="p-6 space-y-4">
         {isEdit && (
           <Box className="mb-1 flex items-center bg-orange-100 p-2 rounded-lg">
-            <Svg src={WarningIcon} className="bg-orange-500 text-white w-5 h-5 rounded-full mr-2" />
+            <Svg
+              src={WarningIcon}
+              className="bg-orange-500 text-white w-5 h-5 rounded-full mr-2"
+            />
             <span>
-              Vui lòng cập nhật lại giá bán cộng thêm cho từng thuộc tính nếu thay đổi lựa chọn!
+              Vui lòng cập nhật lại giá bán cộng thêm cho từng thuộc tính nếu
+              thay đổi lựa chọn!
             </span>
           </Box>
         )}
@@ -137,7 +159,9 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                 key={index}
                 value={attribute?._id}
                 // checked={attributeIds?.includes(attribute?._id)}
-                onValueChange={(checked) => handleChangeAttributeSelected(checked, attribute)}
+                onValueChange={(checked) =>
+                  handleChangeAttributeSelected(checked, attribute)
+                }
               >
                 {attribute?.name}
               </Checkbox>
@@ -148,7 +172,9 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
           <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
             <Box className="font-bold flex-[3] text-center">Tên mở rộng</Box>
             <Box className="font-bold flex-[3] text-center">Tên thuộc tính</Box>
-            <Box className="font-bold flex-[3] text-center">Giá bán cộng thêm</Box>
+            <Box className="font-bold flex-[3] text-center">
+              Giá bán cộng thêm
+            </Box>
             <Box className="font-bold flex-1 text-center">Hành động</Box>
           </Box>
           <Box>
@@ -159,12 +185,16 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                   index % 2 == 1 && 'bg-zinc-100 rounded-md'
                 }`}
               >
-                <Box className="flex-[3] text-center">{attribute?.extendedName}</Box>
+                <Box className="flex-[3] text-center">
+                  {attribute?.extendedName}
+                </Box>
 
                 <Box className="flex-[3] text-center">
                   <Box className="flex justify-around flex-col gap-8">
                     {attribute?.productAttributeItem?.map((attributeValue) => (
-                      <span className="block my-auto">- {attributeValue?.name}</span>
+                      <span className="block my-auto">
+                        - {attributeValue?.name}
+                      </span>
                     ))}
                   </Box>
                 </Box>
