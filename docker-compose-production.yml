@@ -2,7 +2,7 @@ version: '4'
 
 services:
   dynasty-dashboard:
-    image: dynasty-dasboard:production
+    image: phamvantan/dynasty-admin:1.0.0
     container_name: dynasty-dashboard
     restart: always
     build:
