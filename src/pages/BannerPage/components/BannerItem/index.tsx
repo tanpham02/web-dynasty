@@ -26,7 +26,7 @@ const BannerItem = ({
         <img
           src={getFullImageUrl(url)}
           loading="lazy"
-          className={` aspect-video object-cover transition-all ${
+          className={` aspect-video object-cover transition-all rounded-lg ${
             isDragging ? 'w-[5%]' : 'w-1/6'
           }`}
         />

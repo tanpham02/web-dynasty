@@ -8,6 +8,7 @@ import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
 import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
 import BANNER_ICON from '~/assets/svg/banner.svg';
 import STORE_ICON from '~/assets/svg/store.svg';
+import SETTING_ICON from "~/assets/svg/setting.svg"
 import TERM_AND_CONDITION_ICON from '~/assets/svg/term-and-condition.svg';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
@@ -99,6 +100,13 @@ const routeSideBar = [
         path: PATH_NAME.STORE_LIST,
         title: 'Danh sách cửa hàng',
         icon: STORE_ICON,
+        child: [],
+      },
+      {
+        key: ROUTER_KEY.SORT_CONFIG,
+        path: PATH_NAME.SORT_CONFIG,
+        title: 'Cấu hình hệ thống',
+        icon: SETTING_ICON,
         child: [],
       },
       {

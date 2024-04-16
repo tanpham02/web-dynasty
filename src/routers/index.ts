@@ -1,5 +1,5 @@
 
-import { AttributePage, BannerPage, CategoryPage, CustomerPage, MaterialPage, OrderFormPage, OrderPage, OverviewPage, ProductFormPage, ProductPage, SignInPage, StorePage, TermAndConditionPage, UserPage } from "~/pages";
+import { AttributePage, BannerPage, CategoryPage, CustomerPage, MaterialPage, OrderFormPage, OrderPage, OverviewPage, ProductFormPage, ProductPage, SignInPage, SystemConfigPage, StorePage, TermAndConditionPage, UserPage } from "~/pages";
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
 const privateRoutes = [
@@ -86,6 +86,12 @@ const privateRoutes = [
     key: ROUTER_KEY.STORE_LIST,
     path: PATH_NAME.STORE_LIST,
     component: StorePage,
+    title: 'Danh sách cửa hàng',
+  },
+  {
+    key: ROUTER_KEY.SORT_CONFIG,
+    path: PATH_NAME.SORT_CONFIG,
+    component: SystemConfigPage,
     title: 'Danh sách cửa hàng',
   },
 ];
