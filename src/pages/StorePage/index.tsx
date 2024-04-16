@@ -37,8 +37,10 @@ const StorePage = () => {
     {
       align: 'center',
       name: 'Địa chỉ',
-      render: (_store: StoreModel) =>
-        '696/3 Âu Cơ, P.11, Quận Tân Bình, TP. Hồ Chí Minh',
+      render: (store: StoreModel) =>
+        [store?.location, store?.ward, store?.district, store?.city]
+          ?.filter((value) => Boolean(value))
+          .join(', '),
     },
     {
       align: 'center',
@@ -222,6 +224,7 @@ const StorePage = () => {
         isOpen={isOpenModalCreate}
         onClose={onOpenChangeModalCreate}
         storeId={storeUpdateId}
+        refetchData={refetchStoreList}
       />
     </Box>
   );

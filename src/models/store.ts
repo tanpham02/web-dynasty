@@ -9,6 +9,8 @@ export interface StoreModel {
     district?: string,
     wardId?: string | string[],
     ward?: string,
+    longitude?: string
+    latitude?: string
     createAt?: string
     updatedAt?: string
 }
