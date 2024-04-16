@@ -1,7 +1,7 @@
 # Specify the base image
 FROM node:18-alpine as builder
 
-ENV NODE_ENV development
+ENV NODE_ENV staging
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max-old-space-size=16384
 
@@ -13,8 +13,10 @@ COPY package.json ./
 COPY yarn.lock .
 
 # Install dependencies
-# RUN yarn install
+# RUN yarn install --production
+
 RUN yarn install --frozen-lockfile
+
 # RUN yarn install serve
 RUN yarn cache clean
 
