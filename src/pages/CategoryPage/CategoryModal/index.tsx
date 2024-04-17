@@ -34,7 +34,7 @@ const CategoryModal = ({
   categoryId,
 }: CategoryModalProps) => {
   const forms = useForm<Category>({
-    defaultValues: { priority: 0, childrenCategory: {} },
+    defaultValues: { priority: 1, childrenCategory: {} },
   });
 
   const {
@@ -211,7 +211,7 @@ const CategoryModal = ({
       <FormProvider {...forms}>
         <Box className="grid grid-cols-3 gap-4">
           <Box className="col-span-1">
-            <FormContextUpload name="file" />
+            <FormContextUpload name="file" isCircle />
           </Box>
           {Array.isArray(categoriesData) ? (
             <>
@@ -247,6 +247,12 @@ const CategoryModal = ({
                   name="priority"
                   label="Thứ tự hiển thị"
                   type="number"
+                  rules={{
+                    min: {
+                      value: 1,
+                      message: 'Thứ tự hiển thị bắt đầu từ 1!',
+                    },
+                  }}
                 />
                 <FormContextSwitch
                   name="isShowHomePage"
