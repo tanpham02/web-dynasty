@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
-import Logo from '~/assets/images/logo/logo-bg-white.png';
+import Logo from '~/assets/images/logo/admin-logo.png';
 import { PATH_NAME } from '~/constants/router';
 import routeSideBar from '~/routers/routeSideBar';
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -73,7 +73,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-[11px]">
           <NavLink to={PATH_NAME.STAFF_MANAGEMENT} className="mx-auto mt-2">
-            <img src={Logo} className="w-20 h-20 select-none" />
+            <img src={Logo} className="w-full object-contain select-none" />
           </NavLink>
 
           <button
@@ -102,7 +102,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
           {/* <!-- Sidebar Menu --> */}
-          <nav className="mt-2 py-4">
+          <nav className="py-4">
             {/* <!-- Menu Group --> */}
             {routeSideBar.map((item, index) => (
               <div key={index}>
