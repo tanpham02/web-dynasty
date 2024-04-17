@@ -29,8 +29,8 @@ const GoogleMaps = () => {
     >
       <Marker
         position={{
-          lat: latitudeSelected || 10.782148,
-          lng: longitudeSelected || 106.706088,
+          lat: Number(latitudeSelected) || 10.782148,
+          lng: Number(longitudeSelected) || 106.706088,
         }}
       />
     </GoogleMap>

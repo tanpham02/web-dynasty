@@ -23,6 +23,17 @@ interface FormStoreModalProps {
   refetchData(): Promise<any>;
 }
 
+const initFormValue: StoreModel = {
+  name: '',
+  phone: '',
+  cityId: '',
+  districtId: '',
+  wardId: '',
+  location: '',
+  longitude: '',
+  latitude: '',
+};
+
 const FormStoreModal = ({
   isOpen,
   onClose,
@@ -53,32 +64,55 @@ const FormStoreModal = ({
   );
 
   useEffect(() => {
-    setValue('districtId', []);
-    setValue('wardId', []);
+    if (getFieldState('cityId').isDirty) {
+      setValue('districtId', []);
+      setValue('wardId', []);
+    }
   }, [currentFormValue?.cityId]);
 
   useEffect(() => {
-    setValue('wardId', []);
+    if (getFieldState('districtId').isDirty) {
+      setValue('wardId', []);
+    }
   }, [currentFormValue?.districtId]);
 
-  useQuery({
-    queryKey: [QUERY_KEY.STORE, storeId],
-    queryFn: async () => {
-      try {
-        if (!storeId) return null;
+  useEffect(() => {
+    if (!storeId || !isOpen) {
+      reset(initFormValue);
+    }
+  }, [storeId, isOpen]);
 
-        const response = await storeService.getById(storeId);
+  const { isLoading: isLoadingStoreData, isFetching: isFetchingStoreData } =
+    useQuery({
+      queryKey: [QUERY_KEY.STORE, storeId],
+      queryFn: async () => {
+        try {
+          if (!storeId) return null;
 
-        reset({ ...response, cityId: [], districtId: [], wardId: [] });
-        return response;
-      } catch (err) {
-        console.log('🚀 ~ queryFn: ~ err:', err);
-        enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
-          variant: 'error',
-        });
-      }
-    },
-  });
+          const response = await storeService.getById(storeId);
+
+          reset({
+            ...response,
+            cityId: response?.cityId ? [String(response.cityId)] : [],
+            districtId: response?.districtId
+              ? [String(response.districtId)]
+              : [],
+            wardId: response?.wardId ? [String(response.wardId)] : [],
+          });
+          console.log(
+            '🚀 ~ queryFn: ~ response?.cityId ? [String(response.cityId)] : []:',
+            response?.cityId ? [String(response.cityId)] : [],
+          );
+          return response;
+        } catch (err) {
+          console.log('🚀 ~ queryFn: ~ err:', err);
+          enqueueSnackbar('Có lỗi xảy ra vui lòng thử lại sau!', {
+            variant: 'error',
+          });
+        }
+      },
+      enabled: Boolean(storeId),
+    });
 
   const createOrUpdateStore = async (data: StoreModel) => {
     try {
@@ -103,21 +137,10 @@ const FormStoreModal = ({
       };
 
       if (storeId) {
-        const storeChangeData: StoreModel = {};
+        formData.append('storeSystemInfo', JSON.stringify(dataSubmit));
 
-        Object.entries(dataSubmit).map((dataSubmit) => {
-          const fieldName = dataSubmit[0] as keyof StoreModel;
-
-          if (getFieldState(fieldName).isDirty)
-            storeChangeData[fieldName] = dataSubmit[1];
-        });
-
-        formData.append('storeSystemInfo', JSON.stringify(storeChangeData));
-
-        if (Object.keys(storeChangeData)?.length) {
-          await storeService.updateById(storeId, formData);
-          enqueueSnackbar('Cập nhật thông tin cửa hàng thành công!');
-        }
+        await storeService.updateById(storeId, formData);
+        enqueueSnackbar('Cập nhật thông tin cửa hàng thành công!');
       } else {
         formData.append('storeSystemInfo', JSON.stringify(dataSubmit));
         await storeService.createNew(formData);
@@ -141,7 +164,7 @@ const FormStoreModal = ({
       onClose={onClose}
       okButtonText={storeId ? 'Lưu thay đổi' : 'Lưu'}
       title={storeId ? 'Chỉnh sửa thông tin cửa hàng' : 'Thêm cửa hàng mới'}
-      isLoading={isSubmitting}
+      isLoading={isSubmitting || isLoadingStoreData || isFetchingStoreData}
       onOk={handleSubmit(createOrUpdateStore)}
     >
       <FormProvider {...formMethods}>
@@ -161,10 +184,6 @@ const FormStoreModal = ({
               label="Số điện thoại!"
               rules={{
                 required: 'Vui lòng nhập số điện thoại cửa hàng!',
-                // pattern: {
-                //   value: PATTERN.PHONE,
-                //   message: 'Số điện thoại không đúng định dạng!',
-                // },
               }}
             />
             <FormContextSelect

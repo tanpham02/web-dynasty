@@ -36,6 +36,13 @@ const StorePage = () => {
     },
     {
       align: 'center',
+      name: 'Số điện thoại',
+      render: (store: StoreModel) => (
+        <span className="line-clamp-1">{store?.phone}</span>
+      ),
+    },
+    {
+      align: 'center',
       name: 'Địa chỉ',
       render: (store: StoreModel) =>
         [store?.location, store?.ward, store?.district, store?.city]
@@ -222,7 +229,10 @@ const StorePage = () => {
       />
       <FormStoreModal
         isOpen={isOpenModalCreate}
-        onClose={onOpenChangeModalCreate}
+        onClose={() => {
+          setStoreUpdateId('');
+          onOpenChangeModalCreate();
+        }}
         storeId={storeUpdateId}
         refetchData={refetchStoreList}
       />
