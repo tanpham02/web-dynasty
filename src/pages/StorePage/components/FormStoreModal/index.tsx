@@ -164,7 +164,10 @@ const FormStoreModal = ({
       onClose={onClose}
       okButtonText={storeId ? 'Lưu thay đổi' : 'Lưu'}
       title={storeId ? 'Chỉnh sửa thông tin cửa hàng' : 'Thêm cửa hàng mới'}
-      isLoading={isSubmitting || isLoadingStoreData || isFetchingStoreData}
+      isLoading={
+        isSubmitting ||
+        ((isLoadingStoreData || isFetchingStoreData) && !!storeId)
+      }
       onOk={handleSubmit(createOrUpdateStore)}
     >
       <FormProvider {...formMethods}>
