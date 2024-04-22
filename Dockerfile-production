@@ -2,6 +2,8 @@
 FROM node:18-alpine as builder
 
 ENV NODE_ENV staging
+ENV GENERATE_SOURCEMAP=false
+ENV NODE_OPTIONS=--max-old-space-size=16384
 
 # Set the working directory to /app
 WORKDIR /pages

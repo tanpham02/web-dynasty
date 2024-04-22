@@ -38,9 +38,9 @@ const BannerPage = () => {
     queryFn: async () => {
       const bannerResponse = await bannerService.getBanner();
       if (Array.isArray(bannerResponse) && bannerResponse.length > 0) {
-        return bannerResponse.sort(
-          (a, b) => Number(a?.priority) - Number(b?.priority),
-        );
+        return bannerResponse
+          .sort((a, b) => Number(a?.priority) - Number(b?.priority))
+          .map((banner, index) => ({ ...banner, priority: index + 1 }));
       }
       return [];
     },
@@ -84,6 +84,12 @@ const BannerPage = () => {
     const destinationItem = banners[result.destination.index];
 
     if (!sourceItem?._id || !destinationItem?._id) return;
+
+    if (
+      sourceItem?.priority === result.destination.index + 1 ||
+      destinationItem?.priority === result.source.index + 1
+    )
+      return;
 
     try {
       globalLoading.show();

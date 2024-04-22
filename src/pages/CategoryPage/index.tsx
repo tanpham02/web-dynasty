@@ -150,12 +150,23 @@ const Categories = () => {
     refetch: refetchCategory,
   } = useQuery(
     [QUERY_KEY.ATTRIBUTE, searchCategoryDebounce, pageIndex, pageSize],
-    async () =>
-      await categoryService.getCategoryByCriteria({
+    async () => {
+      const response = await categoryService.getCategoryByCriteria({
         pageSize: pageSize,
         pageIndex: pageIndex - 1,
         name: searchCategoryDebounce,
-      }),
+      });
+
+      return {
+        ...response,
+        data: (response?.data || [])
+          .sort(
+            (a: Category, b: Category) =>
+              Number(a?.priority) - Number(b?.priority),
+          )
+          .map((category, index) => ({ ...category, priority: index + 1 })),
+      };
+    },
     {
       refetchOnWindowFocus: false,
     },

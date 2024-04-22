@@ -36,9 +36,18 @@ const StorePage = () => {
     },
     {
       align: 'center',
+      name: 'Số điện thoại',
+      render: (store: StoreModel) => (
+        <span className="line-clamp-1">{store?.phone}</span>
+      ),
+    },
+    {
+      align: 'center',
       name: 'Địa chỉ',
-      render: (_store: StoreModel) =>
-        '696/3 Âu Cơ, P.11, Quận Tân Bình, TP. Hồ Chí Minh',
+      render: (store: StoreModel) =>
+        [store?.location, store?.ward, store?.district, store?.city]
+          ?.filter((value) => Boolean(value))
+          .join(', '),
     },
     {
       align: 'center',
@@ -220,8 +229,12 @@ const StorePage = () => {
       />
       <FormStoreModal
         isOpen={isOpenModalCreate}
-        onClose={onOpenChangeModalCreate}
+        onClose={() => {
+          setStoreUpdateId('');
+          onOpenChangeModalCreate();
+        }}
         storeId={storeUpdateId}
+        refetchData={refetchStoreList}
       />
     </Box>
   );
