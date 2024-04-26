@@ -10,11 +10,18 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Users, UserRole } from '~/models/user';
 import CustomModal from '~/components/NextUI/CustomModal';
-import { FormContextInput } from '~/components/NextUI/Form';
+import {
+  FormContextDatePicker,
+  FormContextInput,
+} from '~/components/NextUI/Form';
 import Box from '~/components/Box';
 import { PATTERN } from '~/utils/regex';
 import Upload, { onChangeUploadState } from '~/components/Upload';
-import { DATE_FORMAT_DDMMYYYY, DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
+import {
+  DATE_FORMAT_DDMMYYYY,
+  DATE_FORMAT_YYYYMMDD,
+  formatDate,
+} from '~/utils/date.utils';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import { globalLoading } from '~/components/GlobalLoading';
 import userService from '~/services/userService';
@@ -22,6 +29,7 @@ import { QUERY_KEY } from '~/constants/queryKey';
 import { getFullImageUrl } from '~/utils/image';
 import { AppDispatch } from '~/redux/store';
 import { getUserInfo } from '~/redux/slice/userSlice';
+import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
 
 const defaultUserValues: Users = {};
 
@@ -101,9 +109,15 @@ const UserModal = ({
         reset({
           ...response,
           cityId: response?.cityId ? ([String(response.cityId)] as any) : [],
-          districtId: response?.districtId ? ([String(response.districtId)] as any) : [],
+          districtId: response?.districtId
+            ? ([String(response.districtId)] as any)
+            : [],
           wardId: response?.wardId ? ([String(response.wardId)] as any) : [],
           role: response?.role ? ([response.role] as any) : [],
+          image:
+            response?.image && typeof response.image === 'string'
+              ? getFullImageUrl(response.image)
+              : '',
         });
         setLocations({
           city: {
@@ -119,12 +133,6 @@ const UserModal = ({
             name: response?.ward || '',
           },
         });
-
-        if (response?.image) {
-          setAvatar({
-            srcPreview: getFullImageUrl(response.image),
-          });
-        }
       }
       globalLoading.hide();
     },
@@ -136,7 +144,9 @@ const UserModal = ({
 
   const mappingVietNamLocation = useMemo(() => {
     if (vietnamLocations) {
-      const newLocationsArray = Object.keys(vietnamLocations).map((key) => vietnamLocations[key]);
+      const newLocationsArray = Object.keys(vietnamLocations).map(
+        (key) => vietnamLocations[key],
+      );
       return newLocationsArray;
     }
   }, [JSON.stringify(vietnamLocations)]);
@@ -171,7 +181,9 @@ const UserModal = ({
       const districtsMapping = handleGetDistrictsFromVietnamLocation?.find(
         (districts) =>
           districts?.code ===
-          (Number(districtIdWatchValue) < 100 ? `0${districtIdWatchValue}` : districtIdWatchValue),
+          (Number(districtIdWatchValue) < 100
+            ? `0${districtIdWatchValue}`
+            : districtIdWatchValue),
       );
 
       setLocations((prev) => ({
@@ -183,7 +195,9 @@ const UserModal = ({
           name: districtsMapping?.name,
         },
         ward: {
-          id: getFieldState('districtId').isDirty ? undefined : String(getValues('wardId')),
+          id: getFieldState('districtId').isDirty
+            ? undefined
+            : String(getValues('wardId')),
           name: getFieldState('districtId').isDirty ? '' : prev.ward?.name,
         },
       }));
@@ -234,10 +248,7 @@ const UserModal = ({
       image: '',
       confirmPw: '',
     });
-    setAvatar({
-      srcPreview: '',
-      srcRequest: '',
-    });
+
     setChangePw(false);
 
     setLocations({});
@@ -252,7 +263,9 @@ const UserModal = ({
     const newData: Users = {
       ...data,
       role: (data?.role?.[0] as UserRole) || UserRole.USER,
-      birthday: data?.birthday ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD) : null,
+      birthday: data?.birthday
+        ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD)
+        : null,
       // role: (data.role && Array.isArray(data.role)
       //   ? Array.from(data.role).join()
       //   : data.role) as UserRole,
@@ -336,7 +349,6 @@ const UserModal = ({
       className="w-full max-w-[80%]"
       onOk={handleSubmit(onSubmit)}
       isLoading={isSubmitting}
-      isDismissable={false}
       scrollBehavior="inside"
       placement="center"
       onClose={() => {
@@ -349,18 +361,7 @@ const UserModal = ({
       <FormProvider {...forms}>
         <Box className="grid grid-cols-1 xl:grid-cols-[3fr_7fr] gap-8">
           <Box className="w-[20vw] mx-auto">
-            <Upload
-              onChange={({ srcPreview, srcRequest }: onChangeUploadState) => {
-                setAvatar({
-                  srcPreview,
-                  srcRequest,
-                });
-              }}
-              src={avatar?.srcPreview}
-              loading="lazy"
-              radius="full"
-              isPreview
-            />
+            <FormContextUpload name="image" isCircle label="Ảnh đại diện" />
           </Box>
           <Box className="space-y-4">
             <FormContextInput<Users> name="fullName" label="Họ và tên" />
@@ -376,20 +377,7 @@ const UserModal = ({
               isRequired
               label="Số điện thoại"
             />
-            <Controller
-              control={control}
-              name="birthday"
-              render={({ field: { value, onChange, ref } }) => (
-                <DatePicker
-                  allowClear
-                  ref={ref}
-                  value={value ? moment(value) : null}
-                  format={DATE_FORMAT_DDMMYYYY}
-                  placeholder="Ngày sinh"
-                  onChange={(date) => (date ? onChange(moment(date)) : '')}
-                />
-              )}
-            />
+            <FormContextDatePicker<Users> name="birthday" label="Ngày sinh" />
             <FormContextInput<Users>
               name="email"
               rules={{
@@ -442,7 +430,7 @@ const UserModal = ({
                 </SelectItem>
               ))}
             </FormContextSelect>
-            
+
             <FormContextSelect
               name="wardId"
               label="Phường/Xã"
@@ -455,7 +443,10 @@ const UserModal = ({
                 </SelectItem>
               ))}
             </FormContextSelect>
-            <FormContextInput<Users> name="location" label="Số nhà, tên đường" />
+            <FormContextInput<Users>
+              name="location"
+              label="Số nhà, tên đường"
+            />
             <FormContextInput<Users>
               isRequired
               name="username"

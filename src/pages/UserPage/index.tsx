@@ -1,5 +1,11 @@
 import { Button } from '@nextui-org/button';
-import { Chip, Input, Select, SelectItem, useDisclosure } from '@nextui-org/react';
+import {
+  Chip,
+  Input,
+  Select,
+  SelectItem,
+  useDisclosure,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useMemo, useState } from 'react';
@@ -21,7 +27,9 @@ import EditIcon from '~/assets/svg/edit.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import ModalConfirmDelete, {
+  ModalConfirmDeleteState,
+} from '~/components/ModalConfirmDelete';
 import CustomImage from '~/components/NextUI/CustomImage';
 import usePagination from '~/hooks/usePagination';
 
@@ -32,7 +40,9 @@ export interface ModalKey {
 }
 
 const UserListPage = () => {
-  const currentUserLogin = useSelector<RootState, Users>((state) => state.userStore.user);
+  const currentUserLogin = useSelector<RootState, Users>(
+    (state) => state.userStore.user,
+  );
   const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
   const [searchText, setSearchText] = useState<string>('');
   const [filterRole, setFilterRole] = useState<UserStatus | string>('');
@@ -40,7 +50,8 @@ const UserListPage = () => {
     isEdit?: boolean;
     userId?: string;
   }>({ isEdit: false });
-  const [modalConfirmDelete, setModalConfirmDelete] = useState<ModalConfirmDeleteState>();
+  const [modalConfirmDelete, setModalConfirmDelete] =
+    useState<ModalConfirmDeleteState>();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -114,7 +125,9 @@ const UserListPage = () => {
           </Box>
         ) : (
           <Box className="rounded-2xl !h-[80px] !w-[80px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
-            {user?.fullName ? user.fullName.charAt(0) : user?.username!.charAt(0).toUpperCase()}
+            {user?.fullName
+              ? user.fullName.charAt(0)
+              : user?.username!.charAt(0).toUpperCase()}
           </Box>
         ),
     },
@@ -149,7 +162,9 @@ const UserListPage = () => {
             content: 'font-semibold',
           }}
         >
-          {user?.status === UserStatus.ACTIVE ? 'Đang hoạt động' : 'Ngừng hoạt động'}
+          {user?.status === UserStatus.ACTIVE
+            ? 'Đang hoạt động'
+            : 'Ngừng hoạt động'}
         </Chip>
       ),
     },
@@ -165,7 +180,9 @@ const UserListPage = () => {
             //     : 'Chỉnh sửa nhân viên'
             // }`}
             title={
-              isHavePermission ? 'Chỉnh sửa' : 'Bạn không có quyền chỉnh sửa thông tin người này'
+              isHavePermission
+                ? 'Chỉnh sửa'
+                : 'Bạn không có quyền chỉnh sửa thông tin người này'
             }
             disable={!isHavePermission}
             icon={EditIcon}
@@ -228,14 +245,15 @@ const UserListPage = () => {
   const userDisableId = useMemo(() => {
     if (Array.isArray(users?.data) && users.data.length > 0) {
       return isHavePermission
-        ? [currentUserLogin?._id, ...users.data.map((user) => user.role === UserRole.ADMIN)]
+        ? [
+            currentUserLogin?._id,
+            ...users.data.map((user) => user.role === UserRole.ADMIN),
+          ]
         : users.data.map((user) => user._id);
     }
 
     return [currentUserLogin?._id];
   }, [users?.data, isHavePermission]);
-
-  console.log(userDisableId);
 
   const handleDeleteUser = async () => {
     globalLoading.show();
@@ -325,7 +343,10 @@ const UserListPage = () => {
               onChange={(e) => setFilterRole(e.target.value)}
             >
               {(status) => (
-                <SelectItem key={status.value.toString()} value={status.value?.toString()}>
+                <SelectItem
+                  key={status.value.toString()}
+                  value={status.value?.toString()}
+                >
                   {status.label}
                 </SelectItem>
               )}

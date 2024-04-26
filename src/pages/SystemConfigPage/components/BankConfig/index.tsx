@@ -16,7 +16,7 @@ import { QUERY_KEY } from '~/constants/queryKey';
 import { bankAccountService } from '~/services/bankAccountService';
 
 const BankConfig = () => {
-  const { data: banks } = useQuery({
+  const { data: banks, isLoading: isLoadingBanks } = useQuery({
     queryKey: [QUERY_KEY.BANKS_LIST],
     queryFn: async () => {
       const banksResponse =
@@ -50,6 +50,7 @@ const BankConfig = () => {
           label="Tên ngân hàng"
           name="bankCode"
           items={banks || []}
+          isLoading={isLoadingBanks}
         >
           {(bank: any) => (
             <SelectItem key={bank.key} textValue={bank.label}>

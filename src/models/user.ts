@@ -27,6 +27,6 @@ export interface Users {
   password?: string;
   role?: UserRole | UserRole[];
   status?: UserStatus;
-  image?: string;
+  image?: string | Blob;
   confirmPw?: string;
 }

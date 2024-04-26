@@ -76,3 +76,6 @@ export const TERM_AND_CONDITION_URL = `${API_URL}/term-and-policy`
 
 // STORE SYSTEM
 export const STORE_SYSTEM_URL = `${API_URL}/store-system`
+
+// STORE SETTING 
+export const STORE_SETTING_URL = `${API_URL}/stores`
