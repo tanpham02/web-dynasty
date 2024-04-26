@@ -113,7 +113,7 @@ const UserListPage = () => {
         user?.image ? (
           <Box className="image-table relative !h-[80px] !w-[80px] flex items-center">
             <CustomImage
-              src={getFullImageUrl(user.image)}
+              src={getFullImageUrl(user.image as string)}
               fallbackSrc="https://via.placeholder.com/80x80"
               radius="full"
               isPreview

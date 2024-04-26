@@ -188,11 +188,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }}
                       </SidebarLinkGroup>
                     ) : (
-                      <li key={`${menu.key}-${index}`} className="list-none">
+                      <li
+                        key={`${menu.key}-${index}`}
+                        className="list-none h-[50px] overflow-hidden flex items-center -my-[3px]"
+                      >
                         <div
-                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-2 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-10 hover:font-bold ${
+                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-2 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-20 hover:font-bold menu-item w-full transition-all ${
                             pathname === `${menu.path}`
-                              ? 'bg-zinc-100 font-bold text-primary'
+                              ? 'bg-zinc-100 font-bold text-primary z-20'
                               : 'font-normal cursor-pointer text-white'
                           }`}
                           onClick={() => {
@@ -204,12 +207,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           {menu.title}
                           {pathname === menu.path && (
                             <>
-                              <div className="absolute size-6 bg-zinc-100 top-0 right-0 -translate-y-full transition-all"></div>
-                              <div className="absolute size-12 bg-primary rounded-xl top-0 right-0 -translate-y-full transition-all "></div>{' '}
-                              <div className="absolute size-6 bg-zinc-100 bottom-0 right-0 translate-y-full transition-all"></div>
-                              <div className="absolute size-12 bg-primary rounded-xl bottom-0 right-0 translate-y-full transition-all"></div>
+                              <div className="absolute size-6 bg-zinc-100 top-0 right-0 -translate-y-full z-0"></div>
+                              <div className="absolute size-12 bg-primary rounded-lg top-0 right-0 -translate-y-full z-0"></div>{' '}
+                              <div className="absolute size-6 bg-zinc-100 bottom-0 right-0 translate-y-full z-0"></div>
+                              <div className="absolute size-12 bg-primary rounded-lg bottom-0 right-0 translate-y-full z-0"></div>
                             </>
                           )}
+                          <div className="menu-item-decoration hidden">
+                            <div className="absolute size-6 bg-zinc-100 top-0 right-0 -translate-y-full z-0 transition-all"></div>
+                            <div className="absolute size-12 bg-primary rounded-lg top-0 right-0 -translate-y-full z-0 transition-all"></div>
+                            <div className="absolute size-6 bg-zinc-100 bottom-0 right-0 translate-y-full z-0 transition-all"></div>
+                            <div className="absolute size-12 bg-primary rounded-lg bottom-0 right-0 translate-y-full z-0 transition-all"></div>
+                          </div>
                         </div>
                       </li>
                     );

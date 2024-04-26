@@ -266,3 +266,7 @@ li.ant-pagination-item:hover a,
 .form-upload-container:hover .form-upload-action {
   display: flex;
 }
+
+.menu-item:hover .menu-item-decoration {
+  display: block !important;
+}

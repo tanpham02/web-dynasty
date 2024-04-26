@@ -54,9 +54,9 @@ export const VOUCHER_URL = `${API_URL}/voucher`;
 //VOUCHER
 export const MATERIALS_URL = `${API_URL}/materials`;
 
-export const ATTRIBUTES_URL = `${API_URL}/product-attributes`;
+export const ATTRIBUTES_URL = `${API_URL}/product/attributes`;
 
-export const CATEGORY_URL = `${API_URL}/category`;
+export const CATEGORY_URL = `${API_URL}/categories`;
 
 //STATISTIC
 export const STATISTIC_URL = `${API_URL}/charts`;
