@@ -33,6 +33,7 @@ const FormContextSelect = (props: FormContextSelectProps) => {
             color={!!error ? 'danger' : 'primary'}
             variant="bordered"
             errorMessage={error?.message}
+            isInvalid={!!error?.message}
           />
         );
       }}

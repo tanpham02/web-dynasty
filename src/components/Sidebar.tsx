@@ -66,9 +66,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       <aside
         id="side-bar"
         ref={sidebar}
-        className={`absolute left-0 top-0 z-10 flex h-screen w-72.5 flex-col overflow-y-hidden bg-primary duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`absolute left-0 top-0 z-10 flex h-screen w-72.5 flex-col overflow-y-hidden bg-primary duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-[11px]">
@@ -144,9 +143,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 {menu.title}
                                 {menu.child.length > 0 && (
                                   <svg
-                                    className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
-                                      open && 'rotate-180'
-                                    }`}
+                                    className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
+                                      }`}
                                     width="20"
                                     height="20"
                                     viewBox="0 0 20 20"
@@ -163,9 +161,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 )}
                               </NavLink>
                               <div
-                                className={`translate transform overflow-hidden ${
-                                  !open && 'hidden'
-                                }`}
+                                className={`translate transform overflow-hidden ${!open && 'hidden'
+                                  }`}
                               >
                                 <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                                   {menu.child.map((subMenu: any, index) => (
@@ -193,11 +190,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         className="list-none h-[50px] overflow-hidden flex items-center -my-[3px]"
                       >
                         <div
-                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-2 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-20 hover:font-bold menu-item w-full transition-all ${
-                            pathname === `${menu.path}`
-                              ? 'bg-zinc-100 font-bold text-primary z-20'
-                              : 'font-normal cursor-pointer text-white'
-                          }`}
+                          className={`flex items-center gap-2.5 px-4 rounded-s-full py-2 hover:bg-zinc-100 hover:text-primary select-none relative hover:z-20 hover:font-bold menu-item w-full transition-all ${pathname === `${menu.path}`
+                            ? 'bg-zinc-100 font-bold text-primary z-20'
+                            : 'font-normal cursor-pointer text-white'
+                            }`}
                           onClick={() => {
                             setSidebarOpen(false);
                             navigate(menu.path);
@@ -235,3 +231,4 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 };
 
 export default Sidebar;
+

@@ -36,6 +36,7 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
           onValueChange={onChange}
           errorMessage={error?.message}
           ref={ref}
+          isInvalid={!!error?.message}
           classNames={{
             inputWrapper: 'bg-white !border hover:!border-primary',
             label: 'font-semibold',

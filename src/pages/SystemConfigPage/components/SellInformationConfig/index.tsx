@@ -16,21 +16,21 @@ const SellInformationConfig = () => {
       </CardHeader>
       <Divider />
       <CardBody className="p-4 space-y-4">
-        <FormContextInput name="feeShip" type="number" label="Phí giao hàng" />
+        <FormContextInput name="storeConfig.feeShip" type="number" label="Phí giao hàng" endContent="đ" />
         <FormContextInput
-          name="hotlineSupport.order"
+          name="storeConfig.hotlineSupport.order"
           label="Số điện thoại đặt hàng"
         />
         <FormContextInput
-          name="hotlineSupport.customerCareHotline"
+          name="storeConfig.hotlineSupport.customerCareHotline"
           label="Số điện thoại chăm sóc khách hàng"
         />
         <FormContextInput
-          name="transferContent"
+          name="storeConfig.transferContent"
           label="Nội dung thanh toán chuyển khoản"
         />
         <FormContextTextArea
-          name="reasonOrderCancel"
+          name="storeConfig.reasonOrderCancel"
           label="Lý do hủy đơn (phân tách nhau bởi dấu phẩy)"
           variant="bordered"
           classNames={{

@@ -15,6 +15,7 @@ import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
 import useAddress from '~/hooks/useAddress';
 import { StoreSettingModel } from '~/models/storeSetting';
+import { PATTERN } from '~/utils/regex';
 
 const StoreInformationConfig = () => {
   const { watch, getFieldState, setValue } =
@@ -51,10 +52,21 @@ const StoreInformationConfig = () => {
       <Divider />
       <CardBody className="p-4 space-y-4">
         <FormContextInput name="storeInformation.name" label="Tên cửa hàng" />
-        <FormContextInput name="storeInformation.email" label="Email" />
+        <FormContextInput name="storeInformation.email" label="Email" rules={{
+          pattern: {
+            value: PATTERN.EMAIL,
+            message: 'Email không hợp lệ!',
+          }
+        }} />
         <FormContextInput
           name="storeInformation.phoneNumber"
           label="Số điện thoại"
+          rules={{
+            pattern: {
+              value: PATTERN.PHONE,
+              message: 'Số điện thoại không hợp lệ!',
+            }
+          }}
         />
         <FormContextSelect
           items={cityOptions}

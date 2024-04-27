@@ -2,6 +2,7 @@ import { Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
 import Svg from 'react-inlinesvg';
 
 import EmailSvg from '~/assets/svg/email.svg';
+import { FormContextInput } from '~/components/NextUI/Form';
 
 const EmailServerConfig = () => {
   return (
@@ -13,8 +14,11 @@ const EmailServerConfig = () => {
         </span>
       </CardHeader>
       <Divider />
-      <CardBody className="gap-4 space-y-4">
-        
+      <CardBody className="gap-4">
+        <FormContextInput isRequired name="emailConfig.username" label="Email" />
+        <FormContextInput isRequired name="emailConfig.password" label="Mật khẩu" type='password' />
+        <FormContextInput isRequired name="emailConfig.mailServer" label="SMTP / TLS" />
+        <FormContextInput isRequired name="emailConfig.port" label="Port" />
       </CardBody>
     </Card>
   );

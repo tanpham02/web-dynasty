@@ -42,6 +42,7 @@ const FormContextDatePicker = <T extends FieldValues>(
           )}
           onChange={onChange}
           {...props}
+          isInvalid={!!error?.message}
           errorMessage={error?.message}
         />
       )}

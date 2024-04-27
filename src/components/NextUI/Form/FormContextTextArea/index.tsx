@@ -37,6 +37,7 @@ const FormContextTextArea = ({
           }}
           color={!!error ? 'danger' : 'primary'}
           variant="underlined"
+          isInvalid={!!error?.message}
           errorMessage={error?.message}
           {...props}
         />

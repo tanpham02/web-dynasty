@@ -9,7 +9,7 @@ export const SIGN_OUT_URL = `${API_URL}/auth/signout`;
 export const REFRESH_TOKEN_URL = `${API_URL}/auth/user/refresh-token`;
 
 //USER URL
-export const USER_URL = `${API_URL}/users`;
+export const USER_URL = `${API_URL}/staff`;
 export const FIND_USER_BY_CRITERIA_URL = `${USER_URL}/search`;
 
 //CUSTOMER URL
@@ -54,7 +54,7 @@ export const VOUCHER_URL = `${API_URL}/voucher`;
 //VOUCHER
 export const MATERIALS_URL = `${API_URL}/materials`;
 
-export const ATTRIBUTES_URL = `${API_URL}/product/attributes`;
+export const ATTRIBUTES_URL = `${API_URL}/products/attributes`;
 
 export const CATEGORY_URL = `${API_URL}/categories`;
 
@@ -66,16 +66,17 @@ export const MEMBERSHIP_URL = `${API_URL}/membership-level`;
 
 // BANK ACCOUNT
 export const BANK_ACCOUNT = `${API_URL}/bank-account`;
-export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR = 'https://api.vietqr.io/v2/banks';
+export const FIND_ALL_BANK_FROM_THIRD_PARTY_VIETQR =
+  'https://api.vietqr.io/v2/banks';
 
 // NHANH VN CONFIG
 export const NHANH_VN_CONFIG = `${API_URL}/nhanh-vn`;
 
 // TERM AND CONDITION
-export const TERM_AND_CONDITION_URL = `${API_URL}/term-and-policy`
+export const TERM_AND_CONDITION_URL = `${API_URL}/term-and-policy`;
 
 // STORE SYSTEM
-export const STORE_SYSTEM_URL = `${API_URL}/store-system`
+export const STORE_SYSTEM_URL = `${API_URL}/store-system`;
 
-// STORE SETTING 
-export const STORE_SETTING_URL = `${API_URL}/stores`
+// STORE SETTING
+export const STORE_SETTING_URL = `${API_URL}/stores`;

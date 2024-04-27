@@ -31,6 +31,7 @@ const BankConfig = () => {
             <span>{bank?.name}</span>
           </Box>
         ),
+        textValue: bank?.name
       }));
     },
   });
@@ -48,19 +49,19 @@ const BankConfig = () => {
         <FormContextSelect
           isRequired
           label="Tên ngân hàng"
-          name="bankCode"
+          name="bankAccountConfig.bankCode"
           items={banks || []}
           isLoading={isLoadingBanks}
         >
           {(bank: any) => (
-            <SelectItem key={bank.key} textValue={bank.label}>
+            <SelectItem key={bank.key} textValue={bank.textValue}>
               {bank.label}
             </SelectItem>
           )}
         </FormContextSelect>
-        <FormContextInput isRequired name="bankNumber" label="Số tài khoản" />
-        <FormContextInput isRequired name="bankName" label="Chủ tài khoản" />
-        <FormContextInput name="bankBranch" label="Chi nhánh" />
+        <FormContextInput isRequired name="bankAccountConfig.bankNumber" label="Số tài khoản" />
+        <FormContextInput isRequired name="bankAccountConfig.bankName" label="Chủ tài khoản" />
+        <FormContextInput name="bankAccountConfig.bankBranch" label="Chi nhánh" />
       </CardBody>
     </Card>
   );
