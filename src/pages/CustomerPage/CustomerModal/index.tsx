@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import Box from '~/components/Box';
-import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
 import { FormContextInput } from '~/components/NextUI/Form';
 import { CUSTOMER_TYPES } from '~/constants/customer';
@@ -50,9 +49,9 @@ const CustomerModal = ({
           await customerAddressService.getListCustomerAddressByCustomerId(
             customerId,
           );
-        const defaultAddress = customerAddress?.addressList?.filter(
-          (address) => address?.isDefault,
-        )?.[0];
+        const defaultAddress = customerAddress?.addressList?.find(
+          (item) => item.isDefault,
+        );
 
         reset({
           ...response,
@@ -62,16 +61,16 @@ const CustomerModal = ({
               : 'Ngưng hoạt động',
           customerType: response?.customerType
             ? CUSTOMER_TYPES?.[response?.customerType]?.label
-            : 'Không rõ',
+            : '',
           address:
             [
-              defaultAddress?.address,
+              defaultAddress?.location,
               defaultAddress?.ward,
               defaultAddress?.district,
               defaultAddress?.city,
             ]
               .filter((value) => Boolean(value))
-              ?.join(', ') || 'Không có',
+              ?.join(', ') || undefined,
         });
       }
     },
@@ -101,7 +100,7 @@ const CustomerModal = ({
     <CustomModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={'Cập nhật thông tin khách hàng'}
+      title="Thông tin khách hàng"
       okButtonText={isEdit ? 'Lưu thay đổi' : 'Thêm'}
       className="w-full max-w-[700px] pb-4"
       placement="center"

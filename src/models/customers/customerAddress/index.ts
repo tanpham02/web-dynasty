@@ -1,12 +1,14 @@
 export interface CustomerAddressItem {
+  location?: string;
   city?: string;
-  cityId?: number;
+  cityId?: string;
   district?: string;
-  districtId?: number;
+  districtId?: string;
   ward?: string;
-  wardId?: number;
+  wardId?: string;
+  latitude?: string;
+  longitude?: string;
   fullName?: string;
-  address?: string;
   phoneNumber?: string;
   isDefault?: boolean;
 }

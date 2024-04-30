@@ -137,19 +137,6 @@ const CustomerPage = () => {
               onOpenModal();
             }}
           />
-          {/* <ButtonIcon
-            title="Xóa khách hàng này"
-            icon={DeleteIcon}
-            status="danger"
-            showArrow
-            onClick={() => {
-              setModalConfirmDelete({
-                desc: 'Bạn có chắc chắn muốn xoá khách hàng này?',
-                id: customer._id,
-              });
-              onOpenModalConfirmDeleteUser();
-            }}
-          /> */}
         </div>
       ),
     },
