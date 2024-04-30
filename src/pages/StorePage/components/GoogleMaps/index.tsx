@@ -8,7 +8,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { StoreModel } from '~/models/store';
 
-const GoogleMaps = () => {
+const MapWithAMarker = () => {
   const { setValue, watch } = useFormContext<StoreModel>();
 
   const longitudeSelected = watch('longitude');
@@ -37,4 +37,4 @@ const GoogleMaps = () => {
   );
 };
 
-export default withScriptjs(withGoogleMap(GoogleMaps));
+export default withScriptjs(withGoogleMap(MapWithAMarker));

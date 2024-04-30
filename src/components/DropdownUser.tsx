@@ -81,7 +81,8 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         <span className="h-14 w-14 !rounded-full flex justify-center items-center">
           <Avatar
             src={
-              userInformation?.image && getFullImageUrl(userInformation.image)
+              userInformation?.image &&
+              getFullImageUrl(userInformation.image as string)
             }
             alt={`${userInformation?.fullName}`}
             isBordered={!!userInformation?.image}

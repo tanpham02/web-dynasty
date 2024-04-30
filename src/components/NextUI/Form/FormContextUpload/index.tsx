@@ -110,9 +110,9 @@ const FormContextUpload = ({
         ? getFullImageUrl(currentFile)
         : currentFile instanceof Blob
           ? URL.createObjectURL(currentFile)
-          : '';
+          : undefined;
     } catch (err) {
-      return '';
+      return undefined;
     }
   }, [currentFile]);
 

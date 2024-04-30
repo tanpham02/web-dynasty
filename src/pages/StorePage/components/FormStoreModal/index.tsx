@@ -1,10 +1,11 @@
 import { SelectItem } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Svg from 'react-inlinesvg';
 
+import QuestionIcon from '~/assets/svg/question.svg';
 import Box from '~/components/Box';
 import CustomModal from '~/components/NextUI/CustomModal';
 import { FormContextInput } from '~/components/NextUI/Form';
@@ -14,7 +15,6 @@ import useAddress from '~/hooks/useAddress';
 import { StoreModel } from '~/models/store';
 import { storeService } from '~/services/storeService';
 import GoogleMaps from '../GoogleMaps';
-import QuestionIcon from '~/assets/svg/question.svg';
 
 interface FormStoreModalProps {
   isOpen: boolean;

@@ -110,10 +110,6 @@ const UserModal = ({
             : [],
           wardId: response?.wardId ? ([String(response.wardId)] as any) : [],
           role: response?.role ? ([response.role] as any) : [],
-          image:
-            response?.image && typeof response.image === 'string'
-              ? getFullImageUrl(response.image)
-              : '',
         });
         setLocations({
           city: {
@@ -138,7 +134,7 @@ const UserModal = ({
     },
   );
 
-  const mappingVietNamLocation = useMemo(() => {
+  const vietNamLocation = useMemo(() => {
     if (vietnamLocations) {
       const newLocationsArray = Object.keys(vietnamLocations).map(
         (key) => vietnamLocations[key],
@@ -147,11 +143,11 @@ const UserModal = ({
     }
   }, [JSON.stringify(vietnamLocations)]);
 
-  const handleGetDistrictsFromVietnamLocation = useMemo(() => {
+  const districtsFromVietnamLocation = useMemo(() => {
     const cityIdWatchValue = watch('cityId')?.toString();
 
     if (cityIdWatchValue) {
-      const districtsMapping = mappingVietNamLocation?.find(
+      const districtsMapping = vietNamLocation?.find(
         (city) => city?.code === cityIdWatchValue,
       );
 
@@ -171,10 +167,10 @@ const UserModal = ({
     }
   }, [watch('cityId')]);
 
-  const handleGetWardsFromVietnamLocation = useMemo(() => {
+  const wardsFromVietnamLocation = useMemo(() => {
     const districtIdWatchValue = watch('districtId')?.toString();
     if (districtIdWatchValue) {
-      const districtsMapping = handleGetDistrictsFromVietnamLocation?.find(
+      const districtsMapping = districtsFromVietnamLocation?.find(
         (districts) =>
           districts?.code ===
           (Number(districtIdWatchValue) < 100
@@ -211,7 +207,7 @@ const UserModal = ({
     const wardIdWatchValue = watch('wardId')?.toString();
 
     if (wardIdWatchValue) {
-      const wards = handleGetWardsFromVietnamLocation?.find(
+      const wards = wardsFromVietnamLocation?.find(
         (ward) => ward?.code === wardIdWatchValue,
       );
       setLocations((prev) => ({
@@ -252,7 +248,7 @@ const UserModal = ({
       password: '',
       role: undefined,
       status: undefined,
-      image: null,
+      image: undefined,
       confirmPw: '',
     });
 
@@ -295,15 +291,15 @@ const UserModal = ({
         }
         const newData: Users = {
           ...data,
-          password:
-            isEdit && changePw && data?.newPassword
-              ? data.newPassword
-              : data.password,
           role: (data?.role?.[0] as UserRole) || UserRole.USER,
           birthday: data?.birthday
             ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD)
             : null,
         };
+
+        if (isEdit && changePw && data?.newPassword) {
+          newData.password = data.newPassword;
+        }
 
         delete newData?.confirmPw;
         delete newData?.oldPassword;
@@ -446,9 +442,9 @@ const UserModal = ({
               ))}
             </FormContextSelect>
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
-              {mappingVietNamLocation &&
-                mappingVietNamLocation.length > 0 &&
-                (mappingVietNamLocation.map((item) => (
+              {vietNamLocation &&
+                vietNamLocation.length > 0 &&
+                (vietNamLocation.map((item) => (
                   <SelectItem key={item?.code} value={item?.code}>
                     {item?.name}
                   </SelectItem>
@@ -457,10 +453,10 @@ const UserModal = ({
             <FormContextSelect
               name="districtId"
               label="Quận/Huyện"
-              isDisabled={!handleGetDistrictsFromVietnamLocation}
+              isDisabled={!districtsFromVietnamLocation}
               disallowEmptySelection
             >
-              {(handleGetDistrictsFromVietnamLocation as any[])?.map((item) => (
+              {(districtsFromVietnamLocation as any[])?.map((item) => (
                 <SelectItem key={Number(item?.code)} value={Number(item?.code)}>
                   {item?.name}
                 </SelectItem>
@@ -469,10 +465,10 @@ const UserModal = ({
             <FormContextSelect
               name="wardId"
               label="Phường/Xã"
-              isDisabled={!handleGetWardsFromVietnamLocation}
+              isDisabled={!wardsFromVietnamLocation}
               disallowEmptySelection
             >
-              {(handleGetWardsFromVietnamLocation as any[])?.map((item) => (
+              {(wardsFromVietnamLocation as any[])?.map((item) => (
                 <SelectItem key={Number(item?.code)} value={Number(item?.code)}>
                   {item?.name}
                 </SelectItem>
