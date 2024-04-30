@@ -1,15 +1,13 @@
 import STAFF_ICON from '~ assets/svg/staff.svg';
-import CART_ICON from '~/assets/svg/cart-shopping-sidebar.svg';
+import BANNER_ICON from '~/assets/svg/banner.svg';
 import USER_LIST_ICON from '~/assets/svg/customer.svg';
 import CATEGORY_ICON from '~/assets/svg/grid.svg';
 import MATERIAL_ICON from '~/assets/svg/material-sidebar.svg';
 import OVERVIEW_ICON from '~/assets/svg/overview.svg';
 import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
-import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
-import BANNER_ICON from '~/assets/svg/banner.svg';
-import STORE_ICON from '~/assets/svg/store.svg';
 import SETTING_ICON from '~/assets/svg/setting.svg';
-import TERM_AND_CONDITION_ICON from '~/assets/svg/term-and-condition.svg';
+import STORE_ICON from '~/assets/svg/store.svg';
+import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
 const routeSideBar = [

@@ -1,16 +1,14 @@
 import SVG from 'react-inlinesvg';
 
-import ButtonIcon from '~/components/ButtonIcon';
-import EditSvg from '~/assets/svg/edit.svg';
 import DeleteSvg from '~/assets/svg/delete.svg';
 import DragVerticalSvg from '~/assets/svg/drag-vertical.svg';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import { BannerItemProps } from './type';
+import EditSvg from '~/assets/svg/edit.svg';
+import ButtonIcon from '~/components/ButtonIcon';
 import { getFullImageUrl } from '~/utils/image';
+import { BannerItemProps } from './type';
 
 const BannerItem = ({
   name,
-  createdAt,
   url,
   onUpdate,
   onDelete,
