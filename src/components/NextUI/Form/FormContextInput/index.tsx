@@ -12,14 +12,17 @@ import Svg from 'react-inlinesvg';
 import EyeSlashIcon from '~/assets/svg/eye-slash.svg';
 import EyeIcon from '~/assets/svg/eye.svg';
 
-interface FormContextInputProps<T extends { [key: string]: keyof T }> extends InputProps {
+interface FormContextInputProps<T extends { [key: string]: keyof T }>
+  extends InputProps {
   name: FieldPath<T>;
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
     'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
   >;
 }
-const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>) => {
+const FormContextInput = <T extends FieldValues>(
+  props: FormContextInputProps<T>,
+) => {
   const { control } = useFormContext();
   const [isVisible, setIsVisible] = useState(false);
 
@@ -47,7 +50,11 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
           variant="bordered"
           endContent={
             props?.type === 'password' ? (
-              <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
                 {isVisible ? (
                   <Svg
                     src={EyeIcon}
@@ -65,7 +72,13 @@ const FormContextInput = <T extends FieldValues>(props: FormContextInputProps<T>
             )
           }
           {...props}
-          type={props?.type !== 'password' ? props.type : isVisible ? 'text' : 'password'}
+          type={
+            props?.type !== 'password'
+              ? props.type
+              : isVisible
+                ? 'text'
+                : 'password'
+          }
         />
       )}
     />

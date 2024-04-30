@@ -1,16 +1,18 @@
 import axios from 'axios';
+
+import { SignInType } from '~/models';
 import { REFRESH_TOKEN_URL, SIGNIN_URL, SIGN_OUT_URL } from '../apiUrl';
 import axiosService from '../axiosService';
 
 const authService = {
-  signIn: async (payload: FormData) => {
+  signIn: async (payload: SignInType) => {
     return axios({
-      url: SIGNIN_URL,
+      baseURL: SIGNIN_URL,
       method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       data: payload,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
       .then((res) => res.data)
       .catch((err) => {

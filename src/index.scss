@@ -31,7 +31,7 @@
 *,
 body,
 html {
-  font-family: 'Nunito', sans-serif !important;
+  font-family: "Nunito", sans-serif !important;
 }
 
 @layer components {
@@ -58,12 +58,12 @@ html {
   min-height: 350px;
 }
 
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
   display: none;
 }
 
 /* Fallback for other browsers */
-input[type='number'] {
+input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
   -webkit-appearance: textfield;
@@ -119,20 +119,14 @@ input::-webkit-inner-spin-button {
 .ant-btn.ant-btn-default:hover,
 .ant-pagination-item.ant-pagination-item-active,
 li.ant-pagination-item:hover,
-li.ant-pagination-prev:not(.ant-pagination-disabled)
-  button.ant-pagination-item-link:hover,
-li.ant-pagination-next:not(.ant-pagination-disabled)
-  button.ant-pagination-item-link:hover,
+li.ant-pagination-prev:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover,
+li.ant-pagination-next:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover,
 .ant-pagination-item.ant-pagination-item-active:hover {
   border: 1px solid #006a31;
   color: #006a31;
 }
-li.ant-pagination-prev:not(.ant-pagination-disabled)
-  button.ant-pagination-item-link:hover
-  span,
-li.ant-pagination-next:not(.ant-pagination-disabled)
-  button.ant-pagination-item-link:hover
-  span {
+li.ant-pagination-prev:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover span,
+li.ant-pagination-next:not(.ant-pagination-disabled) button.ant-pagination-item-link:hover span {
   color: #006a31 !important;
 }
 
@@ -142,9 +136,7 @@ li.ant-pagination-item:hover a,
   color: #006a31 !important;
 }
 
-.ant-radio-button-wrapper-checked:not(
-    .ant-radio-button-wrapper-disabled
-  )::before {
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
   background-color: #006a31;
 }
 
@@ -234,12 +226,8 @@ li.ant-pagination-item:hover a,
   height: 56px;
   color: #006a31 !important;
   border-radius: 12px !important;
-  border-color: hsl(
-    var(--nextui-default-200) /
-      var(--nextui-default-200-opacity, var(--tw-border-opacity))
-  ) !important;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  border-color: hsl(var(--nextui-default-200) / var(--nextui-default-200-opacity, var(--tw-border-opacity))) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
   overflow: auto !important;
 }
 .ant-picker input::placeholder {
@@ -259,8 +247,7 @@ li.ant-pagination-item:hover a,
 .ant-picker-range {
   overflow: hidden !important;
   height: 40px;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
 
 .form-upload-container:hover .form-upload-action {
@@ -269,4 +256,18 @@ li.ant-pagination-item:hover a,
 
 .menu-item:hover .menu-item-decoration {
   display: block !important;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  transition: background-color 5000s ease-in-out 0s;
 }

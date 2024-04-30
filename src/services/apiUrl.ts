@@ -4,7 +4,7 @@ import { BASE_URL } from '~/config';
 const API_URL = `${BASE_URL}/api`;
 
 // AUTHENTICATION URL
-export const SIGNIN_URL = `${API_URL}/auth/user/login`;
+export const SIGNIN_URL = `${API_URL}/auth/staff/login`;
 export const SIGN_OUT_URL = `${API_URL}/auth/signout`;
 export const REFRESH_TOKEN_URL = `${API_URL}/auth/user/refresh-token`;
 

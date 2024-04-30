@@ -28,6 +28,7 @@ import ExcelSvg from '~/assets/svg/excel.svg';
 import ImagePreview from '~/components/ImagePreview';
 import Progress from '~/components/Progess';
 import FormContextField from '../FormContextField';
+import { getFullImageUrl } from '~/utils/image';
 
 interface FormContextUploadProps {
   label?: string;
@@ -106,7 +107,7 @@ const FormContextUpload = ({
   const fileUrl = useMemo(() => {
     try {
       return typeof currentFile === 'string'
-        ? currentFile
+        ? getFullImageUrl(currentFile)
         : currentFile instanceof Blob
           ? URL.createObjectURL(currentFile)
           : '';

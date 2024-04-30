@@ -1,11 +1,13 @@
-import { Users } from '~/models/user';
-import axiosService from '../axiosService';
-import { FIND_USER_BY_CRITERIA_URL, USER_URL } from '../apiUrl';
-import { ListDataResponse, SearchParams } from '~/types';
 import qs from 'qs';
+import { Users, UsersRequestCheckMatchOldPassword } from '~/models/user';
+import { ListDataResponse, SearchParams } from '~/types';
+import { FIND_USER_BY_CRITERIA_URL, USER_URL } from '../apiUrl';
+import axiosService from '../axiosService';
 
 const userService = {
-  searchUserByCriteria: async (params: SearchParams): Promise<ListDataResponse<Users>> => {
+  searchUserByCriteria: async (
+    params: SearchParams,
+  ): Promise<ListDataResponse<Users>> => {
     return axiosService()({
       url: `${FIND_USER_BY_CRITERIA_URL}`,
       method: 'GET',
@@ -55,6 +57,21 @@ const userService = {
         throw error;
       });
   },
+
+  checkMatchOldPassword: async (
+    data: UsersRequestCheckMatchOldPassword,
+  ): Promise<Boolean> => {
+    return axiosService()({
+      method: 'POST',
+      baseURL: `${USER_URL}/check-match-old-password`,
+      data: data,
+    })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
+
   deleteUser: async (ids: string[]) => {
     return axiosService()({
       baseURL: `${USER_URL}`,
@@ -62,7 +79,8 @@ const userService = {
       params: {
         ids: ids,
       },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((error) => {

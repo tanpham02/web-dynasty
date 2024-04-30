@@ -21,6 +21,10 @@ export function subtractDays(date: Date, days: number | string) {
   return moment(date).subtract(days, 'days');
 }
 
+export function subtractMonths(date: Date, months: number | string) {
+  return moment(date).subtract(months, 'months');
+}
+
 export function addDays(date: Date, days: number | string) {
   return moment(date).add(days, 'days');
 }

@@ -8,9 +8,9 @@ import {
   useFormContext,
 } from 'react-hook-form';
 import {
-  DATE_FORMAT_DDMMYYYYTHHMMSS,
   DATE_FORMAT_YYYYMMDD,
   formatDate,
+  subtractMonths,
 } from '~/utils/date.utils';
 
 interface FormContextDatePickerProps<T extends { [key: string]: keyof T }>
@@ -38,7 +38,10 @@ const FormContextDatePicker = <T extends FieldValues>(
           color="primary"
           variant="bordered"
           value={parseDate(
-            formatDate(value || new Date(), DATE_FORMAT_YYYYMMDD),
+            formatDate(
+              value ? subtractMonths(value, 1).toString() : new Date(),
+              DATE_FORMAT_YYYYMMDD,
+            ),
           )}
           onChange={onChange}
           {...props}

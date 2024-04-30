@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+
 import { BASE_URL } from '~/config';
 import { LOCAL_STORAGE } from '../constants/local_storage';
 import { asyncLocalStorage } from '../utils/localStorage.utils';
@@ -36,11 +37,16 @@ const axiosService = () => {
   axiosOptions.interceptors.request.use(
     async (config: any) => {
       if (!checkTokenExp(accessToken)) {
-        refreshTokenRequest = refreshTokenRequest ? refreshTokenRequest : loadRefreshToken();
+        refreshTokenRequest = refreshTokenRequest
+          ? refreshTokenRequest
+          : loadRefreshToken();
         try {
           const response = await refreshTokenRequest;
           if (response) {
-            asyncLocalStorage.setLocalStorage(LOCAL_STORAGE.ACCESS_TOKEN, response.accessToken);
+            asyncLocalStorage.setLocalStorage(
+              LOCAL_STORAGE.ACCESS_TOKEN,
+              response.accessToken,
+            );
             config.headers = {
               'Content-Type': 'application/json',
               Authorization: 'Bearer ' + response?.data?.accessToken,

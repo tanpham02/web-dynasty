@@ -27,6 +27,13 @@ export interface Users {
   password?: string;
   role?: UserRole | UserRole[];
   status?: UserStatus;
-  image?: string | Blob;
+  image?: string | Blob | null;
   confirmPw?: string;
+  newPassword?: string;
+  oldPassword?: string;
+}
+
+export interface UsersRequestCheckMatchOldPassword {
+  _id?: string;
+  password?: string;
 }

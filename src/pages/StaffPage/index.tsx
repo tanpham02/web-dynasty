@@ -20,7 +20,7 @@ import { RootState } from '~/redux/store';
 import userService from '~/services/userService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
 import { getFullImageUrl } from '~/utils/image';
-import UserModal, { ModalType } from './UserModal';
+import UserModal, { ModalType } from './StaffModal';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
@@ -39,7 +39,7 @@ export interface ModalKey {
   user?: Users;
 }
 
-const UserListPage = () => {
+const StaffListPage = () => {
   const currentUserLogin = useSelector<RootState, Users>(
     (state) => state.userStore.user,
   );
@@ -370,7 +370,7 @@ const UserListPage = () => {
             ) : (
               ''
             )}
-            {!isHavePermission && (
+            {isHavePermission && (
               <Button
                 color="primary"
                 variant="shadow"
@@ -422,4 +422,4 @@ const UserListPage = () => {
   );
 };
 
-export default UserListPage;
+export default StaffListPage;

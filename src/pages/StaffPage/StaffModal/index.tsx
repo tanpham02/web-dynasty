@@ -1,35 +1,28 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { getProvincesWithDetail } from 'vietnam-provinces';
-import { DatePicker } from 'antd';
-import moment from 'moment';
 import { Button, SelectItem } from '@nextui-org/react';
-import { useDispatch } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useEffect, useMemo, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { getProvincesWithDetail } from 'vietnam-provinces';
 
-import { Users, UserRole } from '~/models/user';
+import Box from '~/components/Box';
+import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
 import {
   FormContextDatePicker,
   FormContextInput,
+  FormContextSelect,
+  FormContextUpload,
 } from '~/components/NextUI/Form';
-import Box from '~/components/Box';
-import { PATTERN } from '~/utils/regex';
-import Upload, { onChangeUploadState } from '~/components/Upload';
-import {
-  DATE_FORMAT_DDMMYYYY,
-  DATE_FORMAT_YYYYMMDD,
-  formatDate,
-} from '~/utils/date.utils';
-import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
-import { globalLoading } from '~/components/GlobalLoading';
-import userService from '~/services/userService';
 import { QUERY_KEY } from '~/constants/queryKey';
-import { getFullImageUrl } from '~/utils/image';
-import { AppDispatch } from '~/redux/store';
+import { UserRole, Users } from '~/models/user';
 import { getUserInfo } from '~/redux/slice/userSlice';
-import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
+import { AppDispatch } from '~/redux/store';
+import userService from '~/services/userService';
+import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
+import { getFullImageUrl } from '~/utils/image';
+import { PATTERN } from '~/utils/regex';
 
 const defaultUserValues: Users = {};
 
@@ -76,7 +69,6 @@ const UserModal = ({
   setModal,
 }: UserModalProps) => {
   const vietnamLocations = getProvincesWithDetail();
-  const [avatar, setAvatar] = useState<onChangeUploadState>();
   const { enqueueSnackbar } = useSnackbar();
   const [changePw, setChangePw] = useState<boolean>(false);
   const [locations, setLocations] = useState<Locations>({
@@ -91,14 +83,18 @@ const UserModal = ({
   });
 
   const {
-    control,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     reset,
     watch,
     handleSubmit,
     getFieldState,
     getValues,
+    setValue,
+    setError,
+    clearErrors,
   } = forms;
+
+  const phoneNumber = watch('phoneNumber');
 
   useQuery(
     [QUERY_KEY.USERS_DETAIL, userId],
@@ -228,6 +224,17 @@ const UserModal = ({
     }
   }, [watch('wardId')]);
 
+  useEffect(() => {
+    if (
+      !isEdit &&
+      phoneNumber &&
+      PATTERN.PHONE.test(phoneNumber) &&
+      !getFieldState('username').isDirty
+    ) {
+      setValue('username', phoneNumber);
+    }
+  }, [phoneNumber, isEdit]);
+
   const handleResetFormValue = () => {
     reset({
       birthday: '',
@@ -245,7 +252,7 @@ const UserModal = ({
       password: '',
       role: undefined,
       status: undefined,
-      image: '',
+      image: null,
       confirmPw: '',
     });
 
@@ -254,63 +261,92 @@ const UserModal = ({
     setLocations({});
   };
 
+  const handleShowOrHideInputChangePassword = () => setChangePw(!changePw);
+
   const onSubmit = async (data: Users) => {
     globalLoading.show();
     const formData = new FormData();
-    if (avatar) {
-      formData.append('file', avatar.srcRequest);
-    }
-    const newData: Users = {
-      ...data,
-      role: (data?.role?.[0] as UserRole) || UserRole.USER,
-      birthday: data?.birthday
-        ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD)
-        : null,
-      // role: (data.role && Array.isArray(data.role)
-      //   ? Array.from(data.role).join()
-      //   : data.role) as UserRole,
-    };
-
-    delete newData.cityId;
-    delete newData.city;
-    delete newData.districtId;
-    delete newData.district;
-    delete newData.wardId;
-    delete newData.ward;
-
-    if (
-      locations?.city &&
-      Object.keys(locations.city).length > 0 &&
-      !!locations.city?.id &&
-      !!locations.city?.name
-    ) {
-      newData.cityId = locations.city.id;
-      newData.city = locations.city?.name;
-    }
-
-    if (
-      locations?.district &&
-      Object.keys(locations.district).length > 0 &&
-      !!locations.district?.id &&
-      !!locations.district?.name
-    ) {
-      newData.districtId = locations.district?.id;
-      newData.district = locations.district?.name;
-    }
-
-    if (
-      locations?.ward &&
-      Object.keys(locations.ward).length > 0 &&
-      !!locations.ward?.id &&
-      !!locations.ward?.name
-    ) {
-      newData.wardId = locations.ward?.id;
-      newData.ward = locations.ward?.name;
-    }
-
-    formData.append('userInfo', JSON.stringify(newData));
 
     try {
+      const isMatchOldPassword = await userService.checkMatchOldPassword({
+        _id: data._id,
+        password: data.oldPassword,
+      });
+
+      if (data?.oldPassword && isEdit && !isMatchOldPassword) {
+        setError('oldPassword', {
+          message: 'Mật khẩu cũ không chính xác',
+          type: 'isMatchPassword',
+        });
+        return;
+      } else {
+        if (errors?.oldPassword) clearErrors('oldPassword');
+        if (
+          !isEdit &&
+          phoneNumber &&
+          watch('username') &&
+          !getFieldState('username').isDirty
+        ) {
+          setValue('username', phoneNumber, { shouldDirty: true });
+        }
+
+        if (data.image instanceof Blob) {
+          formData.append('file', data.image);
+        }
+        const newData: Users = {
+          ...data,
+          password:
+            isEdit && changePw && data?.newPassword
+              ? data.newPassword
+              : data.password,
+          role: (data?.role?.[0] as UserRole) || UserRole.USER,
+          birthday: data?.birthday
+            ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD)
+            : null,
+        };
+
+        delete newData?.confirmPw;
+        delete newData?.oldPassword;
+        delete newData?.newPassword;
+        delete newData.cityId;
+        delete newData.city;
+        delete newData.districtId;
+        delete newData.district;
+        delete newData.wardId;
+        delete newData.ward;
+
+        if (
+          locations?.city &&
+          Object.keys(locations.city).length > 0 &&
+          !!locations.city?.id &&
+          !!locations.city?.name
+        ) {
+          newData.cityId = locations.city.id;
+          newData.city = locations.city?.name;
+        }
+
+        if (
+          locations?.district &&
+          Object.keys(locations.district).length > 0 &&
+          !!locations.district?.id &&
+          !!locations.district?.name
+        ) {
+          newData.districtId = locations.district?.id;
+          newData.district = locations.district?.name;
+        }
+
+        if (
+          locations?.ward &&
+          Object.keys(locations.ward).length > 0 &&
+          !!locations.ward?.id &&
+          !!locations.ward?.name
+        ) {
+          newData.wardId = locations.ward?.id;
+          newData.ward = locations.ward?.name;
+        }
+
+        formData.append('staffInfo', JSON.stringify(newData));
+      }
       if (!isEdit) {
         await userService.createUser(formData);
       } else if (userId) {
@@ -326,14 +362,12 @@ const UserModal = ({
       });
       enqueueSnackbar({
         message: `${!isEdit ? 'Thêm' : 'Cập nhật'} nhân viên thành công!`,
-        autoHideDuration: 2000,
       });
     } catch (err) {
       console.log('🚀 ~ file: index.tsx:219 ~ onSubmit ~ err:', err);
       enqueueSnackbar({
         message: `${!isEdit ? 'Thêm' : 'Cập nhật'} nhân viên thất bại!`,
         variant: 'error',
-        autoHideDuration: 2000,
       });
     } finally {
       globalLoading.hide();
@@ -357,6 +391,7 @@ const UserModal = ({
           userId: undefined,
         });
       }}
+      isDismissable={false}
     >
       <FormProvider {...forms}>
         <Box className="grid grid-cols-1 xl:grid-cols-[3fr_7fr] gap-8">
@@ -377,7 +412,11 @@ const UserModal = ({
               isRequired
               label="Số điện thoại"
             />
-            <FormContextDatePicker<Users> name="birthday" label="Ngày sinh" />
+            <FormContextDatePicker<Users>
+              name="birthday"
+              label="Ngày sinh"
+              calendarWidth={300}
+            />
             <FormContextInput<Users>
               name="email"
               rules={{
@@ -391,7 +430,6 @@ const UserModal = ({
               type="email"
               label="E-mail"
             />
-
             <FormContextSelect
               isRequired
               name="role"
@@ -407,7 +445,6 @@ const UserModal = ({
                 </SelectItem>
               ))}
             </FormContextSelect>
-
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
               {mappingVietNamLocation &&
                 mappingVietNamLocation.length > 0 &&
@@ -417,7 +454,6 @@ const UserModal = ({
                   </SelectItem>
                 )) as any)}
             </FormContextSelect>
-
             <FormContextSelect
               name="districtId"
               label="Quận/Huyện"
@@ -430,7 +466,6 @@ const UserModal = ({
                 </SelectItem>
               ))}
             </FormContextSelect>
-
             <FormContextSelect
               name="wardId"
               label="Phường/Xã"
@@ -456,89 +491,67 @@ const UserModal = ({
               }}
               isDisabled={isEdit}
             />
-
-            {!isEdit && (
+            {(!isEdit || changePw) && (
               <>
                 <FormContextInput<Users>
                   isRequired
-                  name="password"
-                  label="Mật khẩu"
+                  name={`${changePw ? 'oldPassword' : 'password'}`}
+                  label={`${changePw ? 'Mật khẩu cũ' : 'Mật khẩu'}`}
                   type="password"
                   rules={{
-                    required: 'Vui lòng nhập mật khẩu',
+                    required: `Vui lòng nhập mật khẩu${changePw ? ' cũ' : ''}`,
                     pattern: {
                       value: PATTERN.PASSWORD,
-                      message:
-                        'Sai định dạng (Mật khẩu ít nhất 8 ký tự, bao gồm ít nhất một chữ số, một ký tự đặc biệt, một chứ cái thường và một chữ cái in hoa)',
+                      message: 'Mật khẩu của bạn phải ít nhất 6 ký tự',
                     },
                   }}
                 />
 
-                <FormContextInput<Users>
-                  isRequired
-                  name="confirmPw"
-                  label="Xác nhận mật khẩu"
-                  type="password"
-                  rules={{
-                    required: 'Vui lòng nhập mật khẩu xác nhận',
-                    validate: {
-                      confirmPw: (value) =>
-                        value !== watch('password')
-                          ? 'Mật khẩu và mật khẩu xác nhận không khớp'
-                          : true,
-                    },
-                  }}
-                />
-              </>
-            )}
-
-            {isEdit && (
-              <>
                 {changePw && (
-                  <>
-                    <FormContextInput<Users>
-                      isRequired
-                      name="password"
-                      label="Mật khẩu"
-                      type="password"
-                      rules={{
-                        required: 'Vui lòng nhập mật khẩu',
-                        pattern: {
-                          value: PATTERN.PASSWORD,
-                          message:
-                            'Sai định dạng (Mật khẩu ít nhất 8 ký tự, bao gồm ít nhất một chữ số, một ký tự đặc biệt, một chứ cái thường và một chữ cái in hoa)',
-                        },
-                      }}
-                    />
-
-                    <FormContextInput<Users>
-                      isRequired
-                      name="confirmPw"
-                      label="Xác nhận mật khẩu"
-                      type="password"
-                      rules={{
-                        required: 'Vui lòng nhập mật khẩu xác nhận',
-                        validate: {
-                          confirmPw: (value) =>
-                            value !== watch('password')
-                              ? 'Mật khẩu và mật khẩu xác nhận không khớp'
-                              : true,
-                        },
-                      }}
-                    />
-                  </>
+                  <FormContextInput<Users>
+                    isRequired
+                    name="newPassword"
+                    label="Mật khẩu mới"
+                    type="password"
+                    rules={{
+                      required: 'Vui lòng nhập mật khẩu mới',
+                      pattern: {
+                        value: PATTERN.PASSWORD,
+                        message: 'Mật khẩu của bạn phải ít nhất 6 ký tự',
+                      },
+                    }}
+                  />
                 )}
 
-                <Button
-                  onClick={() => {
-                    setChangePw(!changePw);
-                  }}
-                  radius="sm"
-                  className="bg-white border border-primary hover:text-primary"
-                >
-                  {`${changePw ? 'Huỷ' : 'Đổi mật khẩu'}`}
-                </Button>
+                {isEdit && (
+                  <FormContextInput<Users>
+                    isRequired
+                    name="confirmPw"
+                    label="Xác nhận mật khẩu"
+                    type="password"
+                    rules={{
+                      required: 'Vui lòng nhập mật khẩu xác nhận',
+                      validate: {
+                        confirmPw: (value) =>
+                          value !== watch(changePw ? 'newPassword' : 'password')
+                            ? `Mật khẩu${
+                                changePw ? ' mới' : ''
+                              } và mật khẩu xác nhận không khớp`
+                            : true,
+                      },
+                    }}
+                  />
+                )}
               </>
+            )}
+            {isEdit && (
+              <Button
+                onClick={handleShowOrHideInputChangePassword}
+                radius="sm"
+                className="bg-white border border-primary hover:text-primary"
+              >
+                {`${changePw ? 'Huỷ' : 'Đổi mật khẩu'}`}
+              </Button>
             )}
           </Box>
         </Box>
