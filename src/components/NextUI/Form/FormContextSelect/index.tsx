@@ -1,5 +1,10 @@
 import { Select, SelectProps } from '@nextui-org/react';
-import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
+import {
+  Controller,
+  FieldValues,
+  RegisterOptions,
+  useFormContext,
+} from 'react-hook-form';
 
 interface FormContextSelectProps extends SelectProps {
   name: string;
@@ -34,7 +39,9 @@ const FormContextSelect = (props: FormContextSelectProps) => {
             variant="bordered"
             errorMessage={error?.message}
             isInvalid={!!error?.message}
-          />
+          >
+            {props.children}
+          </Select>
         );
       }}
     />

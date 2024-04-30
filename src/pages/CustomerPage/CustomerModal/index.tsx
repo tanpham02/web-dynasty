@@ -17,7 +17,13 @@ export interface CustomerModalProps {
   isOpen?: boolean;
   onClose?(): void;
   onOpenChange?(): void;
-  setModal?({ isEdit, customerId }: { isEdit?: boolean; customerId?: string }): void;
+  setModal?({
+    isEdit,
+    customerId,
+  }: {
+    isEdit?: boolean;
+    customerId?: string;
+  }): void;
   onRefetch?(): Promise<any>;
   isEdit?: boolean;
   customerId?: string;
@@ -37,18 +43,23 @@ const CustomerModal = ({
   useQuery(
     [QUERY_KEY.CUSTOMERS, customerId],
     async () => {
-      globalLoading.show();
       if (customerId) {
-        const response = await customerService.getCustomerByCustomerID(customerId);
+        const response =
+          await customerService.getCustomerByCustomerID(customerId);
         const customerAddress =
-          await customerAddressService.getListCustomerAddressByCustomerId(customerId);
+          await customerAddressService.getListCustomerAddressByCustomerId(
+            customerId,
+          );
         const defaultAddress = customerAddress?.addressList?.filter(
           (address) => address?.isDefault,
         )?.[0];
 
         reset({
           ...response,
-          status: response?.status === CustomerStatus.ACTIVE ? 'Đang hoạt động' : 'Ngưng hoạt động',
+          status:
+            response?.status === CustomerStatus.ACTIVE
+              ? 'Đang hoạt động'
+              : 'Ngưng hoạt động',
           customerType: response?.customerType
             ? CUSTOMER_TYPES?.[response?.customerType]?.label
             : 'Không rõ',
@@ -63,7 +74,6 @@ const CustomerModal = ({
               ?.join(', ') || 'Không có',
         });
       }
-      globalLoading.hide();
     },
     {
       enabled: Boolean(customerId && isEdit),
@@ -105,12 +115,32 @@ const CustomerModal = ({
     >
       <FormProvider {...forms}>
         <Box className="space-y-4">
-          <FormContextInput<Customer> name="fullName" label="Họ và tên" isReadOnly />
-          <FormContextInput<Customer> name="phoneNumber" label="Số điện thoại" isReadOnly />
+          <FormContextInput<Customer>
+            name="fullName"
+            label="Họ và tên"
+            isReadOnly
+          />
+          <FormContextInput<Customer>
+            name="phoneNumber"
+            label="Số điện thoại"
+            isReadOnly
+          />
           <FormContextInput<Customer> name="email" label="E-mail" isReadOnly />
-          <FormContextInput<Customer> name="address" label="Địa chỉ" isReadOnly />
-          <FormContextInput<Customer> name="status" label="Trạng thái hoạt động" isReadOnly />
-          <FormContextInput<Customer> name="customerType" label="Nhóm khách hàng" isReadOnly />
+          <FormContextInput<Customer>
+            name="address"
+            label="Địa chỉ"
+            isReadOnly
+          />
+          <FormContextInput<Customer>
+            name="status"
+            label="Trạng thái hoạt động"
+            isReadOnly
+          />
+          <FormContextInput<Customer>
+            name="customerType"
+            label="Nhóm khách hàng"
+            isReadOnly
+          />
           <Button className="ml-auto block" onClick={onOpenChange}>
             Đóng
           </Button>

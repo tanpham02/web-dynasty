@@ -21,7 +21,6 @@ import { getUserInfo } from '~/redux/slice/userSlice';
 import { AppDispatch } from '~/redux/store';
 import userService from '~/services/userService';
 import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
-import { getFullImageUrl } from '~/utils/image';
 import { PATTERN } from '~/utils/regex';
 
 const defaultUserValues: Users = {};
