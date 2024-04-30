@@ -1,7 +1,7 @@
 import { SelectItem } from '@nextui-org/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
@@ -34,14 +34,18 @@ const CategoryModal = ({
   categoryId,
 }: CategoryModalProps) => {
   const forms = useForm<Category>({
-    defaultValues: { priority: 1, childrenCategory: {} },
+    defaultValues: { childrenCategory: {} },
   });
+
+  const [categoryAllData, setCategoryAllData] = useState<Category[]>();
 
   const {
     handleSubmit,
     formState: { isSubmitting },
     reset: resetFormValue,
     getFieldState,
+    setValue,
+    watch,
     control,
   } = forms;
 
@@ -56,7 +60,15 @@ const CategoryModal = ({
   useEffect(() => {
     if (categoryId && isEdit && isOpen) getCategoryDetail();
     else resetFormValue({ name: '', childrenCategory: { category: [] } });
+    getAllCategory();
   }, [isEdit, categoryId, isOpen]);
+
+  const getAllCategory = async () => {
+    const response = await categoryService.getAllCategory();
+    if (response) {
+      setCategoryAllData(response);
+    }
+  };
 
   const {
     data: categories,
@@ -67,6 +79,12 @@ const CategoryModal = ({
     async () => categoryService.getCategoryByCriteria({}),
     { enabled: isOpen },
   );
+
+  useEffect(() => {
+    if (categoryAllData && !isEdit) {
+      setValue('priority', categoryAllData.length + 1);
+    }
+  }, [categoryAllData, isEdit]);
 
   const getCategoryDetail = async () => {
     try {
@@ -293,6 +311,7 @@ const CategoryModal = ({
                           <Box className="font-bold flex-[2] text-center">
                             <FormContextInput
                               name={`childrenCategory.category.${index}.priority`}
+                              value={(index + 1) as any}
                               type="number"
                             />
                           </Box>

@@ -7,7 +7,7 @@ import {
 } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import DeleteIcon from '~/assets/svg/delete.svg';
 import EditIcon from '~/assets/svg/edit.svg';
@@ -171,6 +171,10 @@ const Categories = () => {
       refetchOnWindowFocus: false,
     },
   );
+
+  useEffect(() => {
+    if (!isOpenModal) setModal({ isEdit: false });
+  }, [isOpenModal]);
 
   const handleOpenModalEdit = (category: Category) => {
     setModal({ isEdit: true, categoryId: category?._id });

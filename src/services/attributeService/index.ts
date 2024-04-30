@@ -16,13 +16,10 @@ export const attributeService = {
         throw err;
       });
   },
-  createAttribute: async (data: FormData): Promise<Attribute> => {
+  createAttribute: async (data: Attribute): Promise<Attribute> => {
     return axiosService()({
       url: ATTRIBUTES_URL,
       method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       data,
     })
       .then((res) => res.data)
@@ -37,7 +34,8 @@ export const attributeService = {
       params: {
         ids,
       },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((err) => {
@@ -54,13 +52,13 @@ export const attributeService = {
         throw err;
       });
   },
-  updateAttributeById: async (id?: Key, data?: FormData): Promise<Attribute> => {
+  updateAttributeById: async (
+    id?: Key,
+    data?: Attribute,
+  ): Promise<Attribute> => {
     return axiosService()({
       url: `${ATTRIBUTES_URL}/${id}`,
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       data,
     })
       .then((res) => res.data)

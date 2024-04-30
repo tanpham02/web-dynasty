@@ -62,11 +62,8 @@ const AttributeModal = ({
 
   const onSubmit = async (data: Attribute) => {
     try {
-      const formData = new FormData();
-      formData.append('productAttributeInfo', JSON.stringify(data));
-      if (isEdit)
-        await attributeService.updateAttributeById(attributeId, formData);
-      else await attributeService.createAttribute(formData);
+      if (isEdit) await attributeService.updateAttributeById(attributeId, data);
+      else await attributeService.createAttribute(data);
       enqueueSnackbar(
         `${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`,
       );

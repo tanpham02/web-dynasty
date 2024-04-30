@@ -75,7 +75,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
       const formData = new FormData();
 
       if (data?.files && data.files instanceof Blob) {
-        formData.append('files', data.files);
+        formData.append('file', data.files);
         delete data.files;
       }
 

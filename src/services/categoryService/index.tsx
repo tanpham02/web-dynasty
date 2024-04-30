@@ -7,7 +7,19 @@ import { CATEGORY_URL } from '../apiUrl';
 import { Category } from '~/models/category';
 
 export const categoryService = {
-  getCategoryByCriteria: async (params: SearchParams): Promise<ListResponse<Category>> => {
+  getAllCategory: async (): Promise<Category[]> => {
+    return axiosService()({
+      url: `${CATEGORY_URL}/search-all`,
+      method: 'GET',
+    })
+      .then((res) => res.data)
+      .catch((err) => {
+        throw err;
+      });
+  },
+  getCategoryByCriteria: async (
+    params: SearchParams,
+  ): Promise<ListResponse<Category>> => {
     return axiosService()({
       url: `${CATEGORY_URL}/search`,
       method: 'GET',
@@ -51,7 +63,8 @@ export const categoryService = {
       url: CATEGORY_URL,
       method: 'DELETE',
       params: { ids },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((err) => {
