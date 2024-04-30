@@ -1,12 +1,9 @@
 import { BaseModel } from './base';
-export interface StoreConfigModel extends BaseModel {
-  feeShip?: number;
+export interface StoreSettingModel extends BaseModel {
+  feeShip?: string;
   transferContent?: string;
   reasonOrderCancel?: string[];
-  hotlineSupport?: {
-    order?: string;
-    customerCareHotline?: string;
-  };
+  hotline?: string;
 }
 
 export interface FrequentlyAskedQuestionsModel extends BaseModel {
@@ -31,7 +28,7 @@ export interface StoreInformationModel extends LocationBaseModel, BaseModel {
 }
 
 export interface BankAccountConfigModel extends BaseModel {
-  bankCode?: string;
+  bankCode?: string | string[];
   bankNumber?: string;
   bankName?: string;
   bankBranch?: string;
@@ -45,13 +42,19 @@ export interface EmailConfigModel extends BaseModel {
   isDefault: boolean; // false
 }
 
-export interface StoreSettingModel extends BaseModel {
-  storeConfig?: StoreConfigModel;
+export interface StoreConfigModel extends BaseModel {
+  storeSetting?: StoreSettingModel;
   storeInformation?: StoreInformationModel;
   faqs?: FrequentlyAskedQuestionsModel[];
   termAndPolicy?: TermAndPolicyModel;
   emailConfig?: EmailConfigModel;
   bankAccountConfig?: BankAccountConfigModel;
+
+  cancelReasons?: {
+    reason: string;
+  }[];
+
+  [key: string]: any;
 }
 
 export interface LocationBaseModel {

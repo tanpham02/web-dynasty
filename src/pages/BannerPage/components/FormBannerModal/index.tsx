@@ -16,6 +16,7 @@ interface FormBannerModalProps {
   onClose(): void;
   bannerId?: string;
   refetchData(): Promise<any>;
+  lengthBanners?: number;
 }
 
 const FormBannerModal = ({
@@ -23,6 +24,7 @@ const FormBannerModal = ({
   onClose,
   bannerId,
   refetchData,
+  lengthBanners = 0,
 }: FormBannerModalProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -35,6 +37,8 @@ const FormBannerModal = ({
   const {
     handleSubmit,
     reset,
+    getValues,
+
     formState: { isSubmitting },
   } = formMethods;
 
@@ -46,9 +50,10 @@ const FormBannerModal = ({
       const bannerResponse = await bannerService.getBannerById(bannerId);
       reset({
         ...bannerResponse,
-        banner: bannerResponse?.url
-          ? getFullImageUrl(bannerResponse.url)
-          : undefined,
+        banner:
+          typeof bannerResponse?.url === 'string'
+            ? getFullImageUrl(bannerResponse.url)
+            : undefined,
       });
     },
     enabled: Boolean(bannerId),
@@ -56,14 +61,14 @@ const FormBannerModal = ({
 
   useEffect(() => {
     if (!isOpen)
-      reset({ banner: '', name: '', redirect: '', priority: undefined });
+      reset({ banner: undefined, name: '', redirect: '', priority: undefined });
   }, [isOpen]);
 
   const handleCreateOrUpdateBanner = async (data: Banner) => {
     try {
       const formData = new FormData();
       if (data?.banner && data.banner instanceof Blob) {
-        formData.append('files', data.banner);
+        formData.append('file', data.banner);
         delete data.banner;
       }
       formData.append('bannerInfo', JSON.stringify(data));
@@ -123,6 +128,9 @@ const FormBannerModal = ({
               name="priority"
               label="Thứ tự"
               type="number"
+              value={
+                (!bannerId ? lengthBanners + 1 : getValues('priority')) as any
+              }
               rules={{
                 min: {
                   value: 1,

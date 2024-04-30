@@ -5,7 +5,9 @@ import { MATERIALS_URL } from '../apiUrl';
 import { Key } from 'react';
 
 const materialService = {
-  searchPagination: (params: SearchParams): Promise<ListDataResponse<Material>> => {
+  searchPagination: (
+    params: SearchParams,
+  ): Promise<ListDataResponse<Material>> => {
     return axiosService()({
       method: 'GET',
       baseURL: `${MATERIALS_URL}/search`,
@@ -16,13 +18,10 @@ const materialService = {
         throw err;
       });
   },
-  create: (data: FormData): Promise<Material> => {
+  create: (data: Material): Promise<Material> => {
     return axiosService()({
       method: 'POST',
       baseURL: `${MATERIALS_URL}`,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       data,
     })
       .then((res) => res.data)
@@ -30,13 +29,10 @@ const materialService = {
         throw err;
       });
   },
-  update: (id?: string, data?: FormData): Promise<Material> => {
+  update: (id?: string, data?: Material): Promise<Material> => {
     return axiosService()({
       method: 'PATCH',
       baseURL: `${MATERIALS_URL}/${id}`,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       data,
     })
       .then((res) => res.data)

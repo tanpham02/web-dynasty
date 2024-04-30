@@ -15,10 +15,14 @@ const EmailServerConfig = () => {
       </CardHeader>
       <Divider />
       <CardBody className="gap-4">
-        <FormContextInput isRequired name="emailConfig.username" label="Email" />
-        <FormContextInput isRequired name="emailConfig.password" label="Mật khẩu" type='password' />
-        <FormContextInput isRequired name="emailConfig.mailServer" label="SMTP / TLS" />
-        <FormContextInput isRequired name="emailConfig.port" label="Port" />
+        <FormContextInput name="emailConfig.username" label="Email" />
+        <FormContextInput
+          name="emailConfig.password"
+          label="Mật khẩu"
+          type="password"
+        />
+        <FormContextInput name="emailConfig.mailServer" label="SMTP / TLS" />
+        <FormContextInput name="emailConfig.port" label="Port" />
       </CardBody>
     </Card>
   );

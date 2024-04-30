@@ -108,14 +108,10 @@ const MaterialModal = ({
     }
 
     try {
-      const formData = new FormData();
-
-      formData.append('materialInfo', JSON.stringify(data));
-
       if (isEdit) {
-        await materialService.update(materialId, formData);
+        await materialService.update(materialId, data);
       } else {
-        await materialService.create(formData);
+        await materialService.create(data);
       }
 
       enqueueSnackbar(

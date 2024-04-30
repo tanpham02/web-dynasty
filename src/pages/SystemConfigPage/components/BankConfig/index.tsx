@@ -31,7 +31,7 @@ const BankConfig = () => {
             <span>{bank?.name}</span>
           </Box>
         ),
-        textValue: bank?.name
+        textValue: bank?.name,
       }));
     },
   });
@@ -47,7 +47,6 @@ const BankConfig = () => {
       <Divider />
       <CardBody className="p-4 space-y-4">
         <FormContextSelect
-          isRequired
           label="Tên ngân hàng"
           name="bankAccountConfig.bankCode"
           items={banks || []}
@@ -59,9 +58,18 @@ const BankConfig = () => {
             </SelectItem>
           )}
         </FormContextSelect>
-        <FormContextInput isRequired name="bankAccountConfig.bankNumber" label="Số tài khoản" />
-        <FormContextInput isRequired name="bankAccountConfig.bankName" label="Chủ tài khoản" />
-        <FormContextInput name="bankAccountConfig.bankBranch" label="Chi nhánh" />
+        <FormContextInput
+          name="bankAccountConfig.bankNumber"
+          label="Số tài khoản"
+        />
+        <FormContextInput
+          name="bankAccountConfig.bankName"
+          label="Chủ tài khoản"
+        />
+        <FormContextInput
+          name="bankAccountConfig.bankBranch"
+          label="Chi nhánh"
+        />
       </CardBody>
     </Card>
   );

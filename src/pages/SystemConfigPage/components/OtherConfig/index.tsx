@@ -20,17 +20,18 @@ import {
   FormContextInput,
 } from '~/components/NextUI/Form';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
-import { StoreSettingModel } from '~/models/storeSetting';
+import { StoreConfigModel } from '~/models/storeSetting';
 
 const enum TabKeys {
   FAQS = 'faqs',
   DELIVERY_POLICY = 'deliveryPolicy',
   PRIVATE_POLICY = 'privatePolicy',
   TERM_AND_CONDITION = 'termAndCondition',
+  CANCEL_REASON = 'cancelReason',
 }
 
 const FAQsTab = () => {
-  const { watch, control } = useFormContext<StoreSettingModel>();
+  const { control } = useFormContext<StoreConfigModel>();
 
   const {
     fields: faqsData,
@@ -41,21 +42,19 @@ const FAQsTab = () => {
     name: 'faqs',
   });
 
-  const currentFaqsConfig = watch('faqs');
-
   return (
     <Box>
-      {Array.isArray(currentFaqsConfig) && currentFaqsConfig.length > 0 ? (
-        faqsData?.map((faqs, index) => (
+      {faqsData.length > 0 ? (
+        faqsData?.map((_faqs, index) => (
           <Box
-            key={faqs?.id}
+            key={index}
             className="space-y-2 border border-zinc-200 rounded-lg relative"
           >
             <Box
               onClick={() => removeFaqs(index)}
               className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 cursor-pointer"
             >
-              <Svg src={CloseSvg} className="w-5 h-5 text-danger" />
+              <Svg src={CloseSvg} className="w-6 h-6 text-danger" />
             </Box>
             <FormContextInput
               name={`faqs.${index}.question`}
@@ -104,15 +103,65 @@ const FAQsTab = () => {
   );
 };
 
+const CancelReasonTab = () => {
+  const { control } = useFormContext<StoreConfigModel>();
+  const {
+    fields: cancelReasonsData,
+    append: appendNewReason,
+    remove: removeReason,
+  } = useFieldArray<StoreConfigModel>({
+    control,
+    name: 'cancelReasons',
+  });
+
+  return (
+    <Box>
+      {cancelReasonsData.length > 0 ? (
+        cancelReasonsData?.map((_reason, index) => (
+          <Box
+            key={index}
+            className="space-y-2 mb-2 border border-zinc-200 rounded-lg relative"
+          >
+            <Box
+              onClick={() => removeReason(index)}
+              className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 cursor-pointer"
+            >
+              <Svg src={CloseSvg} className="w-6 h-6 text-danger" />
+            </Box>
+            <FormContextTextArea
+              variant="bordered"
+              name={`cancelReasons.${index}.reason`}
+              size="sm"
+              minRows={2}
+              label={`Lý do ${index + 1}`}
+              classNames={{
+                inputWrapper: '!border-none',
+              }}
+            />
+          </Box>
+        ))
+      ) : (
+        <Empty description="Chưa có lý do nào" />
+      )}
+      <Button
+        size="sm"
+        className="w-fit col-span-3 mt-4"
+        onClick={() => appendNewReason({ reason: '' })}
+      >
+        Thêm lý do
+      </Button>
+    </Box>
+  );
+};
+
 const OtherConfig = () => {
   const [tabKeys, setTabKeys] = useState<TabKeys | string | number>(
     TabKeys.FAQS,
   );
 
-  console.log('key:', tabKeys);
-
   const renderCardBody = useMemo(() => {
     if (tabKeys === TabKeys.FAQS) return <FAQsTab />;
+    if (tabKeys === TabKeys.CANCEL_REASON) return <CancelReasonTab />;
     else
       return (
         <FormContextCKEditor key={tabKeys} name={`termAndPolicy.${tabKeys}`} />
@@ -131,7 +180,8 @@ const OtherConfig = () => {
           aria-label="Tabs sizes"
         >
           <Tab key={TabKeys.FAQS} title="Câu hỏi thường gặp" />
-          <Tab key={TabKeys.DELIVERY_POLICY} title="Chính sách vận chuyển" />
+          <Tab key={TabKeys.CANCEL_REASON} title="Lý do huỷ đơn" />
+          <Tab key={TabKeys.DELIVERY_POLICY} title="Chính sách giao hàng" />
           <Tab key={TabKeys.PRIVATE_POLICY} title="Chính sách bảo mật" />
           <Tab
             key={TabKeys.TERM_AND_CONDITION}
@@ -142,7 +192,7 @@ const OtherConfig = () => {
       <Divider />
       <CardBody
         className={`p-4 ${
-          tabKeys === TabKeys.FAQS && 'grid grid-cols-3 gap-4'
+          tabKeys === TabKeys.FAQS && 'grid grid-cols-1 gap-4'
         }`}
       >
         {renderCardBody}

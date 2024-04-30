@@ -26,7 +26,7 @@ const BannerItem = ({
         <img
           src={getFullImageUrl(url)}
           loading="lazy"
-          className={` aspect-video object-cover transition-all rounded-lg ${
+          className={`aspect-video object-cover transition-all rounded-lg ${
             isDragging ? 'w-[5%]' : 'w-1/6'
           }`}
         />
@@ -35,11 +35,11 @@ const BannerItem = ({
         <span className="text-zinc-700 text-base line-clamp-1 font-bold">
           {name}
         </span>
-        {createdAt && (
+        {/* {createdAt && (
           <span className="text-zinc-500 text-[13px] line-clamp-1 font-medium">
             {formatDate(createdAt, DATE_FORMAT_DDMMYYYY)}
           </span>
-        )}
+        )} */}
       </div>
       <div className="space-x-2 mr-4">
         <ButtonIcon

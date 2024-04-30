@@ -35,6 +35,7 @@ const FormContextTextArea = ({
             inputWrapper: 'border-b',
             label: 'font-semibold',
           }}
+          className="font-semibold"
           color={!!error ? 'danger' : 'primary'}
           variant="underlined"
           isInvalid={!!error?.message}

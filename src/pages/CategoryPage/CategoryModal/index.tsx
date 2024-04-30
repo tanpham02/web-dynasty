@@ -1,5 +1,5 @@
 import { SelectItem } from '@nextui-org/react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -45,7 +45,6 @@ const CategoryModal = ({
     reset: resetFormValue,
     getFieldState,
     setValue,
-    watch,
     control,
   } = forms;
 

@@ -1,4 +1,11 @@
-import { Button, Card, CardBody, CardHeader, Divider, SelectItem } from '@nextui-org/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  SelectItem,
+} from '@nextui-org/react';
 import Svg from 'react-inlinesvg';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useEffect, useMemo } from 'react';
@@ -29,7 +36,12 @@ const OrderFormPage = () => {
   }, [districtId]);
 
   const cities = useMemo(
-    () => getProvinces().map((city) => ({ key: city.code, value: city.code, label: city.name })),
+    () =>
+      getProvinces().map((city) => ({
+        key: city.code,
+        value: city.code,
+        label: city.name,
+      })),
     [],
   );
 
@@ -80,8 +92,17 @@ const OrderFormPage = () => {
                   required: 'Vui lòng nhập tên khách hàng!',
                 }}
               />
-              <FormContextInput<Order> isRequired name="phoneNumber" label="Số điện thoại" />
-              <FormContextSelect isRequired name="cityId" label="Tỉnh / Thành phố" items={cities}>
+              <FormContextInput<Order>
+                isRequired
+                name="phoneNumber"
+                label="Số điện thoại"
+              />
+              <FormContextSelect
+                isRequired
+                name="cityId"
+                label="Tỉnh / Thành phố"
+                items={cities}
+              >
                 {(city: any) => (
                   <SelectItem key={city.key} textValue={city.label}>
                     {city.label}
@@ -106,7 +127,9 @@ const OrderFormPage = () => {
                 name="wardId"
                 items={wards}
                 label="Phường / Xã"
-                isDisabled={!(Array.isArray(districtId) && districtId.length > 0)}
+                isDisabled={
+                  !(Array.isArray(districtId) && districtId.length > 0)
+                }
               >
                 {(ward: any) => (
                   <SelectItem key={ward.key} textValue={ward.label}>

@@ -1,5 +1,19 @@
-
-import { AttributePage, BannerPage, CategoryPage, CustomerPage, MaterialPage, OrderFormPage, OrderPage, OverviewPage, ProductFormPage, ProductPage, SignInPage, SystemConfigPage, StorePage, TermAndConditionPage, UserPage } from "~/pages";
+import {
+  AttributePage,
+  BannerPage,
+  CategoryPage,
+  CustomerPage,
+  MaterialPage,
+  OrderFormPage,
+  OrderPage,
+  OverviewPage,
+  ProductFormPage,
+  ProductPage,
+  SignInPage,
+  StorePage,
+  SystemConfigPage,
+  UserPage,
+} from '~/pages';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
 const privateRoutes = [
@@ -77,12 +91,6 @@ const privateRoutes = [
     title: 'Danh sách banner quảng cáo',
   },
   {
-    key: ROUTER_KEY.TERM_AND_CONDITION,
-    path: PATH_NAME.TERM_AND_CONDITION,
-    component: TermAndConditionPage,
-    title: 'Chính sách và điều khoản',
-  },
-  {
     key: ROUTER_KEY.STORE_LIST,
     path: PATH_NAME.STORE_LIST,
     component: StorePage,
@@ -106,4 +114,3 @@ const publicRoutes = [
 ];
 
 export { privateRoutes, publicRoutes };
-

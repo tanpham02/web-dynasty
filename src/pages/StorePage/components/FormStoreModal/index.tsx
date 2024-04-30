@@ -25,7 +25,7 @@ interface FormStoreModalProps {
 
 const initFormValue: StoreModel = {
   name: '',
-  phone: '',
+  phoneNumber: '',
   cityId: '',
   districtId: '',
   wardId: '',
@@ -116,7 +116,6 @@ const FormStoreModal = ({
 
   const createOrUpdateStore = async (data: StoreModel) => {
     try {
-      const formData = new FormData();
       const dataSubmit: StoreModel = {
         ...data,
         cityId:
@@ -137,13 +136,10 @@ const FormStoreModal = ({
       };
 
       if (storeId) {
-        formData.append('storeSystemInfo', JSON.stringify(dataSubmit));
-
-        await storeService.updateById(storeId, formData);
+        await storeService.updateById(storeId, dataSubmit);
         enqueueSnackbar('Cập nhật thông tin cửa hàng thành công!');
       } else {
-        formData.append('storeSystemInfo', JSON.stringify(dataSubmit));
-        await storeService.createNew(formData);
+        await storeService.createNew(dataSubmit);
         enqueueSnackbar('Thêm cửa hàng thành công!');
       }
       await refetchData();
@@ -183,8 +179,8 @@ const FormStoreModal = ({
             />
             <FormContextInput
               isRequired
-              name="phone"
-              label="Số điện thoại!"
+              name="phoneNumber"
+              label="Số điện thoại"
               rules={{
                 required: 'Vui lòng nhập số điện thoại cửa hàng!',
               }}

@@ -9,8 +9,8 @@ import {
   DroppableProvided,
   DroppableStateSnapshot,
 } from 'react-beautiful-dnd';
-
 import { useSnackbar } from 'notistack';
+
 import { globalLoading } from '~/components/GlobalLoading';
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
@@ -194,6 +194,7 @@ const BannerPage = () => {
         }}
         bannerId={bannerUpdateId}
         refetchData={refetchBanner}
+        lengthBanners={banners?.length}
       />
       <ModalConfirmDelete
         {...modalDelete}

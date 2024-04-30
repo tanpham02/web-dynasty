@@ -8,7 +8,7 @@ import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
 import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
 import BANNER_ICON from '~/assets/svg/banner.svg';
 import STORE_ICON from '~/assets/svg/store.svg';
-import SETTING_ICON from "~/assets/svg/setting.svg"
+import SETTING_ICON from '~/assets/svg/setting.svg';
 import TERM_AND_CONDITION_ICON from '~/assets/svg/term-and-condition.svg';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
@@ -76,20 +76,20 @@ const routeSideBar = [
       },
     ],
   },
-  {
-    key: ROUTER_KEY.ORDER,
-    path: PATH_NAME.ORDER,
-    title: 'Đơn hàng',
-    menu: [
-      {
-        key: ROUTER_KEY.ORDER,
-        path: PATH_NAME.ORDER,
-        title: 'Quản lí đơn hàng',
-        icon: CART_ICON,
-        child: [],
-      },
-    ],
-  },
+  // {
+  //   key: ROUTER_KEY.ORDER,
+  //   path: PATH_NAME.ORDER,
+  //   title: 'Đơn hàng',
+  //   menu: [
+  //     {
+  //       key: ROUTER_KEY.ORDER,
+  //       path: PATH_NAME.ORDER,
+  //       title: 'Quản lí đơn hàng',
+  //       icon: CART_ICON,
+  //       child: [],
+  //     },
+  //   ],
+  // },
   {
     key: ROUTER_KEY.MATERIAL,
     path: PATH_NAME.MATERIAL,
@@ -121,13 +121,6 @@ const routeSideBar = [
         path: PATH_NAME.BANNER,
         title: 'Banner quảng cáo',
         icon: BANNER_ICON,
-        child: [],
-      },
-      {
-        key: ROUTER_KEY.TERM_AND_CONDITION,
-        path: PATH_NAME.TERM_AND_CONDITION,
-        title: 'Chính sách và điều khoản',
-        icon: TERM_AND_CONDITION_ICON,
         child: [],
       },
     ],

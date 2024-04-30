@@ -38,7 +38,7 @@ const StorePage = () => {
       align: 'center',
       name: 'Số điện thoại',
       render: (store: StoreModel) => (
-        <span className="line-clamp-1">{store?.phone}</span>
+        <span className="line-clamp-1">{store?.phoneNumber}</span>
       ),
     },
     {
