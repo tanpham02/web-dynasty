@@ -11,6 +11,7 @@ import { QUERY_KEY } from '~/constants/queryKey';
 import { Customer, CustomerStatus, CustomerType } from '~/models/customers';
 import customerService from '~/services/customerService';
 import customerAddressService from '~/services/customerService/customerAddressService';
+import { getProvinces, getDistricts, getWards } from "vietnam-provinces"
 
 export interface CustomerModalProps {
   isOpen?: boolean;
@@ -49,9 +50,16 @@ const CustomerModal = ({
           await customerAddressService.getListCustomerAddressByCustomerId(
             customerId,
           );
-        const defaultAddress = customerAddress?.addressList?.find(
-          (item) => item.isDefault,
-        );
+        const defaultAddress = customerAddress?.addressList?.sort((a, b) => Number(a?.isDefault) - Number(b?.isDefault))?.[0]
+        let addressName = ''
+
+        if (defaultAddress && Object.keys(defaultAddress)) {
+          const city = getProvinces().find(city => city.code == defaultAddress?.cityId)
+          const district = getDistricts(defaultAddress?.districtId)?.find(district => district?.code == defaultAddress?.districtId)
+          const ward = getWards(defaultAddress?.wardId)?.find(ward => ward?.code == defaultAddress?.wardId)
+
+          addressName = [city, district, ward, defaultAddress?.location]?.filter(value => Boolean(value))?.join(", ")
+        }
 
         reset({
           ...response,
@@ -62,15 +70,7 @@ const CustomerModal = ({
           customerType: response?.customerType
             ? CUSTOMER_TYPES?.[response?.customerType]?.label
             : '',
-          address:
-            [
-              defaultAddress?.location,
-              defaultAddress?.ward,
-              defaultAddress?.district,
-              defaultAddress?.city,
-            ]
-              .filter((value) => Boolean(value))
-              ?.join(', ') || undefined,
+          address: addressName
         });
       }
     },
@@ -82,7 +82,7 @@ const CustomerModal = ({
 
   useEffect(() => {
     if (!isOpen) handleResetFormValue();
-  }, []);
+  }, [isOpen]);
 
   const handleResetFormValue = () => {
     reset({
@@ -124,7 +124,7 @@ const CustomerModal = ({
             label="Số điện thoại"
             isReadOnly
           />
-          <FormContextInput<Customer> name="email" label="E-mail" isReadOnly />
+          <FormContextInput<Customer> name="email" label="Email" isReadOnly />
           <FormContextInput<Customer>
             name="address"
             label="Địa chỉ"

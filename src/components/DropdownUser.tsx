@@ -93,7 +93,7 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
                 {currentUserLogin?.fullName
                   ? currentUserLogin.fullName?.charAt(0)
                   : currentUserLogin?.username &&
-                    currentUserLogin.username?.charAt(0)?.toUpperCase()}
+                  currentUserLogin.username?.charAt(0)?.toUpperCase()}
               </Box>
             }
             className="h-10 w-10 object-cover !rounded-full"
@@ -101,9 +101,8 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         </span>
 
         <svg
-          className={`hidden fill-black sm:block ${
-            dropdownOpen ? 'rotate-180' : ''
-          }`}
+          className={`hidden fill-black sm:block ${dropdownOpen ? 'rotate-180' : ''
+            }`}
           width="12"
           height="8"
           viewBox="0 0 12 8"
@@ -124,9 +123,8 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-2 flex w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
-          dropdownOpen === true ? 'block' : 'hidden'
-        }`}
+        className={`absolute right-0 mt-2 flex w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'
+          }`}
       >
         <button
           onClick={handleLogOut}

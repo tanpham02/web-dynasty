@@ -9,18 +9,18 @@ import EyeIcon from '~/assets/svg/eye.svg';
 interface CustomImageProps extends ImageProps {
   isPreview?: boolean;
   placement?:
-    | 'top'
-    | 'bottom'
-    | 'right'
-    | 'left'
-    | 'top-start'
-    | 'top-end'
-    | 'bottom-start'
-    | 'bottom-end'
-    | 'left-start'
-    | 'left-end'
-    | 'right-start'
-    | 'right-end';
+  | 'top'
+  | 'bottom'
+  | 'right'
+  | 'left'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left-start'
+  | 'left-end'
+  | 'right-start'
+  | 'right-end';
   fallbackSrc?: string;
 }
 
@@ -56,7 +56,7 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
         classNames={{
           wrapper:
             'absolute top-0 left-0 !w-full !h-full aspect-square flex item-center justify-center',
-          img: '!w-full object-contain !aspect-square',
+          // img: '!w-full object-contain !aspect-square',
           // blurredImg: '!w-full object-contain !aspect-square',
         }}
         // className="absolute top-0 left-0 w-full h-full"

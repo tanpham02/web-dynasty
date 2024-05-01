@@ -111,18 +111,13 @@ const StaffListPage = () => {
       align: 'center',
       render: (user: Users) =>
         user?.image ? (
-          <Box className="image-table relative !h-[80px] !w-[80px] flex items-center">
-            <CustomImage
-              src={getFullImageUrl(user.image as string)}
-              fallbackSrc="https://via.placeholder.com/80x80"
-              radius="full"
-              isPreview
-              loading="lazy"
-              classNames={{
-                img: '!object-contain',
-              }}
-            />
-          </Box>
+          <CustomImage
+            src={getFullImageUrl(user.image as string)}
+            fallbackSrc="https://via.placeholder.com/80x80"
+            radius="full"
+            isPreview
+            loading="lazy"
+          />
         ) : (
           <Box className="rounded-2xl !h-[80px] !w-[80px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
             {user?.fullName
@@ -246,9 +241,9 @@ const StaffListPage = () => {
     if (Array.isArray(users?.data) && users.data.length > 0) {
       return isHavePermission
         ? [
-            currentUserLogin?._id,
-            ...users.data.map((user) => user.role === UserRole.ADMIN),
-          ]
+          currentUserLogin?._id,
+          ...users.data.map((user) => user.role === UserRole.ADMIN),
+        ]
         : users.data.map((user) => user._id);
     }
 
