@@ -7,6 +7,7 @@ import OVERVIEW_ICON from '~/assets/svg/overview.svg';
 import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
 import SETTING_ICON from '~/assets/svg/setting.svg';
 import STORE_ICON from '~/assets/svg/store.svg';
+import CART_ICON from '~/assets/svg/cart-shopping-sidebar.svg';
 import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
 import { PATH_NAME, ROUTER_KEY } from '../constants/router';
 
@@ -74,20 +75,20 @@ const routeSideBar = [
       },
     ],
   },
-  // {
-  //   key: ROUTER_KEY.ORDER,
-  //   path: PATH_NAME.ORDER,
-  //   title: 'Đơn hàng',
-  //   menu: [
-  //     {
-  //       key: ROUTER_KEY.ORDER,
-  //       path: PATH_NAME.ORDER,
-  //       title: 'Quản lí đơn hàng',
-  //       icon: CART_ICON,
-  //       child: [],
-  //     },
-  //   ],
-  // },
+  {
+    key: ROUTER_KEY.ORDER,
+    path: PATH_NAME.ORDER,
+    title: 'Đơn hàng',
+    menu: [
+      {
+        key: ROUTER_KEY.ORDER,
+        path: PATH_NAME.ORDER,
+        title: 'Quản lí đơn hàng',
+        icon: CART_ICON,
+        child: [],
+      },
+    ],
+  },
   {
     key: ROUTER_KEY.MATERIAL,
     path: PATH_NAME.MATERIAL,

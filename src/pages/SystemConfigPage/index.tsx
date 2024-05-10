@@ -167,7 +167,7 @@ const SystemConfigPage = () => {
         ]}
       />
       <FormProvider {...formMethods}>
-        <Box className="grid gap-4">
+        <Box className="flex flex-col xl:grid xl:grid-cols-2 gap-4">
           <StoreInformationConfig />
           <SellInformationConfig />
           <BankConfig />

@@ -43,7 +43,7 @@ const FAQsTab = () => {
   });
 
   return (
-    <Box>
+    <Box className=' space-y-4'>
       {faqsData.length > 0 ? (
         faqsData?.map((_faqs, index) => (
           <Box
@@ -191,9 +191,8 @@ const OtherConfig = () => {
       </CardHeader>
       <Divider />
       <CardBody
-        className={`p-4 ${
-          tabKeys === TabKeys.FAQS && 'grid grid-cols-1 gap-4'
-        }`}
+        className={`p-4 ${tabKeys === TabKeys.FAQS && 'grid grid-cols-1 gap-4'
+          }`}
       >
         {renderCardBody}
       </CardBody>

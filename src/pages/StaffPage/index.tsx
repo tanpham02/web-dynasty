@@ -78,12 +78,10 @@ const StaffListPage = () => {
   const search = useDebounce(searchText, 500);
   const role = useDebounce(filterRole, 500);
 
-  const handleGetAddress = (user: Users) => {
-    const address = [user.location, user.ward, user.district, user.city]
+  const handleGetAddress = (user: Users) =>
+    [user.location, user.ward, user.district, user.city]
       .filter((item) => Boolean(item))
       .join(', ');
-    return address;
-  };
 
   const optionStatus = [
     {
@@ -129,7 +127,9 @@ const StaffListPage = () => {
     {
       name: 'Họ tên',
       align: 'center',
-      render: (user: Users) => user?.fullName || '',
+      render: (user: Users) => (
+        <span className="capitalize">{user?.fullName || ''}</span>
+      ),
     },
     {
       name: 'Số điện thoại',
@@ -241,9 +241,9 @@ const StaffListPage = () => {
     if (Array.isArray(users?.data) && users.data.length > 0) {
       return isHavePermission
         ? [
-          currentUserLogin?._id,
-          ...users.data.map((user) => user.role === UserRole.ADMIN),
-        ]
+            currentUserLogin?._id,
+            ...users.data.map((user) => user.role === UserRole.ADMIN),
+          ]
         : users.data.map((user) => user._id);
     }
 

@@ -194,15 +194,15 @@ const StorePage = () => {
       </Box>
       {(storeSelectedKeys == 'all' ||
         (storeSelectedKeys && storeSelectedKeys?.size > 0)) && (
-        <Button
-          color="danger"
-          size="sm"
-          className="mb-2"
-          onClick={() => onDeleteStore()}
-        >
-          Xoá tất cả
-        </Button>
-      )}
+          <Button
+            color="danger"
+            size="sm"
+            className="mb-2"
+            onClick={() => onDeleteStore()}
+          >
+            Xoá tất cả
+          </Button>
+        )}
       <CustomTable
         rowKey="_id"
         selectedKeys={storeSelectedKeys}
