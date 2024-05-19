@@ -12,8 +12,8 @@ export const useLoginForm = () => {
 
   const formMethods = useForm<SignInType>({
     defaultValues: {
-      // username: 'admin',
-      // password: '13112002',
+      username: 'admin',
+      password: '13112002',
     },
   });
 
