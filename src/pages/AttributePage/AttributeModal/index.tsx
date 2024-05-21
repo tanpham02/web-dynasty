@@ -47,6 +47,13 @@ const AttributeModal = ({
     else resetFormValue({ name: '', attributeList: [] });
   }, [isEdit, attributeId, isOpen]);
 
+  useEffect(() => {
+    if (isOpen)
+      appendAttributeValue({
+        label: '',
+      });
+  }, [appendAttributeValue, isOpen]);
+
   const getAttributeDetail = async () => {
     try {
       const response = await attributeService.getAttributeById(attributeId);
@@ -121,8 +128,7 @@ const AttributeModal = ({
                   className="bg-sky-100 text-sky-500 font-bold"
                   onClick={() =>
                     appendAttributeValue({
-                      name: '',
-                      value: '',
+                      label: '',
                     })
                   }
                 >
@@ -136,7 +142,6 @@ const AttributeModal = ({
                 <Box className="font-bold flex-[3] text-center">
                   Tên giá trị
                 </Box>
-                <Box className="font-bold flex-[3] text-center">Giá trị</Box>
                 <Box className="font-bold flex-1 text-center">Hành động</Box>
               </Box>
               <Box>
@@ -150,17 +155,9 @@ const AttributeModal = ({
                     </Box>
                     <Box className="font-bold flex-[3] text-center">
                       <FormContextInput<Attribute>
-                        name={`attributeList.${index}.name` as any}
+                        name={`attributeList.${index}.label` as any}
                         rules={{
                           required: 'Vui lòng nhập tên giá trị thuộc tính!',
-                        }}
-                      />
-                    </Box>
-                    <Box className="font-bold flex-[3] text-center">
-                      <FormContextInput<Attribute>
-                        name={`attributeList.${index}.value` as any}
-                        rules={{
-                          required: 'Vui lòng nhập giá trị thuộc tính!',
                         }}
                       />
                     </Box>

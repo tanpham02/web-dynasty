@@ -8,6 +8,5 @@ export interface Attribute {
 
 export interface AttributeValue {
   _id?: string;
-  name?: string;
-  value?: string;
+  label?: string;
 }
