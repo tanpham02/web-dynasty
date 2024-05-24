@@ -4,33 +4,34 @@ import {
   Input,
   Selection,
   useDisclosure,
-} from '@nextui-org/react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+} from '@nextui-org/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import DeleteIcon from '~/assets/svg/delete.svg';
-import EditIcon from '~/assets/svg/edit.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
+import DeleteIcon from '~/assets/svg/delete.svg'
+import EditIcon from '~/assets/svg/edit.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
-} from '~/components/ModalConfirmDelete';
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import CustomImage from '~/components/NextUI/CustomImage';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { PATH_NAME } from '~/constants/router';
-import useDebounce from '~/hooks/useDebounce';
-import usePagination from '~/hooks/usePagination';
-import { ProductMain } from '~/models/product';
-import { productService } from '~/services/productService';
-import { getFullImageUrl } from '~/utils/image';
-import { formatCurrencyVND } from '~/utils/number';
+} from '~/components/ModalConfirmDelete'
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import CustomImage from '~/components/NextUI/CustomImage'
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { PRODUCT_TYPES } from '~/constants/product'
+import { QUERY_KEY } from '~/constants/queryKey'
+import { PATH_NAME } from '~/constants/router'
+import useDebounce from '~/hooks/useDebounce'
+import usePagination from '~/hooks/usePagination'
+import { ProductMain } from '~/models/product'
+import { productService } from '~/services/productService'
+import { getFullImageUrl } from '~/utils/image'
+import { formatCurrencyVND } from '~/utils/number'
 
 const ProductListPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const columns: ColumnType<ProductMain>[] = [
     {
@@ -66,9 +67,11 @@ const ProductListPage = () => {
       align: 'end',
       name: 'Loại sản phẩm',
       render: (_product: ProductMain) => (
-        <Chip color="success" variant="flat">
-          Mới
-        </Chip>
+        <Box className="space-x-2">
+          {_product?.types?.map((type) => (
+            <Chip variant="flat">{PRODUCT_TYPES?.[type]}</Chip>
+          ))}
+        </Box>
       ),
     },
     {
@@ -90,33 +93,33 @@ const ProductListPage = () => {
         </Box>
       ),
     },
-  ];
+  ]
 
-  const [valueSearch, setValueSearch] = useState<string>('');
-  const [productSelectedKeys, setProductSelectedKeys] = useState<Selection>();
+  const [valueSearch, setValueSearch] = useState<string>('')
+  const [productSelectedKeys, setProductSelectedKeys] = useState<Selection>()
   const { isOpen: isOpenModalDelete, onOpenChange: onOpenChangeModalDelete } =
-    useDisclosure();
-  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>({});
+    useDisclosure()
+  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>({})
 
-  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination()
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
-  const queryText = useDebounce(valueSearch, 700);
-  const [valueFilterFromCategory] = useState<string>();
+  const queryText = useDebounce(valueSearch, 700)
+  const [valueFilterFromCategory] = useState<string>()
 
   const onDeleteProduct = (product?: ProductMain) => {
     if (product && Object.keys(product).length > 0)
       setModalDelete({
         id: product?._id,
         desc: `Bạn có chắc muốn xóa sản phẩm ${product?.name} này không?`,
-      });
+      })
     else
       setModalDelete({
         desc: `Bạn có chắc muốn xóa tất cả sản phẩm đã chọn không?`,
-      });
-    onOpenChangeModalDelete();
-  };
+      })
+    onOpenChangeModalDelete()
+  }
 
   const {
     data: productList,
@@ -136,53 +139,53 @@ const ProductListPage = () => {
         pageIndex: pageIndex - 1,
         pageSize,
         name: queryText,
-      };
-      return await productService.getProductPagination(params);
+      }
+      return await productService.getProductPagination(params)
     },
     {
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
   const { isLoading: isLoadDeleteProduct, mutate: deleteProduct } = useMutation(
     {
       mutationKey: [QUERY_KEY.PRODUCTS_DELETE],
       mutationFn: async () => {
         try {
-          let productDeleteIDs = [];
+          let productDeleteIDs = []
           if (productSelectedKeys === 'all') {
             productDeleteIDs =
               productList?.data
                 ?.filter((product) => Boolean(product?._id))
-                ?.map((product) => product?._id) || [];
+                ?.map((product) => product?._id) || []
           } else {
             productDeleteIDs = [
               ...(productSelectedKeys || [modalDelete?.id] || []),
-            ];
+            ]
           }
           console.log(
             '🚀 ~ file: index.tsx:144 ~ mutationFn: ~ productDeleteIDs:',
             productDeleteIDs,
-          );
+          )
 
-          await productService.deleteProduct(productDeleteIDs as string[]);
+          await productService.deleteProduct(productDeleteIDs as string[])
         } catch (err) {
           enqueueSnackbar('Xóa sản phẩm không thành công!', {
             variant: 'error',
-          });
-          console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err);
+          })
+          console.log('🚀 ~ file: index.tsx:140 ~ mutationFn: ~ err:', err)
         } finally {
-          await refetchProduct();
-          onCloseModalDeleteProduct();
+          await refetchProduct()
+          onCloseModalDeleteProduct()
         }
       },
     },
-  );
+  )
 
   const onCloseModalDeleteProduct = () => {
-    setProductSelectedKeys(new Set());
-    onOpenChangeModalDelete();
-  };
+    setProductSelectedKeys(new Set())
+    onOpenChangeModalDelete()
+  }
 
   return (
     <Box>
@@ -252,7 +255,7 @@ const ProductListPage = () => {
         onOpenChange={onCloseModalDeleteProduct}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default ProductListPage;
+export default ProductListPage
