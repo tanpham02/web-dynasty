@@ -1,4 +1,5 @@
-import { Attribute, AttributeValue } from './attribute';
+import { Attribute, AttributeValue } from './attribute'
+import { Category } from './category'
 
 export enum ProductStatus {
   ACTIVE = 'ACTIVE',
@@ -6,15 +7,15 @@ export enum ProductStatus {
 }
 
 export interface ProductConfigAttribute extends AttributeValue {
-  id?: number;
-  attributeId?: string;
-  attributeName?: string;
+  id?: number
+  attributeId?: string
+  attributeName?: string
 }
 
 export interface AttributeResponse {
-  attributeId?: string;
-  attributeName?: string;
-  attributeValues?: AttributeValue[];
+  attributeId?: string
+  attributeName?: string
+  attributeValues?: AttributeValue[]
 }
 
 export enum ProductType {
@@ -28,29 +29,30 @@ export enum ProductType {
 }
 
 export interface ProductMain {
-  _id?: string;
-  name: string;
-  description?: string;
-  information?: string;
-  categoryId?: string | string[];
-  price: number;
-  oldPrice?: number;
-  image?: string;
-  types?: ProductType[];
-  orderQuantity?: number;
-  productVariantId?: string;
-  attribute?: string[];
-  productAttributeList?: ProductChildrenAttribute[];
-  attributeMapping?: Attribute[];
-  attributeIds?: string[];
-  files?: Blob | string;
+  _id?: string
+  name: string
+  description?: string
+  information?: string
+  categoryId?: Category | string[] | string
+  price: number
+  oldPrice?: number
+  image?: string
+  types?: ProductType[]
+  orderQuantity?: number
+  productVariantId?: string
+  attribute?: string[]
+  productAttributeList?: ProductChildrenAttribute[]
+  attributeMapping?: Attribute[]
+  attributeIds?: string[]
+  files?: Blob | string
 }
 
 export interface ProductChildrenAttribute {
-  extendedIds?: string[];
-  label?: string;
-  priceAdjustmentValue?: number;
-  productAttributeItem?: AttributeValue[];
+  _id?: string
+  extendedIds?: string[]
+  label?: string
+  priceAdjustmentValues?: number[]
+  productAttributeItem?: AttributeValue[]
 }
 
 export enum ProductTypes {
@@ -60,8 +62,8 @@ export enum ProductTypes {
 }
 
 export interface ProductStatusOption {
-  label: string;
-  value: number | string;
+  label: string
+  value: number | string
 }
 
 export const ProductStatusOptions: ProductStatusOption[] = [
@@ -93,4 +95,4 @@ export const ProductStatusOptions: ProductStatusOption[] = [
     label: 'Độc đáo',
     value: ProductType.UNIQUE,
   },
-];
+]

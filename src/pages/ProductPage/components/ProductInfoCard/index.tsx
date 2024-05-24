@@ -1,11 +1,18 @@
-import { Card, CardBody, CardHeader, Divider, SelectItem, SelectSection } from '@nextui-org/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  SelectItem,
+  SelectSection,
+} from '@nextui-org/react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Svg from 'react-inlinesvg';
 
 import GridIcon from '~/assets/svg/grid.svg';
 import InfoIcon from '~/assets/svg/info.svg';
 import Box from '~/components/Box';
-import { FormContextInput } from '~/components/NextUI/Form';
+import { FormContextInput, FormContextSwitch } from '~/components/NextUI/Form';
 import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
 import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
 import { QUERY_KEY } from '~/constants/queryKey';
@@ -99,14 +106,24 @@ const ProductInfoCard = () => {
             required: 'Vui lòng nhập giá bán!',
           }}
         />
-        <FormContextInput name="oldPrice" label="Giá cũ" type="number" endContent="đ" />
-        <FormContextSelect name="types" label="Loại sản phẩm" selectionMode="multiple">
+        <FormContextInput
+          name="oldPrice"
+          label="Giá cũ"
+          type="number"
+          endContent="đ"
+        />
+        <FormContextSelect
+          name="types"
+          label="Loại sản phẩm"
+          selectionMode="multiple"
+        >
           {ProductStatusOptions.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               {item.label}
             </SelectItem>
           ))}
         </FormContextSelect>
+        <FormContextSwitch name="visible" label="Hiển thị" />
         <FormContextTextArea name="information" label="Ghi chú sản phẩm" />
       </CardBody>
     </Card>

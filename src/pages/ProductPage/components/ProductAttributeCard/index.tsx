@@ -160,8 +160,8 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
         </CheckboxGroup>
         <Box className="border border-zinc-200 rounded-xl p-4 shadow">
           <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
-            <Box className="font-bold flex-[3] text-center">Tên mở rộng</Box>
-            <Box className="font-bold flex-[3] text-center">Tên thuộc tính</Box>
+            <Box className="font-bold flex-[2] text-center">Tên hiển thị</Box>
+            <Box className="font-bold flex-[2] text-center">Tên thuộc tính</Box>
             <Box className="font-bold flex-[3] text-center">
               Giá bán cộng thêm
             </Box>
@@ -177,32 +177,28 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                     index % 2 == 1 && 'bg-zinc-100 rounded-md'
                   }`}
                 >
-                  <Box className="flex-[3] text-center">{attribute?.label}</Box>
-
-                  <Box className="flex-[3] text-center">
-                    <Box className="flex justify-around flex-col gap-8">
+                  <Box className="flex-[2] text-center">{attribute?.label}</Box>
+                  <Box className="flex justify-around flex-col gap-8 flex-[2] text-center">
+                    {attribute?.productAttributeItem?.map((attributeValue) => (
+                      <span className="block my-auto">
+                        - {attributeValue?.label}
+                      </span>
+                    ))}
+                  </Box>
+                  <Box className="font-bold flex-[3] text-center">
+                    <Box className="space-y-1">
                       {attribute?.productAttributeItem?.map(
-                        (attributeValue) => (
-                          <span className="block my-auto">
-                            - {attributeValue?.label}
-                          </span>
+                        (attributeItem, fieldIndex) => (
+                          <FormContextInput
+                            key={attributeItem?._id}
+                            type="number"
+                            name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
+                            endContent={<span className="font-bold">đ</span>}
+                          />
                         ),
                       )}
                     </Box>
                   </Box>
-
-                  <Box className="font-bold flex-[3] text-center">
-                    <Box className="space-y-1">
-                      {attribute?.productAttributeItem?.map((_, fieldIndex) => (
-                        <FormContextInput
-                          name={`productAttributeList.${index}.priceAdjustmentValue`}
-                          endContent={<span className="font-bold">đ</span>}
-                          type="number"
-                        />
-                      ))}
-                    </Box>
-                  </Box>
-
                   <Box className="font-bold flex-1 text-center">
                     <ButtonIcon
                       icon={DeleteIcon}

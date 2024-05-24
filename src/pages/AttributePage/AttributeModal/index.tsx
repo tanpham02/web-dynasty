@@ -1,4 +1,5 @@
-import { Button } from '@nextui-org/react';
+import { Button, SelectItem } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -7,9 +8,11 @@ import DeleteIcon from '~/assets/svg/delete.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import CustomModal from '~/components/NextUI/CustomModal';
-import { FormContextInput } from '~/components/NextUI/Form';
+import { FormContextInput, FormContextSelect } from '~/components/NextUI/Form';
+import { QUERY_KEY } from '~/constants/queryKey';
 import { Attribute } from '~/models/attribute';
 import { attributeService } from '~/services/attributeService';
+import { categoryService } from '~/services/categoryService';
 
 interface AttributeModalProps {
   isOpen?: boolean;
@@ -42,6 +45,13 @@ const AttributeModal = ({
     remove: removeAttributeValue,
   } = useFieldArray({ control, name: 'attributeList' });
 
+  const { data: categories, isLoading: isLoadingCategory } = useQuery({
+    queryKey: [QUERY_KEY.CATEGORY_ALL],
+    queryFn: categoryService.getAllCategory,
+    enabled: Boolean(isOpen),
+    refetchOnWindowFocus: false,
+  });
+
   useEffect(() => {
     if (attributeId && isEdit && isOpen) getAttributeDetail();
     else resetFormValue({ name: '', attributeList: [] });
@@ -64,6 +74,10 @@ const AttributeModal = ({
             response?.attributeList?.map((attributeValue) => ({
               label: attributeValue?.label,
             })) || [],
+          categoryId:
+            response?.categoryId && typeof response?.categoryId === 'string'
+              ? [response.categoryId]
+              : [],
         });
       }
     } catch (err) {
@@ -75,8 +89,13 @@ const AttributeModal = ({
 
   const onSubmit = async (data: Attribute) => {
     try {
-      if (isEdit) await attributeService.updateAttributeById(attributeId, data);
-      else await attributeService.createAttribute(data);
+      const dataSubmit: Attribute = {
+        ...data,
+        categoryId: data?.categoryId?.[0],
+      };
+      if (isEdit)
+        await attributeService.updateAttributeById(attributeId, dataSubmit);
+      else await attributeService.createAttribute(dataSubmit);
       enqueueSnackbar(
         `${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`,
       );
@@ -113,6 +132,20 @@ const AttributeModal = ({
               required: 'Vui lòng nhập tên thuộc tính',
             }}
           />
+          <FormContextSelect
+            name="categoryId"
+            label="Danh mục"
+            isLoading={isLoadingCategory}
+            rules={{
+              required: 'Vui lòng nhập tên thuộc tính',
+            }}
+          >
+            {categories?.map((item) => (
+              <SelectItem key={item?._id || ''} value={item?.name}>
+                {item?.name}
+              </SelectItem>
+            )) || []}
+          </FormContextSelect>
           <div>
             <div className="flex justify-between items-end mb-2">
               <span className="font-bold">Giá trị thuộc tính</span>

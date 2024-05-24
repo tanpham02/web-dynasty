@@ -34,7 +34,7 @@ const CategoryModal = ({
   categoryId,
 }: CategoryModalProps) => {
   const forms = useForm<Category>({
-    defaultValues: { childrenCategory: {} },
+    defaultValues: { childrenCategory: {}, visible: true },
   });
 
   const [categoryAllData, setCategoryAllData] = useState<Category[]>();
@@ -58,7 +58,12 @@ const CategoryModal = ({
 
   useEffect(() => {
     if (categoryId && isEdit && isOpen) getCategoryDetail();
-    else resetFormValue({ name: '', childrenCategory: { category: [] } });
+    else
+      resetFormValue({
+        name: '',
+        childrenCategory: { category: [] },
+        visible: true,
+      });
     getAllCategory();
   }, [isEdit, categoryId, isOpen]);
 
@@ -272,7 +277,7 @@ const CategoryModal = ({
                   }}
                 />
                 <FormContextSwitch
-                  name="isShowHomePage"
+                  name="visible"
                   label="Hiển thị trên trang chủ"
                 />
               </Box>
