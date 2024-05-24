@@ -21,13 +21,15 @@ import InfoIcon from '~/assets/svg/info.svg';
 import Box from '~/components/Box';
 import ButtonIcon from '~/components/ButtonIcon';
 import { globalLoading } from '~/components/GlobalLoading';
-import ModalConfirmDelete, { ModalConfirmDeleteState } from '~/components/ModalConfirmDelete';
+import ModalConfirmDelete, {
+  ModalConfirmDeleteState,
+} from '~/components/ModalConfirmDelete';
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
 import { ORDER_STATUSES } from '~/constants/order';
 import { QUERY_KEY } from '~/constants/queryKey';
 import usePagination from '~/hooks/usePagination';
-import { Order, StatusCheckout, StatusOrder } from '~/models/order';
+import { Order, OrderType, StatusOrder } from '~/models/order';
 import orderService from '~/services/orderService';
 import {
   DATE_FORMAT_DDMMYYYY,
@@ -41,7 +43,8 @@ import OrderDetailModal from './components/OrderDetailModal';
 import { SearchParams } from '~/types';
 
 const OrderPage = () => {
-  const { isOpen: isOpenModal, onOpenChange: onOpenChangeModal } = useDisclosure();
+  const { isOpen: isOpenModal, onOpenChange: onOpenChangeModal } =
+    useDisclosure();
 
   const {
     isOpen: isOpenModalDelete,
@@ -66,7 +69,9 @@ const OrderPage = () => {
           <span>{(index || 0) + 1 + (pageIndex - 1) * 10}</span>
           {order?.createdAt ? (
             <>
-              <span className="text-[13px]">{formatDate(order.createdAt, DATE_FORMAT_HHMMSS)}</span>
+              <span className="text-[13px]">
+                {formatDate(order.createdAt, DATE_FORMAT_HHMMSS)}
+              </span>
               <span className="text-[13px]">
                 {formatDate(order.createdAt, DATE_FORMAT_DDMMYYYY)}
               </span>
@@ -80,7 +85,12 @@ const OrderPage = () => {
     {
       name: 'Khách hàng',
       render: (order: Order) => {
-        const address = [order?.location, order?.ward, order?.district, order?.city]
+        const address = [
+          order?.location,
+          order?.ward,
+          order?.district,
+          order?.city,
+        ]
           .filter((value) => Boolean(value))
           .join(', ');
         return (
@@ -92,7 +102,11 @@ const OrderPage = () => {
               </Link>
             )}
             {address && (
-              <Link target="_blank" to={getLocationLinkByAddress(address)} className="text-[13px]">
+              <Link
+                target="_blank"
+                to={getLocationLinkByAddress(address)}
+                className="text-[13px]"
+              >
                 {address}
               </Link>
             )}
@@ -103,13 +117,17 @@ const OrderPage = () => {
     {
       name: <Box className="flex justify-center">Số lượng sản phẩm</Box>,
       render: (order: Order) => (
-        <Box className="flex justify-center">{order?.productsFromCart?.length || 0}</Box>
+        <Box className="flex justify-center">
+          {order?.products?.length || 0}
+        </Box>
       ),
     },
     {
       name: <Box className="flex justify-center">Tổng giá trị</Box>,
       render: (order: Order) => (
-        <Box className="flex justify-center">{formatCurrencyVND(order?.totalOrder || 0)}</Box>
+        <Box className="flex justify-center">
+          {formatCurrencyVND(order?.total || 0)}
+        </Box>
       ),
     },
     {
@@ -121,16 +139,19 @@ const OrderPage = () => {
               <DropdownTrigger>
                 <Chip
                   style={{
-                    backgroundColor: order?.statusOrder
-                      ? ORDER_STATUSES?.[order.statusOrder]?.color
+                    backgroundColor: order?.orderStatus
+                      ? ORDER_STATUSES?.[order.orderStatus]?.color
                       : '#191919',
                   }}
                   classNames={{
-                    content: 'flex items-center space-x-2 text-white cursor-pointer',
+                    content:
+                      'flex items-center space-x-2 text-white cursor-pointer',
                   }}
                 >
                   <span>
-                    {order?.statusOrder ? ORDER_STATUSES?.[order.statusOrder]?.label : 'Không có'}
+                    {order?.orderStatus
+                      ? ORDER_STATUSES?.[order.orderStatus]?.label
+                      : 'Không có'}
                   </span>
                   <Svg src={ArrowDownIcon} className="w-5 h-5" />
                 </Chip>
@@ -138,11 +159,18 @@ const OrderPage = () => {
               <DropdownMenu aria-label="Order Status">
                 {Object.keys(ORDER_STATUSES).map((key) => (
                   <DropdownItem
-                    onClick={() => handleChangeOrderStatus(order?._id, key as StatusOrder)}
+                    onClick={() =>
+                      handleChangeOrderStatus(order?._id, key as StatusOrder)
+                    }
                     key={key}
                   >
-                    <Svg src={ORDER_STATUSES?.[key]?.icon} className="w-4 h-4 inline-block mr-2" />{' '}
-                    <span className="font-semibold">{ORDER_STATUSES?.[key]?.label}</span>
+                    <Svg
+                      src={ORDER_STATUSES?.[key]?.icon}
+                      className="w-4 h-4 inline-block mr-2"
+                    />{' '}
+                    <span className="font-semibold">
+                      {ORDER_STATUSES?.[key]?.label}
+                    </span>
                   </DropdownItem>
                 ))}
               </DropdownMenu>
@@ -161,7 +189,7 @@ const OrderPage = () => {
               title="Xem chi tiết đơn hàng"
               onClick={() => handleOpenModalOrderDetail(order)}
             />
-            {(order?.statusCheckout === StatusCheckout.VERIFY_INFORMATION ||
+            {/* {(order?.orderType === StatusCheckout.VERIFY_INFORMATION ||
               order?.statusOrder === StatusOrder.WAITING_FOR_PAYMENT) && (
               <ButtonIcon
                 icon={DeleteIcon}
@@ -169,7 +197,7 @@ const OrderPage = () => {
                 status="danger"
                 onClick={() => handleOpenDeleteModal(order)}
               />
-            )}
+            )} */}
           </Box>
         );
       },
@@ -193,8 +221,12 @@ const OrderPage = () => {
       if (filterImportDate.length > 0) {
         params = {
           ...params,
-          from: moment(filterImportDate?.[0]?.toString()).format(DATE_FORMAT_YYYYMMDD),
-          to: moment(filterImportDate?.[1]?.toString()).format(DATE_FORMAT_YYYYMMDD),
+          from: moment(filterImportDate?.[0]?.toString()).format(
+            DATE_FORMAT_YYYYMMDD,
+          ),
+          to: moment(filterImportDate?.[1]?.toString()).format(
+            DATE_FORMAT_YYYYMMDD,
+          ),
         };
       }
       return await orderService.searchPagination(params);
@@ -249,7 +281,10 @@ const OrderPage = () => {
     }
   };
 
-  const handleChangeOrderStatus = async (orderId?: string, status?: StatusOrder) => {
+  const handleChangeOrderStatus = async (
+    orderId?: string,
+    status?: StatusOrder,
+  ) => {
     if (orderId && status)
       try {
         globalLoading.show();
@@ -259,7 +294,10 @@ const OrderPage = () => {
         enqueueSnackbar('Cập nhật trạng thái đơn hàng thất bại!', {
           variant: 'error',
         });
-        console.log('🚀 ~ file: index.tsx:224 ~ handleChangeOrderStatus ~ err:', err);
+        console.log(
+          '🚀 ~ file: index.tsx:224 ~ handleChangeOrderStatus ~ err:',
+          err,
+        );
       } finally {
         await refetchOrders();
         globalLoading.hide();
@@ -285,7 +323,9 @@ const OrderPage = () => {
               ? [filterImportDate[0], filterImportDate[1]]
               : undefined
           }
-          onChange={(range) => handleChangeFilterImportDate(range as [Moment, Moment])}
+          onChange={(range) =>
+            handleChangeFilterImportDate(range as [Moment, Moment])
+          }
         />
       </Box>
       <CustomTable
@@ -313,7 +353,11 @@ const OrderPage = () => {
         onAgree={handleDeleteOrder}
         isLoading={modalDelete?.isLoading}
       />
-      <OrderDetailModal orderId={modalId} isOpen={isOpenModal} onOpenChange={onOpenChangeModal} />
+      <OrderDetailModal
+        orderId={modalId}
+        isOpen={isOpenModal}
+        onOpenChange={onOpenChangeModal}
+      />
     </Box>
   );
 };

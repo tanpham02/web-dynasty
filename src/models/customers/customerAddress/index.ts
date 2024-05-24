@@ -1,4 +1,5 @@
 export interface CustomerAddressItem {
+  _id?: string;
   location?: string;
   city?: string;
   cityId?: string;

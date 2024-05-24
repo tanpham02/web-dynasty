@@ -20,7 +20,7 @@ import usePagination from '~/hooks/usePagination';
 import { Customer, CustomerStatus, CustomerType } from '~/models/customers';
 import customerService from '~/services/customerService';
 import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import UserModal from './CustomerModal';
+import UserModal from './components/CustomerModal';
 
 export interface ModalKey {
   visible?: boolean;

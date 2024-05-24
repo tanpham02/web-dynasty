@@ -7,13 +7,14 @@ import {
   ModalHeader,
   ModalProps,
 } from '@nextui-org/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 interface CustomModalProps extends ModalProps {
   isOpen?: boolean;
   onOpenChange?(): void;
   title?: string;
+  header?: ReactNode;
   children: React.ReactNode;
   cancelButtonText?: string;
   okButtonText?: string;
@@ -32,6 +33,7 @@ const CustomModal = (props: CustomModalProps) => {
     okButtonText,
     onOk,
     isLoading,
+    header,
     controls = true,
   } = props!;
 
@@ -71,7 +73,9 @@ const CustomModal = (props: CustomModalProps) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                {title || header}
+              </ModalHeader>
               <ModalBody>{children}</ModalBody>
               {controls && (
                 <ModalFooter>

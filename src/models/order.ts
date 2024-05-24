@@ -1,77 +1,64 @@
 import { ProductMain } from './product';
 
-enum StatusOrder {
-  WAITING_FOR_DELIVERING = 'WAITING_FOR_DELIVERING',
-  WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
+export enum StatusOrder {
   PENDING = 'PENDING',
   DELIVERING = 'DELIVERING',
-  FAIL = 'FAIL',
-  CANCELED = 'CANCELED',
   SUCCESS = 'SUCCESS',
-}
-enum TypeOrder {
-  ORDER_TO_PICK_UP = 'ORDER_TO_PICK_UP',
-  ORDER_DELIVERING = 'ORDER_DELIVERING',
-}
-
-enum StatusCheckout {
-  VERIFY_INFORMATION = 'VERIFY_INFORMATION',
-  ORDER_CONFIRMATION = 'ORDER_CONFIRMATION',
+  CANCELED = 'CANCELED',
+  WAITING_FOR_DELIVERING = 'WAITING_FOR_DELIVERING',
+  WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
 }
 
-enum PaymentMethod {
-  PAYMENT_ON_DELIVERY = 'PAYMENT_ON_DELIVERY',
-  MONO = 'MONO',
+export enum OrderType {
+  PICK_UP = 'PICK_UP',
+  DELIVERY = 'DELIVERY',
+}
+
+export enum OrderPaymentMethod {
+  CASH = 'CASH',
+  MOMO = 'MOMO',
   ATM_CARD = 'ATM_CARD',
   SHOPEE_PAY = 'SHOPEE_PAY',
   ZALO_PAY = 'ZALO_PAY',
 }
 
-enum TimeOrder {
+export enum OrderReceivingTime {
   NOW = 'NOW',
   SELECT_DATE_TIME = 'SELECT_DATE_TIME',
 }
 
 export interface Order {
-  customerId?: string;
-  productsFromCart?: ProductFromCart[];
-  productsWhenTheCustomerIsNotLoggedIn?: string[];
   _id?: string;
+  customerId?: string;
+  products?: ProductOrder[];
   shipFee?: number;
-  totalAmountBeforeUsingDiscount?: number;
-  statusOrder?: StatusOrder;
+  orderStatus?: StatusOrder;
   fullName?: string;
   phoneNumber?: string;
   location?: string;
   city?: string;
-  cityId?: number | number[];
+  cityId?: string;
   district?: string;
-  districtId?: number | number[];
+  districtId?: string;
   ward?: string;
-  wardId?: number | number[];
-  typeOrder?: TypeOrder;
-  statusCheckout?: StatusCheckout;
-  paymentMethod?: PaymentMethod;
-  orderReceivingTime?: 'NOW';
-  dateTimeOrderReceive?: string;
+  wardId?: string;
+  orderType?: OrderType;
+  paymentMethod?: OrderPaymentMethod;
+  orderReceivingTime?: OrderReceivingTime;
+  orderReceivingTimeAt?: string;
   voucherId?: string;
-  orderAtStore?: string;
-  reasonOrderCancel?: string;
-  totalOrder?: number;
+  storeId?: string;
+  shipperId?: string;
+  reasonCancel?: string;
+  note?: string;
+  subTotal?: number;
+  total?: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface ProductFromCart {
-  product?: {
-    createdAt?: string;
-    parentId?: string;
-    productItem?: ProductMain;
-    updatedAt?: string;
-    _id?: string;
-  };
-  productQuantities?: number;
-  _id?: string;
+export interface ProductOrder {
+  product?: ProductMain;
+  note?: string;
+  quantity?: number;
 }
-
-export { PaymentMethod, StatusCheckout, StatusOrder, TimeOrder, TypeOrder };

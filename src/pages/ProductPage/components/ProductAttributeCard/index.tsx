@@ -53,7 +53,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     removeProductAttribute(undefined);
     setValue('productAttributeList', []);
     if (attributeSelected.length > 0) {
-      generateCombinations(0, [], [], []);
+      generateCombinations(0, [], []);
       setValue(
         'attributeIds',
         attributeSelected?.map((attribute) => attribute?._id) as string[],
@@ -74,14 +74,12 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     (
       index: number,
       currentCombination: string[],
-      currentCombinationValue: string[],
       attributeValue: AttributeValue[],
     ) => {
       if (index === attributeSelected?.length && currentCombination) {
         appendProductAttribute(
           {
-            extendedName: currentCombination.join(' - '),
-            extendedValue: currentCombinationValue.join('_'),
+            label: currentCombination.join(' - '),
             productAttributeItem: attributeValue,
           },
           {
@@ -91,12 +89,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
       }
 
       if (attributeSelected?.[index]?.attributeList?.length === 0) {
-        generateCombinations(
-          index + 1,
-          currentCombination,
-          currentCombinationValue,
-          attributeValue,
-        );
+        generateCombinations(index + 1, currentCombination, attributeValue);
       } else if (
         attributeSelected?.[index]?.attributeList &&
         Array.isArray(attributeSelected?.[index]?.attributeList) &&
@@ -105,12 +98,9 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
         for (const attr of attributeSelected[index].attributeList || []) {
           generateCombinations(
             index + 1,
-            attr?.name
-              ? [...currentCombination, attr.name]
+            attr?.label
+              ? [...currentCombination, attr?.label]
               : [...currentCombination],
-            attr?.value
-              ? [...currentCombinationValue, attr.value]
-              : [...currentCombinationValue],
             attr ? [...attributeValue, attr] : [...attributeValue],
           );
         }
@@ -178,49 +168,56 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
             <Box className="font-bold flex-1 text-center">Hành động</Box>
           </Box>
           <Box>
-            {productAttributes?.map((attribute, index) => (
-              <Box
-                key={attribute?.id}
-                className={`px-3 py-2 flex items-center gap-2 ${
-                  index % 2 == 1 && 'bg-zinc-100 rounded-md'
-                }`}
-              >
-                <Box className="flex-[3] text-center">
-                  {attribute?.extendedName}
-                </Box>
+            {Array.isArray(productAttributes) &&
+            productAttributes.length > 0 ? (
+              productAttributes.map((attribute, index) => (
+                <Box
+                  key={attribute?.id}
+                  className={`px-3 py-2 flex items-center gap-2 ${
+                    index % 2 == 1 && 'bg-zinc-100 rounded-md'
+                  }`}
+                >
+                  <Box className="flex-[3] text-center">{attribute?.label}</Box>
 
-                <Box className="flex-[3] text-center">
-                  <Box className="flex justify-around flex-col gap-8">
-                    {attribute?.productAttributeItem?.map((attributeValue) => (
-                      <span className="block my-auto">
-                        - {attributeValue?.name}
-                      </span>
-                    ))}
+                  <Box className="flex-[3] text-center">
+                    <Box className="flex justify-around flex-col gap-8">
+                      {attribute?.productAttributeItem?.map(
+                        (attributeValue) => (
+                          <span className="block my-auto">
+                            - {attributeValue?.label}
+                          </span>
+                        ),
+                      )}
+                    </Box>
+                  </Box>
+
+                  <Box className="font-bold flex-[3] text-center">
+                    <Box className="space-y-1">
+                      {attribute?.productAttributeItem?.map((_, fieldIndex) => (
+                        <FormContextInput
+                          name={`productAttributeList.${index}.priceAdjustmentValue`}
+                          endContent={<span className="font-bold">đ</span>}
+                          type="number"
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+
+                  <Box className="font-bold flex-1 text-center">
+                    <ButtonIcon
+                      icon={DeleteIcon}
+                      title="Xóa sản phẩm con này"
+                      onClick={() => removeProductAttribute(index)}
+                      status="danger"
+                    />
                   </Box>
                 </Box>
-
-                <Box className="font-bold flex-[3] text-center">
-                  <Box className="space-y-1">
-                    {attribute?.productAttributeItem?.map((_, fieldIndex) => (
-                      <FormContextInput
-                        name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
-                        endContent={<span className="font-bold">đ</span>}
-                        type="number"
-                      />
-                    ))}
-                  </Box>
-                </Box>
-
-                <Box className="font-bold flex-1 text-center">
-                  <ButtonIcon
-                    icon={DeleteIcon}
-                    title="Xóa sản phẩm con này"
-                    onClick={() => removeProductAttribute(index)}
-                    status="danger"
-                  />
-                </Box>
+              ))
+            ) : (
+              <Box className="py-8 text-center font-medium text-zinc-400">
+                Không có biển thể sản phẩm nào
               </Box>
-            ))}
+            )}
           </Box>
         </Box>
       </CardBody>

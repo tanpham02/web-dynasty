@@ -9,18 +9,18 @@ import EyeIcon from '~/assets/svg/eye.svg';
 interface CustomImageProps extends ImageProps {
   isPreview?: boolean;
   placement?:
-  | 'top'
-  | 'bottom'
-  | 'right'
-  | 'left'
-  | 'top-start'
-  | 'top-end'
-  | 'bottom-start'
-  | 'bottom-end'
-  | 'left-start'
-  | 'left-end'
-  | 'right-start'
-  | 'right-end';
+    | 'top'
+    | 'bottom'
+    | 'right'
+    | 'left'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'left-start'
+    | 'left-end'
+    | 'right-start'
+    | 'right-end';
   fallbackSrc?: string;
 }
 
@@ -36,7 +36,7 @@ const CustomImage: React.FC<CustomImageProps> = (props) => {
     useState<boolean>(false);
 
   return (
-    <Box className="w-20 relative h-20 mx-auto" id="FileUpload">
+    <Box className="relative mx-auto size-20" id="FileUpload">
       {isPreview && src && !isError && (
         <Box
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[99999999] hidden"

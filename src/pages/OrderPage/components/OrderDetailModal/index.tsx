@@ -17,8 +17,8 @@ import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils';
 import { formatCurrencyVND } from '~/utils/number';
 import { globalLoading } from '~/components/GlobalLoading';
 import { getFullImageUrl } from '~/utils/image';
-import { ORDER_STATUSES } from '~/constants/order';
-import { PaymentMethod } from '~/models/order';
+import { ORDER_PAYMENT_METHODS, ORDER_STATUSES } from '~/constants/order';
+import { OrderType } from '~/models/order';
 
 interface OrderDetailModalProps {
   isOpen?: boolean;
@@ -26,7 +26,11 @@ interface OrderDetailModalProps {
   orderId?: string;
 }
 
-const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalProps) => {
+const OrderDetailModal = ({
+  isOpen,
+  onOpenChange,
+  orderId,
+}: OrderDetailModalProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: orderDetail } = useQuery(
@@ -40,7 +44,10 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
           variant: 'error',
         });
         onOpenChange?.();
-        console.log('🚀 ~ file: index.tsx:25 ~ const{data:orderDetail}=useQuery ~ err:', err);
+        console.log(
+          '🚀 ~ file: index.tsx:25 ~ const{data:orderDetail}=useQuery ~ err:',
+          err,
+        );
       } finally {
         globalLoading.hide();
       }
@@ -49,7 +56,12 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
   );
 
   const address = useMemo(() => {
-    return [orderDetail?.location, orderDetail?.ward, orderDetail?.district, orderDetail?.city]
+    return [
+      orderDetail?.location,
+      orderDetail?.ward,
+      orderDetail?.district,
+      orderDetail?.city,
+    ]
       .filter((value) => Boolean(value))
       .join(', ');
   }, [orderDetail]);
@@ -70,7 +82,9 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
           <Card shadow="none" className="border border-zinc-300">
             <CardHeader>
               <Svg src={UserIcon} className="w-5 h-5 mr-2" />
-              <span className="text-base font-semibold">Thông tin khách hàng</span>
+              <span className="text-base font-semibold">
+                Thông tin khách hàng
+              </span>
             </CardHeader>
             <CardBody className="px-4 space-y-2">
               <DataRow label="Tên khách hàng" value={orderDetail?.fullName} />
@@ -81,22 +95,24 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
           <Card shadow="none" className="border border-zinc-300">
             <CardHeader>
               <Svg src={BoxIcon} className="w-5 h-5 mr-2" />
-              <span className="text-base font-semibold">Thông tin sản phẩm</span>
+              <span className="text-base font-semibold">
+                Thông tin sản phẩm
+              </span>
             </CardHeader>
             <CardBody className="space-y-4">
-              {orderDetail?.productsFromCart?.map((product, index) => (
+              {orderDetail?.products?.map((productOrder, index) => (
                 <Box key={index} className="flex justify-between">
                   <Box className="flex items-start space-x-2">
                     <Image
-                      src={getFullImageUrl(product?.product?.productItem?.image)}
+                      src={getFullImageUrl(productOrder?.product?.image)}
                       className="w-6 h-6"
                     />
                     <span>
-                      {product?.product?.productItem?.name} x {product?.productQuantities}
+                      {productOrder?.product?.name} x {productOrder?.quantity}
                     </span>
                   </Box>
                   <span className="font-semibold">
-                    {formatCurrencyVND(product?.product?.productItem?.price || 0)}
+                    {formatCurrencyVND(productOrder?.product?.price || 0)}
                   </span>
                 </Box>
               ))}
@@ -117,16 +133,17 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
                   size="sm"
                   className="text-right"
                   style={{
-                    backgroundColor: orderDetail?.statusOrder
-                      ? ORDER_STATUSES?.[orderDetail.statusOrder]?.color
+                    backgroundColor: orderDetail?.orderStatus
+                      ? ORDER_STATUSES?.[orderDetail.orderStatus]?.color
                       : '#191919',
                   }}
                   classNames={{
-                    content: 'flex items-center space-x-2 text-white cursor-pointer',
+                    content:
+                      'flex items-center space-x-2 text-white cursor-pointer',
                   }}
                 >
-                  {orderDetail?.statusOrder
-                    ? ORDER_STATUSES?.[orderDetail?.statusOrder]?.label
+                  {orderDetail?.orderStatus
+                    ? ORDER_STATUSES?.[orderDetail?.orderStatus]?.label
                     : 'Không có'}
                 </Chip>
               }
@@ -137,7 +154,10 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
               value={
                 <span className="text-right">
                   {orderDetail?.createdAt
-                    ? formatDate(orderDetail.createdAt, DATE_FORMAT_DDMMYYYYHHMMSS)
+                    ? formatDate(
+                        orderDetail.createdAt,
+                        DATE_FORMAT_DDMMYYYYHHMMSS,
+                      )
                     : ''}
                 </span>
               }
@@ -147,7 +167,9 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
               className="flex justify-between"
               value={
                 <span className="text-right">
-                  {orderDetail?.orderReceivingTime ? 'Nhận ngay sau 30 phút' : ''}
+                  {orderDetail?.orderReceivingTime
+                    ? 'Nhận ngay sau 30 phút'
+                    : ''}
                 </span>
               }
             />
@@ -156,21 +178,25 @@ const OrderDetailModal = ({ isOpen, onOpenChange, orderId }: OrderDetailModalPro
               className="flex justify-between"
               value={
                 <span className="text-right">
-                  {orderDetail?.paymentMethod && orderDetail.paymentMethod === PaymentMethod.PAYMENT_ON_DELIVERY ? 'Thanh toán khi nhận hàng' : ''}
+                  {orderDetail?.paymentMethod
+                    ? ORDER_PAYMENT_METHODS?.[orderDetail?.paymentMethod].label
+                    : ''}
                 </span>
               }
             />
             <DataRow
               label="Phí giao hàng"
               className="flex justify-between"
-              value={<span>{formatCurrencyVND(orderDetail?.shipFee || 0)}</span>}
+              value={
+                <span>{formatCurrencyVND(orderDetail?.shipFee || 0)}</span>
+              }
             />
             <DataRow
               label="Tổng thanh toán"
               className="flex justify-between"
               value={
                 <span className="text-right font-bold text-base">
-                  {formatCurrencyVND(orderDetail?.totalOrder || 0)}
+                  {formatCurrencyVND(orderDetail?.total || 0)}
                 </span>
               }
             />

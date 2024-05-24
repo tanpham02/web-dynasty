@@ -1,39 +1,4 @@
-import { Attribute } from './attribute';
-export interface PercentSale {
-  type: 'percent';
-  percent: number;
-}
-
-export interface FixedSale {
-  amount: number;
-  type: 'fixed';
-}
-
-export type Sale = PercentSale | FixedSale;
-
-export interface Option {
-  key: string;
-  label?: string;
-  priceChange?: Sale;
-}
-
-export interface BaseVariant {
-  key: string;
-  label?: string;
-  options: Option[];
-}
-
-export interface SingleOptionVariant extends BaseVariant {
-  type: 'single';
-  default?: string;
-}
-
-export interface MultipleOptionVariant extends BaseVariant {
-  type: 'multiple';
-  default?: string[];
-}
-
-export type Variant = SingleOptionVariant | MultipleOptionVariant;
+import { Attribute, AttributeValue } from './attribute';
 
 export enum ProductStatus {
   ACTIVE = 'ACTIVE',
@@ -46,38 +11,10 @@ export interface ProductConfigAttribute extends AttributeValue {
   attributeName?: string;
 }
 
-export interface AttributeValue {
-  nhanhVnId?: string;
-  name?: string;
-}
-
 export interface AttributeResponse {
   attributeId?: string;
   attributeName?: string;
   attributeValues?: AttributeValue[];
-}
-
-export interface Product {
-  id?: number;
-  name?: string;
-  price?: number;
-  oldPrice?: number;
-  importPrice?: number;
-  image?: string;
-  images?: string[];
-  nhanhVnId?: string;
-  nhanhVnCategoryId?: string;
-  status?: ProductStatus;
-  parentId?: string;
-  existInDatabase?: boolean;
-  orderQuantity?: number;
-  description?: string;
-  freeShipDescription?: string;
-  attributeDTOs?: ProductConfigAttribute[];
-  attributeResponses?: AttributeResponse[];
-  childProductDTOs?: Product[];
-  newProduct?: boolean;
-  types?: ProductTypes[];
 }
 
 export enum ProductType {
@@ -106,20 +43,14 @@ export interface ProductMain {
   productAttributeList?: ProductChildrenAttribute[];
   attributeMapping?: Attribute[];
   attributeIds?: string[];
-  files?: Blob | string
+  files?: Blob | string;
 }
 
 export interface ProductChildrenAttribute {
-  extendedName?: string; // VD: Nhỏ - Dày => Pizza Hải Sản Pesto Xanh - Nhỏ - Dày
-  extendedValue?: string; // Còn này là cắp value SMALL - PAN, gửi này lên để t query
-  productAttributeItem?: ProductChildrenAttributeItem[]; // này là những attribute item, mỗi item là một product con
-}
-
-export interface ProductChildrenAttributeItem {
-  _id?: string;
-  attributeId?: string;
-  name?: string; // Nhỏ
-  priceAdjustmentValue?: number; // 80000   => 2 cai này là biến thế nếu giá thay đổi thì có, còn không thôi
+  extendedIds?: string[];
+  label?: string;
+  priceAdjustmentValue?: number;
+  productAttributeItem?: AttributeValue[];
 }
 
 export enum ProductTypes {

@@ -58,7 +58,13 @@ const AttributeModal = ({
     try {
       const response = await attributeService.getAttributeById(attributeId);
       if (response && Object.keys(response).length > 0) {
-        resetFormValue(response);
+        resetFormValue({
+          ...response,
+          attributeList:
+            response?.attributeList?.map((attributeValue) => ({
+              label: attributeValue?.label,
+            })) || [],
+        });
       }
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu thuộc tính!');

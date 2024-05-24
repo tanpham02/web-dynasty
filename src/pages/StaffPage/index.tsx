@@ -107,22 +107,25 @@ const StaffListPage = () => {
     {
       name: 'Hình ảnh',
       align: 'center',
-      render: (user: Users) =>
-        user?.image ? (
-          <CustomImage
-            src={getFullImageUrl(user.image as string)}
-            fallbackSrc="https://via.placeholder.com/80x80"
-            radius="full"
-            isPreview
-            loading="lazy"
-          />
-        ) : (
-          <Box className="rounded-2xl !h-[80px] !w-[80px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
-            {user?.fullName
-              ? user.fullName.charAt(0)
-              : user?.username!.charAt(0).toUpperCase()}
-          </Box>
-        ),
+      render: (user: Users) => (
+        <Box className="w-fit mx-auto">
+          {user?.image ? (
+            <CustomImage
+              src={getFullImageUrl(user.image as string)}
+              fallbackSrc="https://via.placeholder.com/80x80"
+              radius="full"
+              isPreview
+              loading="lazy"
+            />
+          ) : (
+            <Box className="rounded-2xl !h-[80px] !w-[80px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
+              {user?.fullName
+                ? user.fullName.charAt(0)
+                : user?.username!.charAt(0).toUpperCase()}
+            </Box>
+          )}
+        </Box>
+      ),
     },
     {
       name: 'Họ tên',

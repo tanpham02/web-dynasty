@@ -3,7 +3,9 @@ import { CUSTOMER_ADDRESS_URL } from '~/services/apiUrl';
 import axiosService from '~/services/axiosService';
 
 const customerAddressService = {
-  getListCustomerAddressByCustomerId: async (customerId: string): Promise<CustomerAddressList> => {
+  getListDeliveryAddressById: async (
+    customerId: string,
+  ): Promise<CustomerAddressList> => {
     return axiosService()({
       method: 'GET',
       baseURL: `${CUSTOMER_ADDRESS_URL}/${customerId}`,
