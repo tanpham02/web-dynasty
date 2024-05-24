@@ -1,17 +1,20 @@
-import { Chip } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
+import { Chip } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
 
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { CustomerAddressItem } from '~/models/customers/customerAddress';
-import customerAddressService from '~/services/customerService/customerAddressService';
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { QUERY_KEY } from '~/constants/queryKey'
+import useAddress from '~/hooks/useAddress'
+import { CustomerAddressItem } from '~/models/customers/customerAddress'
+import customerAddressService from '~/services/customerService/customerAddressService'
 
 interface CustomerDeliveryAddressProps {
-  customerId?: string;
+  customerId?: string
+  isActive?: boolean
 }
 
 const CustomerDeliveryAddress = ({
   customerId,
+  isActive,
 }: CustomerDeliveryAddressProps) => {
   const columns: ColumnType<CustomerAddressItem>[] = [
     {
@@ -32,9 +35,9 @@ const CustomerDeliveryAddress = ({
     },
     {
       name: 'Địa chỉ',
-      render: (customerAddress: CustomerAddressItem) => {
-        return '';
-      },
+      render: (customerAddress: CustomerAddressItem) => (
+        <CustomerAddressName {...customerAddress} />
+      ),
     },
     {
       name: 'Loại',
@@ -47,7 +50,7 @@ const CustomerDeliveryAddress = ({
           <Chip>Khác</Chip>
         ),
     },
-  ];
+  ]
 
   const {
     data: customerDeliveryAddresses,
@@ -58,8 +61,8 @@ const CustomerDeliveryAddress = ({
       customerId
         ? await customerAddressService.getListDeliveryAddressById(customerId)
         : null,
-    enabled: Boolean(customerId),
-  });
+    enabled: Boolean(customerId && isActive),
+  })
 
   return (
     <div>
@@ -72,7 +75,24 @@ const CustomerDeliveryAddress = ({
         emptyContent="Không có địa chỉ giao hàng nào"
       />
     </div>
-  );
-};
+  )
+}
 
-export default CustomerDeliveryAddress;
+export default CustomerDeliveryAddress
+
+interface CustomerAddressNameProps extends CustomerAddressItem {}
+
+const CustomerAddressName = ({
+  cityId,
+  districtId,
+  wardId,
+  location,
+}: CustomerAddressNameProps) => {
+  const { addressInfo } = useAddress({
+    cityId,
+    districtId,
+    wardId,
+    location,
+  })
+  return <>{addressInfo}</>
+}
