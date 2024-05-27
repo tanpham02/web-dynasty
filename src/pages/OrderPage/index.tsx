@@ -47,7 +47,7 @@ const OrderPage = () => {
 
   const {
     isOpen: isOpenModalDelete,
-    onOpen: onOpenModalDelete,
+    // onOpen: onOpenModalDelete,
     onOpenChange: onOpenChangeModalDelete,
   } = useDisclosure()
 
