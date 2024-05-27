@@ -1,13 +1,18 @@
-import qs from 'qs';
-import { Key } from 'react';
-import { Product } from '~/models/product';
-import { ListDataResponse, ListResponse, SearchParams } from '~/types';
-import { PRODUCT_CONFIG_TYPE_URL, PRODUCT_FROM_THIRD_PARTY_URL, PRODUCT_URL } from '../apiUrl';
-import axiosService from '../axiosService';
-import { ProductMain, ProductTypes } from './../../models/product';
+import qs from 'qs'
+import { Key } from 'react'
+import { ListDataResponse, ListResponse, SearchParams } from '~/types'
+import {
+  PRODUCT_CONFIG_TYPE_URL,
+  PRODUCT_FROM_THIRD_PARTY_URL,
+  PRODUCT_URL,
+} from '../apiUrl'
+import axiosService from '../axiosService'
+import { ProductMain, ProductTypes } from './../../models/product'
 
 export const productService = {
-  getProductFromThirdParty: async (params: SearchParams): Promise<ListResponse<Product>> => {
+  getProductFromThirdParty: async (
+    params: SearchParams,
+  ): Promise<ListResponse<ProductMain>> => {
     return axiosService()({
       baseURL: `${PRODUCT_FROM_THIRD_PARTY_URL}`,
       method: 'GET',
@@ -15,10 +20,12 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
-  getProductPagination: async (params: SearchParams): Promise<ListDataResponse<ProductMain>> => {
+  getProductPagination: async (
+    params: SearchParams,
+  ): Promise<ListDataResponse<ProductMain>> => {
     return axiosService()({
       baseURL: `${PRODUCT_URL}/search`,
       method: 'GET',
@@ -26,8 +33,8 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   getProductDetail: async (id: string): Promise<ProductMain> => {
     return axiosService()({
@@ -36,10 +43,10 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
-  createProduct: async (products: FormData): Promise<Product> => {
+  createProduct: async (products: FormData): Promise<ProductMain> => {
     return axiosService()({
       baseURL: PRODUCT_URL,
       method: 'POST',
@@ -50,13 +57,16 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
-  updateProduct: async (products?: FormData, id?: string): Promise<Product> => {
+  updateProduct: async (
+    products?: FormData,
+    id?: string,
+  ): Promise<ProductMain> => {
     return axiosService()({
       baseURL: `${PRODUCT_URL}/${id}`,
-      method: 'PATCH',
+      method: 'PUT',
       data: products,
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -64,8 +74,8 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   deleteProduct: async (ids?: Key[]) => {
     return axiosService()({
@@ -74,14 +84,18 @@ export const productService = {
       params: {
         ids: ids,
       },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
-  changeProductTypeInZaloMiniApp: async (ids: number[], productTypes: ProductTypes[]) => {
+  changeProductTypeInZaloMiniApp: async (
+    ids: number[],
+    productTypes: ProductTypes[],
+  ) => {
     return axiosService()({
       url: `${PRODUCT_CONFIG_TYPE_URL}`,
       method: 'PATCH',
@@ -89,11 +103,12 @@ export const productService = {
         nhanhVnIds: ids,
         productTypes: productTypes,
       },
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'repeat' }),
     })
       .then((res) => res.data)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
-};
+}

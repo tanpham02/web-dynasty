@@ -47,7 +47,7 @@ export const categoryService = {
   updateCategory: async (id?: Key, data?: FormData): Promise<Category> => {
     return axiosService()({
       url: `${CATEGORY_URL}/${id}`,
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         'Content-Type': 'multipart/form-data',
       },
