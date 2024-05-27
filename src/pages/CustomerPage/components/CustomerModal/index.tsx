@@ -1,19 +1,10 @@
 import { Button, Tab, Tabs } from '@nextui-org/react'
-import { useQuery } from '@tanstack/react-query'
 import { Key, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
 
-import Box from '~/components/Box'
 import CustomModal from '~/components/NextUI/CustomModal'
-import { FormContextInput } from '~/components/NextUI/Form'
-import { CUSTOMER_TYPES } from '~/constants/customer'
-import { QUERY_KEY } from '~/constants/queryKey'
-import { Customer, CustomerStatus, CustomerType } from '~/models/customers'
-import customerService from '~/services/customerService'
-import customerAddressService from '~/services/customerService/customerAddressService'
-import CustomerForm from '../CustomerForm'
 import CustomerDeliveryAddress from '../CustomerDeliveryAddress'
-import CustomerOrderHistory from '../CustomerOrderHistory/inde'
+import CustomerForm from '../CustomerForm'
+import CustomerOrderHistory from '../CustomerOrderHistory'
 
 enum CustomerTab {
   INFO = 'INFO',

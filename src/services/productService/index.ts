@@ -1,5 +1,7 @@
 import qs from 'qs'
 import { Key } from 'react'
+
+import { ProductMain, ProductTypes } from '~/models/product'
 import { ListDataResponse, ListResponse, SearchParams } from '~/types'
 import {
   PRODUCT_CONFIG_TYPE_URL,
@@ -7,7 +9,6 @@ import {
   PRODUCT_URL,
 } from '../apiUrl'
 import axiosService from '../axiosService'
-import { ProductMain, ProductTypes } from './../../models/product'
 
 export const productService = {
   getProductFromThirdParty: async (

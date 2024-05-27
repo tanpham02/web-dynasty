@@ -1,4 +1,4 @@
-import { ProductMain } from './product';
+import { ProductMain } from './product'
 
 export enum StatusOrder {
   PENDING = 'PENDING',
@@ -7,6 +7,7 @@ export enum StatusOrder {
   CANCELED = 'CANCELED',
   WAITING_FOR_DELIVERING = 'WAITING_FOR_DELIVERING',
   WAITING_FOR_PAYMENT = 'WAITING_FOR_PAYMENT',
+  FAIL = 'FAIL',
 }
 
 export enum OrderType {
@@ -28,37 +29,37 @@ export enum OrderReceivingTime {
 }
 
 export interface Order {
-  _id?: string;
-  customerId?: string;
-  products?: ProductOrder[];
-  shipFee?: number;
-  orderStatus?: StatusOrder;
-  fullName?: string;
-  phoneNumber?: string;
-  location?: string;
-  city?: string;
-  cityId?: string;
-  district?: string;
-  districtId?: string;
-  ward?: string;
-  wardId?: string;
-  orderType?: OrderType;
-  paymentMethod?: OrderPaymentMethod;
-  orderReceivingTime?: OrderReceivingTime;
-  orderReceivingTimeAt?: string;
-  voucherId?: string;
-  storeId?: string;
-  shipperId?: string;
-  reasonCancel?: string;
-  note?: string;
-  subTotal?: number;
-  total?: number;
-  createdAt?: string;
-  updatedAt?: string;
+  _id?: string
+  customerId?: string
+  products?: ProductOrder[]
+  shipFee?: number
+  orderStatus?: StatusOrder
+  fullName?: string
+  phoneNumber?: string
+  location?: string
+  city?: string
+  cityId?: string
+  district?: string
+  districtId?: string
+  ward?: string
+  wardId?: string
+  orderType?: OrderType
+  paymentMethod?: OrderPaymentMethod
+  orderReceivingTime?: OrderReceivingTime
+  orderReceivingTimeAt?: string
+  voucherId?: string
+  storeId?: string
+  shipperId?: string
+  reasonCancel?: string
+  note?: string
+  subTotal?: number
+  total?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface ProductOrder {
-  product?: ProductMain;
-  note?: string;
-  quantity?: number;
+  product?: ProductMain
+  note?: string
+  quantity?: number
 }

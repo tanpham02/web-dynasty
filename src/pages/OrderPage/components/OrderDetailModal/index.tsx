@@ -1,24 +1,23 @@
 import { Card, CardBody, CardHeader, Chip, Image } from '@nextui-org/react';
-import Svg from 'react-inlinesvg';
 import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
+import Svg from 'react-inlinesvg';
 
-import Box from '~/components/Box';
 import BoxIcon from '~/assets/svg/box.svg';
-import UserIcon from '~/assets/svg/user-circle.svg';
 import PaymentIcon from '~/assets/svg/payment.svg';
+import UserIcon from '~/assets/svg/user-circle.svg';
+import Box from '~/components/Box';
 
+import { globalLoading } from '~/components/GlobalLoading';
 import CustomModal from '~/components/NextUI/CustomModal';
+import { ORDER_PAYMENT_METHODS, ORDER_STATUSES } from '~/constants/order';
 import { QUERY_KEY } from '~/constants/queryKey';
 import orderService from '~/services/orderService';
-import DataRow from '../DataRow';
 import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils';
-import { formatCurrencyVND } from '~/utils/number';
-import { globalLoading } from '~/components/GlobalLoading';
 import { getFullImageUrl } from '~/utils/image';
-import { ORDER_PAYMENT_METHODS, ORDER_STATUSES } from '~/constants/order';
-import { OrderType } from '~/models/order';
+import { formatCurrencyVND } from '~/utils/number';
+import DataRow from '../DataRow';
 
 interface OrderDetailModalProps {
   isOpen?: boolean;

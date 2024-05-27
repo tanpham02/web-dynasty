@@ -1,4 +1,4 @@
-import { Product } from './product';
+import { ProductMain } from './product'
 
 export enum CategoryStatus {
   ACTIVE = 'ACTIVE',
@@ -6,19 +6,19 @@ export enum CategoryStatus {
 }
 
 export interface ProductCategory {
-  [x: string]: any;
-  id?: number;
-  name?: string;
-  image?: string;
-  nhanhVnId?: string;
-  content?: string;
-  status?: CategoryStatus;
-  banner?: string;
-  products?: Product[];
-  existInDatabase?: boolean;
-  code?: string;
-  parentId?: string;
-  nhanhVnParentId?: string;
-  childCategoryDTOs?: ProductCategory[];
-  children?: ProductCategory[];
+  [x: string]: any
+  id?: number
+  name?: string
+  image?: string
+  nhanhVnId?: string
+  content?: string
+  status?: CategoryStatus
+  banner?: string
+  products?: ProductMain[]
+  existInDatabase?: boolean
+  code?: string
+  parentId?: string
+  nhanhVnParentId?: string
+  childCategoryDTOs?: ProductCategory[]
+  children?: ProductCategory[]
 }

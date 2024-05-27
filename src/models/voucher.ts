@@ -1,4 +1,4 @@
-import { Product } from './product';
+import { ProductMain } from './product'
 
 export enum VoucherStatus {
   ACTIVE = 'ACTIVE',
@@ -48,42 +48,42 @@ export enum VoucherTypes {
 }
 
 export interface Voucher {
-  id?: number;
-  name?: string;
-  code?: string;
-  description?: string;
-  createdDate?: Date | string;
-  modifiedDate?: Date | string;
-  status?: VoucherStatus | '';
-  startDate?: Date | string;
-  endDate?: Date | string;
-  type?: VoucherType | '';
-  saleScope?: VoucherSaleScope | '';
-  promotionType?: VoucherPromotionType | '';
-  minimumOrderPrice?: number;
-  totalQuantity?: number;
-  maxQuantityUseInUser?: number;
-  totalQuantityUsed?: number;
-  maxPromotion?: number;
-  discount?: number | null;
-  discountPercent?: number | null;
-  receivePointPercent?: number | null;
-  receivePoint?: number | null;
-  totalQuantityProduct?: number;
-  canUse?: boolean;
-  saleDetailDTOs?: VoucherDetail[];
-  voucherType?: VoucherTypes;
+  id?: number
+  name?: string
+  code?: string
+  description?: string
+  createdDate?: Date | string
+  modifiedDate?: Date | string
+  status?: VoucherStatus | ''
+  startDate?: Date | string
+  endDate?: Date | string
+  type?: VoucherType | ''
+  saleScope?: VoucherSaleScope | ''
+  promotionType?: VoucherPromotionType | ''
+  minimumOrderPrice?: number
+  totalQuantity?: number
+  maxQuantityUseInUser?: number
+  totalQuantityUsed?: number
+  maxPromotion?: number
+  discount?: number | null
+  discountPercent?: number | null
+  receivePointPercent?: number | null
+  receivePoint?: number | null
+  totalQuantityProduct?: number
+  canUse?: boolean
+  saleDetailDTOs?: VoucherDetail[]
+  voucherType?: VoucherTypes
 }
 
 export interface VoucherDetail {
-  id?: number;
-  discount?: number;
-  discountPercent?: number;
-  totalQuantity?: number;
-  totalQuantityUsed?: number;
-  maxQuantityInOrder?: number;
-  productId?: number;
-  productDTO?: Product;
+  id?: number
+  discount?: number
+  discountPercent?: number
+  totalQuantity?: number
+  totalQuantityUsed?: number
+  maxQuantityInOrder?: number
+  productId?: number
+  productDTO?: ProductMain
 }
 
 export enum SaleScope {
@@ -103,20 +103,20 @@ export enum StatusVoucher {
 }
 
 export interface VoucherOverriding {
-  _id?: string;
-  name?: string;
-  description?: string;
-  code?: string;
-  startDate?: string | Date;
-  endDate?: string | Date;
-  saleScope?: SaleScope;
-  promotionType?: PromotionsType;
-  discount?: number | null;
-  discountPercent?: number | null;
-  maximumReducedAmountMoney?: number;
-  totalQuantityVoucher?: number;
-  minimumOrderValue?: number;
-  listProductUsedVoucher?: string[];
-  customerIdsUsedVoucher?: string[];
-  status?: StatusVoucher;
+  _id?: string
+  name?: string
+  description?: string
+  code?: string
+  startDate?: string | Date
+  endDate?: string | Date
+  saleScope?: SaleScope
+  promotionType?: PromotionsType
+  discount?: number | null
+  discountPercent?: number | null
+  maximumReducedAmountMoney?: number
+  totalQuantityVoucher?: number
+  minimumOrderValue?: number
+  listProductUsedVoucher?: string[]
+  customerIdsUsedVoucher?: string[]
+  status?: StatusVoucher
 }
