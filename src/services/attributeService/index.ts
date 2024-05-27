@@ -58,7 +58,7 @@ export const attributeService = {
   ): Promise<Attribute> => {
     return axiosService()({
       url: `${ATTRIBUTES_URL}/${id}`,
-      method: 'PATCH',
+      method: 'PUT',
       data,
     })
       .then((res) => res.data)
