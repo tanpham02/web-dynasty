@@ -66,7 +66,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
               //   },
               // ),
               productAttributeItem: attribute?.extendedIds?.map(
-                (id, index) => ({
+                (_id, index) => ({
                   _id: attribute?._id,
                   // label?: string;
                   priceAdjustmentValue:

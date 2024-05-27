@@ -5,35 +5,35 @@ import {
   CardHeader,
   Divider,
   SelectItem,
-} from '@nextui-org/react';
-import Svg from 'react-inlinesvg';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useEffect, useMemo } from 'react';
-import { getProvinces, getDistricts, getWards } from 'vietnam-provinces';
+} from '@nextui-org/react'
+import { useEffect, useMemo } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import Svg from 'react-inlinesvg'
+import { getDistricts, getProvinces, getWards } from 'vietnam-provinces'
 
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import UserIcon from '~/assets/svg/user.svg';
-import { Order } from '~/models/order';
-import { FormContextInput } from '~/components/NextUI/Form';
-import Box from '~/components/Box';
-import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
+import UserIcon from '~/assets/svg/user.svg'
+import Box from '~/components/Box'
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import { FormContextInput } from '~/components/NextUI/Form'
+import FormContextSelect from '~/components/NextUI/Form/FormContextSelect'
+import { Order } from '~/models/order'
 
 const OrderFormPage = () => {
-  const forms = useForm<Order>();
+  const forms = useForm<Order>()
 
-  const { watch, setValue } = forms;
+  const { watch, setValue } = forms
 
-  const cityId = watch('cityId');
-  const districtId = watch('districtId');
-
-  useEffect(() => {
-    setValue('districtId', []);
-    setValue('wardId', []);
-  }, [cityId]);
+  const cityId = watch('cityId')
+  const districtId = watch('districtId')
 
   useEffect(() => {
-    setValue('wardId', []);
-  }, [districtId]);
+    setValue('districtId', [] as unknown as string)
+    setValue('wardId', [] as unknown as string)
+  }, [cityId])
+
+  useEffect(() => {
+    setValue('wardId', [] as unknown as string)
+  }, [districtId])
 
   const cities = useMemo(
     () =>
@@ -43,7 +43,7 @@ const OrderFormPage = () => {
         label: city.name,
       })),
     [],
-  );
+  )
 
   const districts = useMemo(() => {
     return Array.isArray(cityId) && cityId.length > 0
@@ -52,8 +52,8 @@ const OrderFormPage = () => {
           value: district.code,
           label: district.name,
         }))
-      : [];
-  }, [cityId]);
+      : []
+  }, [cityId])
 
   const wards = useMemo(() => {
     return Array.isArray(districtId) && districtId.length > 0
@@ -62,8 +62,8 @@ const OrderFormPage = () => {
           value: ward.code,
           label: ward.name,
         }))
-      : [];
-  }, [districtId]);
+      : []
+  }, [districtId])
 
   return (
     <div>
@@ -153,7 +153,7 @@ const OrderFormPage = () => {
         </CardBody>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default OrderFormPage;
+export default OrderFormPage

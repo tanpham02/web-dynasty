@@ -6,60 +6,59 @@ import {
   DropdownTrigger,
   Selection,
   useDisclosure,
-} from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { DatePicker } from 'antd';
-import moment, { Moment } from 'moment';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
-import Svg from 'react-inlinesvg';
-import { Link } from 'react-router-dom';
+} from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { DatePicker } from 'antd'
+import moment, { Moment } from 'moment'
+import { useSnackbar } from 'notistack'
+import { useState } from 'react'
+import Svg from 'react-inlinesvg'
+import { Link } from 'react-router-dom'
 
-import ArrowDownIcon from '~/assets/svg/arrow-down.svg';
-import DeleteIcon from '~/assets/svg/delete.svg';
-import InfoIcon from '~/assets/svg/info.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
-import { globalLoading } from '~/components/GlobalLoading';
+import ArrowDownIcon from '~/assets/svg/arrow-down.svg'
+import InfoIcon from '~/assets/svg/info.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
+import { globalLoading } from '~/components/GlobalLoading'
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
-} from '~/components/ModalConfirmDelete';
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { ORDER_STATUSES } from '~/constants/order';
-import { QUERY_KEY } from '~/constants/queryKey';
-import usePagination from '~/hooks/usePagination';
-import { Order, OrderType, StatusOrder } from '~/models/order';
-import orderService from '~/services/orderService';
+} from '~/components/ModalConfirmDelete'
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { ORDER_STATUSES } from '~/constants/order'
+import { QUERY_KEY } from '~/constants/queryKey'
+import usePagination from '~/hooks/usePagination'
+import { Order, StatusOrder } from '~/models/order'
+import orderService from '~/services/orderService'
+import { SearchParams } from '~/types'
 import {
   DATE_FORMAT_DDMMYYYY,
   DATE_FORMAT_HHMMSS,
   DATE_FORMAT_YYYYMMDD,
   formatDate,
-} from '~/utils/date.utils';
-import { getLocationLinkByAddress } from '~/utils/googleMapUtil';
-import { formatCurrencyVND } from '~/utils/number';
-import OrderDetailModal from './components/OrderDetailModal';
-import { SearchParams } from '~/types';
+} from '~/utils/date.utils'
+import { getLocationLinkByAddress } from '~/utils/googleMapUtil'
+import { formatCurrencyVND } from '~/utils/number'
+import OrderDetailModal from './components/OrderDetailModal'
 
 const OrderPage = () => {
   const { isOpen: isOpenModal, onOpenChange: onOpenChangeModal } =
-    useDisclosure();
+    useDisclosure()
 
   const {
     isOpen: isOpenModalDelete,
     onOpen: onOpenModalDelete,
     onOpenChange: onOpenChangeModalDelete,
-  } = useDisclosure();
+  } = useDisclosure()
 
-  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
-  const [orderSelectedKeys, setOrderSelectedKeys] = useState<Selection>();
-  const [modalId, setModalId] = useState<string>();
+  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>()
+  const [orderSelectedKeys, setOrderSelectedKeys] = useState<Selection>()
+  const [modalId, setModalId] = useState<string>()
 
-  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
-  const [filterImportDate, setFilterImportDate] = useState<Moment[]>([]);
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination()
+  const [filterImportDate, setFilterImportDate] = useState<Moment[]>([])
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   const columns: ColumnType<Order>[] = [
     {
@@ -92,7 +91,7 @@ const OrderPage = () => {
           order?.city,
         ]
           .filter((value) => Boolean(value))
-          .join(', ');
+          .join(', ')
         return (
           <Box className="flex flex-col">
             <span>{order?.fullName}</span>
@@ -111,7 +110,7 @@ const OrderPage = () => {
               </Link>
             )}
           </Box>
-        );
+        )
       },
     },
     {
@@ -176,7 +175,7 @@ const OrderPage = () => {
               </DropdownMenu>
             </Dropdown>
           </Box>
-        );
+        )
       },
     },
     {
@@ -199,10 +198,10 @@ const OrderPage = () => {
               />
             )} */}
           </Box>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const {
     data: orders,
@@ -216,7 +215,7 @@ const OrderPage = () => {
       let params: SearchParams = {
         pageSize: pageSize,
         pageIndex: pageIndex - 1,
-      };
+      }
 
       if (filterImportDate.length > 0) {
         params = {
@@ -227,59 +226,59 @@ const OrderPage = () => {
           to: moment(filterImportDate?.[1]?.toString()).format(
             DATE_FORMAT_YYYYMMDD,
           ),
-        };
+        }
       }
-      return await orderService.searchPagination(params);
+      return await orderService.searchPagination(params)
     },
     {
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
-  const handleOpenDeleteModal = (order: Order) => {
-    setModalDelete({
-      id: order?._id,
-      desc: `Bạn có chắc muốn xóa đơn hàng này không?`,
-    });
-    onOpenModalDelete();
-  };
+  // const handleOpenDeleteModal = (order: Order) => {
+  //   setModalDelete({
+  //     id: order?._id,
+  //     desc: `Bạn có chắc muốn xóa đơn hàng này không?`,
+  //   })
+  //   onOpenModalDelete()
+  // }
 
   const onCloseMaterialDeleteModal = () => {
-    setModalDelete({});
-    onOpenChangeModalDelete();
-  };
+    setModalDelete({})
+    onOpenChangeModalDelete()
+  }
 
   const handleDeleteOrder = async () => {
     try {
-      setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await orderService.delete(modalDelete?.id);
-      enqueueSnackbar('Xóa đơn hàng thành công!');
+      setModalDelete((prev) => ({ ...prev, isLoading: true }))
+      await orderService.delete(modalDelete?.id)
+      enqueueSnackbar('Xóa đơn hàng thành công!')
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi xóa đơn hàng!', {
         variant: 'error',
-      });
-      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteOrder ~ err:', err);
+      })
+      console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteOrder ~ err:', err)
     } finally {
-      await refetchOrders();
-      onCloseMaterialDeleteModal();
+      await refetchOrders()
+      onCloseMaterialDeleteModal()
     }
-  };
+  }
 
   const handleOpenModalOrderDetail = (order: Order) => {
     if (order?._id) {
-      setModalId(order._id);
-      onOpenChangeModal();
+      setModalId(order._id)
+      onOpenChangeModal()
     }
-  };
+  }
 
   const handleChangeFilterImportDate = (range: [Moment, Moment]) => {
     if (Array.isArray(range) && range.length === 2) {
-      const [start, end] = range;
-      setFilterImportDate([start, end]);
+      const [start, end] = range
+      setFilterImportDate([start, end])
     } else {
-      setFilterImportDate([]);
+      setFilterImportDate([])
     }
-  };
+  }
 
   const handleChangeOrderStatus = async (
     orderId?: string,
@@ -287,22 +286,22 @@ const OrderPage = () => {
   ) => {
     if (orderId && status)
       try {
-        globalLoading.show();
-        await orderService.updateOrderStatus(orderId, status);
-        enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!');
+        globalLoading.show()
+        await orderService.updateOrderStatus(orderId, status)
+        enqueueSnackbar('Cập nhật trạng thái đơn hàng thành công!')
       } catch (err) {
         enqueueSnackbar('Cập nhật trạng thái đơn hàng thất bại!', {
           variant: 'error',
-        });
+        })
         console.log(
           '🚀 ~ file: index.tsx:224 ~ handleChangeOrderStatus ~ err:',
           err,
-        );
+        )
       } finally {
-        await refetchOrders();
-        globalLoading.hide();
+        await refetchOrders()
+        globalLoading.hide()
       }
-  };
+  }
 
   return (
     <Box>
@@ -359,7 +358,7 @@ const OrderPage = () => {
         onOpenChange={onOpenChangeModal}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default OrderPage;
+export default OrderPage

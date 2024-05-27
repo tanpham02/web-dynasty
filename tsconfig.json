@@ -23,6 +23,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src","declarations"],
+  "include": ["src","declarations", "src/pages/CustomerPage/components/CustomerOrderHistory/index/.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

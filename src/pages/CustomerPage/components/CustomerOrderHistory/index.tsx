@@ -1,16 +1,12 @@
-import { Chip } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { useSnackbar } from 'notistack'
 import Box from '~/components/Box'
 
-import { globalLoading } from '~/components/GlobalLoading'
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
 import { QUERY_KEY } from '~/constants/queryKey'
 import useAddress from '~/hooks/useAddress'
 import usePagination from '~/hooks/usePagination'
 import { CustomerAddressItem } from '~/models/customers/customerAddress'
 import { Order } from '~/models/order'
-import customerAddressService from '~/services/customerService/customerAddressService'
 import orderService from '~/services/orderService'
 import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils'
 
