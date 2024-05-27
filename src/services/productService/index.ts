@@ -1,19 +1,18 @@
-import qs from 'qs';
-import { Key } from 'react';
-import { Product } from '~/models/product';
-import { ListDataResponse, ListResponse, SearchParams } from '~/types';
+import qs from 'qs'
+import { Key } from 'react'
+import { ListDataResponse, ListResponse, SearchParams } from '~/types'
 import {
   PRODUCT_CONFIG_TYPE_URL,
   PRODUCT_FROM_THIRD_PARTY_URL,
   PRODUCT_URL,
-} from '../apiUrl';
-import axiosService from '../axiosService';
-import { ProductMain, ProductTypes } from './../../models/product';
+} from '../apiUrl'
+import axiosService from '../axiosService'
+import { ProductMain, ProductTypes } from './../../models/product'
 
 export const productService = {
   getProductFromThirdParty: async (
     params: SearchParams,
-  ): Promise<ListResponse<Product>> => {
+  ): Promise<ListResponse<ProductMain>> => {
     return axiosService()({
       baseURL: `${PRODUCT_FROM_THIRD_PARTY_URL}`,
       method: 'GET',
@@ -21,8 +20,8 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   getProductPagination: async (
     params: SearchParams,
@@ -34,8 +33,8 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   getProductDetail: async (id: string): Promise<ProductMain> => {
     return axiosService()({
@@ -44,10 +43,10 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
-  createProduct: async (products: FormData): Promise<Product> => {
+  createProduct: async (products: FormData): Promise<ProductMain> => {
     return axiosService()({
       baseURL: PRODUCT_URL,
       method: 'POST',
@@ -58,10 +57,13 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
-  updateProduct: async (products?: FormData, id?: string): Promise<Product> => {
+  updateProduct: async (
+    products?: FormData,
+    id?: string,
+  ): Promise<ProductMain> => {
     return axiosService()({
       baseURL: `${PRODUCT_URL}/${id}`,
       method: 'PUT',
@@ -72,8 +74,8 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   deleteProduct: async (ids?: Key[]) => {
     return axiosService()({
@@ -87,8 +89,8 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
   changeProductTypeInZaloMiniApp: async (
     ids: number[],
@@ -106,7 +108,7 @@ export const productService = {
     })
       .then((res) => res.data)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
-};
+}
