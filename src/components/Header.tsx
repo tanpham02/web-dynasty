@@ -1,35 +1,61 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import jwt_decode from 'jwt-decode';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Users } from '~/models/user';
-import { getUserInfo } from '~/redux/slice/userSlice';
-import { AppDispatch, RootState } from '~/redux/store';
-import DropdownUser from './DropdownUser';
-import { LOCAL_STORAGE } from '~/constants/local_storage';
+import { Badge } from 'antd'
+import jwt_decode from 'jwt-decode'
+import { useContext, useEffect, useState } from 'react'
+import { FaBell } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { EVENT_KEYS } from '~/constants'
+import { LOCAL_STORAGE } from '~/constants/local_storage'
+import { SocketIOContext } from '~/context'
+import { Users } from '~/models/user'
+import { getUserInfo } from '~/redux/slice/userSlice'
+import { AppDispatch, RootState } from '~/redux/store'
+import DropdownUser from './DropdownUser'
 interface DecodedJWT {
-  id: string;
-  role?: string;
-  iat?: number;
-  exp?: number;
+  id: string
+  role?: string
+  iat?: number
+  exp?: number
 }
 
 const Header = (props: {
-  sidebarOpen: string | boolean | undefined;
-  setSidebarOpen: (arg0: boolean) => void;
+  sidebarOpen: string | boolean | undefined
+  setSidebarOpen: (arg0: boolean) => void
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const userInformation = useSelector<RootState, Users>((state) => state.userStore.user);
-  const token = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+  const dispatch = useDispatch<AppDispatch>()
+  const userInformation = useSelector<RootState, Users>(
+    (state) => state.userStore.user,
+  )
+  const socketClient = useContext(SocketIOContext)
+  const token = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+  const [haveNotification, setHaveNotification] = useState<boolean>(false)
 
   useEffect(() => {
     if (token) {
-      const decoded: DecodedJWT = jwt_decode(token);
+      const decoded: DecodedJWT = jwt_decode(token)
       if (decoded && Object.keys(decoded)?.length > 0) {
-        dispatch(getUserInfo(decoded?.id));
+        dispatch(getUserInfo(decoded?.id))
       }
     }
-  }, [token]);
+  }, [token])
+
+  useEffect(() => {
+    socketClient.on('connect', () => {
+      console.log(`Socket client connected with id: ${socketClient.id}`)
+    })
+
+    socketClient.on(EVENT_KEYS.CREATE_ORDER, (newOrder: any) => {
+      console.log('newOrder', newOrder)
+      setHaveNotification(true)
+    })
+
+    return () => {
+      socketClient.on('disconnect', () => {
+        console.log('Socket client disconnected')
+      })
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-9 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
@@ -39,8 +65,8 @@ const Header = (props: {
           <button
             aria-controls="sidebar"
             onClick={(e) => {
-              e.stopPropagation();
-              props.setSidebarOpen(!props.sidebarOpen);
+              e.stopPropagation()
+              props.setSidebarOpen(!props.sidebarOpen)
             }}
             className="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
           >
@@ -81,11 +107,16 @@ const Header = (props: {
         <div className="hidden sm:block"></div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
+          <div className="w-10 h-10 flex justify-center items-center rounded-full hover:bg-primary-100 hover:cursor-pointer">
+            <Badge color="text-secondary" dot={haveNotification}>
+              <FaBell size={20} className="text-primary" />
+            </Badge>
+          </div>
           <DropdownUser userInformation={userInformation} />
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

@@ -1,26 +1,26 @@
-import { Button, SelectItem } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Button, SelectItem } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
-import Box from '~/components/Box';
-import { globalLoading } from '~/components/GlobalLoading';
-import CustomModal from '~/components/NextUI/CustomModal';
+import Box from '~/components/Box'
+import { globalLoading } from '~/components/GlobalLoading'
+import CustomModal from '~/components/NextUI/CustomModal'
 import {
   FormContextDatePicker,
   FormContextInput,
   FormContextSelect,
   FormContextUpload,
-} from '~/components/NextUI/Form';
-import { QUERY_KEY } from '~/constants/queryKey';
-import useAddress from '~/hooks/useAddress';
-import { UserRole, Users } from '~/models/user';
-import userService from '~/services/userService';
-import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils';
-import { PATTERN } from '~/utils/regex';
+} from '~/components/NextUI/Form'
+import { QUERY_KEY } from '~/constants/queryKey'
+import useAddress from '~/hooks/useAddress'
+import { UserRole, Users } from '~/models/user'
+import userService from '~/services/userService'
+import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils'
+import { PATTERN } from '~/utils/regex'
 
-const defaultUserValues: Users = {};
+const defaultUserValues: Users = {}
 
 export enum ModalType {
   CREATE = 'CREATE',
@@ -29,13 +29,13 @@ export enum ModalType {
   INFORMATION = 'INFORMATION',
 }
 export interface UserModalProps {
-  isOpen?: boolean;
-  onClose?(): void;
-  onOpenChange?(): void;
-  setModal?({ isEdit, userId }: { isEdit?: boolean; userId?: string }): void;
-  onRefetch?(): Promise<any>;
-  isEdit?: boolean;
-  userId?: string;
+  isOpen?: boolean
+  onClose?(): void
+  onOpenChange?(): void
+  setModal?({ isEdit, userId }: { isEdit?: boolean; userId?: string }): void
+  onRefetch?(): Promise<any>
+  isEdit?: boolean
+  userId?: string
 }
 const roleSelection = [
   {
@@ -46,7 +46,7 @@ const roleSelection = [
     value: UserRole.USER,
     label: 'Nhân viên',
   },
-];
+]
 
 const UserModal = ({
   isOpen,
@@ -57,12 +57,12 @@ const UserModal = ({
   userId,
   setModal,
 }: UserModalProps) => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [changePw, setChangePw] = useState<boolean>(false);
+  const { enqueueSnackbar } = useSnackbar()
+  const [changePw, setChangePw] = useState<boolean>(false)
 
   const forms = useForm<Users>({
     defaultValues: defaultUserValues,
-  });
+  })
 
   const {
     formState: { isSubmitting, errors },
@@ -73,12 +73,10 @@ const UserModal = ({
     setValue,
     setError,
     clearErrors,
-  } = forms;
+  } = forms
 
-  const phoneNumber = watch('phoneNumber');
-  const currentFormData = watch();
-
-  console.log('form: ', currentFormData);
+  const phoneNumber = watch('phoneNumber')
+  const currentFormData = watch()
 
   const { cityOptions, districtOptions, wardOptions, addressInfo } = useAddress(
     {
@@ -86,14 +84,14 @@ const UserModal = ({
       districtId: currentFormData?.districtId?.[0],
       wardId: currentFormData?.wardId?.[0],
     },
-  );
+  )
 
   useQuery(
     [QUERY_KEY.USERS_DETAIL, userId],
     async () => {
-      globalLoading.show();
+      globalLoading.show()
       if (userId) {
-        const response = await userService.getUserByUserId(userId);
+        const response = await userService.getUserByUserId(userId)
         reset({
           ...response,
           cityId: response?.cityId
@@ -106,23 +104,23 @@ const UserModal = ({
             ? ([String(response.wardId || '')] as any)
             : [],
           role: response?.role ? ([response.role] as any) : [],
-        });
+        })
       }
-      globalLoading.hide();
+      globalLoading.hide()
     },
     {
       enabled: Boolean(userId) && isEdit,
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
   useEffect(() => {
-    if (getFieldState('cityId').isDirty) setValue('districtId', '');
-  }, [currentFormData?.cityId, getFieldState]);
+    if (getFieldState('cityId').isDirty) setValue('districtId', '')
+  }, [currentFormData?.cityId, getFieldState])
 
   useEffect(() => {
-    if (getFieldState('cityId').isDirty) setValue('wardId', '');
-  }, [currentFormData?.districtId, getFieldState]);
+    if (getFieldState('cityId').isDirty) setValue('wardId', '')
+  }, [currentFormData?.districtId, getFieldState])
 
   useEffect(() => {
     if (
@@ -131,9 +129,9 @@ const UserModal = ({
       PATTERN.PHONE.test(phoneNumber) &&
       !getFieldState('username').isDirty
     ) {
-      setValue('username', phoneNumber);
+      setValue('username', phoneNumber)
     }
-  }, [phoneNumber, isEdit]);
+  }, [phoneNumber, isEdit])
 
   const handleResetFormValue = () => {
     reset({
@@ -154,42 +152,42 @@ const UserModal = ({
       status: undefined,
       image: undefined,
       confirmPw: '',
-    });
+    })
 
-    setChangePw(false);
-  };
+    setChangePw(false)
+  }
 
-  const handleShowOrHideInputChangePassword = () => setChangePw(!changePw);
+  const handleShowOrHideInputChangePassword = () => setChangePw(!changePw)
 
   const onSubmit = async (data: Users) => {
-    globalLoading.show();
-    const formData = new FormData();
+    globalLoading.show()
+    const formData = new FormData()
 
     try {
       const isMatchOldPassword = await userService.checkMatchOldPassword({
         _id: data._id,
         password: data.oldPassword,
-      });
+      })
 
       if (data?.oldPassword && isEdit && !isMatchOldPassword) {
         setError('oldPassword', {
           message: 'Mật khẩu cũ không chính xác',
           type: 'isMatchPassword',
-        });
-        return;
+        })
+        return
       } else {
-        if (errors?.oldPassword) clearErrors('oldPassword');
+        if (errors?.oldPassword) clearErrors('oldPassword')
         if (
           !isEdit &&
           phoneNumber &&
           watch('username') &&
           !getFieldState('username').isDirty
         ) {
-          setValue('username', phoneNumber, { shouldDirty: true });
+          setValue('username', phoneNumber, { shouldDirty: true })
         }
 
         if (data.image instanceof Blob) {
-          formData.append('file', data.image);
+          formData.append('file', data.image)
         }
         const newData: Users = {
           ...data,
@@ -203,40 +201,40 @@ const UserModal = ({
           districtId: data?.districtId?.[0] || '',
           city: addressInfo?.city,
           cityId: data?.cityId?.[0] || '',
-        };
-
-        if (isEdit && changePw && data?.newPassword) {
-          newData.password = data.newPassword;
         }
 
-        delete newData?.confirmPw;
-        delete newData?.oldPassword;
-        delete newData?.newPassword;
+        if (isEdit && changePw && data?.newPassword) {
+          newData.password = data.newPassword
+        }
 
-        formData.append('staffInfo', JSON.stringify(newData));
+        delete newData?.confirmPw
+        delete newData?.oldPassword
+        delete newData?.newPassword
+
+        formData.append('staffInfo', JSON.stringify(newData))
       }
-      if (!isEdit) await userService.createUser(formData);
-      else if (userId) await userService.updateUser(formData, userId);
+      if (!isEdit) await userService.createUser(formData)
+      else if (userId) await userService.updateUser(formData, userId)
 
-      handleResetFormValue();
-      onClose?.();
-      onRefetch?.();
+      handleResetFormValue()
+      onClose?.()
+      onRefetch?.()
       setModal?.({
         userId: undefined,
-      });
+      })
       enqueueSnackbar({
         message: `${!isEdit ? 'Thêm' : 'Cập nhật'} nhân viên thành công!`,
-      });
+      })
     } catch (err) {
-      console.log('🚀 ~ file: index.tsx:219 ~ onSubmit ~ err:', err);
+      console.log('🚀 ~ file: index.tsx:219 ~ onSubmit ~ err:', err)
       enqueueSnackbar({
         message: `${!isEdit ? 'Thêm' : 'Cập nhật'} nhân viên thất bại!`,
         variant: 'error',
-      });
+      })
     } finally {
-      globalLoading.hide();
+      globalLoading.hide()
     }
-  };
+  }
 
   return (
     <CustomModal
@@ -250,10 +248,10 @@ const UserModal = ({
       scrollBehavior="inside"
       placement="center"
       onClose={() => {
-        handleResetFormValue();
+        handleResetFormValue()
         setModal?.({
           userId: undefined,
-        });
+        })
       }}
       isDismissable={false}
     >
@@ -419,7 +417,7 @@ const UserModal = ({
         </Box>
       </FormProvider>
     </CustomModal>
-  );
-};
+  )
+}
 
-export default UserModal;
+export default UserModal
