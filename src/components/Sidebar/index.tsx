@@ -1,65 +1,65 @@
-import { AnimatePresence } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
-import SVG from 'react-inlinesvg';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import SVG from 'react-inlinesvg'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
-import Logo from '~/assets/images/logo/admin-logo.png';
-import { PATH_NAME } from '~/constants/router';
-import routeSideBar from '~/routers/routeSideBar';
-import SidebarLinkGroup from './SidebarLinkGroup';
+import Logo from '~/assets/images/logo/admin-logo.png'
+import { PATH_NAME } from '~/constants/router'
+import routeSideBar from '~/routers/routeSideBar'
+import { SidebarLinkGroup } from '..'
 
 interface SidebarProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (arg: boolean) => void;
+  sidebarOpen: boolean
+  setSidebarOpen: (arg: boolean) => void
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { pathname } = location;
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { pathname } = location
 
-  const trigger = useRef<any>(null);
-  const sidebar = useRef<any>(null);
+  const trigger = useRef<any>(null)
+  const sidebar = useRef<any>(null)
 
-  const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
+  const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true',
-  );
+  )
 
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!sidebar.current || !trigger.current) return;
+      if (!sidebar.current || !trigger.current) return
       if (
         !sidebarOpen ||
         sidebar.current.contains(target) ||
         trigger.current.contains(target)
       )
-        return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener('click', clickHandler);
-    return () => document.removeEventListener('click', clickHandler);
-  });
+        return
+      setSidebarOpen(false)
+    }
+    document.addEventListener('click', clickHandler)
+    return () => document.removeEventListener('click', clickHandler)
+  })
 
   // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (!sidebarOpen || keyCode !== 27) return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener('keydown', keyHandler);
-    return () => document.removeEventListener('keydown', keyHandler);
-  });
+      if (!sidebarOpen || keyCode !== 27) return
+      setSidebarOpen(false)
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  })
 
   useEffect(() => {
-    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
+    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString())
     if (sidebarExpanded) {
-      document.querySelector('body')?.classList.add('sidebar-expanded');
+      document.querySelector('body')?.classList.add('sidebar-expanded')
     } else {
-      document.querySelector('body')?.classList.remove('sidebar-expanded');
+      document.querySelector('body')?.classList.remove('sidebar-expanded')
     }
-  }, [sidebarExpanded]);
+  }, [sidebarExpanded])
 
   return (
     <AnimatePresence>
@@ -126,10 +126,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 to={menu.path}
                                 className={`group relative flex list-none items-center gap-2.5 rounded-sm px-4 py-2 font-normal text-white duration-300 ease-in-out `}
                                 onClick={(e) => {
-                                  e.preventDefault();
+                                  e.preventDefault()
                                   sidebarExpanded
                                     ? handleClick?.()
-                                    : setSidebarExpanded?.(true);
+                                    : setSidebarExpanded?.(true)
                                 }}
                               >
                                 <SVG
@@ -184,7 +184,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 </ul>
                               </div>
                             </li>
-                          );
+                          )
                         }}
                       </SidebarLinkGroup>
                     ) : (
@@ -199,8 +199,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               : 'font-normal cursor-pointer text-white'
                           }`}
                           onClick={() => {
-                            setSidebarOpen(false);
-                            navigate(menu.path);
+                            setSidebarOpen(false)
+                            navigate(menu.path)
                           }}
                         >
                           <SVG src={menu.icon} className="w-5 h-5" />
@@ -221,7 +221,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </div>
                         </div>
                       </li>
-                    );
+                    )
                   })}
                 </ul>
               </div>
@@ -231,7 +231,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         </div>
       </aside>
     </AnimatePresence>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

@@ -1,6 +1,6 @@
-import { Skeleton } from '@nextui-org/react';
+import { Skeleton } from '@nextui-org/react'
 
-import Box from '../Box';
+import Box from '../../Box'
 
 const ModalCategorySkeleton = () => {
   return (
@@ -11,7 +11,7 @@ const ModalCategorySkeleton = () => {
         </Skeleton>
       ))}
     </Box>
-  );
-};
+  )
+}
 
-export default ModalCategorySkeleton;
+export default ModalCategorySkeleton

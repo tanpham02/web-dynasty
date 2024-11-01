@@ -1,64 +1,64 @@
-import { Avatar } from '@nextui-org/react';
-import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Avatar } from '@nextui-org/react'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-import { useSelector } from 'react-redux';
-import { UserRole, Users } from '~/models/user';
-import { RootState } from '~/redux/store';
-import { getFullImageUrl } from '~/utils/image';
-import Box from './Box';
+import { useSelector } from 'react-redux'
+import { UserRole, Users } from '~/models/user'
+import { RootState } from '~/redux/store'
+import { getFullImageUrl } from '~/utils/image'
+import Box from '../Box'
 
 interface DropdownUserType {
-  userInformation: Users;
+  userInformation: Users
 }
 
 const UserRoleMapping: { [key: string]: any } = {
   [`${UserRole.ADMIN}`]: 'Quản trị viên cửa hàng',
   [`${UserRole.USER}`]: 'Nhân viên',
-};
+}
 
 const DropdownUser = ({ userInformation }: DropdownUserType) => {
-  const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const currentUserLogin = useSelector<RootState, Users>(
     (state) => state.userStore.user,
-  );
+  )
 
-  const trigger = useRef<any>(null);
-  const dropdown = useRef<any>(null);
+  const trigger = useRef<any>(null)
+  const dropdown = useRef<any>(null)
 
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return;
+      if (!dropdown.current) return
       if (
         !dropdownOpen ||
         dropdown.current.contains(target) ||
         trigger.current.contains(target)
       )
-        return;
-      setDropdownOpen(false);
-    };
-    document.addEventListener('click', clickHandler);
-    return () => document.removeEventListener('click', clickHandler);
-  });
+        return
+      setDropdownOpen(false)
+    }
+    document.addEventListener('click', clickHandler)
+    return () => document.removeEventListener('click', clickHandler)
+  })
 
   // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (!dropdownOpen || keyCode !== 27) return;
-      setDropdownOpen(false);
-    };
-    document.addEventListener('keydown', keyHandler);
-    return () => document.removeEventListener('keydown', keyHandler);
-  });
+      if (!dropdownOpen || keyCode !== 27) return
+      setDropdownOpen(false)
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  })
 
   const handleLogOut = () => {
     // await dispatch(signOut());
-    localStorage.removeItem('@access_token');
-    localStorage.removeItem('@refresh_token');
-    navigate('/login');
-  };
+    localStorage.removeItem('@access_token')
+    localStorage.removeItem('@refresh_token')
+    navigate('/login')
+  }
 
   return (
     <div className="relative">
@@ -69,10 +69,10 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         to="#"
       >
         <span className="hidden text-right lg:block">
-          <span className="block text-sm font-bold text-black dark:text-white">
+          <span className="block text-base font-bold text-black dark:text-white">
             {userInformation?.fullName || userInformation?.email}
           </span>
-          <span className="block text-xs text-primary">
+          <span className="block text-sm text-primary">
             {userInformation?.role &&
               UserRoleMapping[userInformation?.role as any]}
           </span>
@@ -93,7 +93,7 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
                 {currentUserLogin?.fullName
                   ? currentUserLogin.fullName?.charAt(0)
                   : currentUserLogin?.username &&
-                  currentUserLogin.username?.charAt(0)?.toUpperCase()}
+                    currentUserLogin.username?.charAt(0)?.toUpperCase()}
               </Box>
             }
             className="h-10 w-10 object-cover !rounded-full"
@@ -101,8 +101,9 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         </span>
 
         <svg
-          className={`hidden fill-black sm:block ${dropdownOpen ? 'rotate-180' : ''
-            }`}
+          className={`hidden fill-black sm:block ${
+            dropdownOpen ? 'rotate-180' : ''
+          }`}
           width="12"
           height="8"
           viewBox="0 0 12 8"
@@ -123,8 +124,9 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-2 flex w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'
-          }`}
+        className={`absolute right-0 mt-2 flex w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+          dropdownOpen === true ? 'block' : 'hidden'
+        }`}
       >
         <button
           onClick={handleLogOut}
@@ -152,7 +154,7 @@ const DropdownUser = ({ userInformation }: DropdownUserType) => {
       </div>
       {/* <!-- Dropdown End --> */}
     </div>
-  );
-};
+  )
+}
 
-export default DropdownUser;
+export default DropdownUser

@@ -11,7 +11,8 @@ import { SocketIOContext } from '~/context'
 import { Users } from '~/models/user'
 import { getUserInfo } from '~/redux/slice/userSlice'
 import { AppDispatch, RootState } from '~/redux/store'
-import DropdownUser from './DropdownUser'
+import { DropdownUser, Notification } from '..'
+
 interface DecodedJWT {
   id: string
   role?: string
@@ -30,6 +31,8 @@ const Header = (props: {
   const socketClient = useContext(SocketIOContext)
   const token = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
   const [haveNotification, setHaveNotification] = useState<boolean>(false)
+
+  const [isShowNotification, setIsShowNotification] = useState<boolean>(false)
 
   useEffect(() => {
     if (token) {
@@ -56,6 +59,9 @@ const Header = (props: {
       })
     }
   }, [])
+
+  const handleToggleShowNotification = () =>
+    setIsShowNotification(!isShowNotification)
 
   return (
     <header className="sticky top-0 z-9 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
@@ -106,11 +112,17 @@ const Header = (props: {
 
         <div className="hidden sm:block"></div>
 
-        <div className="flex items-center gap-3 2xsm:gap-7">
-          <div className="w-10 h-10 flex justify-center items-center rounded-full hover:bg-primary-100 hover:cursor-pointer">
+        <div className="flex items-center gap-3 2xsm:gap-7 relative">
+          <div
+            className={`w-10 h-10 flex justify-center items-center rounded-full hover:bg-primary-100 hover:cursor-pointer  ${
+              isShowNotification ? 'bg-primary-100' : ''
+            }`}
+            onClick={handleToggleShowNotification}
+          >
             <Badge color="text-secondary" dot={haveNotification}>
               <FaBell size={20} className="text-primary" />
             </Badge>
+            {isShowNotification && <Notification isEmpty={haveNotification} />}
           </div>
           <DropdownUser userInformation={userInformation} />
         </div>

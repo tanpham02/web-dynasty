@@ -88,3 +88,5 @@ export interface LocationResponseType {
   messages?: string[];
   data?: LocationItemType[];
 }
+
+export type Callback = () => void

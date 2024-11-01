@@ -1,30 +1,30 @@
-import { SelectItem } from '@nextui-org/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useEffect, useMemo, useState } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { SelectItem } from '@nextui-org/react'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useEffect, useMemo, useState } from 'react'
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 
-import DeleteIcon from '~/assets/svg/delete.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
-import { globalLoading } from '~/components/GlobalLoading';
-import CustomModal from '~/components/NextUI/CustomModal';
-import { FormContextInput } from '~/components/NextUI/Form';
-import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
-import FormContextSwitch from '~/components/NextUI/Form/FormContextSwitch';
-import FormContextUpload from '~/components/NextUI/Form/FormContextUpload';
-import ModalCategorySkeleton from '~/components/Skeleton/ModalCategorySkeleton';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { Category } from '~/models/category';
-import { categoryService } from '~/services/categoryService';
-import { getFullImageUrl } from '~/utils/image';
+import DeleteIcon from '~/assets/svg/delete.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
+import { globalLoading } from '~/components/GlobalLoading'
+import CustomModal from '~/components/NextUI/CustomModal'
+import { FormContextInput } from '~/components/NextUI/Form'
+import FormContextSelect from '~/components/NextUI/Form/FormContextSelect'
+import FormContextSwitch from '~/components/NextUI/Form/FormContextSwitch'
+import FormContextUpload from '~/components/NextUI/Form/FormContextUpload'
+import ModalCategorySkeleton from '~/components/Skeleton/ModalCategorySkeleton'
+import { QUERY_KEY } from '~/constants/queryKey'
+import { Category } from '~/models/category'
+import { categoryService } from '~/services/categoryService'
+import { getFullImageUrl } from '~/utils/image'
 
 interface CategoryModalProps {
-  isOpen?: boolean;
-  onOpenChange?(): void;
-  onRefetch?(): Promise<any>;
-  isEdit?: boolean;
-  categoryId?: string;
+  isOpen?: boolean
+  onOpenChange?(): void
+  onRefetch?(): Promise<any>
+  isEdit?: boolean
+  categoryId?: string
 }
 const CategoryModal = ({
   isOpen,
@@ -35,9 +35,9 @@ const CategoryModal = ({
 }: CategoryModalProps) => {
   const forms = useForm<Category>({
     defaultValues: { childrenCategory: {}, visible: true },
-  });
+  })
 
-  const [categoryAllData, setCategoryAllData] = useState<Category[]>();
+  const [categoryAllData, setCategoryAllData] = useState<Category[]>()
 
   const {
     handleSubmit,
@@ -46,33 +46,33 @@ const CategoryModal = ({
     getFieldState,
     setValue,
     control,
-  } = forms;
+  } = forms
 
   const { fields: childrenCategory, remove: removeChildrenCategory } =
     useFieldArray({
       control,
       name: 'childrenCategory.category',
-    });
+    })
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    if (categoryId && isEdit && isOpen) getCategoryDetail();
+    if (categoryId && isEdit && isOpen) getCategoryDetail()
     else
       resetFormValue({
         name: '',
         childrenCategory: { category: [] },
         visible: true,
-      });
-    getAllCategory();
-  }, [isEdit, categoryId, isOpen]);
+      })
+    getAllCategory()
+  }, [isEdit, categoryId, isOpen])
 
   const getAllCategory = async () => {
-    const response = await categoryService.getAllCategory();
+    const response = await categoryService.getAllCategory()
     if (response) {
-      setCategoryAllData(response);
+      setCategoryAllData(response)
     }
-  };
+  }
 
   const {
     data: categories,
@@ -82,51 +82,51 @@ const CategoryModal = ({
     [QUERY_KEY.CATEGORY],
     async () => categoryService.getCategoryByCriteria({}),
     { enabled: isOpen },
-  );
+  )
 
   useEffect(() => {
     if (categoryAllData && !isEdit) {
-      setValue('priority', categoryAllData.length + 1);
+      setValue('priority', categoryAllData.length + 1)
     }
-  }, [categoryAllData, isEdit]);
+  }, [categoryAllData, isEdit])
 
   const getCategoryDetail = async () => {
     try {
-      globalLoading.show();
-      const response = await categoryService.getCategoryById(categoryId);
+      globalLoading.show()
+      const response = await categoryService.getCategoryById(categoryId)
 
       if (response && Object.keys(response).length > 0) {
         resetFormValue({
           ...response,
           file: response?.avatar ? getFullImageUrl(response.avatar) : undefined,
-        });
+        })
       }
     } catch (err) {
-      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu danh mục!');
-      onOpenChange?.();
-      console.log('🚀 ~ file: index.tsx:125 ~ getCategoryDetail ~ err:', err);
+      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu danh mục!')
+      onOpenChange?.()
+      console.log('🚀 ~ file: index.tsx:125 ~ getCategoryDetail ~ err:', err)
     } finally {
-      globalLoading.hide();
+      globalLoading.hide()
     }
-  };
+  }
 
   const categoriesData = useMemo(
     () => categories?.pages?.flatMap((page) => page?.data),
     [categories],
-  );
+  )
 
   const onSubmit = async (data: Category) => {
-    console.log(data);
+    console.log(data)
     try {
-      const formData = new FormData();
+      const formData = new FormData()
 
-      let jsonData: Category = {};
-      let parentCategoryId: string = '';
-      let isCreateChildrenCategory: boolean = false;
+      let jsonData: Category = {}
+      let parentCategoryId: string = ''
+      let isCreateChildrenCategory: boolean = false
 
       if (data?.file && data.file instanceof Blob) {
-        formData.append('file', data.file);
-        delete data.file;
+        formData.append('file', data.file)
+        delete data.file
       }
 
       if (
@@ -138,11 +138,11 @@ const CategoryModal = ({
           Array.isArray(data.childrenCategory.parentId) &&
           data.childrenCategory.parentId.length > 0
             ? data.childrenCategory.parentId[0]
-            : data.childrenCategory.parentId;
+            : data.childrenCategory.parentId
         const parentCategory = categoriesData?.find(
           (item) => item._id === parentCategoryId,
-        );
-        isCreateChildrenCategory = true;
+        )
+        isCreateChildrenCategory = true
 
         if (!isEdit) {
           jsonData = {
@@ -158,7 +158,7 @@ const CategoryModal = ({
                 },
               ],
             },
-          };
+          }
         } else {
           jsonData = {
             ...parentCategory,
@@ -177,25 +177,25 @@ const CategoryModal = ({
                     ]
                 : data?.childrenCategory?.category,
             },
-          };
+          }
         }
-        delete jsonData?._id;
+        delete jsonData?._id
       } else {
-        jsonData = data;
+        jsonData = data
 
         if (!jsonData?.childrenCategory?.parentId?.length)
-          delete jsonData?.childrenCategory;
+          delete jsonData?.childrenCategory
       }
 
-      formData.append('categoryInfo', JSON.stringify(jsonData));
+      formData.append('categoryInfo', JSON.stringify(jsonData))
 
       if (isEdit || isCreateChildrenCategory) {
         await categoryService.updateCategory(
           !isCreateChildrenCategory ? categoryId : parentCategoryId,
           formData,
-        );
+        )
       } else {
-        await categoryService.createCategory(formData);
+        await categoryService.createCategory(formData)
       }
       if (
         isEdit &&
@@ -203,22 +203,22 @@ const CategoryModal = ({
         data?.childrenCategory?.parentId &&
         getFieldState(`childrenCategory.parentId`).isDirty
       )
-        await categoryService.deleteCategoryByIds([categoryId]);
+        await categoryService.deleteCategoryByIds([categoryId])
 
-      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} danh mục thành công!`);
+      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} danh mục thành công!`)
     } catch (err) {
       enqueueSnackbar(
         `Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} danh mục!`,
         {
           variant: 'error',
         },
-      );
-      console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
+      )
+      console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err)
     } finally {
-      await onRefetch?.();
-      onOpenChange?.();
+      await onRefetch?.()
+      onOpenChange?.()
     }
-  };
+  }
 
   return (
     <CustomModal
@@ -346,7 +346,7 @@ const CategoryModal = ({
         </Box>
       </FormProvider>
     </CustomModal>
-  );
-};
+  )
+}
 
-export default CategoryModal;
+export default CategoryModal

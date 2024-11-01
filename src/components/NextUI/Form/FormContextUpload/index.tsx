@@ -8,42 +8,42 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from 'react'
 import {
   Controller,
   FieldValues,
   RegisterOptions,
   useFormContext,
-} from 'react-hook-form';
-import SVG from 'react-inlinesvg';
-import toast from 'react-hot-toast';
+} from 'react-hook-form'
+import SVG from 'react-inlinesvg'
+import toast from 'react-hot-toast'
 
-import PreviewSvg from '~/assets/svg/magnifying-glass.svg';
-import TrashBinSvg from '~/assets/svg/delete.svg';
-import WarningSvg from '~/assets/svg/warning-filled.svg';
-import UploadSvg from '~/assets/svg/upload.svg';
-import DownloadFileSvg from '~/assets/svg/download-file.svg';
-import FileSvg from '~/assets/svg/file.svg';
-import ExcelSvg from '~/assets/svg/excel.svg';
-import ImagePreview from '~/components/ImagePreview';
-import Progress from '~/components/Progess';
-import FormContextField from '../FormContextField';
-import { getFullImageUrl } from '~/utils/image';
+import PreviewSvg from '~/assets/svg/magnifying-glass.svg'
+import TrashBinSvg from '~/assets/svg/delete.svg'
+import WarningSvg from '~/assets/svg/warning-filled.svg'
+import UploadSvg from '~/assets/svg/upload.svg'
+import DownloadFileSvg from '~/assets/svg/download-file.svg'
+import FileSvg from '~/assets/svg/file.svg'
+import ExcelSvg from '~/assets/svg/excel.svg'
+import ImagePreview from '~/components/ImagePreview'
+import Progress from '~/components/Progress'
+import FormContextField from '../FormContextField'
+import { getFullImageUrl } from '~/utils/image'
 
 interface FormContextUploadProps {
-  label?: string;
-  name: string;
+  label?: string
+  name: string
   rules?:
     | Omit<
         RegisterOptions<FieldValues, string>,
         'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
       >
-    | undefined;
-  acceptType?: string[];
-  isCircle?: boolean;
-  className?: string;
-  resizeMode?: 'object-contain' | 'object-cover' | 'object-fill';
-  showPreview?: boolean;
+    | undefined
+  acceptType?: string[]
+  isCircle?: boolean
+  className?: string
+  resizeMode?: 'object-contain' | 'object-cover' | 'object-fill'
+  showPreview?: boolean
 }
 
 enum FileType {
@@ -68,41 +68,41 @@ const FormContextUpload = ({
   showPreview = true,
   acceptType = ['image/*'],
 }: FormContextUploadProps) => {
-  const uploadId = useId();
+  const uploadId = useId()
 
-  const timer = useRef<any>(null);
-  const prevProgress = useRef<number>(0);
-  const fileUploadRef = useRef<HTMLInputElement>(null);
+  const timer = useRef<any>(null)
+  const prevProgress = useRef<number>(0)
+  const fileUploadRef = useRef<HTMLInputElement>(null)
 
-  const [currentProgress, setCurrentProgress] = useState<number>(0);
-  const [isOpenPreview, setIsOpenPreview] = useState<boolean>(false);
-  const [isDraggingFile, setIsDraggingFile] = useState<boolean>(false);
+  const [currentProgress, setCurrentProgress] = useState<number>(0)
+  const [isOpenPreview, setIsOpenPreview] = useState<boolean>(false)
+  const [isDraggingFile, setIsDraggingFile] = useState<boolean>(false)
 
-  const { control, setValue, watch } = useFormContext();
+  const { control, setValue, watch } = useFormContext()
 
-  const currentFile = watch(name);
+  const currentFile = watch(name)
 
   useEffect(() => {
-    window.addEventListener('dragenter', handleDragFile);
-    window.addEventListener('dragleave', handleDragFile);
-    window.addEventListener('dragover', handleDragFile);
-    window.addEventListener('drop', handleDropOnWindow);
-    window.addEventListener('blur', handleDropOnWindow);
+    window.addEventListener('dragenter', handleDragFile)
+    window.addEventListener('dragleave', handleDragFile)
+    window.addEventListener('dragover', handleDragFile)
+    window.addEventListener('drop', handleDropOnWindow)
+    window.addEventListener('blur', handleDropOnWindow)
 
     return () => {
-      window.removeEventListener('dragleave', handleDragFile);
-      window.removeEventListener('dragenter', handleDragFile);
-      window.removeEventListener('dragover', handleDragFile);
-      window.addEventListener('drop', handleDropOnWindow);
-      window.addEventListener('blur', handleDropOnWindow);
-    };
-  }, []);
+      window.removeEventListener('dragleave', handleDragFile)
+      window.removeEventListener('dragenter', handleDragFile)
+      window.removeEventListener('dragover', handleDragFile)
+      window.addEventListener('drop', handleDropOnWindow)
+      window.addEventListener('blur', handleDropOnWindow)
+    }
+  }, [])
 
   const handleDropOnWindow = (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDraggingFile(false);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDraggingFile(false)
+  }
 
   const fileUrl = useMemo(() => {
     try {
@@ -110,102 +110,102 @@ const FormContextUpload = ({
         ? getFullImageUrl(currentFile)
         : currentFile instanceof Blob
           ? URL.createObjectURL(currentFile)
-          : undefined;
+          : undefined
     } catch (err) {
-      return undefined;
+      return undefined
     }
-  }, [currentFile]);
+  }, [currentFile])
 
   const uploadFile = (file?: Blob) => {
     if (currentFile) {
-      setValue(name, null);
+      setValue(name, null)
     }
 
     timer.current = setInterval(() => {
       if (prevProgress.current < 100) {
         prevProgress.current += Math.ceil(
           Math.random() * 5 + currentProgress + 1,
-        );
-        setCurrentProgress(prevProgress.current);
-        return;
+        )
+        setCurrentProgress(prevProgress.current)
+        return
       }
 
       if (file && fileUploadRef.current) {
-        setValue(name, file);
-        fileUploadRef.current.value = '';
-        setCurrentProgress(0);
-        prevProgress.current = 0;
-        clearInterval(timer.current);
+        setValue(name, file)
+        fileUploadRef.current.value = ''
+        setCurrentProgress(0)
+        prevProgress.current = 0
+        clearInterval(timer.current)
       }
-    }, 15);
-  };
+    }, 15)
+  }
 
   const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
-    uploadFile(e.target.files?.[0]);
-  };
+    uploadFile(e.target.files?.[0])
+  }
 
   const handleClearFile = (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setValue(name, null);
-  };
+    e.preventDefault()
+    setValue(name, null)
+  }
 
   const handlePreviewFile = (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsOpenPreview(true);
-  };
+    e.preventDefault()
+    setIsOpenPreview(true)
+  }
 
   const handleDragFile = (e: any) => {
-    console.log('dragenter');
+    console.log('dragenter')
 
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
 
     if (
       (e.type === 'dragenter' || e.type === 'dragover') &&
       (e.clientX && e.clientY && e.screenX && e.screenY) > 0
     ) {
-      setIsDraggingFile(true);
+      setIsDraggingFile(true)
     }
-  };
+  }
 
   const handleDropFile = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDraggingFile(false);
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDraggingFile(false)
 
-    const targetFile = e.dataTransfer.files?.[0];
+    const targetFile = e.dataTransfer.files?.[0]
 
     if (acceptType.includes(targetFile?.type)) {
-      uploadFile(e.dataTransfer.files?.[0]);
+      uploadFile(e.dataTransfer.files?.[0])
     } else {
       toast.custom(
         <div className="flex flex-row py-2 px-5 bg-white border border-zinc-100 rounded-lg transition-all shadow-lg shadow-zinc-200">
           <SVG src={WarningSvg} className="text-warning w-5 h-5 mr-2" />
           <span className="text-sm">Định dạng file không được hỗ trợ!</span>
         </div>,
-      );
+      )
     }
-  };
+  }
 
   const handlePreventDragImage = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const getFileIcon = useCallback(() => {
     if (currentFile instanceof Blob) {
-      const fileType = currentFile?.type;
+      const fileType = currentFile?.type
 
       switch (true) {
         case FileType.EXCEL.includes(fileType):
-          return ExcelSvg;
+          return ExcelSvg
 
         default:
-          return FileSvg;
+          return FileSvg
       }
     }
 
-    return FileSvg;
-  }, [currentFile]);
+    return FileSvg
+  }, [currentFile])
 
   return (
     <div>
@@ -358,7 +358,7 @@ const FormContextUpload = ({
         <></>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default FormContextUpload;
+export default FormContextUpload
