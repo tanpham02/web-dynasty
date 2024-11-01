@@ -9,8 +9,6 @@ interface NotificationProps {
 }
 
 const Notification: FC<NotificationProps> = ({ isEmpty }) => {
-  console.log('Notification')
-
   return (
     <Box
       className="absolute top-[calc(100%+8px)] right-0 bg-white w-[450px] min-h-[200px] max-h-[70vh] py-2 px-6 shadow-lg rounded-lg"
