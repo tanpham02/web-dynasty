@@ -220,6 +220,7 @@ const UserModal = ({
       if (!isEdit) await userService.createUser(formData)
       else if (userId) await userService.updateUser(formData, userId)
 
+      dispatch(getUserInfo(userId!))
       handleResetFormValue()
       onClose?.()
       onRefetch?.()
@@ -236,7 +237,6 @@ const UserModal = ({
         variant: 'error',
       })
     } finally {
-      dispatch(getUserInfo(userId!))
       globalLoading.hide()
     }
   }
