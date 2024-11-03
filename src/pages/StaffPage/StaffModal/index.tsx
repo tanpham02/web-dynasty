@@ -1,8 +1,9 @@
 import { Button, SelectItem } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 
 import Box from '~/components/Box'
 import { globalLoading } from '~/components/GlobalLoading'
@@ -16,6 +17,8 @@ import {
 import { QUERY_KEY } from '~/constants/queryKey'
 import useAddress from '~/hooks/useAddress'
 import { UserRole, Users } from '~/models/user'
+import { getUserInfo } from '~/redux/slice/userSlice'
+import { AppDispatch } from '~/redux/store'
 import userService from '~/services/userService'
 import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils'
 import { PATTERN } from '~/utils/regex'
@@ -59,6 +62,7 @@ const UserModal = ({
 }: UserModalProps) => {
   const { enqueueSnackbar } = useSnackbar()
   const [changePw, setChangePw] = useState<boolean>(false)
+  const dispatch = useDispatch<AppDispatch>()
 
   const forms = useForm<Users>({
     defaultValues: defaultUserValues,
@@ -232,6 +236,7 @@ const UserModal = ({
         variant: 'error',
       })
     } finally {
+      dispatch(getUserInfo(userId!))
       globalLoading.hide()
     }
   }
