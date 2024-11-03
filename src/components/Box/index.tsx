@@ -1,7 +1,9 @@
-import { HTMLProps } from 'react';
+import { forwardRef, HTMLProps } from 'react'
 
-const Box = (props: HTMLProps<HTMLDivElement>) => {
-  return <div {...props}></div>;
-};
+const Box = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
+  (props, ref) => {
+    return <div {...props} ref={ref}></div>
+  },
+)
 
-export default Box;
+export default Box

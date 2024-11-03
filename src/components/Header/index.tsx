@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Badge } from 'antd'
 import jwt_decode from 'jwt-decode'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { FaBell } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import { EVENT_KEYS } from '~/constants'
 import { LOCAL_STORAGE } from '~/constants/local_storage'
@@ -11,7 +12,7 @@ import { SocketIOContext } from '~/context'
 import { Users } from '~/models/user'
 import { getUserInfo } from '~/redux/slice/userSlice'
 import { AppDispatch, RootState } from '~/redux/store'
-import { DropdownUser, Notification } from '..'
+import { Box, DropdownUser, Notification } from '..'
 
 interface DecodedJWT {
   id: string
@@ -30,8 +31,10 @@ const Header = (props: {
   )
   const socketClient = useContext(SocketIOContext)
   const token = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
-  const [haveNotification, setHaveNotification] = useState<boolean>(false)
 
+  const notificationElementRef = useRef<any>(null)
+
+  const [haveNotification, setHaveNotification] = useState<boolean>(false)
   const [isShowNotification, setIsShowNotification] = useState<boolean>(false)
 
   useEffect(() => {
@@ -62,6 +65,8 @@ const Header = (props: {
 
   const handleToggleShowNotification = () =>
     setIsShowNotification(!isShowNotification)
+
+  useOnClickOutside(notificationElementRef, handleToggleShowNotification)
 
   return (
     <header className="sticky top-0 z-9 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
@@ -122,7 +127,12 @@ const Header = (props: {
             <Badge color="text-secondary" dot={haveNotification}>
               <FaBell size={20} className="text-primary" />
             </Badge>
-            {isShowNotification && <Notification isEmpty={haveNotification} />}
+            {isShowNotification && (
+              <Notification
+                ref={notificationElementRef}
+                isEmpty={haveNotification}
+              />
+            )}
           </div>
           <DropdownUser userInformation={userInformation} />
         </div>
