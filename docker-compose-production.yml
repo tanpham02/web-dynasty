@@ -16,5 +16,5 @@ services:
       - dynasty-network
 
 networks:
-  dynasty-network:
-    external: true
+    dynasty-network:
+        external: true
