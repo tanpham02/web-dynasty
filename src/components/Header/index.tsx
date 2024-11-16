@@ -12,7 +12,7 @@ import { SocketIOContext } from '~/context'
 import { Users } from '~/models/user'
 import { getUserInfo } from '~/redux/slice/userSlice'
 import { AppDispatch, RootState } from '~/redux/store'
-import { Box, DropdownUser, Notification } from '..'
+import { DropdownUser, Notification } from '..'
 
 interface DecodedJWT {
   id: string

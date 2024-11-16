@@ -1,5 +1,5 @@
 import { Avatar, Chip } from '@nextui-org/react'
-import { FC, forwardRef, Ref } from 'react'
+import { FC, forwardRef } from 'react'
 import { GoDotFill } from 'react-icons/go'
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io'
 

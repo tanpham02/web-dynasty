@@ -1,7 +1,7 @@
 import { Button, SelectItem } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 
