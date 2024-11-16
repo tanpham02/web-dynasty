@@ -1,10 +1,10 @@
 version: '4'
 
 services:
-  dynasty-dashboard:
+  web-dynasty:
     platform: linux/amd64
-    image: phamvantan/dynasty-admin:1.0.0
-    container_name: dynasty-dashboard
+    image: phamvantan/web-dynasty:1.0.0
+    container_name: web-dynasty
     restart: always
     build:
       context: .
@@ -13,8 +13,8 @@ services:
     ports:
       - 1311:1311
     networks:
-      - dynasty-dashboard-network
+      - dynasty-network
 
 networks:
-  dynasty-dashboard-network:
+  dynasty-network:
     external: true

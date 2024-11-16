@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-  dynasty-dasboard:
-    image: tanphamvan/dynasty-dasboard:staging
-    container_name: dynasty-dashboard
+  web-dynasty:
+    image: tanphamvan/web-dynasty:staging
+    container_name: web-dynasty
     build:
       context: .
       dockerfile: Dockerfile-staging
     ports:
       - 1311:1311
     networks:
-      - dynasty-dashboard-network
+      - dynaty-network
 
 networks:
-  dynasty-dashboard-network:
+  dynasty-network:
     external: true
