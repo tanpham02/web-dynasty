@@ -10,8 +10,8 @@ services:
     ports:
       - 1311:1311
     networks:
-      - dynasty-network
+      - dynasty_network
 
 networks:
-  dynasty-network:
+  dynasty_network:
     external: true
