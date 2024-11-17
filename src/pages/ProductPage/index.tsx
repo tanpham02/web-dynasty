@@ -20,6 +20,7 @@ import ModalConfirmDelete, {
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
 import CustomImage from '~/components/NextUI/CustomImage'
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { FALLBACK_SRC } from '~/constants'
 import { PRODUCT_TYPES } from '~/constants/product'
 import { QUERY_KEY } from '~/constants/queryKey'
 import { PATH_NAME } from '~/constants/router'
@@ -47,7 +48,7 @@ const ProductListPage = () => {
         <CustomImage
           isPreview
           src={getFullImageUrl(product?.image)}
-          fallbackSrc="https://via.placeholder.com/80x80"
+          fallbackSrc={FALLBACK_SRC}
         />
       ),
     },
@@ -64,10 +65,10 @@ const ProductListPage = () => {
       render: (product: ProductMain) => formatCurrencyVND(product?.price),
     },
     {
-      align: 'end',
+      align: 'start',
       name: 'Loại sản phẩm',
       render: (_product: ProductMain) => (
-        <Box className="space-x-2">
+        <Box className="flex justify-start items-center gap-2 flex-wrap">
           {_product?.types?.map((type) => (
             <Chip variant="flat">{PRODUCT_TYPES?.[type]}</Chip>
           ))}

@@ -5,19 +5,19 @@ import {
   Divider,
   SelectItem,
   SelectSection,
-} from '@nextui-org/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import Svg from 'react-inlinesvg';
+} from '@nextui-org/react'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import Svg from 'react-inlinesvg'
 
-import GridIcon from '~/assets/svg/grid.svg';
-import InfoIcon from '~/assets/svg/info.svg';
-import Box from '~/components/Box';
-import { FormContextInput, FormContextSwitch } from '~/components/NextUI/Form';
-import FormContextSelect from '~/components/NextUI/Form/FormContextSelect';
-import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { ProductStatusOptions } from '~/models/product';
-import { categoryService } from '~/services/categoryService';
+import GridIcon from '~/assets/svg/grid.svg'
+import InfoIcon from '~/assets/svg/info.svg'
+import Box from '~/components/Box'
+import { FormContextInput, FormContextSwitch } from '~/components/NextUI/Form'
+import FormContextSelect from '~/components/NextUI/Form/FormContextSelect'
+import FormContextTextArea from '~/components/NextUI/Form/FormContextTextArea'
+import { QUERY_KEY } from '~/constants/queryKey'
+import { ProductStatusOptions } from '~/models/product'
+import { categoryService } from '~/services/categoryService'
 
 const ProductInfoCard = () => {
   const {
@@ -27,7 +27,7 @@ const ProductInfoCard = () => {
   } = useInfiniteQuery(
     [QUERY_KEY.CATEGORY],
     async () => await categoryService.getCategoryByCriteria({}),
-  );
+  )
 
   return (
     <Card>
@@ -123,11 +123,15 @@ const ProductInfoCard = () => {
             </SelectItem>
           ))}
         </FormContextSelect>
-        <FormContextSwitch name="visible" label="Hiển thị" />
+        <FormContextSwitch
+          name="visible"
+          label="Hiển thị"
+          defaultSelected={true}
+        />
         <FormContextTextArea name="information" label="Ghi chú sản phẩm" />
       </CardBody>
     </Card>
-  );
-};
+  )
+}
 
-export default ProductInfoCard;
+export default ProductInfoCard
