@@ -23,7 +23,7 @@ interface ProductFormProps {
 }
 
 const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
-  const forms = useForm<ProductMain>()
+  const forms = useForm<ProductMain>({ defaultValues: {} })
   const [isShowConfirmModal, setIsShowConfirmModal] = useState<boolean>(false)
 
   const { enqueueSnackbar } = useSnackbar()
@@ -118,11 +118,16 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
   const handleToggleWarningModal = () =>
     setIsShowConfirmModal(!isShowConfirmModal)
 
+  const handleAgree = () => {
+    reset()
+    navigate(PATH_NAME.PRODUCT_LIST)
+  }
+
   const handleCancel = () => {
     if (isDirty) {
       setIsShowConfirmModal(true)
     } else {
-      navigate(PATH_NAME.PRODUCT_LIST)
+      handleAgree()
     }
   }
 
@@ -160,11 +165,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
           <ProductAttributeCard isEdit={isEdit} />
         </Box>
         <Box className="mt-3 flex justify-end items-center gap-3">
-          <Button
-            color="default"
-            variant="bordered"
-            onClick={handleToggleWarningModal}
-          >
+          <Button color="default" variant="bordered" onClick={handleCancel}>
             Huỷ bỏ
           </Button>
           <Button
@@ -180,7 +181,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
 
       <ModalConfirmDelete
         isOpen={isShowConfirmModal}
-        onAgree={handleCancel}
+        onAgree={handleAgree}
         onOpenChange={handleToggleWarningModal}
         desc="Bạn có những thay đổi chưa lưu. Bạn có chắc chắn muốn rời khỏi trang này không? Bất kỳ dữ liệu nào chưa lưu sẽ bị mất."
       />
