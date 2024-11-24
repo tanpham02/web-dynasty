@@ -5,32 +5,36 @@ import {
   Checkbox,
   CheckboxGroup,
   Divider,
-} from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import Svg from 'react-inlinesvg';
+} from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import Svg from 'react-inlinesvg'
 
-import DeleteIcon from '~/assets/svg/delete.svg';
-import GridLayoutIcon from '~/assets/svg/grid-layout.svg';
-import WarningIcon from '~/assets/svg/warning.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
-import { FormContextInput } from '~/components/NextUI/Form';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { Attribute, AttributeValue } from '~/models/attribute';
-import { ProductMain } from '~/models/product';
-import { attributeService } from '~/services/attributeService';
+import DeleteIcon from '~/assets/svg/delete.svg'
+import GridLayoutIcon from '~/assets/svg/grid-layout.svg'
+import WarningIcon from '~/assets/svg/warning.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
+import { FormContextInput } from '~/components/NextUI/Form'
+import { QUERY_KEY } from '~/constants/queryKey'
+import { Attribute, AttributeValue } from '~/models/attribute'
+import { ProductMain } from '~/models/product'
+import { attributeService } from '~/services/attributeService'
 
 interface ProductAttributeCardProps {
-  isEdit?: boolean;
+  isEdit?: boolean
 }
 
 const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
-  const { control, setValue } = useFormContext<ProductMain>();
+  const { control, setValue } = useFormContext<ProductMain>()
 
-  const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([]);
-  const [attributeIds, setAttributeIds] = useState<string[]>([]);
+  const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([])
+  const [attributeIds, setAttributeIds] = useState<string[]>([])
+  const [isTriggerRemoveProductAttribute, setIsTriggerRemoveProductAttribute] =
+    useState<boolean>(false)
+
+  const isFirstTime = useRef<boolean>(true)
 
   const {
     fields: productAttributes,
@@ -39,36 +43,98 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
   } = useFieldArray({
     control,
     name: 'productAttributeList',
-  });
+  })
 
-  const { data: attributes } = useQuery(
+  const { data: attributes, isLoading } = useQuery(
     [QUERY_KEY.ATTRIBUTE],
     async () => await attributeService.getAllAttributes(),
     {
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
   useEffect(() => {
-    removeProductAttribute(undefined);
-    setValue('productAttributeList', []);
+    removeProductAttribute(undefined)
+    setValue('productAttributeList', [])
     if (attributeSelected.length > 0) {
-      generateCombinations(0, [], []);
+      generateCombinations(0, [], [])
       setValue(
         'attributeIds',
         attributeSelected?.map((attribute) => attribute?._id) as string[],
-      );
+      )
     }
-  }, [JSON.stringify(attributeSelected)]);
+  }, [JSON.stringify(attributeSelected)])
 
-  // useEffect(() => {
-  //   const oldProductAttribute = getValues('attributeMapping');
-  //   if (isEdit && Array.isArray(oldProductAttribute) && oldProductAttribute.length > 0) {
-  //     setAttributeSelected(oldProductAttribute as Attribute[]);
-  //     setAttributeIds((oldProductAttribute?.map((attribute) => attribute?._id) as string[]) || []);
-  //     // isCheckedAttributeBefore.current = true;
-  //   }
-  // }, [isEdit, getValues('attributeMapping')]);
+  useEffect(() => {
+    if (
+      isEdit &&
+      isFirstTime.current &&
+      Array.isArray(productAttributes) &&
+      productAttributes?.length > 0 &&
+      !isLoading
+    ) {
+      const ids: string[] = []
+      let attributeOld: any[] = []
+      attributes?.forEach((attr) => {
+        attr?.attributeList?.forEach((attributeItem) => {
+          const isChecked = productAttributes?.some(
+            (proAttr) => proAttr?.extendedIds?.includes(attributeItem?._id!),
+          )
+          if (isChecked) {
+            ids.push(attr._id!)
+            const filteredAttributes = attr?.attributeList?.filter(
+              (item) =>
+                productAttributes?.some(
+                  (proAttr) => proAttr?.extendedIds?.includes(item?._id!),
+                ),
+            )
+            attributeOld.push({ ...attr, attributeList: filteredAttributes })
+          }
+        })
+      })
+      setAttributeIds(ids)
+      setAttributeSelected(attributeOld)
+      isFirstTime.current = false
+    }
+  }, [
+    JSON.stringify([
+      isEdit,
+      isFirstTime,
+      productAttributes,
+      isLoading,
+      attributes,
+    ]),
+  ])
+
+  useEffect(() => {
+    if (isTriggerRemoveProductAttribute) {
+      const filteredAttributes = attributes
+        ?.map((item) => {
+          const attributeChildrenIds = item?.attributeList?.map(
+            (item) => item._id,
+          )
+          const isExisting = productAttributes?.some(
+            (proAttr) =>
+              proAttr.productAttributeItem?.some((item) =>
+                attributeChildrenIds.includes(item._id),
+              ),
+          )
+          if (!isExisting) return null
+          return item
+        })
+        ?.filter(Boolean)
+
+      setAttributeIds(filteredAttributes?.map((item) => item?._id) as string[])
+      setAttributeSelected(filteredAttributes as Attribute[])
+      setIsTriggerRemoveProductAttribute(false)
+    }
+  }, [
+    JSON.stringify([
+      productAttributes,
+      attributes,
+      isTriggerRemoveProductAttribute,
+    ]),
+  ])
 
   const generateCombinations = useCallback(
     (
@@ -85,11 +151,11 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
           {
             shouldFocus: false,
           },
-        );
+        )
       }
 
       if (attributeSelected?.[index]?.attributeList?.length === 0) {
-        generateCombinations(index + 1, currentCombination, attributeValue);
+        generateCombinations(index + 1, currentCombination, attributeValue)
       } else if (
         attributeSelected?.[index]?.attributeList &&
         Array.isArray(attributeSelected?.[index]?.attributeList) &&
@@ -102,25 +168,28 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
               ? [...currentCombination, attr?.label]
               : [...currentCombination],
             attr ? [...attributeValue, attr] : [...attributeValue],
-          );
+          )
         }
       }
     },
     [attributeSelected],
-  );
+  )
 
-  const handleChangeAttributeSelected = (
-    checked: boolean,
-    attribute: Attribute,
-  ) => {
+  const handleChangeAttributeSelected = (checked: boolean, id: string) => {
+    const attribute = attributes?.find((item) => item._id === id)
     if (checked) {
-      setAttributeSelected((prev) => [...prev, attribute]);
+      setAttributeSelected((prev) => [...prev, attribute!])
     } else {
       setAttributeSelected(
-        attributeSelected?.filter((item) => item?._id != attribute?._id) || [],
-      );
+        attributeSelected?.filter((item) => item?._id !== id) || [],
+      )
     }
-  };
+  }
+
+  const handleRemoveProductAttribute = (index: number) => {
+    removeProductAttribute(index)
+    setIsTriggerRemoveProductAttribute(true)
+  }
 
   return (
     <Card>
@@ -148,9 +217,8 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
               <Checkbox
                 key={index}
                 value={attribute?._id}
-                // checked={attributeIds?.includes(attribute?._id)}
                 onValueChange={(checked) =>
-                  handleChangeAttributeSelected(checked, attribute)
+                  handleChangeAttributeSelected(checked, attribute?._id!)
                 }
               >
                 {attribute?.name}
@@ -160,8 +228,8 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
         </CheckboxGroup>
         <Box className="border border-zinc-200 rounded-xl p-4 shadow">
           <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
-            <Box className="font-bold flex-[2] text-center">Tên hiển thị</Box>
-            <Box className="font-bold flex-[2] text-center">Tên thuộc tính</Box>
+            <Box className="font-bold flex-[2] text-start">Tên hiển thị</Box>
+            <Box className="font-bold flex-[2] text-start">Tên thuộc tính</Box>
             <Box className="font-bold flex-[3] text-center">
               Giá bán cộng thêm
             </Box>
@@ -177,8 +245,8 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                     index % 2 == 1 && 'bg-zinc-100 rounded-md'
                   }`}
                 >
-                  <Box className="flex-[2] text-center">{attribute?.label}</Box>
-                  <Box className="flex justify-around flex-col gap-8 flex-[2] text-center">
+                  <Box className="flex-[2] text-start">{attribute?.label}</Box>
+                  <Box className="flex justify-around flex-col gap-8 flex-[2] text-start">
                     {attribute?.productAttributeItem?.map((attributeValue) => (
                       <span className="block my-auto">
                         - {attributeValue?.label}
@@ -190,6 +258,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                       {attribute?.productAttributeItem?.map(
                         (attributeItem, fieldIndex) => (
                           <FormContextInput
+                            defaultValue="0"
                             key={attributeItem?._id}
                             type="number"
                             name={`productAttributeList.${index}.productAttributeItem.${fieldIndex}.priceAdjustmentValue`}
@@ -203,7 +272,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                     <ButtonIcon
                       icon={DeleteIcon}
                       title="Xóa sản phẩm con này"
-                      onClick={() => removeProductAttribute(index)}
+                      onClick={() => handleRemoveProductAttribute(index)}
                       status="danger"
                     />
                   </Box>
@@ -218,7 +287,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
         </Box>
       </CardBody>
     </Card>
-  );
-};
+  )
+}
 
-export default ProductAttributeCard;
+export default ProductAttributeCard

@@ -51,6 +51,7 @@ export interface ProductChildrenAttribute {
   _id?: string
   extendedIds?: string[]
   label?: string
+  extendedNames?: string[]
   priceAdjustmentValues?: number[]
   productAttributeItem?: AttributeValue[]
 }

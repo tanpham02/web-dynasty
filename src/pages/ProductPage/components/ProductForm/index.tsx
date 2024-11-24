@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardHeader, Divider } from '@nextui-org/react'
 import { useSnackbar } from 'notistack'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import Svg from 'react-inlinesvg'
 import { useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ import { productService } from '~/services/productService'
 import { getFullImageUrl } from '~/utils/image'
 import ProductAttributeCard from '../ProductAttributeCard'
 import ProductInfoCard from '../ProductInfoCard'
+import { ModalConfirmDelete } from '~/components'
 
 interface ProductFormProps {
   currentProduct?: ProductMain
@@ -23,6 +24,7 @@ interface ProductFormProps {
 
 const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
   const forms = useForm<ProductMain>()
+  const [isShowConfirmModal, setIsShowConfirmModal] = useState<boolean>(false)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -31,7 +33,7 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = forms
 
   useEffect(() => {
@@ -47,28 +49,15 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             ? []
             : [currentProduct?.categoryId?._id],
         productAttributeList: currentProduct?.productAttributeList?.map(
-          (attribute, index) => {
+          (attribute) => {
             return {
               ...attribute,
               id: attribute?._id,
-              label: index.toString(),
-              // productAttributeItem : attribute?.productAttributeItem?.map(
-              //   (attributeValue) => {
-              //     const attributeValueData = attributeValue.attributeId
-              //       ? JSON.parse(attributeValue.attributeId)
-              //       : ''
-
-              //     return {
-              //       ...attributeValue,
-              //       name: attributeValueData?.name,
-              //       attributeId: attributeValueData?._id,
-              //     }
-              //   },
-              // ),
+              label: attribute?.extendedNames?.join(' - '),
               productAttributeItem: attribute?.extendedIds?.map(
                 (_id, index) => ({
                   _id: attribute?._id,
-                  // label?: string;
+                  label: attribute?.extendedNames?.[index],
                   priceAdjustmentValue:
                     attribute?.priceAdjustmentValues?.[index] || 0,
                 }),
@@ -113,8 +102,6 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
 
       formData.append('productInfo', jsonData)
 
-      console.log('jsonData', json)
-
       if (isEdit)
         await productService.updateProduct(formData, currentProduct?._id)
       else await productService.createProduct(formData)
@@ -128,48 +115,76 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
     }
   }
 
+  const handleToggleWarningModal = () =>
+    setIsShowConfirmModal(!isShowConfirmModal)
+
+  const handleCancel = () => {
+    if (isDirty) {
+      setIsShowConfirmModal(true)
+    } else {
+      navigate(PATH_NAME.PRODUCT_LIST)
+    }
+  }
+
   return (
-    <FormProvider {...forms}>
-      <Box className="space-y-4">
-        <Box className="grid xl:grid-cols-2 gap-4">
-          <ProductInfoCard />
+    <>
+      <FormProvider {...forms}>
+        <Box className="space-y-4">
+          <Box className="grid xl:grid-cols-2 gap-4">
+            <ProductInfoCard />
+            <Card>
+              <CardHeader>
+                <Svg src={DescriptionIcon} className="w-5 h-5 mr-2" />
+                <span className="text-lg font-bold">Mô tả sản phẩm</span>
+              </CardHeader>
+              <Divider />
+              <CardBody className="py-0">
+                <FormContextCKEditor name="description" />
+              </CardBody>
+            </Card>
+          </Box>
           <Card>
             <CardHeader>
               <Svg src={DescriptionIcon} className="w-5 h-5 mr-2" />
-              <span className="text-lg font-bold">Mô tả sản phẩm</span>
+              <span className="text-lg font-bold">Hình ảnh sản phẩm</span>
             </CardHeader>
             <Divider />
-            <CardBody className="py-0">
-              <FormContextCKEditor name="description" />
+            <CardBody>
+              <Box className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-8">
+                <Box className="w-[20vw]">
+                  <FormContextUpload name="files" />
+                </Box>
+              </Box>
             </CardBody>
           </Card>
+          <ProductAttributeCard isEdit={isEdit} />
         </Box>
-        <Card>
-          <CardHeader>
-            <Svg src={DescriptionIcon} className="w-5 h-5 mr-2" />
-            <span className="text-lg font-bold">Hình ảnh sản phẩm</span>
-          </CardHeader>
-          <Divider />
-          <CardBody>
-            <Box className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-8">
-              <Box className="w-[20vw]">
-                <FormContextUpload name="files" />
-              </Box>
-            </Box>
-          </CardBody>
-        </Card>
-        <ProductAttributeCard isEdit={isEdit} />
-      </Box>
-      <Button
-        color="primary"
-        variant="shadow"
-        className="mt-2"
-        isLoading={isSubmitting}
-        onClick={handleSubmit(onSubmit)}
-      >
-        {isEdit ? 'Lưu thay đổi' : 'Thêm sản phẩm'}
-      </Button>
-    </FormProvider>
+        <Box className="mt-3 flex justify-end items-center gap-3">
+          <Button
+            color="default"
+            variant="bordered"
+            onClick={handleToggleWarningModal}
+          >
+            Huỷ bỏ
+          </Button>
+          <Button
+            color="primary"
+            variant="shadow"
+            isLoading={isSubmitting}
+            onClick={handleSubmit(onSubmit)}
+          >
+            {isEdit ? 'Lưu thay đổi' : 'Thêm sản phẩm'}
+          </Button>
+        </Box>
+      </FormProvider>
+
+      <ModalConfirmDelete
+        isOpen={isShowConfirmModal}
+        onAgree={handleCancel}
+        onOpenChange={handleToggleWarningModal}
+        desc="Bạn có những thay đổi chưa lưu. Bạn có chắc chắn muốn rời khỏi trang này không? Bất kỳ dữ liệu nào chưa lưu sẽ bị mất."
+      />
+    </>
   )
 }
 
