@@ -3,7 +3,7 @@ version: '4'
 services:
   web-dynasty:
     platform: linux/amd64
-    image: phamvantan/web-dynasty:1.0.0
+    image: phamvantan/web-dynasty:1.0.2
     container_name: web-dynasty
     restart: always
     build:
