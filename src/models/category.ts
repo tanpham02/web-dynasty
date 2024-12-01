@@ -4,18 +4,17 @@ export enum CategoryStatus {
 }
 
 export interface Category {
-  _id?: string;
-  name?: string;
-  status?: CategoryStatus;
-  products?: string[];
-  slug?: string;
-  priority?: number;
-  visible?: boolean;
-  isShowHomePage?: boolean;
+  _id?: string
+  name?: string
+  status?: CategoryStatus
+  products?: string[]
+  slug?: string
+  priority?: number
+  visible?: boolean
   childrenCategory?: {
-    parentId?: string;
-    category?: Category[];
-  };
+    parentId?: string
+    category?: Category[]
+  }
   file?: Blob | string
   avatar?: string
 }

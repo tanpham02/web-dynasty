@@ -1,4 +1,4 @@
-import { SelectItem } from '@nextui-org/react'
+import { Button, SelectItem } from '@nextui-org/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
@@ -48,11 +48,14 @@ const CategoryModal = ({
     control,
   } = forms
 
-  const { fields: childrenCategory, remove: removeChildrenCategory } =
-    useFieldArray({
-      control,
-      name: 'childrenCategory.category',
-    })
+  const {
+    fields: childrenCategory,
+    remove: removeChildrenCategory,
+    append: appendChildrenCategory,
+  } = useFieldArray({
+    control,
+    name: 'childrenCategory.category',
+  })
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -116,7 +119,6 @@ const CategoryModal = ({
   )
 
   const onSubmit = async (data: Category) => {
-    console.log(data)
     try {
       const formData = new FormData()
 
@@ -154,7 +156,7 @@ const CategoryModal = ({
                 {
                   name: data?.name,
                   priority: data?.priority,
-                  isShowHomePage: data?.isShowHomePage,
+                  visible: data?.visible ?? true,
                 },
               ],
             },
@@ -172,7 +174,7 @@ const CategoryModal = ({
                       {
                         name: data?.name,
                         priority: data?.priority,
-                        isShowHomePage: data?.isShowHomePage,
+                        visible: data?.visible ?? true,
                       },
                     ]
                 : data?.childrenCategory?.category,
@@ -238,25 +240,26 @@ const CategoryModal = ({
           {Array.isArray(categoriesData) ? (
             <>
               <Box className="space-y-4 col-span-2">
-                {Boolean(
-                  !childrenCategory?.length && categoriesData?.length,
-                ) && (
-                  <FormContextSelect
-                    isLoading={isLoadingCategory || isFetchingCategory}
-                    name="childrenCategory.parentId"
-                    label="Danh mục cha (nếu có)"
-                  >
-                    {
-                      categoriesData?.map((category) =>
-                        category?._id && category._id !== categoryId ? (
-                          <SelectItem key={category._id}>
-                            {category?.name}
-                          </SelectItem>
-                        ) : null,
-                      ) as any
-                    }
-                  </FormContextSelect>
-                )}
+                {!isEdit &&
+                  Boolean(
+                    !childrenCategory?.length && categoriesData?.length,
+                  ) && (
+                    <FormContextSelect
+                      isLoading={isLoadingCategory || isFetchingCategory}
+                      name="childrenCategory.parentId"
+                      label="Danh mục cha (nếu có)"
+                    >
+                      {
+                        categoriesData?.map((category) =>
+                          category?._id && category._id !== categoryId ? (
+                            <SelectItem key={category._id}>
+                              {category?.name}
+                            </SelectItem>
+                          ) : null,
+                        ) as any
+                      }
+                    </FormContextSelect>
+                  )}
                 <FormContextInput
                   isRequired
                   name="name"
@@ -265,80 +268,107 @@ const CategoryModal = ({
                     required: 'Vui lòng nhập tên danh mục',
                   }}
                 />
-                <FormContextInput
-                  name="priority"
-                  label="Thứ tự hiển thị"
-                  type="number"
-                  rules={{
-                    min: {
-                      value: 1,
-                      message: 'Thứ tự hiển thị bắt đầu từ 1!',
-                    },
-                  }}
-                />
+                {isEdit && (
+                  <FormContextInput
+                    name="priority"
+                    label="Thứ tự hiển thị"
+                    type="number"
+                    rules={{
+                      min: {
+                        value: 1,
+                        message: 'Thứ tự hiển thị bắt đầu từ 1!',
+                      },
+                    }}
+                  />
+                )}
                 <FormContextSwitch
                   name="visible"
                   label="Hiển thị trên trang chủ"
                 />
               </Box>
-              {Boolean(childrenCategory?.length) && (
-                <Box className="col-span-3">
-                  <span className="font-semibold mb-2 block text-base">
-                    Danh mục con
-                  </span>
-                  <Box className="border border-zinc-200 rounded-xl p-4 shadow">
-                    <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
-                      <Box className="font-bold flex-[3] text-center">
-                        Tên danh mục
-                      </Box>
-                      <Box className="font-bold flex-[2] text-center">
-                        Thứ tự hiển thị
-                      </Box>
-                      <Box className="font-bold flex-[2] text-center">
-                        Hiển thi trên trang chủ
-                      </Box>
-                      <Box className="font-bold flex-1 text-center">
-                        Hành động
-                      </Box>
-                    </Box>
-                    <Box>
-                      {childrenCategory?.map((category, index) => (
-                        <Box
-                          key={category?.id}
-                          className="px-3 py-2 flex items-center gap-2"
-                        >
-                          <Box className="font-bold flex-[3] text-center">
-                            <FormContextInput
-                              name={`childrenCategory.category.${index}.name`}
-                            />
-                          </Box>
-                          <Box className="font-bold flex-[2] text-center">
-                            <FormContextInput
-                              name={`childrenCategory.category.${index}.priority`}
-                              value={(index + 1) as any}
-                              type="number"
-                            />
-                          </Box>
-                          <Box className="font-bold flex-[2] text-center">
-                            <FormContextSwitch
-                              name={`childrenCategory.category.${index}.isShowHomePage`}
-                            />
-                          </Box>
-                          <Box className="font-bold flex-1 text-center">
-                            <ButtonIcon
-                              icon={DeleteIcon}
-                              title="Xóa danh mục này"
-                              status="danger"
-                              placement="top"
-                              onClick={() => removeChildrenCategory(index)}
-                            />
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
+              <Box className="col-span-3">
+                <Box className="flex my-2 items-center">
+                  <span className="font-semibold text-base">Danh mục con</span>
+                  <Box className="ml-auto">
+                    <Button
+                      color="secondary"
+                      size="sm"
+                      variant="flat"
+                      className="bg-sky-100 text-sky-500 font-bold"
+                      onClick={() =>
+                        appendChildrenCategory({
+                          name: '',
+                          visible: true,
+                        })
+                      }
+                    >
+                      Thêm danh mục con
+                    </Button>
                   </Box>
                 </Box>
-              )}
+                <Box className="border border-zinc-200 rounded-xl p-4 shadow">
+                  <Box className="bg-zinc-200 shadow rounded-lg px-3 py-2 flex gap-2 mb-2">
+                    <Box className="font-bold flex-[3] text-center">
+                      Tên danh mục
+                      <span className="text-[#d50e15]"> *</span>
+                    </Box>
+                    <Box className="font-bold flex-[2] text-center">
+                      Thứ tự hiển thị
+                    </Box>
+                    <Box className="font-bold flex-[2] text-center">
+                      Hiển thi trên trang chủ
+                    </Box>
+                    <Box className="font-bold flex-1 text-center">
+                      Hành động
+                    </Box>
+                  </Box>
+                  <Box>
+                    {childrenCategory?.map((category, index) => (
+                      <Box
+                        key={category?.id}
+                        className="px-3 py-2 flex items-center gap-2"
+                      >
+                        <Box className="font-bold flex-[3] text-center">
+                          <FormContextInput
+                            isRequired
+                            name={`childrenCategory.category.${index}.name`}
+                            rules={{
+                              required: 'Trường này là bắt buộc',
+                            }}
+                          />
+                        </Box>
+                        <Box className="font-bold flex-[2] text-center">
+                          <FormContextInput
+                            name={`childrenCategory.category.${index}.priority`}
+                            value={(index + 1) as any}
+                            type="number"
+                            className={`${
+                              !isEdit
+                                ? 'pointer-events-none'
+                                : 'pointer-events-auto'
+                            }`}
+                            disabled={!isEdit}
+                          />
+                        </Box>
+                        <Box className="font-bold flex-[2] text-center">
+                          <FormContextSwitch
+                            name={`childrenCategory.category.${index}.visible`}
+                          />
+                        </Box>
+                        <Box className="font-bold flex-1 text-center">
+                          <ButtonIcon
+                            icon={DeleteIcon}
+                            title="Xóa danh mục này"
+                            status="danger"
+                            placement="top"
+                            onClick={() => removeChildrenCategory(index)}
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
             </>
           ) : (
             <ModalCategorySkeleton />

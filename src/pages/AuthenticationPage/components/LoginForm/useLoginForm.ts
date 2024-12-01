@@ -1,6 +1,7 @@
 import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { useEventListener } from 'usehooks-ts'
 
 import { LOCAL_STORAGE, PATH_NAME } from '~/constants'
 import { SignInType } from '~/models'
@@ -20,7 +21,7 @@ export const useLoginForm = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting: isLogin },
+    formState: { isSubmitting: isLogin, isDirty },
   } = formMethods
 
   const login = async (data: SignInType) => {
@@ -49,6 +50,14 @@ export const useLoginForm = () => {
   }
 
   const handleLogin = handleSubmit(login)
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (isDirty && (event?.key === 'Enter' || event.keyCode === 13)) {
+      handleLogin()
+    }
+  }
+
+  useEventListener('keypress', handleKeyPress)
 
   return { handleLogin, formMethods, isLogin } as const
 }

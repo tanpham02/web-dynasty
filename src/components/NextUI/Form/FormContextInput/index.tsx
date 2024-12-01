@@ -1,32 +1,32 @@
-import { Input, InputProps } from '@nextui-org/react';
-import { useState } from 'react';
+import { Input, InputProps } from '@nextui-org/react'
+import { useState } from 'react'
 import {
   Controller,
   FieldPath,
   FieldValues,
   RegisterOptions,
   useFormContext,
-} from 'react-hook-form';
-import Svg from 'react-inlinesvg';
+} from 'react-hook-form'
+import Svg from 'react-inlinesvg'
 
-import EyeSlashIcon from '~/assets/svg/eye-slash.svg';
-import EyeIcon from '~/assets/svg/eye.svg';
+import EyeSlashIcon from '~/assets/svg/eye-slash.svg'
+import EyeIcon from '~/assets/svg/eye.svg'
 
 interface FormContextInputProps<T extends { [key: string]: keyof T }>
   extends InputProps {
-  name: FieldPath<T>;
+  name: FieldPath<T>
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
     'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
-  >;
+  >
 }
 const FormContextInput = <T extends FieldValues>(
   props: FormContextInputProps<T>,
 ) => {
-  const { control } = useFormContext();
-  const [isVisible, setIsVisible] = useState(false);
+  const { control } = useFormContext()
+  const [isVisible, setIsVisible] = useState(false)
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const toggleVisibility = () => setIsVisible(!isVisible)
 
   return (
     <Controller
@@ -44,6 +44,7 @@ const FormContextInput = <T extends FieldValues>(
             inputWrapper: 'bg-white !border hover:!border-primary',
             label: 'font-semibold',
             input: 'text-primary-text-color',
+            errorMessage: 'flex justify-start items-center',
           }}
           color={!!error ? 'danger' : 'primary'}
           size="md"
@@ -82,7 +83,7 @@ const FormContextInput = <T extends FieldValues>(
         />
       )}
     />
-  );
-};
+  )
+}
 
-export default FormContextInput;
+export default FormContextInput
