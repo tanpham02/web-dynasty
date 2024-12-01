@@ -4,55 +4,57 @@ import {
   Input,
   Selection,
   useDisclosure,
-} from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+} from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useEffect, useRef, useState } from 'react'
 
-import DeleteIcon from '~/assets/svg/delete.svg';
-import EditIcon from '~/assets/svg/edit.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
+import DeleteIcon from '~/assets/svg/delete.svg'
+import EditIcon from '~/assets/svg/edit.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
-} from '~/components/ModalConfirmDelete';
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import CustomImage from '~/components/NextUI/CustomImage';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { QUERY_KEY } from '~/constants/queryKey';
-import useDebounce from '~/hooks/useDebounce';
-import usePagination from '~/hooks/usePagination';
-import { Category, CategoryStatus } from '~/models/category';
-import { categoryService } from '~/services/categoryService';
-import { getFullImageUrl } from '~/utils/image';
-import CategoryModal from './CategoryModal';
+} from '~/components/ModalConfirmDelete'
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import CustomImage from '~/components/NextUI/CustomImage'
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { QUERY_KEY } from '~/constants/queryKey'
+import useDebounce from '~/hooks/useDebounce'
+import usePagination from '~/hooks/usePagination'
+import { Category, CategoryStatus } from '~/models/category'
+import { categoryService } from '~/services/categoryService'
+import { getFullImageUrl } from '~/utils/image'
+import CategoryModal from './CategoryModal'
 
 const Categories = () => {
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
     onOpenChange: onOpenChangeModal,
-  } = useDisclosure();
+  } = useDisclosure()
 
   const {
     isOpen: isOpenModalDelete,
     onOpen: onOpenModalDelete,
     onOpenChange: onOpenChangeModalDelete,
-  } = useDisclosure();
+    onClose,
+  } = useDisclosure()
 
-  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>();
-  const [searchCategory, setSearchCategory] = useState<string>('');
-  const [categorySelectedKeys, setCategorySelectedKeys] = useState<Selection>();
+  const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>()
+  const [searchCategory, setSearchCategory] = useState<string>('')
+  const [categorySelectedKeys, setCategorySelectedKeys] = useState<Selection>()
   const [modal, setModal] = useState<{
-    isEdit?: boolean;
-    categoryId?: string;
-  }>();
+    isEdit?: boolean
+    categoryId?: string
+  }>()
+  const isQuickDelete = useRef<boolean>(false)
 
-  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination()
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
-  const searchCategoryDebounce = useDebounce(searchCategory, 500);
+  const searchCategoryDebounce = useDebounce(searchCategory, 500)
 
   const columns: ColumnType<Category>[] = [
     {
@@ -70,7 +72,7 @@ const Categories = () => {
             src={getFullImageUrl(category?.avatar)}
             fallbackSrc="https://via.placeholder.com/80x80"
           />
-        );
+        )
       },
     },
     {
@@ -140,7 +142,7 @@ const Categories = () => {
         </div>
       ),
     },
-  ];
+  ]
 
   const {
     data: categories,
@@ -155,7 +157,7 @@ const Categories = () => {
         pageSize: pageSize,
         pageIndex: pageIndex - 1,
         name: searchCategoryDebounce,
-      });
+      })
 
       return {
         ...response,
@@ -165,56 +167,74 @@ const Categories = () => {
               Number(a?.priority) - Number(b?.priority),
           )
           .map((category, index) => ({ ...category, priority: index + 1 })),
-      };
+      }
     },
     {
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
   useEffect(() => {
-    if (!isOpenModal) setModal({ isEdit: false });
-  }, [isOpenModal]);
+    if (!isOpenModal) setModal({ isEdit: false })
+  }, [isOpenModal])
 
   const handleOpenModalEdit = (category: Category) => {
-    setModal({ isEdit: true, categoryId: category?._id });
-    onOpenModal();
-  };
+    setModal({ isEdit: true, categoryId: category?._id })
+    onOpenModal()
+  }
 
   const handleOpenDeleteModal = (category: Category) => {
     setModalDelete({
       id: category?._id,
       desc: `Bạn có chắc muốn xóa danh mục ${category?.name} này không?`,
-    });
-    onOpenModalDelete();
-  };
+    })
+    onOpenModalDelete()
+  }
 
   const handleOpenModalAddAttribute = () => {
-    setModal({});
-    onOpenModal();
-  };
+    setModal({})
+    onOpenModal()
+  }
 
-  const handleDeleteAttribute = async () => {
+  const handleDeleteCategory = async () => {
     try {
-      setModalDelete((prev) => ({ ...prev, isLoading: true }));
-      await categoryService.deleteCategoryByIds(
-        modalDelete?.id ? [modalDelete.id] : [],
-      );
-      enqueueSnackbar('Xóa danh mục thành công!');
+      setModalDelete((prev) => ({ ...prev, isLoading: true }))
+      if (!isQuickDelete.current) {
+        await categoryService.deleteCategoryByIds(
+          modalDelete?.id ? [modalDelete.id] : [],
+        )
+      }
+      const categoryIds =
+        categorySelectedKeys === 'all'
+          ? categories?.data?.map((item) => item._id)
+          : [...(categorySelectedKeys as any)]
+      await categoryService.deleteCategoryByIds(categoryIds)
+
+      enqueueSnackbar('Xóa danh mục thành công!')
     } catch (err) {
       enqueueSnackbar('Có lỗi xảy ra khi xóa danh mục!', {
         variant: 'error',
-      });
+      })
       console.log(
         '🚀 ~ file: index.tsx:112 ~ handleDeleteAttribute ~ err:',
         err,
-      );
+      )
     } finally {
-      await refetchCategory();
-      setModalDelete({});
-      onOpenChangeModalDelete();
+      await refetchCategory()
+      setModalDelete({})
+      onOpenChangeModalDelete()
+      setCategorySelectedKeys(new Set())
+      isQuickDelete.current = false
     }
-  };
+  }
+
+  const showModalConfirmQuickDeleteCategory = () => {
+    isQuickDelete.current = true
+    setModalDelete({
+      desc: 'Bạn có chắc muốn xóa tất cả danh mục đã chọn không?',
+    })
+    onOpenModalDelete()
+  }
 
   return (
     <div>
@@ -248,6 +268,17 @@ const Categories = () => {
           Thêm danh mục
         </Button>
       </div>
+      {(categorySelectedKeys == 'all' ||
+        (categorySelectedKeys && categorySelectedKeys?.size > 0)) && (
+        <Button
+          color="danger"
+          size="sm"
+          className="mb-2"
+          onClick={showModalConfirmQuickDeleteCategory}
+        >
+          Xoá tất cả
+        </Button>
+      )}
       <CustomTable
         pagination
         rowKey="_id"
@@ -275,13 +306,13 @@ const Categories = () => {
       />
       <ModalConfirmDelete
         isOpen={isOpenModalDelete}
-        onOpenChange={onOpenChangeModalDelete}
+        onOpenChange={onClose}
         desc={modalDelete?.desc}
-        onAgree={handleDeleteAttribute}
+        onAgree={handleDeleteCategory}
         isLoading={modalDelete?.isLoading}
       />
     </div>
-  );
-};
+  )
+}
 
-export default Categories;
+export default Categories

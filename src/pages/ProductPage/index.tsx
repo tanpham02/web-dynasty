@@ -117,7 +117,7 @@ const ProductListPage = () => {
       })
     else
       setModalDelete({
-        desc: `Bạn có chắc muốn xóa tất cả sản phẩm đã chọn không?`,
+        desc: 'Bạn có chắc muốn xóa tất cả sản phẩm đã chọn không?',
       })
     onOpenChangeModalDelete()
   }
