@@ -3,7 +3,7 @@ import {
   BannerPage,
   CategoryPage,
   CustomerPage,
-  MaterialPage,
+  StockManagementPage,
   OrderFormPage,
   OrderPage,
   OverviewPage,
@@ -13,8 +13,8 @@ import {
   StorePage,
   SystemConfigPage,
   UserPage,
-} from '~/pages';
-import { PATH_NAME, ROUTER_KEY } from '../constants/router';
+} from '~/pages'
+import { PATH_NAME, ROUTER_KEY } from '../constants/router'
 
 const privateRoutes = [
   {
@@ -55,9 +55,9 @@ const privateRoutes = [
     title: 'Thêm đơn hàng mới',
   },
   {
-    key: ROUTER_KEY.MATERIAL,
-    path: PATH_NAME.MATERIAL,
-    component: MaterialPage, //Done UI
+    key: ROUTER_KEY.STOCK_MANAGEMENTS,
+    path: PATH_NAME.STOCK_MANAGEMENTS,
+    component: StockManagementPage, //Done UI
     title: 'Quản lý nguyên liệu',
   },
   {
@@ -102,7 +102,7 @@ const privateRoutes = [
     component: SystemConfigPage,
     title: 'Danh sách cửa hàng',
   },
-];
+]
 
 const publicRoutes = [
   {
@@ -111,6 +111,6 @@ const publicRoutes = [
     component: SignInPage,
     title: 'Sign In',
   },
-];
+]
 
-export { privateRoutes, publicRoutes };
+export { privateRoutes, publicRoutes }

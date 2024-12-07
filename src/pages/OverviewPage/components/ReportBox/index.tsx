@@ -1,11 +1,11 @@
-import React from 'react';
-import Svg from 'react-inlinesvg';
-import Box from '~/components/Box';
+import React from 'react'
+import Svg from 'react-inlinesvg'
+import Box from '~/components/Box'
 
 interface ReportBoxProps {
-  label: string;
-  icon: string;
-  value: React.ReactNode;
+  label: string
+  icon: string
+  value: React.ReactNode
 }
 
 const ReportBox = ({ label, icon: Icon, value }: ReportBoxProps) => {
@@ -17,7 +17,7 @@ const ReportBox = ({ label, icon: Icon, value }: ReportBoxProps) => {
         <span className="font-medium text-lg">{label}</span>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default ReportBox;
+export default ReportBox

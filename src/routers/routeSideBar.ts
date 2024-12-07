@@ -1,15 +1,15 @@
-import STAFF_ICON from '~ assets/svg/staff.svg';
-import BANNER_ICON from '~/assets/svg/banner.svg';
-import USER_LIST_ICON from '~/assets/svg/customer.svg';
-import CATEGORY_ICON from '~/assets/svg/grid.svg';
-import MATERIAL_ICON from '~/assets/svg/material-sidebar.svg';
-import OVERVIEW_ICON from '~/assets/svg/overview.svg';
-import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg';
-import SETTING_ICON from '~/assets/svg/setting.svg';
-import STORE_ICON from '~/assets/svg/store.svg';
-import CART_ICON from '~/assets/svg/cart-shopping-sidebar.svg';
-import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg';
-import { PATH_NAME, ROUTER_KEY } from '../constants/router';
+import STAFF_ICON from '~ assets/svg/staff.svg'
+import BANNER_ICON from '~/assets/svg/banner.svg'
+import USER_LIST_ICON from '~/assets/svg/customer.svg'
+import CATEGORY_ICON from '~/assets/svg/grid.svg'
+import STOCK_MANAGEMENT_ICON from '~/assets/svg/stock-management-sidebar.svg'
+import OVERVIEW_ICON from '~/assets/svg/overview.svg'
+import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg'
+import SETTING_ICON from '~/assets/svg/setting.svg'
+import STORE_ICON from '~/assets/svg/store.svg'
+import CART_ICON from '~/assets/svg/cart-shopping-sidebar.svg'
+import ATTRIBUTE_ICON from '~/assets/svg/tree-structure.svg'
+import { PATH_NAME, ROUTER_KEY } from '../constants/router'
 
 const routeSideBar = [
   {
@@ -83,15 +83,15 @@ const routeSideBar = [
       {
         key: ROUTER_KEY.ORDER,
         path: PATH_NAME.ORDER,
-        title: 'Quản lí đơn hàng',
+        title: 'Quản lý đơn hàng',
         icon: CART_ICON,
         child: [],
       },
     ],
   },
   {
-    key: ROUTER_KEY.MATERIAL,
-    path: PATH_NAME.MATERIAL,
+    key: ROUTER_KEY.STOCK_MANAGEMENTS,
+    path: PATH_NAME.STOCK_MANAGEMENTS,
     title: 'Cửa hàng',
     menu: [
       {
@@ -109,10 +109,10 @@ const routeSideBar = [
         child: [],
       },
       {
-        key: ROUTER_KEY.MATERIAL,
-        path: PATH_NAME.MATERIAL,
-        title: 'Quản lí nhập hàng',
-        icon: MATERIAL_ICON,
+        key: ROUTER_KEY.STOCK_MANAGEMENTS,
+        path: PATH_NAME.STOCK_MANAGEMENTS,
+        title: 'Quản lý kho hàng',
+        icon: STOCK_MANAGEMENT_ICON,
         child: [],
       },
       {
@@ -124,6 +124,6 @@ const routeSideBar = [
       },
     ],
   },
-];
+]
 
-export default routeSideBar;
+export default routeSideBar

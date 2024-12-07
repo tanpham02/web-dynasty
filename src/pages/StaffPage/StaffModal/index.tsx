@@ -23,7 +23,9 @@ import userService from '~/services/userService'
 import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils'
 import { PATTERN } from '~/utils/regex'
 
-const defaultUserValues: Users = {}
+const defaultUserValues: Users = {
+  role: UserRole.USER,
+}
 
 export enum ModalType {
   CREATE = 'CREATE',
@@ -41,10 +43,10 @@ export interface UserModalProps {
   userId?: string
 }
 const roleSelection = [
-  {
-    value: UserRole.ADMIN,
-    label: 'Quản trị viên',
-  },
+  // {
+  //   value: UserRole.ADMIN,
+  //   label: 'Quản trị viên',
+  // },
   {
     value: UserRole.USER,
     label: 'Nhân viên',
@@ -195,7 +197,8 @@ const UserModal = ({
         }
         const newData: Users = {
           ...data,
-          role: (data?.role?.[0] as UserRole) || UserRole.USER,
+          // role: (data?.role?.[0] as UserRole) || UserRole.USER,
+          role: UserRole.USER,
           birthday: data?.birthday
             ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD)
             : null,
@@ -297,7 +300,7 @@ const UserModal = ({
               type="email"
               label="E-mail"
             />
-            <FormContextSelect
+            {/* <FormContextSelect
               isRequired
               name="role"
               label="Vai trò"
@@ -311,7 +314,7 @@ const UserModal = ({
                   {item.label}
                 </SelectItem>
               ))}
-            </FormContextSelect>
+            </FormContextSelect> */}
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
               {cityOptions?.map((item) => (
                 <SelectItem key={item?.value} value={item?.value}>

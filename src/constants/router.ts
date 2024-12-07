@@ -32,17 +32,17 @@ enum PATH_NAME {
   INTERNAL_SERVER_ERROR = '/internal-server-error',
 
   ORDER = '/order',
-  MATERIAL = '/material',
+  STOCK_MANAGEMENTS = '/stock-managements',
   ATTRIBUTE = '/attributes',
   PRODUCT = '/product',
   ORDER_FORM = '/order-form',
   OVERVIEW = '/overview',
   HOME = '/',
-  BANNER = "/banners",
-  TERM_AND_CONDITION = "/term-and-conditions",
-  STORE_LIST = "/stores",
-  STORE = "/store",
-  SORT_CONFIG = "/store-config",
+  BANNER = '/banners',
+  TERM_AND_CONDITION = '/term-and-conditions',
+  STORE_LIST = '/stores',
+  STORE = '/store',
+  SORT_CONFIG = '/store-config',
 }
 
 enum ROUTER_KEY {
@@ -66,17 +66,17 @@ enum ROUTER_KEY {
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
 
   ORDER = 'ORDER',
-  MATERIAL = 'MATERIAL',
+  STOCK_MANAGEMENTS = 'STOCK_MANAGEMENTS',
   ATTRIBUTE = 'ATTRIBUTE',
   PRODUCTS = 'PRODUCTS',
   ORDER_FORM = 'ORDER_FORM',
   OVERVIEW = 'OVERVIEW',
-  HOME = "HOME",
-  BANNER = "BANNER",
-  TERM_AND_CONDITION = "TERM_AND_CONDITION",
-  STOTE_LIST = "STOTE_LIST",
-  STORE_LIST = "STORE_LIST",
-  SORT_CONFIG = "SORT_CONFIG"
+  HOME = 'HOME',
+  BANNER = 'BANNER',
+  TERM_AND_CONDITION = 'TERM_AND_CONDITION',
+  STOTE_LIST = 'STOTE_LIST',
+  STORE_LIST = 'STORE_LIST',
+  SORT_CONFIG = 'SORT_CONFIG',
 }
 
-export { PATH_NAME, ROUTER_KEY };
+export { PATH_NAME, ROUTER_KEY }

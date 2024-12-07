@@ -8,40 +8,41 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/react';
-import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
+} from '@nextui-org/react'
+import React from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface ColumnType<T> {
-  name?: React.ReactNode;
-  align?: 'start' | 'center' | 'end';
-  render: (value: T, index?: number) => React.ReactNode;
-  className?: string;
-  width?: number;
+  name?: React.ReactNode
+  align?: 'start' | 'center' | 'end'
+  render: (value: T, index?: number) => React.ReactNode
+  className?: string
+  width?: number
+  hide?: boolean
 }
 
 interface CustomTableProps<T> {
-  rowKey?: keyof T;
-  columns?: ColumnType<T>[];
-  data?: T[];
-  page?: number;
-  isLoading?: boolean;
-  totalPage?: number;
-  rowPerPage?: number;
-  total?: number;
-  onChangePage?(page: number): void;
-  rowPerPageOptions?: number[];
-  onChangeRowPerPage?(rowPerPage: number): void;
-  emptyContent?: React.ReactNode;
-  tableName?: string;
-  selectedKeys?: Selection;
-  onSelectionChange?(keys: Selection): void;
-  selectionMode?: 'multiple' | 'single' | 'none';
-  pagination?: boolean;
-  removeWrapper?: boolean;
-  isStriped?: boolean;
-  disabledKeys?: Selection;
-  isScrollable?: boolean;
+  rowKey?: keyof T
+  columns?: ColumnType<T>[]
+  data?: T[]
+  page?: number
+  isLoading?: boolean
+  totalPage?: number
+  rowPerPage?: number
+  total?: number
+  onChangePage?(page: number): void
+  rowPerPageOptions?: number[]
+  onChangeRowPerPage?(rowPerPage: number): void
+  emptyContent?: React.ReactNode
+  tableName?: string
+  selectedKeys?: Selection
+  onSelectionChange?(keys: Selection): void
+  selectionMode?: 'multiple' | 'single' | 'none'
+  pagination?: boolean
+  removeWrapper?: boolean
+  isStriped?: boolean
+  disabledKeys?: Selection
+  isScrollable?: boolean
 }
 
 export default function CustomTable<T>({
@@ -108,7 +109,7 @@ export default function CustomTable<T>({
         >
           {(isLoading ? Array.from({ length: rowPerPage }) : data)?.map(
             (row: any, rowIndex: number) => (
-              <TableRow key={rowKey && !isLoading ? row[rowKey] : uuidv4()}>
+              <TableRow key={rowKey && !isLoading ? row?.[rowKey] : uuidv4()}>
                 {columns?.map((_, index) =>
                   isLoading ? (
                     <TableCell key={uuidv4()}>
@@ -164,5 +165,5 @@ export default function CustomTable<T>({
         </div>
       )}
     </div>
-  );
+  )
 }

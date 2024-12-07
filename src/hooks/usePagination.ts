@@ -5,7 +5,7 @@ interface Pagination {
   pageIndex: number;
 }
 
-interface PaginationProps {
+export interface PaginationProps {
   pageSize: number;
   pageIndex: number;
   setPage(page: number): void;

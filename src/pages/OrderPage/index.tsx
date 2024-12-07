@@ -243,7 +243,7 @@ const OrderPage = () => {
   //   onOpenModalDelete()
   // }
 
-  const onCloseMaterialDeleteModal = () => {
+  const onCloseStockManagementDeleteModal = () => {
     setModalDelete({})
     onOpenChangeModalDelete()
   }
@@ -260,7 +260,7 @@ const OrderPage = () => {
       console.log('🚀 ~ file: index.tsx:112 ~ handleDeleteOrder ~ err:', err)
     } finally {
       await refetchOrders()
-      onCloseMaterialDeleteModal()
+      onCloseStockManagementDeleteModal()
     }
   }
 

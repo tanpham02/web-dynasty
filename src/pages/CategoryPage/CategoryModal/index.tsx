@@ -1,5 +1,6 @@
 import { Button, SelectItem } from '@nextui-org/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { isEmpty } from 'lodash'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
@@ -45,6 +46,7 @@ const CategoryModal = ({
     reset: resetFormValue,
     getFieldState,
     setValue,
+    getValues,
     control,
   } = forms
 
@@ -221,6 +223,19 @@ const CategoryModal = ({
       onOpenChange?.()
     }
   }
+
+  const childrenCategoryValue = getValues(`childrenCategory`)
+
+  useEffect(() => {
+    if (
+      !childrenCategoryValue?.parentId &&
+      !isEmpty(getValues(`childrenCategory`)?.category)
+    ) {
+      setValue('childrenCategory.parentId', getValues('_id'))
+    } else {
+      setValue('childrenCategory.parentId', childrenCategoryValue?.parentId)
+    }
+  }, [JSON.stringify(childrenCategoryValue)])
 
   return (
     <CustomModal

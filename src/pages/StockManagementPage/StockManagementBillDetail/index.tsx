@@ -5,15 +5,15 @@ import {
   Text,
   Font,
   View,
-} from '@react-pdf/renderer';
-import moment from 'moment';
-import { useMemo } from 'react';
+} from '@react-pdf/renderer'
+import moment from 'moment'
+import { useMemo } from 'react'
 
-import NunitoBold from '~/fonts/Nunito-Bold.ttf';
-import NunitoRegular from '~/fonts/Nunito-Regular.ttf';
-import { Material } from '~/models/materials';
-import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils';
-import { formatCurrencyVND, formatNumber } from '~/utils/number';
+import NunitoBold from '~/fonts/Nunito-Bold.ttf'
+import NunitoRegular from '~/fonts/Nunito-Regular.ttf'
+import { StockManagementInformation } from '~/models/stockManagements'
+import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils'
+import { formatCurrencyVND, formatNumber } from '~/utils/number'
 
 Font.register({
   family: 'Nunito',
@@ -27,7 +27,7 @@ Font.register({
       fontWeight: 'normal',
     },
   ],
-});
+})
 
 const styles = StyleSheet.create({
   page: {
@@ -79,29 +79,36 @@ const styles = StyleSheet.create({
   footer: {
     margin: '20px 0',
   },
-});
+})
 
-interface MaterialBillDetailProps {
-  data?: Material;
+interface StockManagementBillDetailProps {
+  data?: StockManagementInformation
+  isImport?: boolean
 }
 
-const MaterialBillDetail = ({ data }: MaterialBillDetailProps) => {
+const StockManagementBillDetail = ({
+  data,
+  isImport,
+}: StockManagementBillDetailProps) => {
   const billData = useMemo(() => {
     return {
-      title: `HÓA ĐƠN NHẬP HÀNG THÁNG ${moment(data?.importDate).month() + 1}`,
-      date: moment(data?.importDate).toDate(),
+      title: `HÓA ĐƠN ${isImport ? 'NHẬP' : 'XUẤT'} HÀNG THÁNG ${
+        moment(data?.date).month() + 1
+      }`,
+      date: moment(data?.date).toDate(),
       items:
-        data?.materialInfo?.map((material, index) => ({
+        data?.stockManagementInfo?.map((stockManagement, index) => ({
           id: index + 1,
-          name: material?.name,
-          quantity: material?.quantity,
-          price: material?.price,
-          unit: material?.unit,
-          total: (material?.price || 0) * (material?.quantity || 0),
+          name: stockManagement?.name,
+          quantity: stockManagement?.quantity,
+          price: stockManagement?.price,
+          unit: stockManagement?.unit,
+          total:
+            (stockManagement?.price || 0) * (stockManagement?.quantity || 0),
         })) || [],
       totalBill: data?.totalPrice || 0,
-    };
-  }, [data]);
+    }
+  }, [data])
 
   return (
     <Document>
@@ -109,7 +116,8 @@ const MaterialBillDetail = ({ data }: MaterialBillDetailProps) => {
         <View style={styles.header}>
           <Text style={styles.title}>{billData.title}</Text>
           <Text style={styles.subTitle}>
-            Ngày nhập: {formatDate(billData.date, DATE_FORMAT_DDMMYYYYHHMMSS)}
+            Ngày {`${isImport ? 'nhập' : 'xuất'}`}:{' '}
+            {formatDate(billData.date, DATE_FORMAT_DDMMYYYYHHMMSS)}
           </Text>{' '}
         </View>
 
@@ -167,7 +175,7 @@ const MaterialBillDetail = ({ data }: MaterialBillDetailProps) => {
         </View>
       </Page>
     </Document>
-  );
-};
+  )
+}
 
-export default MaterialBillDetail;
+export default StockManagementBillDetail

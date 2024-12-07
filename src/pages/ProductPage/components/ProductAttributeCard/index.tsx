@@ -7,6 +7,7 @@ import {
   Divider,
 } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
+import { unionBy } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import Svg from 'react-inlinesvg'
@@ -65,6 +66,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     }
   }, [JSON.stringify(attributeSelected)])
 
+  // Handle check
   useEffect(() => {
     if (
       isEdit &&
@@ -89,11 +91,12 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
                 ),
             )
             attributeOld.push({ ...attr, attributeList: filteredAttributes })
+            attributeOld = unionBy(attributeOld, '_id')
           }
         })
       })
       setAttributeIds(ids)
-      setAttributeSelected(attributeOld)
+      // setAttributeSelected(attributeOld)
       isFirstTime.current = false
     }
   }, [
@@ -106,6 +109,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     ]),
   ])
 
+  // Trigger uncheck
   useEffect(() => {
     if (isTriggerRemoveProductAttribute) {
       const filteredAttributes = attributes

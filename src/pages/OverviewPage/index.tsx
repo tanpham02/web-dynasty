@@ -1,36 +1,38 @@
-import CountUp from 'react-countup';
-import Chart from 'react-apexcharts';
+import Chart from 'react-apexcharts'
+import CountUp from 'react-countup'
 
-import DeliveryIcon from '~/assets/svg/icon-delivery.svg';
-import OrderCancelIcon from '~/assets/svg/icon-order-cancel.svg';
-import OrderIcon from '~/assets/svg/icon-order.svg';
-import TotalRevenueIcon from '~/assets/svg/total-revenue.svg';
-import Box from '~/components/Box';
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import ReportBox from './components/ReportBox';
+import DeliveryIcon from '~/assets/svg/icon-delivery.svg'
+import OrderCancelIcon from '~/assets/svg/icon-order-cancel.svg'
+import OrderIcon from '~/assets/svg/icon-order.svg'
+import TotalRevenueIcon from '~/assets/svg/total-revenue.svg'
+import Box from '~/components/Box'
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import { formatCurrencyWithUnits } from '~/utils/number'
+import ReportBox from './components/ReportBox'
+
 const OverviewPage = () => {
   const REPORT_VALUES = [
     {
       label: 'Tổng đơn hàng',
       icon: OrderIcon,
-      value: <CountUp end={75} />,
+      value: 75,
     },
     {
-      label: 'Đơn mang đi',
-      icon: DeliveryIcon,
-      value: <CountUp end={357} />,
-    },
-    {
-      label: 'Đơn bị hủy',
-      icon: OrderCancelIcon,
-      value: <CountUp end={65} />,
-    },
-    {
-      label: 'Tổng doanh thu',
+      label: 'Doanh thu',
       icon: TotalRevenueIcon,
-      value: <CountUp end={22635563} suffix="đ" />,
+      value: `${formatCurrencyWithUnits(1281220600)} đ`,
     },
-  ];
+    {
+      label: 'Sản phẩm bán ra',
+      icon: DeliveryIcon,
+      value: 65,
+    },
+    {
+      label: 'Tỷ lệ hủy đơn hàng',
+      icon: OrderCancelIcon,
+      value: `${0.2}%`,
+    },
+  ]
 
   return (
     <Box>
@@ -56,7 +58,15 @@ const OverviewPage = () => {
                 id: 'basic-bar',
               },
               xaxis: {
-                categories: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'],
+                categories: [
+                  'Thứ 2',
+                  'Thứ 3',
+                  'Thứ 4',
+                  'Thứ 5',
+                  'Thứ 6',
+                  'Thứ 7',
+                  'Chủ Nhật',
+                ],
               },
             }}
             series={[
@@ -96,7 +106,7 @@ const OverviewPage = () => {
         </Box>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default OverviewPage;
+export default OverviewPage
