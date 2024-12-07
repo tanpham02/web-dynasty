@@ -1,5 +1,4 @@
 import Chart from 'react-apexcharts'
-import CountUp from 'react-countup'
 
 import DeliveryIcon from '~/assets/svg/icon-delivery.svg'
 import OrderCancelIcon from '~/assets/svg/icon-order-cancel.svg'
