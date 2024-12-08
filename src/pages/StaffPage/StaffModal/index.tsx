@@ -42,16 +42,17 @@ export interface UserModalProps {
   isEdit?: boolean
   userId?: string
 }
-// const roleSelection = [
-//   // {
-//   //   value: UserRole.ADMIN,
-//   //   label: 'Quản trị viên',
-//   // },
-//   {
-//     value: UserRole.USER,
-//     label: 'Nhân viên',
-//   },
-// ]
+
+const roleSelection = [
+  // {
+  //   value: UserRole.ADMIN,
+  //   label: 'Quản trị viên',
+  // },
+  {
+    value: UserRole.USER,
+    label: 'Nhân viên',
+  },
+]
 
 const UserModal = ({
   isOpen,
@@ -197,8 +198,7 @@ const UserModal = ({
         }
         const newData: Users = {
           ...data,
-          // role: (data?.role?.[0] as UserRole) || UserRole.USER,
-          role: UserRole.USER,
+          role: (data?.role?.[0] as UserRole) || UserRole.USER,
           birthday: data?.birthday
             ? formatDate(data.birthday, DATE_FORMAT_YYYYMMDD)
             : null,
@@ -300,7 +300,7 @@ const UserModal = ({
               type="email"
               label="E-mail"
             />
-            {/* <FormContextSelect
+            <FormContextSelect
               isRequired
               name="role"
               label="Vai trò"
@@ -314,7 +314,7 @@ const UserModal = ({
                   {item.label}
                 </SelectItem>
               ))}
-            </FormContextSelect> */}
+            </FormContextSelect>
             <FormContextSelect name="cityId" label="Tỉnh/Thành">
               {cityOptions?.map((item) => (
                 <SelectItem key={item?.value} value={item?.value}>

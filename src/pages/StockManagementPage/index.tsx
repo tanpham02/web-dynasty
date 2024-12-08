@@ -336,6 +336,7 @@ const StockManagementPage = () => {
         )
         tempLink.click()
         ;('filename.pdf')
+        await refetchStocks()
         await ingredientsResponse?.refetch()
       }
     } catch (err) {
