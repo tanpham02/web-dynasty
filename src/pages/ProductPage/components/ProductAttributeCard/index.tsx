@@ -7,7 +7,7 @@ import {
   Divider,
 } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { isEmpty, unionBy } from 'lodash'
+import { unionBy } from 'lodash'
 import {
   useCallback,
   useEffect,
