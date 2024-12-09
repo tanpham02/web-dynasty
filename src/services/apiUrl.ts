@@ -32,6 +32,9 @@ export const PRODUCT_CONFIG_TYPE_URL = `${API_URL}/product-config/types`
 // ORDER URL
 export const ORDER_URL = `${API_URL}/orders`
 
+// OVERVIEWS URL
+export const OVERVIEWS_URL = `${API_URL}/overviews`
+
 // STORE INFORMATION URL
 export const STORE_INFORMATION_URL = `${API_URL}/store-informations`
 

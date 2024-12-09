@@ -15,7 +15,7 @@ export interface SearchParams {
   code?: string;
   saleScope?: VoucherSaleScope;
   promotionType?: VoucherPromotionType;
-  from?: string;
+  from?: string ;
   to?: string;
   statusOrder?: StatusOrder;
 

@@ -34,6 +34,7 @@ export interface ProductMain {
   description?: string
   information?: string
   categoryId?: Category | string[] | string
+  categoryIdSelected?: string
   price: number
   oldPrice?: number
   image?: string

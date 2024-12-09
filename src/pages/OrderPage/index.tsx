@@ -316,7 +316,7 @@ const OrderPage = () => {
       <Box className="flex items-end mb-2">
         <DatePicker.RangePicker
           size="middle"
-          className="max-w-[300px]"
+          className="max-w-[300px] !h-[56px]"
           value={
             Array.isArray(filterImportDate) && filterImportDate.length === 2
               ? [filterImportDate[0], filterImportDate[1]]

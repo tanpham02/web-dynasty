@@ -7,8 +7,14 @@ import {
   Divider,
 } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { unionBy } from 'lodash'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { isEmpty, unionBy } from 'lodash'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import Svg from 'react-inlinesvg'
 
@@ -54,19 +60,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
     },
   )
 
-  useEffect(() => {
-    removeProductAttribute(undefined)
-    setValue('productAttributeList', [])
-    if (attributeSelected.length > 0) {
-      generateCombinations(0, [], [])
-      setValue(
-        'attributeIds',
-        attributeSelected?.map((attribute) => attribute?._id) as string[],
-      )
-    }
-  }, [JSON.stringify(attributeSelected)])
-
-  // Handle check
+  // Handle check at the first
   useEffect(() => {
     if (
       isEdit &&
@@ -84,12 +78,13 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
           )
           if (isChecked) {
             ids.push(attr._id!)
-            const filteredAttributes = attr?.attributeList?.filter(
+            const filteredAttributes = attr?.attributeList?.map(
               (item) =>
                 productAttributes?.some(
                   (proAttr) => proAttr?.extendedIds?.includes(item?._id!),
-                ),
+                ) && item,
             )
+
             attributeOld.push({ ...attr, attributeList: filteredAttributes })
             attributeOld = unionBy(attributeOld, '_id')
           }
@@ -112,21 +107,18 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
   // Trigger uncheck
   useEffect(() => {
     if (isTriggerRemoveProductAttribute) {
+      const ids = productAttributes?.map((item) => item.extendedIds)?.flat()
       const filteredAttributes = attributes
-        ?.map((item) => {
-          const attributeChildrenIds = item?.attributeList?.map(
-            (item) => item._id,
+        ?.map((attribute) => {
+          const attributeList = attribute?.attributeList?.filter(
+            (item) => ids?.includes(item._id!),
           )
-          const isExisting = productAttributes?.some(
-            (proAttr) =>
-              proAttr.productAttributeItem?.some((item) =>
-                attributeChildrenIds.includes(item._id),
-              ),
-          )
-          if (!isExisting) return null
-          return item
+          return {
+            ...attribute,
+            attributeList,
+          }
         })
-        ?.filter(Boolean)
+        ?.filter((item) => !!item?.attributeList?.length)
 
       setAttributeIds(filteredAttributes?.map((item) => item?._id) as string[])
       setAttributeSelected(filteredAttributes as Attribute[])
@@ -139,6 +131,18 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
       isTriggerRemoveProductAttribute,
     ]),
   ])
+
+  useLayoutEffect(() => {
+    removeProductAttribute(undefined)
+    setValue('productAttributeList', [])
+    if (attributeSelected.length > 0) {
+      generateCombinations(0, [], [])
+      setValue(
+        'attributeIds',
+        attributeSelected?.map((attribute) => attribute?._id) as string[],
+      )
+    }
+  }, [JSON.stringify(attributeSelected)])
 
   const generateCombinations = useCallback(
     (
@@ -185,7 +189,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
       setAttributeSelected((prev) => [...prev, attribute!])
     } else {
       setAttributeSelected(
-        attributeSelected?.filter((item) => item?._id !== id) || [],
+        attributeSelected?.filter((item) => item?._id !== id),
       )
     }
   }

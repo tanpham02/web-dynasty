@@ -18,15 +18,15 @@ export const formatCurrencyWithUnits = (
   isCurrency: boolean = false,
 ) => {
   // Handle large numbers with units and currency
-  if (value >= 1_000_000_000) {
+  if (value.toString().length >= 10) {
     return isCurrency
       ? `${(value / 1_000_000_000).toFixed(1)}B₫`
       : `${(value / 1_000_000_000).toFixed(1)}B`
-  } else if (value >= 1_000_000) {
+  } else if (value.toString().length >= 7) {
     return isCurrency
       ? `${(value / 1_000_000).toFixed(1)}M₫`
       : `${(value / 1_000_000).toFixed(1)}M`
-  } else if (value >= 1_000) {
+  } else if (value.toString().length >= 4) {
     return isCurrency
       ? `${(value / 1_000).toFixed(1)}K₫`
       : `${(value / 1_000).toFixed(1)}K`

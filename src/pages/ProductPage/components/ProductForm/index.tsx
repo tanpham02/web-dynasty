@@ -47,16 +47,25 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
           currentProduct?.categoryId instanceof Array ||
           typeof currentProduct?.categoryId === 'string'
             ? []
-            : [currentProduct?.categoryId?._id],
+            : [
+                currentProduct?.categoryId?._id,
+                ...(currentProduct?.categoryId?.childrenCategory?.category
+                  ?.filter(
+                    (item) =>
+                      currentProduct?.categoryIdSelected ===
+                      item._id?.toString(),
+                  )
+                  ?.map((item) => item._id) ?? []),
+              ],
         productAttributeList: currentProduct?.productAttributeList?.map(
           (attribute) => {
             return {
               ...attribute,
-              id: attribute?._id,
+              _id: attribute?._id,
               label: attribute?.extendedNames?.join(' - '),
               productAttributeItem: attribute?.extendedIds?.map(
                 (_id, index) => ({
-                  _id: attribute?._id,
+                  _id,
                   label: attribute?.extendedNames?.[index],
                   priceAdjustmentValue:
                     attribute?.priceAdjustmentValues?.[index] || 0,
