@@ -125,7 +125,7 @@ const OrderPage = () => {
       name: <Box className="flex justify-center">Tổng giá trị</Box>,
       render: (order: Order) => (
         <Box className="flex justify-center">
-          {formatCurrencyVND(order?.total || 0)}
+          {`${formatCurrencyVND(order?.total || 0)} đ`}
         </Box>
       ),
     },

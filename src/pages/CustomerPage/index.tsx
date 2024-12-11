@@ -1,59 +1,59 @@
-import { Button } from '@nextui-org/button';
-import { Chip, Input, useDisclosure } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { Button } from '@nextui-org/button'
+import { Chip, Input, useDisclosure } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useState } from 'react'
 
-import EyeIcon from '~/assets/svg/eye.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
-import { globalLoading } from '~/components/GlobalLoading';
+import EyeIcon from '~/assets/svg/eye.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
+import { globalLoading } from '~/components/GlobalLoading'
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
-} from '~/components/ModalConfirmDelete';
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { CUSTOMER_TYPES } from '~/constants/customer';
-import { QUERY_KEY } from '~/constants/queryKey';
-import useDebounce from '~/hooks/useDebounce';
-import usePagination from '~/hooks/usePagination';
-import { Customer, CustomerStatus, CustomerType } from '~/models/customers';
-import customerService from '~/services/customerService';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import UserModal from './components/CustomerModal';
+} from '~/components/ModalConfirmDelete'
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { CUSTOMER_TYPES } from '~/constants/customer'
+import { QUERY_KEY } from '~/constants/queryKey'
+import useDebounce from '~/hooks/useDebounce'
+import usePagination from '~/hooks/usePagination'
+import { Customer, CustomerStatus, CustomerType } from '~/models/customers'
+import customerService from '~/services/customerService'
+import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils'
+import UserModal from './components/CustomerModal'
 
 export interface ModalKey {
-  visible?: boolean;
-  user?: Customer;
+  visible?: boolean
+  user?: Customer
 }
 
 const CustomerPage = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
-  const [searchText, setSearchText] = useState<string>('');
+  const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]))
+  const [searchText, setSearchText] = useState<string>('')
   const [modal, setModal] = useState<{
-    isEdit?: boolean;
-    customerId?: string;
-  }>({ isEdit: false });
+    isEdit?: boolean
+    customerId?: string
+  }>({ isEdit: false })
   const [modalConfirmDelete, setModalConfirmDelete] =
-    useState<ModalConfirmDeleteState>();
+    useState<ModalConfirmDeleteState>()
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
-  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination()
 
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
     onOpenChange: onOpenChangeModal,
     onClose,
-  } = useDisclosure();
+  } = useDisclosure()
 
   const {
     isOpen: isOpenModalConfirmDeleteUser,
     onOpenChange: onOpenChangeModalConfirmDeleteCustomer,
-  } = useDisclosure();
+  } = useDisclosure()
 
-  const search = useDebounce(searchText, 500);
+  const search = useDebounce(searchText, 500)
 
   const columns: ColumnType<Customer>[] = [
     {
@@ -133,14 +133,14 @@ const CustomerPage = () => {
               setModal({
                 isEdit: true,
                 customerId: customer._id,
-              });
-              onOpenModal();
+              })
+              onOpenModal()
             }}
           />
         </div>
       ),
     },
-  ];
+  ]
 
   const {
     data: Customer,
@@ -153,47 +153,47 @@ const CustomerPage = () => {
         pageIndex: pageIndex - 1,
         pageSize: pageSize,
         fullName: search,
-      };
-      return await customerService.searchCustomerByCriteria(params);
+      }
+      return await customerService.searchCustomerByCriteria(params)
     },
     {
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
   const handleDeleteUser = async () => {
-    globalLoading.show();
+    globalLoading.show()
     setModalConfirmDelete((prev) => ({
       ...prev,
       isLoading: true,
-    }));
-    let ids: string[] = [];
+    }))
+    let ids: string[] = []
     if (modalConfirmDelete?.id) {
-      ids.push(modalConfirmDelete.id);
+      ids.push(modalConfirmDelete.id)
     }
 
     try {
-      await customerService.deleteCustomer(ids);
-      refetchUser();
+      await customerService.deleteCustomer(ids)
+      refetchUser()
       enqueueSnackbar({
         message: 'Xoá khách hàng thành công!',
-      });
-      setSelectedRowKeys(new Set([]));
+      })
+      setSelectedRowKeys(new Set([]))
     } catch (err) {
-      console.log(err);
+      console.log(err)
       enqueueSnackbar({
         message: 'Xoá nhân khách hàng bại!',
         variant: 'error',
-      });
+      })
     } finally {
-      onOpenChangeModalConfirmDeleteCustomer();
+      onOpenChangeModalConfirmDeleteCustomer()
       setModalConfirmDelete((prev) => ({
         ...prev,
         isLoading: false,
-      }));
-      globalLoading.hide();
+      }))
+      globalLoading.hide()
     }
-  };
+  }
 
   return (
     <div>
@@ -233,8 +233,8 @@ const CustomerPage = () => {
                 onClick={() => {
                   setModalConfirmDelete({
                     desc: 'Bạn có chắc chắn muốn xoá danh sách khách hàng đã chọn không?',
-                  });
-                  onOpenChangeModalConfirmDeleteCustomer();
+                  })
+                  onOpenChangeModalConfirmDeleteCustomer()
                 }}
               >
                 Xóa khách hàng đã chọn
@@ -280,7 +280,7 @@ const CustomerPage = () => {
         onOpenChange={onOpenChangeModalConfirmDeleteCustomer}
       />
     </div>
-  );
-};
+  )
+}
 
-export default CustomerPage;
+export default CustomerPage

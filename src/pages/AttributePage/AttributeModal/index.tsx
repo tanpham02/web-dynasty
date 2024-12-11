@@ -1,25 +1,25 @@
-import { Button, SelectItem } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useEffect } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { Button, SelectItem } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useEffect } from 'react'
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 
-import DeleteIcon from '~/assets/svg/delete.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
-import CustomModal from '~/components/NextUI/CustomModal';
-import { FormContextInput, FormContextSelect } from '~/components/NextUI/Form';
-import { QUERY_KEY } from '~/constants/queryKey';
-import { Attribute } from '~/models/attribute';
-import { attributeService } from '~/services/attributeService';
-import { categoryService } from '~/services/categoryService';
+import DeleteIcon from '~/assets/svg/delete.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
+import CustomModal from '~/components/NextUI/CustomModal'
+import { FormContextInput, FormContextSelect } from '~/components/NextUI/Form'
+import { QUERY_KEY } from '~/constants/queryKey'
+import { Attribute } from '~/models/attribute'
+import { attributeService } from '~/services/attributeService'
+import { categoryService } from '~/services/categoryService'
 
 interface AttributeModalProps {
-  isOpen?: boolean;
-  onOpenChange?(): void;
-  onRefetch?(): Promise<any>;
-  isEdit?: boolean;
-  attributeId?: string;
+  isOpen?: boolean
+  onOpenChange?(): void
+  onRefetch?(): Promise<any>
+  isEdit?: boolean
+  attributeId?: string
 }
 const AttributeModal = ({
   isOpen,
@@ -28,45 +28,45 @@ const AttributeModal = ({
   isEdit,
   attributeId,
 }: AttributeModalProps) => {
-  const forms = useForm<Attribute>();
+  const forms = useForm<Attribute>()
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
     reset: resetFormValue,
-  } = forms;
+  } = forms
 
   const {
     fields: attributeValue,
     append: appendAttributeValue,
     remove: removeAttributeValue,
-  } = useFieldArray({ control, name: 'attributeList' });
+  } = useFieldArray({ control, name: 'attributeList' })
 
   const { data: categories, isLoading: isLoadingCategory } = useQuery({
     queryKey: [QUERY_KEY.CATEGORY_ALL],
     queryFn: categoryService.getAllCategory,
     enabled: Boolean(isOpen),
     refetchOnWindowFocus: false,
-  });
+  })
 
   useEffect(() => {
-    if (attributeId && isEdit && isOpen) getAttributeDetail();
-    else resetFormValue({ name: '', attributeList: [] });
-  }, [isEdit, attributeId, isOpen]);
+    if (attributeId && isEdit && isOpen) getAttributeDetail()
+    else resetFormValue({ name: '', attributeList: [] })
+  }, [isEdit, attributeId, isOpen])
 
   useEffect(() => {
     if (isOpen)
       appendAttributeValue({
         label: '',
-      });
-  }, [appendAttributeValue, isOpen]);
+      })
+  }, [appendAttributeValue, isOpen])
 
   const getAttributeDetail = async () => {
     try {
-      const response = await attributeService.getAttributeById(attributeId);
+      const response = await attributeService.getAttributeById(attributeId)
       if (response && Object.keys(response).length > 0) {
         resetFormValue({
           ...response,
@@ -78,40 +78,38 @@ const AttributeModal = ({
             response?.categoryId && typeof response?.categoryId === 'string'
               ? [response.categoryId]
               : [],
-        });
+        })
       }
     } catch (err) {
-      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu thuộc tính!');
-      onOpenChange?.();
-      console.log('🚀 ~ file: index.tsx:125 ~ getAttributeDetail ~ err:', err);
+      enqueueSnackbar('Có lỗi xảy ra khi lấy dữ liệu thuộc tính!')
+      onOpenChange?.()
+      console.log('🚀 ~ file: index.tsx:125 ~ getAttributeDetail ~ err:', err)
     }
-  };
+  }
 
   const onSubmit = async (data: Attribute) => {
     try {
       const dataSubmit: Attribute = {
         ...data,
         categoryId: data?.categoryId?.[0],
-      };
+      }
       if (isEdit)
-        await attributeService.updateAttributeById(attributeId, dataSubmit);
-      else await attributeService.createAttribute(dataSubmit);
-      enqueueSnackbar(
-        `${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`,
-      );
+        await attributeService.updateAttributeById(attributeId, dataSubmit)
+      else await attributeService.createAttribute(dataSubmit)
+      enqueueSnackbar(`${isEdit ? 'Chỉnh sửa' : 'Thêm'} thuộc tính thành công!`)
     } catch (err) {
       enqueueSnackbar(
         `Có lỗi xảy ra khi ${isEdit ? 'chỉnh sửa' : 'thêm'} thuộc tính!`,
         {
           variant: 'error',
         },
-      );
-      console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err);
+      )
+      console.log('🚀 ~ file: index.tsx:69 ~ onSubmit ~ err:', err)
     } finally {
-      await onRefetch?.();
-      onOpenChange?.();
+      await onRefetch?.()
+      onOpenChange?.()
     }
-  };
+  }
 
   return (
     <CustomModal
@@ -128,6 +126,7 @@ const AttributeModal = ({
           <FormContextInput
             name="name"
             label="Tên thuộc tính"
+            isRequired
             rules={{
               required: 'Vui lòng nhập tên thuộc tính',
             }}
@@ -136,6 +135,7 @@ const AttributeModal = ({
             name="categoryId"
             label="Danh mục"
             isLoading={isLoadingCategory}
+            isRequired
             rules={{
               required: 'Vui lòng nhập tên thuộc tính',
             }}
@@ -217,7 +217,7 @@ const AttributeModal = ({
         </div>
       </FormProvider>
     </CustomModal>
-  );
-};
+  )
+}
 
-export default AttributeModal;
+export default AttributeModal

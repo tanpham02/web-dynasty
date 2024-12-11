@@ -38,6 +38,9 @@ import { stockManagementOptions } from './helpers'
 import Ingredients from './Ingredients'
 import StockManagementBillDetail from './StockManagementBillDetail'
 import StockManagementModal from './StockManagementModal'
+import { useSelector } from 'react-redux'
+import { RootState } from '~/redux/store'
+import { UserRole, Users } from '~/models/user'
 
 const StockManagementPage = () => {
   const {
@@ -51,6 +54,10 @@ const StockManagementPage = () => {
     onOpen: onOpenModalDelete,
     onOpenChange: onOpenChangeModalDelete,
   } = useDisclosure()
+
+  const currentUser = useSelector<RootState, Users>(
+    (state) => state.userStore.user,
+  )
 
   const [modalDelete, setModalDelete] = useState<ModalConfirmDeleteState>()
   const [stockManagementSelectedKeys, setStockManagementSelectedKeys] =

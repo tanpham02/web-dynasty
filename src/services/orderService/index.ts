@@ -1,11 +1,13 @@
-import { ListDataResponse, SearchParams } from '~/types';
-import axiosService from '../axiosService';
-import { Order, StatusOrder } from '~/models/order';
+import { ListDataResponse, SearchParams } from '~/types'
+import axiosService from '../axiosService'
+import { Order, StatusOrder } from '~/models/order'
 
-import { ORDER_URL } from '../apiUrl';
+import { ORDER_URL } from '../apiUrl'
 
 const orderService = {
-  searchPagination: async (params: SearchParams): Promise<ListDataResponse<Order>> => {
+  searchPagination: async (
+    params: SearchParams,
+  ): Promise<ListDataResponse<Order>> => {
     return axiosService()({
       method: 'GET',
       baseURL: `${ORDER_URL}/search`,
@@ -13,22 +15,22 @@ const orderService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   updateOrderStatus: async (orderId: string, statusOrder: StatusOrder) => {
     return axiosService()({
       method: 'PATCH',
-      baseURL: `${ORDER_URL}/update-status-order/${orderId}`,
+      baseURL: `${ORDER_URL}/update-status-order`,
       params: {
         orderId,
-        statusOrderRequest: statusOrder,
+        orderStatus: statusOrder,
       },
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   getOrderById: async (id?: string): Promise<Order> => {
     return axiosService()({
@@ -37,8 +39,8 @@ const orderService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
   delete: async (id?: string): Promise<Order> => {
     return axiosService()({
@@ -47,9 +49,9 @@ const orderService = {
     })
       .then((res) => res.data)
       .catch((err) => {
-        throw err;
-      });
+        throw err
+      })
   },
-};
+}
 
-export default orderService;
+export default orderService

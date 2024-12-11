@@ -105,32 +105,32 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
   ])
 
   // Trigger uncheck
-  useEffect(() => {
-    if (isTriggerRemoveProductAttribute) {
-      const ids = productAttributes?.map((item) => item.extendedIds)?.flat()
-      const filteredAttributes = attributes
-        ?.map((attribute) => {
-          const attributeList = attribute?.attributeList?.filter(
-            (item) => ids?.includes(item._id!),
-          )
-          return {
-            ...attribute,
-            attributeList,
-          }
-        })
-        ?.filter((item) => !!item?.attributeList?.length)
+  // useEffect(() => {
+  //   if (isTriggerRemoveProductAttribute) {
+  //     const ids = productAttributes?.map((item) => item.extendedIds)?.flat()
+  //     const filteredAttributes = attributes
+  //       ?.map((attribute) => {
+  //         const attributeList = attribute?.attributeList?.filter(
+  //           (item) => ids?.includes(item._id!),
+  //         )
+  //         return {
+  //           ...attribute,
+  //           attributeList,
+  //         }
+  //       })
+  //       ?.filter((item) => !!item?.attributeList?.length)
 
-      setAttributeIds(filteredAttributes?.map((item) => item?._id) as string[])
-      setAttributeSelected(filteredAttributes as Attribute[])
-      setIsTriggerRemoveProductAttribute(false)
-    }
-  }, [
-    JSON.stringify([
-      productAttributes,
-      attributes,
-      isTriggerRemoveProductAttribute,
-    ]),
-  ])
+  //     setAttributeIds(filteredAttributes?.map((item) => item?._id) as string[])
+  //     setAttributeSelected(filteredAttributes as Attribute[])
+  //     setIsTriggerRemoveProductAttribute(false)
+  //   }
+  // }, [
+  //   JSON.stringify([
+  //     productAttributes,
+  //     attributes,
+  //     isTriggerRemoveProductAttribute,
+  //   ]),
+  // ])
 
   useLayoutEffect(() => {
     removeProductAttribute(undefined)
@@ -196,7 +196,7 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
 
   const handleRemoveProductAttribute = (index: number) => {
     removeProductAttribute(index)
-    setIsTriggerRemoveProductAttribute(true)
+    // setIsTriggerRemoveProductAttribute(true)
   }
 
   return (

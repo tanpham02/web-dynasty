@@ -1,28 +1,28 @@
-import { Card, CardBody, CardHeader, Chip, Image } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useMemo } from 'react';
-import Svg from 'react-inlinesvg';
+import { Card, CardBody, CardHeader, Chip, Image } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useMemo } from 'react'
+import Svg from 'react-inlinesvg'
 
-import BoxIcon from '~/assets/svg/box.svg';
-import PaymentIcon from '~/assets/svg/payment.svg';
-import UserIcon from '~/assets/svg/user-circle.svg';
-import Box from '~/components/Box';
+import BoxIcon from '~/assets/svg/box.svg'
+import PaymentIcon from '~/assets/svg/payment.svg'
+import UserIcon from '~/assets/svg/user-circle.svg'
+import Box from '~/components/Box'
 
-import { globalLoading } from '~/components/GlobalLoading';
-import CustomModal from '~/components/NextUI/CustomModal';
-import { ORDER_PAYMENT_METHODS, ORDER_STATUSES } from '~/constants/order';
-import { QUERY_KEY } from '~/constants/queryKey';
-import orderService from '~/services/orderService';
-import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils';
-import { getFullImageUrl } from '~/utils/image';
-import { formatCurrencyVND } from '~/utils/number';
-import DataRow from '../DataRow';
+import { globalLoading } from '~/components/GlobalLoading'
+import CustomModal from '~/components/NextUI/CustomModal'
+import { ORDER_PAYMENT_METHODS, ORDER_STATUSES } from '~/constants/order'
+import { QUERY_KEY } from '~/constants/queryKey'
+import orderService from '~/services/orderService'
+import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils'
+import { getFullImageUrl } from '~/utils/image'
+import { formatCurrencyVND } from '~/utils/number'
+import DataRow from '../DataRow'
 
 interface OrderDetailModalProps {
-  isOpen?: boolean;
-  onOpenChange?(): void;
-  orderId?: string;
+  isOpen?: boolean
+  onOpenChange?(): void
+  orderId?: string
 }
 
 const OrderDetailModal = ({
@@ -30,29 +30,29 @@ const OrderDetailModal = ({
   onOpenChange,
   orderId,
 }: OrderDetailModalProps) => {
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   const { data: orderDetail } = useQuery(
     [QUERY_KEY.ORDER, orderId],
     async () => {
       try {
-        globalLoading.show();
-        return await orderService.getOrderById(orderId);
+        globalLoading.show()
+        return await orderService.getOrderById(orderId)
       } catch (err) {
         enqueueSnackbar('Có lỗi xảy ra khi lấy thông tin đơn hàng!', {
           variant: 'error',
-        });
-        onOpenChange?.();
+        })
+        onOpenChange?.()
         console.log(
           '🚀 ~ file: index.tsx:25 ~ const{data:orderDetail}=useQuery ~ err:',
           err,
-        );
+        )
       } finally {
-        globalLoading.hide();
+        globalLoading.hide()
       }
     },
     { enabled: Boolean(orderId && open) },
-  );
+  )
 
   const address = useMemo(() => {
     return [
@@ -62,8 +62,8 @@ const OrderDetailModal = ({
       orderDetail?.city,
     ]
       .filter((value) => Boolean(value))
-      .join(', ');
-  }, [orderDetail]);
+      .join(', ')
+  }, [orderDetail])
 
   return (
     <CustomModal
@@ -103,15 +103,20 @@ const OrderDetailModal = ({
                 <Box key={index} className="flex justify-between">
                   <Box className="flex items-start space-x-2">
                     <Image
-                      src={getFullImageUrl(productOrder?.product?.image)}
+                      src={getFullImageUrl(
+                        (productOrder?.product as any)?.productItem?.image,
+                      )}
                       className="w-6 h-6"
                     />
                     <span>
-                      {productOrder?.product?.name} x {productOrder?.quantity}
+                      {(productOrder?.product as any)?.productItem?.name} x{' '}
+                      {productOrder?.quantity}
                     </span>
                   </Box>
                   <span className="font-semibold">
-                    {formatCurrencyVND(productOrder?.product?.price || 0)}
+                    {formatCurrencyVND(
+                      (productOrder?.product as any)?.productItem?.price || 0,
+                    )}
                   </span>
                 </Box>
               ))}
@@ -203,7 +208,7 @@ const OrderDetailModal = ({
         </Card>
       </Box>
     </CustomModal>
-  );
-};
+  )
+}
 
-export default OrderDetailModal;
+export default OrderDetailModal

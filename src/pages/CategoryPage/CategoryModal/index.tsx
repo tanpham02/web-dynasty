@@ -152,7 +152,7 @@ const CategoryModal = ({
           jsonData = {
             ...parentCategory,
             childrenCategory: {
-              parentId: parentCategoryId,
+              parentId: parentCategoryId ?? undefined,
               category: [
                 ...(parentCategory?.childrenCategory?.category || []),
                 {
@@ -187,8 +187,8 @@ const CategoryModal = ({
       } else {
         jsonData = data
 
-        if (!jsonData?.childrenCategory?.parentId?.length)
-          delete jsonData?.childrenCategory
+        // if (!jsonData?.childrenCategory?.parentId?.length)
+        //   delete jsonData?.childrenCategory
       }
 
       formData.append('categoryInfo', JSON.stringify(jsonData))
@@ -256,9 +256,8 @@ const CategoryModal = ({
             <>
               <Box className="space-y-4 col-span-2">
                 {!isEdit &&
-                  Boolean(
-                    !childrenCategory?.length && categoriesData?.length,
-                  ) && (
+                  !childrenCategory?.length &&
+                  !isEmpty(categoriesData) && (
                     <FormContextSelect
                       isLoading={isLoadingCategory || isFetchingCategory}
                       name="childrenCategory.parentId"
