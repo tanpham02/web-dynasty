@@ -28,14 +28,14 @@ import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
 import { ORDER_STATUSES } from '~/constants/order'
 import { QUERY_KEY } from '~/constants/queryKey'
 import usePagination from '~/hooks/usePagination'
-import { Order, StatusOrder } from '~/models/order'
+import { Order, OrderReceivingTime, StatusOrder } from '~/models/order'
 import orderService from '~/services/orderService'
 import { SearchParams } from '~/types'
 import {
   DATE_FORMAT_DDMMYYYY,
+  DATE_FORMAT_DDMMYYYYTHHMMSS,
   DATE_FORMAT_HHMMSS,
   DATE_FORMAT_YYYYMMDD,
-  formatDate,
 } from '~/utils/date.utils'
 import { getLocationLinkByAddress } from '~/utils/googleMapUtil'
 import { formatCurrencyVND } from '~/utils/number'
@@ -63,23 +63,33 @@ const OrderPage = () => {
   const columns: ColumnType<Order>[] = [
     {
       name: '#',
-      render: (order: Order, index?: number) => (
-        <Box className="flex flex-col">
-          <span>{(index || 0) + 1 + (pageIndex - 1) * 10}</span>
-          {order?.createdAt ? (
-            <>
-              <span className="text-[13px]">
-                {formatDate(order.createdAt, DATE_FORMAT_HHMMSS)}
-              </span>
-              <span className="text-[13px]">
-                {formatDate(order.createdAt, DATE_FORMAT_DDMMYYYY)}
-              </span>
-            </>
-          ) : (
-            ''
-          )}
-        </Box>
-      ),
+      render: (order: Order, index?: number) => {
+        const isNow = order.orderReceivingTime === OrderReceivingTime.NOW
+
+        const receiveTime = isNow
+          ? 'Nhận hàng sau 30 phút'
+          : moment(order?.orderReceivingTimeAt, DATE_FORMAT_DDMMYYYYTHHMMSS)
+
+        return (
+          <Box className="flex flex-col">
+            <span>{(index || 0) + 1 + (pageIndex - 1) * 10}</span>
+
+            {/* Receive Time */}
+            {!moment.isMoment(receiveTime) ? (
+              <span className="text-[13px] font-medium">{receiveTime}</span>
+            ) : (
+              <>
+                <span className="text-[13px] font-medium">
+                  {receiveTime?.format(DATE_FORMAT_HHMMSS)}
+                </span>
+                <span className="text-[13px] font-medium">
+                  {receiveTime?.format(DATE_FORMAT_DDMMYYYY)}
+                </span>
+              </>
+            )}
+          </Box>
+        )
+      },
     },
     {
       name: 'Khách hàng',
@@ -94,9 +104,12 @@ const OrderPage = () => {
           .join(', ')
         return (
           <Box className="flex flex-col">
-            <span>{order?.fullName}</span>
+            <span className="text-[13px] font-semibold">{order?.fullName}</span>
             {order?.phoneNumber && (
-              <Link to={`tel:${order.phoneNumber}`} className="text-[13px]">
+              <Link
+                to={`tel:${order.phoneNumber}`}
+                className="text-[13px] hover:underline"
+              >
                 {order.phoneNumber}
               </Link>
             )}
@@ -104,7 +117,7 @@ const OrderPage = () => {
               <Link
                 target="_blank"
                 to={getLocationLinkByAddress(address)}
-                className="text-[13px]"
+                className="text-[13px] hover:underline"
               >
                 {address}
               </Link>
@@ -220,12 +233,12 @@ const OrderPage = () => {
       if (filterImportDate.length > 0) {
         params = {
           ...params,
-          from: moment(filterImportDate?.[0]?.toString()).format(
-            DATE_FORMAT_YYYYMMDD,
-          ),
-          to: moment(filterImportDate?.[1]?.toString()).format(
-            DATE_FORMAT_YYYYMMDD,
-          ),
+          from: moment(filterImportDate?.[0]?.toString())
+            .startOf('D')
+            .toDate() as any,
+          to: moment(filterImportDate?.[1]?.toString())
+            .endOf('D')
+            .toDate() as any,
         }
       }
       return await orderService.searchPagination(params)

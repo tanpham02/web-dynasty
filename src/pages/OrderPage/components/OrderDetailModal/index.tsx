@@ -14,10 +14,16 @@ import CustomModal from '~/components/NextUI/CustomModal'
 import { ORDER_PAYMENT_METHODS, ORDER_STATUSES } from '~/constants/order'
 import { QUERY_KEY } from '~/constants/queryKey'
 import orderService from '~/services/orderService'
-import { DATE_FORMAT_DDMMYYYYHHMMSS, formatDate } from '~/utils/date.utils'
+import {
+  DATE_FORMAT_DDMMYYYYHHMMSS,
+  DATE_FORMAT_DDMMYYYYTHHMMSS,
+  formatDate,
+} from '~/utils/date.utils'
 import { getFullImageUrl } from '~/utils/image'
 import { formatCurrencyVND } from '~/utils/number'
 import DataRow from '../DataRow'
+import { OrderReceivingTime } from '~/models/order'
+import moment from 'moment'
 
 interface OrderDetailModalProps {
   isOpen?: boolean
@@ -171,9 +177,12 @@ const OrderDetailModal = ({
               className="flex justify-between"
               value={
                 <span className="text-right">
-                  {orderDetail?.orderReceivingTime
+                  {orderDetail?.orderReceivingTime === OrderReceivingTime.NOW
                     ? 'Nhận ngay sau 30 phút'
-                    : ''}
+                    : moment(
+                        orderDetail?.orderReceivingTimeAt,
+                        DATE_FORMAT_DDMMYYYYTHHMMSS,
+                      ).format(DATE_FORMAT_DDMMYYYYTHHMMSS)}
                 </span>
               }
             />

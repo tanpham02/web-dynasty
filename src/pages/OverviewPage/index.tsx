@@ -3,12 +3,11 @@ import { useQuery } from '@tanstack/react-query'
 import { DatePicker } from 'antd'
 import { getTimezone } from 'countries-and-timezones'
 import moment, { Moment } from 'moment'
-import { useMemo, useState } from 'react'
-import Chart from 'react-apexcharts'
+import { useEffect, useMemo, useState } from 'react'
+import ApexCharts from 'react-apexcharts'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { isNumber } from 'lodash'
-import DeliveryIcon from '~/assets/svg/icon-delivery.svg'
 import OrderCancelIcon from '~/assets/svg/icon-order-cancel.svg'
 import OrderIcon from '~/assets/svg/icon-order.svg'
 import TotalRevenueIcon from '~/assets/svg/total-revenue.svg'
@@ -103,6 +102,12 @@ const OverviewPage = () => {
     }
   }, [quickDateFilter, filterOtherDate])
 
+  useEffect(() => {
+    if (quickDateFilter[0] !== OverviewFilters.OTHER && filterOtherDate[0]) {
+      setFilterOtherDate([])
+    }
+  }, [quickDateFilter, filterOtherDate])
+
   const { data: overviews } = useQuery(
     [QUERY_KEY.OVERVIEWS, quickDateFilter, quickFilters, currentTimezone],
     async () => {
@@ -119,7 +124,7 @@ const OverviewPage = () => {
     },
   )
 
-  const { data: charts } = useQuery(
+  const { data: charts, isFetching } = useQuery(
     [
       QUERY_KEY.OVERVIEWS_REVENUE_CHART,
       quickDateFilter,
@@ -130,6 +135,7 @@ const OverviewPage = () => {
       let params: SearchParams = {
         ...quickFilters,
         rawOffset: Number(currentTimezone?.utcOffsetStr?.split(':')[0]),
+        groupType: quickDateFilter[0],
       }
 
       return await overviewService.getRevenueChart(params)
@@ -140,7 +146,7 @@ const OverviewPage = () => {
     },
   )
 
-  const { data: topBestSeller, isFetching } = useQuery(
+  const { data: topBestSeller } = useQuery(
     [
       QUERY_KEY.OVERVIEWS_TOP_BEST_SELLER,
       quickDateFilter,
@@ -173,11 +179,11 @@ const OverviewPage = () => {
         icon: TotalRevenueIcon,
         value: `${formatCurrencyWithUnits(overviews?.totalRevenues || 0)} đ`,
       },
-      {
-        label: 'Lợi nhuận thuần',
-        icon: DeliveryIcon,
-        value: `${formatCurrencyWithUnits(overviews?.netRevenueTotal || 0)} đ`,
-      },
+      // {
+      //   label: 'Lợi nhuận thuần',
+      //   icon: DeliveryIcon,
+      //   value: `${formatCurrencyWithUnits(overviews?.netRevenueTotal || 0)} đ`,
+      // },
       {
         label: 'Tỷ lệ hủy đơn hàng',
         icon: OrderCancelIcon,
@@ -221,19 +227,68 @@ const OverviewPage = () => {
       align: 'center',
       name: <Box className="flex justify-center">Tổng số lượng đặt hàng</Box>,
       render: (product: ProductMain) => (
-        <Box className="flex justify-center">{product?.orderQuantity || 0}</Box>
+        <Box className="flex justify-center">{product?.totalOrder || 0}</Box>
       ),
       hide: false,
     },
   ]
 
+  // The date array
+
+  const options = useMemo(
+    () => ({
+      chart: {
+        type: 'bar',
+        height: 350,
+      },
+      title: {
+        text: 'Doanh Thu',
+        align: 'center',
+      },
+      xaxis: {
+        categories: charts?.date ?? [], // The x-axis categories are the dates
+      },
+      yaxis: {
+        title: {
+          text: 'Doanh thu',
+        },
+      },
+      dataLabels: {
+        enabled: false, // Disable data labels
+      },
+      plotOptions: {
+        bar: {
+          columnWidth: '40%',
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: (value: number) => {
+            return `${formatCurrencyWithUnits(value || 0)} đ` // Format value with currency and commas
+          },
+        },
+      },
+    }),
+    [charts?.date],
+  )
+
+  const series = useMemo(
+    () => [
+      {
+        name: 'Doanh thu',
+        data: charts?.data ?? [], // The series data
+      },
+    ],
+    [charts?.data],
+  )
+
   return (
     <Box>
       <CustomBreadcrumb
-        pageName="Báo cáo thống kê"
+        pageName="Tổng quan"
         routes={[
           {
-            label: 'Báo cáo thống kê',
+            label: 'Tổng quan',
           },
         ]}
       />
@@ -273,32 +328,18 @@ const OverviewPage = () => {
         </Box>
       </FormProvider>
 
-      <Box className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <Box className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {REPORT_VALUES.map((value) => (
           <ReportBox {...value} />
         ))}
       </Box>
       <Box className="grid grid-cols-1 gap-4 mt-4">
         <Box className="bg-white rounded-lg p-4">
-          <Chart
-            type="area"
-            options={{
-              chart: {
-                id: 'basic-bar',
-              },
-              title: {
-                text: 'Doanh thu',
-              },
-              xaxis: {
-                categories: charts?.date ?? [],
-              },
-            }}
-            series={[
-              {
-                name: 'Doanh thu',
-                data: charts?.data ?? [],
-              },
-            ]}
+          <ApexCharts
+            options={options as any}
+            series={series}
+            type="bar"
+            height={350}
           />
         </Box>
       </Box>

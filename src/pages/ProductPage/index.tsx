@@ -164,10 +164,6 @@ const ProductListPage = () => {
               ...(productSelectedKeys || [modalDelete?.id] || []),
             ]
           }
-          console.log(
-            '🚀 ~ file: index.tsx:144 ~ mutationFn: ~ productDeleteIDs:',
-            productDeleteIDs,
-          )
 
           await productService.deleteProduct(productDeleteIDs as string[])
         } catch (err) {

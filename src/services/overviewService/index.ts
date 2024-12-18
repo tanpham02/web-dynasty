@@ -30,6 +30,19 @@ const overviewService = {
         throw err
       })
   },
+  getProfitChart: async (
+    params: SearchParams,
+  ): Promise<{ date: string[]; data: number[] }> => {
+    return axiosService()({
+      method: 'GET',
+      baseURL: `${OVERVIEWS_URL}/profit-chart`,
+      params,
+    })
+      .then((res) => res.data)
+      .catch((err) => {
+        throw err
+      })
+  },
   getFiveProductsBestSelling: async (
     params: SearchParams,
   ): Promise<ProductMain[]> => {

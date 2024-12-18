@@ -1,6 +1,5 @@
 export const formatCurrencyVND = (amount: number, format = 'vi-VN'): string => {
   const formatter = new Intl.NumberFormat(format)
-
   return formatter.format(amount)
 }
 

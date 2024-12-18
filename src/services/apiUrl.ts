@@ -6,7 +6,7 @@ const API_URL = `${BASE_URL}/api`
 // AUTHENTICATION URL
 export const SIGNIN_URL = `${API_URL}/auth/staff/login`
 export const SIGN_OUT_URL = `${API_URL}/auth/signout`
-export const REFRESH_TOKEN_URL = `${API_URL}/auth/user/refresh-token`
+export const REFRESH_TOKEN_URL = `${API_URL}/auth/staff/refresh-token`
 
 //USER URL
 export const USER_URL = `${API_URL}/staff`

@@ -43,6 +43,7 @@ enum PATH_NAME {
   STORE_LIST = '/stores',
   STORE = '/store',
   SORT_CONFIG = '/store-config',
+  PROFIT = '/profit',
 }
 
 enum ROUTER_KEY {
@@ -77,6 +78,7 @@ enum ROUTER_KEY {
   STOTE_LIST = 'STOTE_LIST',
   STORE_LIST = 'STORE_LIST',
   SORT_CONFIG = 'SORT_CONFIG',
+  PROFIT = 'PROFIT',
 }
 
 export { PATH_NAME, ROUTER_KEY }

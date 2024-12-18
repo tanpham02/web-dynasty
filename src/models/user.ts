@@ -1,3 +1,5 @@
+import { Salary } from './salary'
+
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
   IN_ACTIVE = 'IN_ACTIVE',
@@ -6,34 +8,37 @@ export enum UserStatus {
 
 export enum UserRole {
   ADMIN = 'ADMIN',
+  SHIPPER = 'SHIPPER',
   USER = 'USER',
   ALL = 'ALL',
 }
 
 export interface Users {
-  _id?: string;
-  birthday?: any;
-  username?: string;
-  fullName?: string;
-  phoneNumber?: string;
-  email?: string;
-  location?: string;
-  city?: string;
-  cityId?: string;
-  district?: string;
-  districtId?: string;
-  ward?: string;
-  wardId?: string;
-  password?: string;
-  role?: UserRole;
-  status?: UserStatus;
-  image?: string | Blob;
-  confirmPw?: string;
-  newPassword?: string;
-  oldPassword?: string;
+  _id?: string
+  birthday?: any
+  username?: string
+  fullName?: string
+  phoneNumber?: string
+  email?: string
+  location?: string
+  city?: string
+  cityId?: string
+  district?: string
+  districtId?: string
+  ward?: string
+  wardId?: string
+  password?: string
+  role?: UserRole
+  status?: UserStatus
+  image?: string | Blob
+  confirmPw?: string
+  newPassword?: string
+  oldPassword?: string
+  salary?: number | Salary
+  salaryId?: string
 }
 
 export interface UsersRequestCheckMatchOldPassword {
-  _id?: string;
-  password?: string;
+  _id?: string
+  password?: string
 }

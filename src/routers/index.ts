@@ -13,6 +13,7 @@ import {
   StorePage,
   SystemConfigPage,
   UserPage,
+  ProfitPage,
 } from '~/pages'
 import { PATH_NAME, ROUTER_KEY } from '../constants/router'
 
@@ -21,9 +22,14 @@ const privateRoutes = [
     key: ROUTER_KEY.HOME,
     path: PATH_NAME.HOME,
     component: OverviewPage, //Done UI
-    title: 'Khách hàng mới trên Zalo Mini App',
+    title: 'Tổng quan',
   },
-
+  {
+    key: ROUTER_KEY.PROFIT,
+    path: PATH_NAME.PROFIT,
+    component: ProfitPage, //Done UI
+    title: 'Lợi nhuận',
+  },
   {
     key: ROUTER_KEY.PRODUCT,
     path: PATH_NAME.PRODUCT_LIST,

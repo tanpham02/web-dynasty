@@ -1,87 +1,89 @@
-import { Button } from '@nextui-org/button';
+import { Button } from '@nextui-org/button'
 import {
   Chip,
   Input,
   Select,
   SelectItem,
   useDisclosure,
-} from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+} from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
+import { useEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 
-import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb';
-import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable';
-import { QUERY_KEY } from '~/constants/queryKey';
-import useDebounce from '~/hooks/useDebounce';
-import { UserRole, UserStatus, Users } from '~/models/user';
-import { RootState } from '~/redux/store';
-import userService from '~/services/userService';
-import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils';
-import { getFullImageUrl } from '~/utils/image';
-import UserModal, { ModalType } from './StaffModal';
+import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
+import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
+import { QUERY_KEY } from '~/constants/queryKey'
+import useDebounce from '~/hooks/useDebounce'
+import { UserRole, UserStatus, Users } from '~/models/user'
+import { RootState } from '~/redux/store'
+import userService from '~/services/userService'
+import { DATE_FORMAT_DDMMYYYY, formatDate } from '~/utils/date.utils'
+import { getFullImageUrl } from '~/utils/image'
+import UserModal, { ModalType } from './StaffModal'
 
-import DeleteIcon from '~/assets/svg/delete.svg';
-import EditIcon from '~/assets/svg/edit.svg';
-import Box from '~/components/Box';
-import ButtonIcon from '~/components/ButtonIcon';
-import { globalLoading } from '~/components/GlobalLoading';
+import DeleteIcon from '~/assets/svg/delete.svg'
+import EditIcon from '~/assets/svg/edit.svg'
+import Box from '~/components/Box'
+import ButtonIcon from '~/components/ButtonIcon'
+import { globalLoading } from '~/components/GlobalLoading'
 import ModalConfirmDelete, {
   ModalConfirmDeleteState,
-} from '~/components/ModalConfirmDelete';
-import CustomImage from '~/components/NextUI/CustomImage';
-import usePagination from '~/hooks/usePagination';
+} from '~/components/ModalConfirmDelete'
+import CustomImage from '~/components/NextUI/CustomImage'
+import usePagination from '~/hooks/usePagination'
+import authService from '~/services/authService'
+import { LOCAL_STORAGE } from '~/constants'
 
 export interface ModalKey {
-  visible?: boolean;
-  type?: ModalType;
-  user?: Users;
+  visible?: boolean
+  type?: ModalType
+  user?: Users
 }
 
 const StaffListPage = () => {
   const currentUserLogin = useSelector<RootState, Users>(
     (state) => state.userStore.user,
-  );
-  const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]));
-  const [searchText, setSearchText] = useState<string>('');
-  const [filterRole, setFilterRole] = useState<UserStatus | string>('');
+  )
+  const [selectedRowKeys, setSelectedRowKeys] = useState(new Set([]))
+  const [searchText, setSearchText] = useState<string>('')
+  const [filterRole, setFilterRole] = useState<UserStatus | string>('')
   const [modal, setModal] = useState<{
-    isEdit?: boolean;
-    userId?: string;
-  }>({ isEdit: false });
+    isEdit?: boolean
+    userId?: string
+  }>({ isEdit: false })
   const [modalConfirmDelete, setModalConfirmDelete] =
-    useState<ModalConfirmDeleteState>();
+    useState<ModalConfirmDeleteState>()
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
-  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination();
+  const { pageIndex, pageSize, setPage, setRowPerPage } = usePagination()
 
   const isHavePermission = useMemo(
     () => currentUserLogin?.role === UserRole.ADMIN,
     [currentUserLogin],
-  );
+  )
 
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
     onOpenChange: onOpenChangeModal,
     onClose,
-  } = useDisclosure();
+  } = useDisclosure()
 
   const {
     isOpen: isOpenModalConfirmDeleteUser,
     onOpen: onOpenModalConfirmDeleteUser,
     onOpenChange: onOpenChangeModalConfirmDeleteUser,
-  } = useDisclosure();
+  } = useDisclosure()
 
-  const search = useDebounce(searchText, 500);
-  const role = useDebounce(filterRole, 500);
+  const search = useDebounce(searchText, 500)
+  const role = useDebounce(filterRole, 500)
 
   const handleGetAddress = (user: Users) =>
     [user.location, user.ward, user.district, user.city]
       .filter((item) => Boolean(item))
-      .join(', ');
+      .join(', ')
 
   const optionStatus = [
     {
@@ -96,7 +98,11 @@ const StaffListPage = () => {
       value: UserRole.USER,
       label: 'Nhân viên',
     },
-  ];
+    {
+      value: UserRole.SHIPPER,
+      label: 'Nhân viên giao hàng',
+    },
+  ]
 
   const columns: ColumnType<Users>[] = [
     {
@@ -182,7 +188,7 @@ const StaffListPage = () => {
                 ? 'Chỉnh sửa'
                 : 'Bạn không có quyền chỉnh sửa thông tin người này'
             }
-            disable={!isHavePermission}
+            disable={!isHavePermission && user._id !== currentUserLogin._id}
             icon={EditIcon}
             placement="top-end"
             showArrow
@@ -191,8 +197,8 @@ const StaffListPage = () => {
               setModal({
                 isEdit: true,
                 userId: user._id,
-              });
-              onOpenModal();
+              })
+              onOpenModal()
             }}
           />
           <ButtonIcon
@@ -211,14 +217,14 @@ const StaffListPage = () => {
               setModalConfirmDelete({
                 desc: 'Bạn có chắc chắn muốn xoá nhân viên này?',
                 id: user._id,
-              });
-              onOpenModalConfirmDeleteUser();
+              })
+              onOpenModalConfirmDeleteUser()
             }}
           />
         </div>
       ),
     },
-  ];
+  ]
 
   const {
     data: users,
@@ -232,13 +238,13 @@ const StaffListPage = () => {
         pageSize: pageSize,
         fullName: search,
         role: role,
-      };
-      return await userService.searchUserByCriteria(params);
+      }
+      return await userService.searchUserByCriteria(params)
     },
     {
       refetchOnWindowFocus: false,
     },
-  );
+  )
 
   const userDisableId = useMemo(() => {
     if (Array.isArray(users?.data) && users.data.length > 0) {
@@ -247,55 +253,55 @@ const StaffListPage = () => {
             currentUserLogin?._id,
             ...users.data.map((user) => user.role === UserRole.ADMIN),
           ]
-        : users.data.map((user) => user._id);
+        : users.data.map((user) => user._id)
     }
 
-    return [currentUserLogin?._id];
-  }, [users?.data, isHavePermission]);
+    return [currentUserLogin?._id]
+  }, [users?.data, isHavePermission])
 
   const handleDeleteUser = async () => {
-    globalLoading.show();
+    globalLoading.show()
     setModalConfirmDelete((prev) => ({
       ...prev,
       isLoading: true,
-    }));
-    let ids: string[] = [];
+    }))
+    let ids: string[] = []
     if (modalConfirmDelete?.id) {
-      ids.push(modalConfirmDelete.id);
+      ids.push(modalConfirmDelete.id)
     }
 
     if (selectedRowKeys && Array.from(selectedRowKeys).length) {
       if (String(selectedRowKeys) === 'all') {
         ids = users?.data
           .filter((user) => user._id !== currentUserLogin._id)
-          ?.map((user) => user._id) as any;
+          ?.map((user) => user._id) as any
       } else {
-        ids = Array.from(selectedRowKeys);
+        ids = Array.from(selectedRowKeys)
       }
     }
 
     try {
-      await userService.deleteUser(ids);
-      refetchUser();
+      await userService.deleteUser(ids)
+      refetchUser()
       enqueueSnackbar({
         message: 'Xoá nhân viên thành công!',
-      });
-      setSelectedRowKeys(new Set([]));
+      })
+      setSelectedRowKeys(new Set([]))
     } catch (err) {
-      console.log(err);
+      console.log(err)
       enqueueSnackbar({
         message: 'Xoá nhân viên thất bại!',
         variant: 'error',
-      });
+      })
     } finally {
-      globalLoading.hide();
-      onOpenChangeModalConfirmDeleteUser();
+      globalLoading.hide()
+      onOpenChangeModalConfirmDeleteUser()
       setModalConfirmDelete((prev) => ({
         ...prev,
         isLoading: false,
-      }));
+      }))
     }
-  };
+  }
 
   return (
     <div>
@@ -329,7 +335,7 @@ const StaffListPage = () => {
               size="md"
               variant="bordered"
               className="w-full max-w-[250px] "
-              label="Chọn trạng thái"
+              label="Chọn vai trò"
               items={optionStatus}
               value={filterRole}
               classNames={{
@@ -359,8 +365,8 @@ const StaffListPage = () => {
                 onClick={() => {
                   setModalConfirmDelete({
                     desc: 'Bạn có chắc chắn muốn xoá danh sách nhân viên đã chọn?',
-                  });
-                  onOpenChangeModalConfirmDeleteUser();
+                  })
+                  onOpenChangeModalConfirmDeleteUser()
                 }}
               >
                 Xác nhận xoá danh sách nhân viên
@@ -417,7 +423,7 @@ const StaffListPage = () => {
         onOpenChange={onOpenChangeModalConfirmDeleteUser}
       />
     </div>
-  );
-};
+  )
+}
 
-export default StaffListPage;
+export default StaffListPage

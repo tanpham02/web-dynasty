@@ -4,6 +4,7 @@ import USER_LIST_ICON from '~/assets/svg/customer.svg'
 import CATEGORY_ICON from '~/assets/svg/grid.svg'
 import STOCK_MANAGEMENT_ICON from '~/assets/svg/stock-management-sidebar.svg'
 import OVERVIEW_ICON from '~/assets/svg/overview.svg'
+import PROFIT_ICON from '~/assets/svg/profit-icon.svg'
 import PRODUCTS_ICON from '~/assets/svg/product-sidebar.svg'
 import SETTING_ICON from '~/assets/svg/setting.svg'
 import STORE_ICON from '~/assets/svg/store.svg'
@@ -14,14 +15,21 @@ import { PATH_NAME, ROUTER_KEY } from '../constants/router'
 const routeSideBar = [
   {
     key: ROUTER_KEY.STATISTIC,
-    path: PATH_NAME.NEW_CUSTOMER_STATISTIC,
-    title: '',
+    path: PATH_NAME.OVERVIEW,
+    title: 'Báo cáo thống kê',
     menu: [
       {
         key: ROUTER_KEY.HOME,
         path: PATH_NAME.HOME,
         title: 'Tổng quan',
         icon: OVERVIEW_ICON,
+        child: [],
+      },
+      {
+        key: ROUTER_KEY.PROFIT,
+        path: PATH_NAME.PROFIT,
+        title: 'Lợi nhuận',
+        icon: PROFIT_ICON,
         child: [],
       },
     ],

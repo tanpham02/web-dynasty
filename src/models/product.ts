@@ -46,6 +46,7 @@ export interface ProductMain {
   attributeMapping?: Attribute[]
   attributeIds?: string[]
   files?: Blob | string
+  totalOrder?: number
 }
 
 export interface ProductChildrenAttribute {

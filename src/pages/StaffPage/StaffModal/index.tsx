@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Box from '~/components/Box'
 import { globalLoading } from '~/components/GlobalLoading'
@@ -16,9 +16,10 @@ import {
 } from '~/components/NextUI/Form'
 import { QUERY_KEY } from '~/constants/queryKey'
 import useAddress from '~/hooks/useAddress'
+import { Salary } from '~/models/salary'
 import { UserRole, Users } from '~/models/user'
 import { getUserInfo } from '~/redux/slice/userSlice'
-import { AppDispatch } from '~/redux/store'
+import { AppDispatch, RootState } from '~/redux/store'
 import userService from '~/services/userService'
 import { DATE_FORMAT_YYYYMMDD, formatDate } from '~/utils/date.utils'
 import { PATTERN } from '~/utils/regex'
@@ -52,6 +53,10 @@ const roleSelection = [
     value: UserRole.USER,
     label: 'Nhân viên',
   },
+  {
+    value: UserRole.SHIPPER,
+    label: 'Nhân viên giao hàng',
+  },
 ]
 
 const UserModal = ({
@@ -66,6 +71,9 @@ const UserModal = ({
   const { enqueueSnackbar } = useSnackbar()
   const [changePw, setChangePw] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>()
+  const currentUserLogin = useSelector<RootState, Users>(
+    (state) => state.userStore.user,
+  )
 
   const forms = useForm<Users>({
     defaultValues: defaultUserValues,
@@ -111,6 +119,10 @@ const UserModal = ({
             ? ([String(response.wardId || '')] as any)
             : [],
           role: response?.role ? ([response.role] as any) : [],
+          ...{
+            salaryId: (response?.salary as Salary)?._id,
+            salary: (response?.salary as Salary)?.value,
+          },
         })
       }
       globalLoading.hide()
@@ -223,7 +235,9 @@ const UserModal = ({
       if (!isEdit) await userService.createUser(formData)
       else if (userId) await userService.updateUser(formData, userId)
 
-      dispatch(getUserInfo(userId!))
+      if (currentUserLogin?._id === userId) {
+        dispatch(getUserInfo(userId!))
+      }
       handleResetFormValue()
       onClose?.()
       onRefetch?.()
@@ -294,9 +308,7 @@ const UserModal = ({
                   value: PATTERN.EMAIL,
                   message: 'Email không hợp lệ',
                 },
-                required: 'Vui lòng nhập email',
               }}
-              isRequired
               type="email"
               label="E-mail"
             />
@@ -350,6 +362,21 @@ const UserModal = ({
               name="location"
               label="Số nhà, tên đường"
             />
+            {currentUserLogin?.role !== UserRole.ADMIN && (
+              <FormContextInput<Users>
+                name="salary"
+                label="Lương"
+                isRequired
+                rules={{
+                  required: 'Vui lòng nhập lương',
+                  min: {
+                    value: 1,
+                    message: 'Lương không hợp lệ',
+                  },
+                }}
+                type="password"
+              />
+            )}
             <FormContextInput<Users>
               isRequired
               name="username"

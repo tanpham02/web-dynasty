@@ -193,12 +193,12 @@ const StockManagementPage = () => {
       if (filterImportDate.length > 0) {
         params = {
           ...params,
-          from: moment(filterImportDate?.[0]?.toString()).format(
-            DATE_FORMAT_YYYYMMDD,
-          ),
-          to: moment(filterImportDate?.[1]?.toString()).format(
-            DATE_FORMAT_YYYYMMDD,
-          ),
+          from: moment(filterImportDate?.[0]?.toString())
+            .startOf('D')
+            .toDate() as any,
+          to: moment(filterImportDate?.[1]?.toString())
+            .endOf('D')
+            .toDate() as any,
         }
       }
 

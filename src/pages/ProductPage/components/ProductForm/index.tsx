@@ -62,7 +62,9 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
             return {
               ...attribute,
               _id: attribute?._id,
-              label: attribute?.extendedNames?.join(' - '),
+              label: attribute?.extendedNames
+                ?.map((name) => name?.split(': ')?.[1])
+                ?.join(' - '),
               productAttributeItem: attribute?.extendedIds?.map(
                 (_id, index) => ({
                   _id,
@@ -108,7 +110,6 @@ const ProductForm = ({ currentProduct, isEdit }: ProductFormProps) => {
         productsVariant: [],
       }
       const jsonData = JSON.stringify(json)
-
       formData.append('productInfo', jsonData)
 
       if (isEdit)
