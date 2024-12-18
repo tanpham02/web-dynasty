@@ -35,7 +35,6 @@ import {
   DATE_FORMAT_DDMMYYYY,
   DATE_FORMAT_DDMMYYYYTHHMMSS,
   DATE_FORMAT_HHMMSS,
-  DATE_FORMAT_YYYYMMDD,
 } from '~/utils/date.utils'
 import { getLocationLinkByAddress } from '~/utils/googleMapUtil'
 import { formatCurrencyVND } from '~/utils/number'

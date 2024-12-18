@@ -8,7 +8,7 @@ import {
 } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
@@ -32,8 +32,6 @@ import ModalConfirmDelete, {
 } from '~/components/ModalConfirmDelete'
 import CustomImage from '~/components/NextUI/CustomImage'
 import usePagination from '~/hooks/usePagination'
-import authService from '~/services/authService'
-import { LOCAL_STORAGE } from '~/constants'
 
 export interface ModalKey {
   visible?: boolean

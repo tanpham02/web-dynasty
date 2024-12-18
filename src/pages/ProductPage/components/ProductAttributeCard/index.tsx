@@ -38,8 +38,6 @@ const ProductAttributeCard = ({ isEdit }: ProductAttributeCardProps) => {
 
   const [attributeSelected, setAttributeSelected] = useState<Attribute[]>([])
   const [attributeIds, setAttributeIds] = useState<string[]>([])
-  const [isTriggerRemoveProductAttribute, setIsTriggerRemoveProductAttribute] =
-    useState<boolean>(false)
 
   const isFirstTime = useRef<boolean>(true)
 
