@@ -8,14 +8,15 @@ import ApexCharts from 'react-apexcharts'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { isNumber } from 'lodash'
+import { useNavigate } from 'react-router-dom'
 import OrderCancelIcon from '~/assets/svg/icon-order-cancel.svg'
 import OrderIcon from '~/assets/svg/icon-order.svg'
 import TotalRevenueIcon from '~/assets/svg/total-revenue.svg'
-import { CustomImage, FormContextSelect } from '~/components'
+import { CustomImage, FormContextSelect, Text } from '~/components'
 import Box from '~/components/Box'
 import CustomBreadcrumb from '~/components/NextUI/CustomBreadcrumb'
 import CustomTable, { ColumnType } from '~/components/NextUI/CustomTable'
-import { FALLBACK_SRC } from '~/constants'
+import { FALLBACK_SRC, PATH_NAME } from '~/constants'
 import { QUERY_KEY } from '~/constants/queryKey'
 import { ProductMain } from '~/models/product'
 import overviewService from '~/services/overviewService'
@@ -28,6 +29,8 @@ import { overviewFilterOptions, OverviewFilters } from './helpers'
 const OverviewPage = () => {
   const currentTimezone = getTimezone(moment.tz.guess())
   const [filterOtherDate, setFilterOtherDate] = useState<Moment[]>([])
+
+  const navigate = useNavigate()
 
   const form = useForm({
     defaultValues: {
@@ -147,20 +150,8 @@ const OverviewPage = () => {
   )
 
   const { data: topBestSeller } = useQuery(
-    [
-      QUERY_KEY.OVERVIEWS_TOP_BEST_SELLER,
-      quickDateFilter,
-      quickFilters,
-      currentTimezone,
-    ],
-    async () => {
-      let params: SearchParams = {
-        ...quickFilters,
-        rawOffset: Number(currentTimezone?.utcOffsetStr?.split(':')[0]),
-      }
-
-      return await overviewService.getFiveProductsBestSelling(params)
-    },
+    [QUERY_KEY.OVERVIEWS_TOP_BEST_SELLER],
+    async () => await overviewService.getFiveProductsBestSelling(),
     {
       enabled: !!quickFilters?.from && !!quickFilters?.to,
       refetchOnWindowFocus: false,
@@ -179,11 +170,6 @@ const OverviewPage = () => {
         icon: TotalRevenueIcon,
         value: `${formatCurrencyWithUnits(overviews?.totalRevenues || 0)} đ`,
       },
-      // {
-      //   label: 'Lợi nhuận thuần',
-      //   icon: DeliveryIcon,
-      //   value: `${formatCurrencyWithUnits(overviews?.netRevenueTotal || 0)} đ`,
-      // },
       {
         label: 'Tỷ lệ hủy đơn hàng',
         icon: OrderCancelIcon,
@@ -206,6 +192,9 @@ const OverviewPage = () => {
     }
   }
 
+  const goToProductBestSelling = (id: string) =>
+    navigate(`${PATH_NAME.PRODUCT}/${id}`)
+
   const columns: ColumnType<ProductMain>[] = [
     {
       align: 'center',
@@ -221,7 +210,14 @@ const OverviewPage = () => {
     {
       align: 'center',
       name: 'Tên sản phẩm',
-      render: (product: ProductMain) => product?.name,
+      render: (product: ProductMain) => (
+        <Text
+          className="hover:underline hover:text-meta-5 hover:cursor-pointer"
+          onClick={() => goToProductBestSelling(product?._id!)}
+        >
+          {product?.name}
+        </Text>
+      ),
     },
     {
       align: 'center',
@@ -344,7 +340,10 @@ const OverviewPage = () => {
         </Box>
       </Box>
 
-      <Box className="grid grid-cols-1 gap-4 mt-4">
+      <Box className="grid grid-cols-1 gap-4 mt-8">
+        <Text className="text-base font-bold">
+          Top 5 sản phẩm bán chạy nhất
+        </Text>
         <CustomTable
           rowKey="_id"
           columns={columns}

@@ -43,13 +43,10 @@ const overviewService = {
         throw err
       })
   },
-  getFiveProductsBestSelling: async (
-    params: SearchParams,
-  ): Promise<ProductMain[]> => {
+  getFiveProductsBestSelling: async (): Promise<ProductMain[]> => {
     return axiosService()({
       method: 'GET',
       baseURL: `${OVERVIEWS_URL}/top-best-selling`,
-      params,
     })
       .then((res) => res.data)
       .catch((err) => {

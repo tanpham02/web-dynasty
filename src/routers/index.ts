@@ -82,7 +82,7 @@ const privateRoutes = [
     key: ROUTER_KEY.PRODUCTS,
     path: `${PATH_NAME.PRODUCT}/:id`,
     component: ProductFormPage,
-    title: 'Chỉnh sủa sản phẩm',
+    title: 'Chỉnh sửa sản phẩm',
   },
   {
     key: ROUTER_KEY.CUSTOMER,

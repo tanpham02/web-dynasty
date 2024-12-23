@@ -16,6 +16,7 @@ import { SearchParams } from '~/types'
 import { currentMonthFirstDate } from '~/utils/date.utils'
 import { OverviewFilters } from './helpers'
 import { formatCurrencyWithUnits } from '~/utils/number'
+import { isEmpty } from 'lodash'
 
 const ProfitPage = () => {
   const currentTimezone = getTimezone(moment.tz.guess())
@@ -23,7 +24,7 @@ const ProfitPage = () => {
 
   const form = useForm({
     defaultValues: {
-      quickDateFilter: [OverviewFilters.LAST_WEEK],
+      quickDateFilter: [OverviewFilters.LAST_MONTH],
     },
   })
   const { watch } = form
@@ -32,16 +33,18 @@ const ProfitPage = () => {
 
   const quickFilters = useMemo(() => {
     switch (quickDateFilter[0]) {
-      case OverviewFilters.LAST_WEEK:
+      case OverviewFilters.OTHER:
         return {
-          from: moment()
-            .day(1 - 7)
-            .startOf('date')
-            .toISOString(),
-          to: moment().day(0).endOf('date').toISOString(),
+          from: filterOtherDate[0]
+            ? filterOtherDate[0]?.startOf('day').toISOString()
+            : undefined,
+          to: filterOtherDate[1]
+            ? filterOtherDate[1]?.endOf('day').toISOString()
+            : undefined,
         }
 
-      case OverviewFilters.LAST_MONTH:
+      default:
+        // LAST_MONTH
         return {
           from: moment()
             .subtract(1, 'months')
@@ -54,27 +57,10 @@ const ProfitPage = () => {
             .endOf('date')
             .toISOString(),
         }
-
-      case OverviewFilters.OTHER:
-        return {
-          from: filterOtherDate[0]
-            ? filterOtherDate[0]?.startOf('day').toISOString()
-            : undefined,
-          to: filterOtherDate[1]
-            ? filterOtherDate[1]?.endOf('day').toISOString()
-            : undefined,
-        }
-
-      default:
-        // TODAY
-        return {
-          from: moment(new Date()).startOf('date').toISOString(),
-          to: moment(new Date()).endOf('date').toISOString(),
-        }
     }
   }, [quickDateFilter, filterOtherDate])
 
-  const { data: charts } = useQuery(
+  const { data: charts, isFetching } = useQuery(
     [
       QUERY_KEY.OVERVIEWS_PROFIT_CHART,
       quickDateFilter,
@@ -96,6 +82,111 @@ const ProfitPage = () => {
     },
   )
 
+  // Helper function to calculate the number of days between two dates
+  function getDaysDifference(date1: any, date2: any) {
+    const d1: any = new Date(date1)
+    const d2: any = new Date(date2)
+    return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24)) // Convert to days
+  }
+
+  // Group data by the type (LAST_MONTH or OTHER)
+  function groupData(data: any, type: any) {
+    const monthlyStats: any = {}
+    const currentDate = new Date()
+
+    // Process orders
+    data?.ordersResult?.forEach((order: any) => {
+      const orderDate = new Date(order._id)
+      const yearMonth = orderDate.toISOString().substring(0, 7) // 'YYYY-MM'
+
+      // Determine the group key based on the type and the date difference
+      let key
+      const daysDiff = getDaysDifference(order._id, currentDate)
+
+      if (
+        type === 'LAST_MONTH' &&
+        orderDate.getMonth() === currentDate.getMonth() - 1
+      ) {
+        key = yearMonth // Group by month if in the last month
+      } else if (type === 'OTHER') {
+        if (daysDiff < 30) {
+          key = yearMonth // Group by month if less than 30 days
+        } else if (daysDiff >= 30 && daysDiff <= 90) {
+          key = yearMonth // Group by month if between 1-3 months
+        } else if (daysDiff > 90 && daysDiff <= 365) {
+          key = yearMonth // Group by month if more than 3 months but less than 1 year
+        } else if (daysDiff > 365) {
+          key = yearMonth // Group by year if more than 1 year
+        }
+      }
+
+      if (!monthlyStats[key!]) {
+        monthlyStats[key!] = {
+          totalRevenue: 0,
+          totalIngredientsCost: 0,
+          profit: 0,
+        }
+      }
+      monthlyStats[key!].totalRevenue += order.totalRevenue
+    })
+
+    // Process ingredients
+    data?.ingredientsResult?.forEach((ingredient: any) => {
+      const ingredientDate = new Date(ingredient._id)
+      const yearMonth = ingredientDate.toISOString().substring(0, 7) // 'YYYY-MM'
+
+      let key: any
+      const daysDiff = getDaysDifference(ingredient._id, currentDate)
+
+      if (
+        type === 'LAST_MONTH' &&
+        ingredientDate.getMonth() === currentDate.getMonth() - 1
+      ) {
+        key = yearMonth // Group by month if in the last month
+      } else if (type === 'OTHER') {
+        if (daysDiff < 30) {
+          key = yearMonth // Group by month if less than 30 days
+        } else if (daysDiff >= 30 && daysDiff <= 90) {
+          key = yearMonth // Group by month if between 1-3 months
+        } else if (daysDiff > 90 && daysDiff <= 365) {
+          key = yearMonth // Group by month if more than 3 months but less than 1 year
+        } else if (daysDiff > 365) {
+          key = yearMonth // Group by year if more than 1 year
+        }
+      }
+
+      if (!monthlyStats[key]) {
+        monthlyStats[key] = {
+          totalRevenue: 0,
+          totalIngredientsCost: 0,
+          profit: 0,
+        }
+      }
+      monthlyStats[key].totalIngredientsCost += ingredient.totalIngredientsCost
+    })
+
+    // Add staff salaries and calculate profit
+    for (const key in monthlyStats) {
+      const stats = monthlyStats[key]
+      stats.totalIngredientsCost += data?.staffSalaries
+      stats.profit = stats.totalRevenue - stats.totalIngredientsCost
+    }
+
+    return monthlyStats
+  }
+
+  function transformData(inputData: any) {
+    const result: any = { data: [], date: [] }
+    if (isEmpty(inputData)) return result
+
+    for (const key in inputData) {
+      result.data.push(inputData[key].profit)
+      result.date.push(key)
+    }
+
+    return result
+  }
+
   useEffect(() => {
     if (quickDateFilter[0] !== OverviewFilters.OTHER && filterOtherDate[0]) {
       setFilterOtherDate([])
@@ -109,6 +200,14 @@ const ProfitPage = () => {
     } else {
       setFilterOtherDate([])
     }
+  }
+
+  if (isFetching) {
+    return (
+      <div className="fixed bg-[#000]/[.25] top-0 right-0 bottom-0 left-0 z-999999 flex justify-center items-center">
+        <span className="loader"></span>
+      </div>
+    )
   }
 
   return (
@@ -132,10 +231,6 @@ const ProfitPage = () => {
               size="md"
             >
               {[
-                {
-                  label: 'Tuần trước',
-                  value: OverviewFilters.LAST_WEEK,
-                },
                 {
                   label: 'Tháng trước',
                   value: OverviewFilters.LAST_MONTH,
@@ -183,7 +278,9 @@ const ProfitPage = () => {
               },
 
               xaxis: {
-                categories: charts?.date ?? [], // The x-axis categories are the dates
+                categories:
+                  transformData(groupData(charts, quickDateFilter[0]))?.date ??
+                  [], // The x-axis categories are the dates
               },
               yaxis: {
                 title: {
@@ -209,7 +306,9 @@ const ProfitPage = () => {
             series={[
               {
                 name: 'Lợi nhuận',
-                data: charts?.data ?? [],
+                data:
+                  transformData(groupData(charts, quickDateFilter[0]))?.data ??
+                  [],
               },
             ]}
             height={630}

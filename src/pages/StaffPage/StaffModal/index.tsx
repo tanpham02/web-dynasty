@@ -220,6 +220,7 @@ const UserModal = ({
           districtId: data?.districtId?.[0] || '',
           city: addressInfo?.city,
           cityId: data?.cityId?.[0] || '',
+          salary: Number(data.salary),
         }
 
         if (isEdit && changePw && data?.newPassword) {
@@ -362,7 +363,7 @@ const UserModal = ({
               name="location"
               label="Số nhà, tên đường"
             />
-            {currentUserLogin?.role !== UserRole.ADMIN && (
+            {currentUserLogin?._id !== userId && (
               <FormContextInput<Users>
                 name="salary"
                 label="Lương"
@@ -374,6 +375,7 @@ const UserModal = ({
                     message: 'Lương không hợp lệ',
                   },
                 }}
+                isDisabled={currentUserLogin?.role !== UserRole.ADMIN}
                 type="password"
               />
             )}

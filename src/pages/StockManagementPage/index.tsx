@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { DatePicker } from 'antd'
 import moment, { Moment } from 'moment'
 import { useSnackbar } from 'notistack'
-import { useId, useMemo, useRef, useState } from 'react'
+import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import DeleteIcon from '~/assets/svg/delete.svg'
@@ -129,14 +129,14 @@ const StockManagementPage = () => {
     {
       name: <Box className="flex justify-end mr-4">Hành động</Box>,
       render: (stockManagement: StockManagementInformation) => {
-        const isDisableEdit = !(
-          moment().month() == moment(stockManagement?.date).month()
-        )
+        const isDisableEdit =
+          moment().date() !== moment(stockManagement?.date).date() ||
+          stockManagement?.isExported
 
         return (
           <div className="flex justify-end space-x-2">
             <ButtonIcon
-              disable={isDisableEdit || stockManagement?.isExported}
+              disable={isDisableEdit}
               icon={EditIcon}
               title={
                 isDisableEdit
@@ -152,7 +152,7 @@ const StockManagementPage = () => {
             />
             <ButtonIcon
               icon={DeleteIcon}
-              disable={isDisableEdit || stockManagement?.isExported}
+              disable={isDisableEdit}
               title={
                 isDisableEdit
                   ? 'Bạn chỉ có thể xóa hóa đơn tháng hiện tại'
@@ -237,16 +237,16 @@ const StockManagementPage = () => {
     refetch: refetchStocks,
   } = stockManagementResponse
 
-  const isExistingBillInMonth = useMemo(() => {
+  const isExistingBillInDay = useMemo(() => {
     if (
       Array.isArray(stockManagements?.data) &&
       stockManagements.data.length > 0
     ) {
-      const currentMonth = moment().month()
+      const currentDate = moment().date()
 
       return stockManagements?.data?.some(
         (stockManagement) =>
-          moment(stockManagement?.date).month() == currentMonth,
+          moment(stockManagement?.date).date() == currentDate,
       )
     }
 
@@ -383,7 +383,7 @@ const StockManagementPage = () => {
             handleChangeFilterImportDate(range as [Moment, Moment])
           }
         />
-        {!isExistingBillInMonth && (
+        {!isExistingBillInDay && (
           <Button
             color="primary"
             variant="shadow"

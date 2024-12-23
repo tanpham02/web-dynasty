@@ -75,6 +75,8 @@ const StockManagementModal = ({
     name: 'stockManagementInfo',
   })
 
+  console.log('stockManagements', stockManagements)
+
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
@@ -173,13 +175,15 @@ const StockManagementModal = ({
     }
   }
 
+  const stockManagementIds = stockManagements?.map((item) => item?._id)
+
   const ingredientExportOptions = useMemo(
     () =>
       ingredientsResponse?.data?.data?.map((item) => ({
         label: item.name,
         value: item._id,
       })),
-    [ingredientsResponse],
+    [JSON.stringify([ingredientsResponse, stockManagements])],
   )
 
   const exportId = watch('exportId')
@@ -330,11 +334,17 @@ const StockManagementModal = ({
                 size="md"
                 isLoading={ingredientsResponse?.isFetching}
               >
-                {ingredientExportOptions?.map((item) => (
-                  <SelectItem key={item.value!} value={item.label}>
-                    {item.label}
-                  </SelectItem>
-                )) ?? []}
+                {ingredientExportOptions
+                  ?.filter((item) =>
+                    !isEmpty(stockManagementIds)
+                      ? !stockManagementIds?.includes(item.value)
+                      : true,
+                  )
+                  ?.map((item) => (
+                    <SelectItem key={item.value!} value={item.label}>
+                      {item.label}
+                    </SelectItem>
+                  )) ?? []}
               </FormContextSelect>
               <FormContextInput
                 label="Số lượng"
