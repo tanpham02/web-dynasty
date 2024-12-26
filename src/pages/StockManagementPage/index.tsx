@@ -140,7 +140,7 @@ const StockManagementPage = () => {
               icon={EditIcon}
               title={
                 isDisableEdit
-                  ? 'Bạn chỉ có thể sửa hóa đơn ngày hiện tại'
+                  ? 'Không thể chỉnh sửa hoá đơn này'
                   : 'Chỉnh sửa hóa đơn'
               }
               onClick={() => handleOpenModalEdit(stockManagement)}
@@ -154,9 +154,7 @@ const StockManagementPage = () => {
               icon={DeleteIcon}
               disable={isDisableEdit}
               title={
-                isDisableEdit
-                  ? 'Bạn chỉ có thể xóa hóa đơn tháng hiện tại'
-                  : 'Xóa hóa đơn này'
+                isDisableEdit ? 'Không thể xoá hoá đơn này' : 'Xóa hóa đơn này'
               }
               onClick={() => handleOpenDeleteModal(stockManagement)}
               status="danger"
