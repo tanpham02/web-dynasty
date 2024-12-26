@@ -61,8 +61,18 @@ const OrderPage = () => {
 
   const columns: ColumnType<Order>[] = [
     {
+      name: 'STT',
+      render: (_order: Order, index?: number) => {
+        return (
+          <Box className="flex flex-col">
+            <span>{(index || 0) + 1 + (pageIndex - 1) * 10}</span>
+          </Box>
+        )
+      },
+    },
+    {
       name: '#',
-      render: (order: Order, index?: number) => {
+      render: (order: Order, _index?: number) => {
         const isNow = order.orderReceivingTime === OrderReceivingTime.NOW
 
         const receiveTime = isNow
@@ -71,7 +81,13 @@ const OrderPage = () => {
 
         return (
           <Box className="flex flex-col">
-            <span>{(index || 0) + 1 + (pageIndex - 1) * 10}</span>
+            <Link
+              onClick={() => handleOpenModalOrderDetail(order)}
+              to=""
+              className="text-[13px] hover:underline"
+            >
+              {`#${order?._id?.slice(0, 9)}`}
+            </Link>
 
             {/* Receive Time */}
             {!moment.isMoment(receiveTime) ? (

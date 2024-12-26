@@ -136,6 +136,15 @@ const OrderDetailModal = ({
           </CardHeader>
           <CardBody className="px-4 space-y-3">
             <DataRow
+              label="Mã đơn hàng"
+              className="flex justify-between"
+              value={
+                <span className="text-right font-bold">
+                  {`#${orderDetail?._id?.slice(0, 9)}`}
+                </span>
+              }
+            />
+            <DataRow
               label="Trạng thái đơn hàng"
               className="flex justify-between"
               value={
