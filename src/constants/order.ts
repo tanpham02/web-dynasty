@@ -2,7 +2,6 @@ import { OrderPaymentMethod, StatusOrder } from '~/models/order'
 
 import WaitingIcon from '~/assets/svg/hourglass.svg'
 import NewIcon from '~/assets/svg/new.svg'
-import OrderReturnIcon from '~/assets/svg/order-returned.svg'
 import OrderSuccessIcon from '~/assets/svg/order-success.svg'
 import ShippingIcon from '~/assets/svg/shipping.svg'
 import WaitingPickupIcon from '~/assets/svg/waiting-pickup.svg'

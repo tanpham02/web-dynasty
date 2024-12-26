@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { DatePicker } from 'antd'
 import moment, { Moment } from 'moment'
 import { useSnackbar } from 'notistack'
-import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import DeleteIcon from '~/assets/svg/delete.svg'
@@ -140,7 +140,7 @@ const StockManagementPage = () => {
               icon={EditIcon}
               title={
                 isDisableEdit
-                  ? 'Bạn chỉ có thể sửa hóa đơn tháng hiện tại'
+                  ? 'Bạn chỉ có thể sửa hóa đơn ngày hiện tại'
                   : 'Chỉnh sửa hóa đơn'
               }
               onClick={() => handleOpenModalEdit(stockManagement)}
