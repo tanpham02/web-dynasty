@@ -66,7 +66,7 @@ const CustomerPage = () => {
         <Box className="rounded-2xl !h-[60px] !w-[60px] flex items-center justify-center bg-primary text-white font-semibold text-xl">
           {customer?.fullName
             ? customer.fullName.charAt(0)
-            : customer?.email!.charAt(0).toUpperCase()}
+            : customer?.email?.charAt(0)?.toUpperCase()}
         </Box>
       ),
     },

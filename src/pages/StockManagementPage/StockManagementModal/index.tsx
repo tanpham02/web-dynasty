@@ -63,6 +63,7 @@ const StockManagementModal = ({
     control,
     setValue,
     watch,
+    reset,
     trigger,
   } = forms
 
@@ -74,8 +75,6 @@ const StockManagementModal = ({
     control,
     name: 'stockManagementInfo',
   })
-
-  console.log('stockManagements', stockManagements)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -175,38 +174,40 @@ const StockManagementModal = ({
     }
   }
 
-  const stockManagementIds = stockManagements?.map((item) => item?._id)
+  const ingredientExportOptions = useMemo(() => {
+    if (!ingredientsResponse) return []
 
-  const ingredientExportOptions = useMemo(
-    () =>
-      ingredientsResponse?.data?.data?.map((item) => ({
-        label: item.name,
-        value: item._id,
-      })),
-    [JSON.stringify([ingredientsResponse, stockManagements])],
-  )
+    return ingredientsResponse?.data?.data?.map((item) => ({
+      label: item.name,
+      value: item._id,
+    }))
+  }, [JSON.stringify([ingredientsResponse])])
 
   const exportId = watch('exportId')
   const exportQuantity = watch('exportQuantity')
 
   const ingredientSelected = useMemo(() => {
-    if (isEmpty(exportId)) return undefined
+    if (isEmpty(exportId) || isEmpty(ingredientsResponse)) return undefined
     const output = ingredientsResponse?.data?.data?.find(
       (item) => exportId?.includes(item?._id!.toString()),
     )
-    setValue(
-      'stockManagementInfo',
-      stockManagements?.map((item) => {
-        if (!exportId?.includes(item?._id!.toString())) return item
-        return {
-          ...item,
-          exportQuantity: output?.quantity,
-        }
-      }),
-    )
-    setValue('exportQuantity', output?.quantity ?? 0)
+    const p = stockManagements?.map((item) => {
+      if (!exportId?.includes(item?._id!.toString())) return item
+      return {
+        ...item,
+        exportQuantity: output?.quantity,
+      }
+    })
+
+    reset((prev) => ({
+      ...prev,
+      stockManagementInfo: p,
+      exportQuantity: output?.quantity ?? 0,
+    }))
+    // setValue('stockManagementInfo', p)
+    // setValue('exportQuantity', output?.quantity ?? 0)
     return output
-  }, [JSON.stringify([ingredientsResponse, exportId, stockManagements])])
+  }, [JSON.stringify([ingredientsResponse, exportId])])
 
   const handleEditExportItem = (index: number) => {
     setIndexEditing(index)
@@ -334,17 +335,11 @@ const StockManagementModal = ({
                 size="md"
                 isLoading={ingredientsResponse?.isFetching}
               >
-                {ingredientExportOptions
-                  ?.filter((item) =>
-                    !isEmpty(stockManagementIds)
-                      ? !stockManagementIds?.includes(item.value)
-                      : true,
-                  )
-                  ?.map((item) => (
-                    <SelectItem key={item.value!} value={item.label}>
-                      {item.label}
-                    </SelectItem>
-                  )) ?? []}
+                {ingredientExportOptions?.map((item) => (
+                  <SelectItem key={item.value!} value={item.label}>
+                    {item.label}
+                  </SelectItem>
+                )) ?? []}
               </FormContextSelect>
               <FormContextInput
                 label="Số lượng"

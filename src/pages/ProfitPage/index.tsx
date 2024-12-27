@@ -172,6 +172,8 @@ const ProfitPage = () => {
       stats.profit = stats.totalRevenue - stats.totalIngredientsCost
     }
 
+    console.log('monthlyStats', monthlyStats)
+
     return monthlyStats
   }
 
