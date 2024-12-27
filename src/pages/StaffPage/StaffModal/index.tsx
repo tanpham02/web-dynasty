@@ -45,10 +45,6 @@ export interface UserModalProps {
 }
 
 const roleSelection = [
-  // {
-  //   value: UserRole.ADMIN,
-  //   label: 'Quản trị viên',
-  // },
   {
     value: UserRole.USER,
     label: 'Nhân viên',
@@ -132,6 +128,15 @@ const UserModal = ({
       refetchOnWindowFocus: false,
     },
   )
+
+  useEffect(() => {
+    if (isEdit) {
+      roleSelection.push({
+        value: UserRole.ADMIN,
+        label: 'Quản trị viên',
+      })
+    }
+  }, [isEdit])
 
   useEffect(() => {
     if (getFieldState('cityId').isDirty) setValue('districtId', '')
